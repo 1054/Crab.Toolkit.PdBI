@@ -108,10 +108,12 @@ for (( PdBIUVT_ITER = 1; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ ))
     echo  "@$PdBIUVT_TEMP_EXEC" |  mapping  >  "$PdBIUVT_TEMP_LOGT"
     
     if [[ $PdBIUVT_ITER -eq $((${#PdBIUVT_NAME[@]}-1)) ]]; then 
+        echo "cp \"$PdBIUVT_SAVE.$PdBIUVT_ITER.uvt\" \"$PdBIUVT_SAVE.uvt\""
         cp "$PdBIUVT_SAVE.$PdBIUVT_ITER.uvt" "$PdBIUVT_SAVE.uvt"
     fi
     
     if [[ $PdBIUVT_KEEP_FILES -eq 0 ]]; then
+        echo "rm \"$PdBIUVT_SAVE.$PdBIUVT_ITER.\"*"
         rm "$PdBIUVT_SAVE.$PdBIUVT_ITER."*
     fi
     
