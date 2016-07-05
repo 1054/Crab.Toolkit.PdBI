@@ -1,0 +1,123 @@
+#!/bin/bash
+# 
+# Input RA Dec
+# Output spec & uv_average
+# 
+PdBIUVT_NAME=()
+PdBIUVT_SAVE=""
+PdBIUVT_KEEP_FILES=0
+# LANG
+LANG=C
+
+
+
+
+# 
+# Read input parameters
+# 
+PdBIUVT_GOOD=0; if [[ "$#" -gt 0 ]]; then PdBIUVT_GOOD=1; fi
+PdBIUVT_RPAR=""
+while [[ "$#" -gt 0 ]]; do
+    #echo $1 "$#"
+    case $1 in
+          "-save") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR=""; PdBIUVT_SAVE="$1";;
+           "-out") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR=""; PdBIUVT_SAVE="$1";;
+     "-keepfiles") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR=""; PdBIUVT_KEEP_FILES=1;;
+          "-name") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="name";;
+    esac
+    if [[ "$PdBIUVT_RPAR" == "name" ]];  then 
+        PdBIUVT_NAME=("${PdBIUVT_NAME[@]}" "$1")
+    fi
+    shift
+done
+# 
+# Check input parameters -- if not passed then print usage and exit
+# 
+if [[ $PdBIUVT_GOOD -eq 0 ]]; then
+    echo "Usage: "
+    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-keepfiles]"
+    exit
+fi
+# 
+# Print input uvtable list
+# 
+echo PdBIUVT_NAME=${PdBIUVT_NAME[*]}
+echo PdBIUVT_SAVE=${PdBIUVT_SAVE}
+# 
+# Revise input parameters
+# 
+# -- remove the suffix of the input uvtable name, and test whether the file exists
+for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do
+    PdBIUVT_NAME[i]=$(echo ${PdBIUVT_NAME[i]} | sed -E 's/[.]uvt$//g')
+    # check file existence
+    if [[ ! -f "${PdBIUVT_NAME[i]}.uvt" ]]; then
+        echo "Error! \"${PdBIUVT_NAME[i]}.uvt\" was not found! Exit!"
+        exit
+    fi
+done
+if [[ "$PdBIUVT_SAVE" == *".uvt" ]]; then
+    PdBIUVT_SAVE=$(echo $PdBIUVT_SAVE | sed -E 's/[.]uvt$//g')
+fi
+# -- set output uvtable name, and check whether it exists
+if [[ x"$PdBIUVT_SAVE" == x"" ]]; then
+    echo "Warning! Output uv table name not defined, we will set it to be ${PdBIUVT_NAME[0]}-Merged.uvt!"
+    PdBIUVT_SAVE="${PdBIUVT_NAME[0]}-Merged"
+fi
+if [[ -f "$PdBIUVT_SAVE.uvt" ]]; then
+    echo "Warning! Found previous \"$PdBIUVT_SAVE.uvt\"! Backup as \"$PdBIUVT_SAVE.uvt.backup\"!"
+    cp "$PdBIUVT_SAVE.uvt" "$PdBIUVT_SAVE.uvt.backup"
+fi
+
+
+
+# 
+# loop each 2 uv table to merge
+# 
+for (( PdBIUVT_ITER = 1; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ )); do
+    # 
+    # prepare gildas/mapping init and script and run
+    # 
+    if [[ $PdBIUVT_ITER -eq 1 ]]; then 
+    PdBIUVT_TEMP_TAB1="${PdBIUVT_NAME[$PdBIUVT_ITER-1]}"
+    else
+    PdBIUVT_TEMP_TAB1="$PdBIUVT_SAVE".$(bc <<< $PdBIUVT_ITER-1)
+    fi
+    PdBIUVT_TEMP_TAB2="${PdBIUVT_NAME[$PdBIUVT_ITER]}"
+    PdBIUVT_TEMP_TAB3="$PdBIUVT_SAVE.$PdBIUVT_ITER"
+    # remove suffix .uvt
+    PdBIUVT_TEMP_TAB1=$(echo $PdBIUVT_TEMP_TAB1 | sed -E 's/[.]uvt$//g')
+    PdBIUVT_TEMP_TAB2=$(echo $PdBIUVT_TEMP_TAB2 | sed -E 's/[.]uvt$//g')
+    PdBIUVT_TEMP_TAB3=$(echo $PdBIUVT_TEMP_TAB3 | sed -E 's/[.]uvt$//g')
+    # 
+    PdBIUVT_TEMP_INIT="$PdBIUVT_SAVE.$PdBIUVT_ITER.init"
+    PdBIUVT_TEMP_EXEC="$PdBIUVT_SAVE.$PdBIUVT_ITER.map"
+    PdBIUVT_TEMP_LOGT="$PdBIUVT_SAVE.$PdBIUVT_ITER.log"
+    echo  '! '                                                                                       > $PdBIUVT_TEMP_INIT
+    echo  '! Task UV_MERGE'                                                                         >> $PdBIUVT_TEMP_INIT
+    echo  '! 6 parameters needed for all functions'                                                 >> $PdBIUVT_TEMP_INIT
+    echo  '!'                                                                                       >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "UV table 1"                  TABLE_IN$      "'$PdBIUVT_TEMP_TAB1.uvt'"'  >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\REAL      "Weighting 1"                   WEIGHT$       ' 1                         >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\REAL      "Multipling 1"                  FACTOR$       ' 1                         >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "UV table 2"                 TABLE_REF$      "'$PdBIUVT_TEMP_TAB2.uvt'"'  >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "UV table out"               TABLE_OUT$      "'$PdBIUVT_TEMP_TAB3.uvt'"'  >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\INTEGER   "Continuum Mode"                  MODE$       ' 0                         >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\GO'                                                                                 >> $PdBIUVT_TEMP_INIT
+    echo  "run uv_merge $PdBIUVT_TEMP_INIT /NOWINDOW"  >> $PdBIUVT_TEMP_EXEC
+    echo  "@$PdBIUVT_TEMP_EXEC  |  mapping  > ""$PdBIUVT_TEMP_LOGT"
+    echo  "@$PdBIUVT_TEMP_EXEC" |  mapping  >  "$PdBIUVT_TEMP_LOGT"
+    
+    if [[ $PdBIUVT_ITER -eq $((${#PdBIUVT_NAME[@]}-1)) ]]; then 
+        cp "$PdBIUVT_SAVE.$PdBIUVT_ITER.uvt" "$PdBIUVT_SAVE.uvt"
+    fi
+    
+    if [[ $PdBIUVT_KEEP_FILES -eq 0 ]]; then
+        rm "$PdBIUVT_SAVE.$PdBIUVT_ITER."*
+    fi
+    
+done
+
+echo "Successufully saved to $PdBIUVT_SAVE.uvt"
+
+
+

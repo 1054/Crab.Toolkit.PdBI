@@ -1,0 +1,46 @@
+! 
+! Usage:
+!     @pdbi-uvt-recomputenoise
+! 
+! Last update: 
+!      2015-07-07 copied from pdbi-uvt-splitpolar
+! 
+
+! LET name 
+
+for i 0 to 0
+    
+    SAY ""
+    SAY Recomputing noise for uvtable 'name'_RNOISE
+    SAY ""
+    
+    !!!!!!!!!!!!!!!!!!!!
+    ! prepare uv_noise !
+    !!!!!!!!!!!!!!!!!!!!
+    
+    SIC COPY 'name'.uvt 'name'_RNOISE.uvt
+    
+    SIC OUTPUT uv_noise_x.init
+    SAY TASK\CHARACTER %UV table%         UVDATA$  'name'_RNOISE.uvt
+    SAY TASK\VALUES    %Range of values%  RANGES$  0 0
+    SAY TASK\CHARACTER %Type of values%    CTYPE$  %CHANNEL%
+    SAY TASK\INTEGER   %Print interval%%   PRINT$  10000
+    SAY TASK\LOGICAL   %Keep flagged%       KEEP$  NO
+    SAY TASK\GO
+    SIC OUTPUT
+    $sed -i -e 's/%/"/g' 'uv_noise_x.init'
+    SIC COPY uv_noise_x.init 'name'_RNOISE.init
+    run uv_noise uv_noise_x.init /NOWINDOW
+    
+    !!!!!!!!!!!!
+    ! go uvmap !
+    !!!!!!!!!!!!
+    
+    let name 'name'_RNOISE
+    go uvmap
+    go view
+    
+next
+
+
+

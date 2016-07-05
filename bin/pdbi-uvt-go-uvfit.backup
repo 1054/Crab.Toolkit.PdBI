@@ -1,0 +1,245 @@
+#!/bin/bash
+# 
+# Input RA Dec
+# Output spec & uvfit
+# 
+PdBIUVT_EXMP=".pdbi-uvt-go-uvfit.mapping"
+PdBIUVT_EXPY=".pdbi-uvt-go-uvfit.py"
+PdBIUVT_STTY=".pdbi-uvt-go-uvfit.tty"
+PdBIUVT_NAME="PACS-867-LINE"
+PdBIUVT_SIZE="30"
+PdBIUVT_VARY=0
+PdBIUVT_VMIN=0
+PdBIUVT_VMAX=0
+PdBIUVT_RANX_OBJT="" # "09:59:38.101"
+PdBIUVT_DECX_OBJT="" # "02:28:57.108"
+# channel width in unit of channel
+PdBIUVT_CHAN_WDTH="0"
+# LANG
+LANG=C
+# CHECK radec2degree
+if [[ $(radec2degree 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo radec2degree not found! Please contact dzliu. 
+    exit
+fi
+# CHECK degree2radec
+if [[ $(degree2radec 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo degree2radec not found! Please contact dzliu. 
+    exit
+fi
+# 
+if [[ "$*" == *"-name "* ]]; then
+PdBIUVT_NAME=$(expr "$*" : '.*-name* \([^ ]*\)')
+PdBIUVT_NAME=$(echo $PdBIUVT_NAME | sed -E 's/[.]uvt$//g')
+fi
+if [[ "$*" == *"-size "* ]]; then
+PdBIUVT_SIZE=$(expr "$*" : '.*-size* \([^ ]*\)')
+fi
+# 
+if [[ "$*" == *"-radec "* ]]; then
+PdBIUVT_RANX_OBJT=$(expr "$*" : '.*-radec *\([^ ]*\)')
+PdBIUVT_DECX_OBJT=$(expr "$*" : '.*-radec *[^ ]* \([^ ]*\)')
+fi
+# 
+if [[ "$*" == *"-vrange "* ]]; then
+PdBIUVT_VMIN=$(expr "$*" : '.*-vrange *\([^ ]*\)')
+PdBIUVT_VMAX=$(expr "$*" : '.*-vrange *[^ ]* \([^ ]*\)')
+fi
+# 
+if [[ "$*" == *"-vary"* || "$*" == *"-varyposition"* ]]; then
+PdBIUVT_VARY=1
+fi
+# 
+if [[ "$*" == *"-pointing "* ]]; then
+if [[ "$*" == *"-pointing "*":"*" "*":"* ]]; then
+PdBIUVT_RANX_CENT=$(expr "$*" : '.*-pointing *\([^ ]*\)')
+PdBIUVT_DECX_CENT=$(expr "$*" : '.*-pointing *[^ ]* \([^ ]*\)')
+PdBIUVT_RAND_CENT=$(radec2degree $PdBIUVT_RANX_CENT $PdBIUVT_DECX_CENT | cut -d ' ' -f 1)
+PdBIUVT_DECD_CENT=$(radec2degree $PdBIUVT_RANX_CENT $PdBIUVT_DECX_CENT | cut -d ' ' -f 2)
+echo 
+echo PdBIUVT_RANX_CENT=$PdBIUVT_RANX_CENT
+echo PdBIUVT_DECX_CENT=$PdBIUVT_DECX_CENT
+echo 
+else
+PdBIUVT_RAND_CENT=$(expr "$*" : '.*-pointing *\([^ ]*\)')
+PdBIUVT_DECD_CENT=$(expr "$*" : '.*-pointing *[^ ]* \([^ ]*\)')
+PdBIUVT_RANX_CENT=$(degree2radec $PdBIUVT_RAND_CENT $PdBIUVT_DECD_CENT | cut -d ' ' -f 1)
+PdBIUVT_DECX_CENT=$(degree2radec $PdBIUVT_RAND_CENT $PdBIUVT_DECD_CENT | cut -d ' ' -f 2)
+echo 
+echo PdBIUVT_RAND_CENT=$PdBIUVT_RAND_CENT
+echo PdBIUVT_DECD_CENT=$PdBIUVT_DECD_CENT
+echo 
+fi
+else
+PdBIUVT_RANX_CENT="00:00:00.000"
+PdBIUVT_DECX_CENT="00:00:00.00"
+fi
+# echo $PdBIUVT_RANX_OBJT $PdBIUVT_DECX_OBJT
+# 
+if [[ x"$PdBIUVT_NAME" == x"" || x"$PdBIUVT_RANX_OBJT" == x"" || x"$PdBIUVT_DECX_OBJT" == x"" ]]; then
+    echo Usage: pdbi-uvt-go-uvfit -name PdBIUVT_NAME[no-suffix] -size 10 -radec RA DEC
+    exit
+fi
+# 
+if [[ h$(echo echo ello | sm 2>/dev/null) != hello ]]; then
+    echo Error! Supermongo not found! sm not working! Exit!
+    exit 1
+fi
+# exit
+# 
+# sexagesimal ra dec to degree ra dec
+if [[ "$PdBIUVT_RANX_OBJT" == *":"* || "$PdBIUVT_RANX_OBJT" == *":"* ]]; then
+PdBIUVT_RAND_OBJT=$(radec2degree $PdBIUVT_RANX_OBJT $PdBIUVT_DECX_OBJT | cut -d ' ' -f 1)
+PdBIUVT_DECD_OBJT=$(radec2degree $PdBIUVT_RANX_OBJT $PdBIUVT_DECX_OBJT | cut -d ' ' -f 2)
+else
+PdBIUVT_RAND_OBJT=$PdBIUVT_RANX_OBJT
+PdBIUVT_DECD_OBJT=$PdBIUVT_DECX_OBJT
+fi
+# 
+PdBIUVT_TEMP_TEXT=$(echo header $PdBIUVT_NAME.uvt | mapping | grep 'Rest Frequency')
+PdBIUVT_TEMP_TEXT=$(echo $PdBIUVT_TEMP_TEXT | sed -e 's/^ *//g' | tr -s ' ') # clean string
+if [[ "$PdBIUVT_TEMP_TEXT" == *"Line Name Rest Frequency"* ]]; then # IF Line Name is Empty
+PdBIUVT_LINE_NAME=""
+PdBIUVT_FREQ_CENT=$(echo $PdBIUVT_TEMP_TEXT | cut -d ' ' -f 7)
+else
+PdBIUVT_LINE_NAME=$(echo $PdBIUVT_TEMP_TEXT | cut -d ' ' -f 5)
+PdBIUVT_FREQ_CENT=$(echo $PdBIUVT_TEMP_TEXT | cut -d ' ' -f 8)
+fi
+echo Freq Center = $PdBIUVT_FREQ_CENT MHz
+# 
+PdBIUVT_TEMP_TEXT=$(echo header $PdBIUVT_NAME.uvt | mapping | grep 'Resolution in Velocity')
+PdBIUVT_TEMP_TEXT=$(echo $PdBIUVT_TEMP_TEXT | sed -e 's/^ *//g' | tr -s ' ') # clean string
+PdBIUVT_VELO_RESL=$(echo $PdBIUVT_TEMP_TEXT | cut -d ' ' -f 4 | sed -e 's/^-//g')
+PdBIUVT_FREQ_RESL=$(echo $PdBIUVT_TEMP_TEXT | cut -d ' ' -f 7)
+echo Freq Resol = $PdBIUVT_FREQ_RESL MHz
+echo Velo Resol = $PdBIUVT_VELO_RESL km/s
+# 
+PdBIUVT_TEMP_TEXT=$(echo header $PdBIUVT_NAME.uvt | mapping | grep 'UV Data *Channels')
+PdBIUVT_TEMP_TEXT=$(echo $PdBIUVT_TEMP_TEXT | sed -e 's/^ *//g' | tr -s ' ') # clean string
+PdBIUVT_CHAN_MINI=$(echo 1)
+PdBIUVT_CHAN_MAXI=$(echo $PdBIUVT_TEMP_TEXT | cut -d ' ' -f 4 | sed -e 's/[,]//g')
+PdBIUVT_CHAN_CENT=$(echo calc $PdBIUVT_CHAN_MAXI / 2.0 + 1.0 | sm)
+echo Channel Min = $PdBIUVT_CHAN_MINI
+echo Channel Max = $PdBIUVT_CHAN_MAXI
+# 
+# read the pointing center of telescope FoV 
+if [[ x"$PdBIUVT_RANX_CENT" == x"00:00:00.000" || x"$PdBIUVT_DECX_CENT" == x"00:00:00.00" ]]; then
+PdBIUVT_TEMP_TEXT=$(echo header $PdBIUVT_NAME.uvt | mapping | grep 'Right Ascension')
+PdBIUVT_TEMP_TEXT=$(echo $PdBIUVT_TEMP_TEXT | sed -e 's/^ *//g' | tr -s ' ') # clean string
+PdBIUVT_RANX_CENT=$(echo $PdBIUVT_TEMP_TEXT | cut -d ' ' -f 3)
+PdBIUVT_DECX_CENT=$(echo $PdBIUVT_TEMP_TEXT | cut -d ' ' -f 5)
+fi
+# <TODO> might be useful -- convert Lii Bii to RA Dec
+# if [[ x"$PdBIUVT_RANX_CENT" == x"00:00:00.000" || x"$PdBIUVT_DECX_CENT" == x"00:00:00.00" ]]; then
+# PdBIUVT_TEMP_TEXT=$(echo header $PdBIUVT_NAME.uvt | mapping | grep 'Lii' | grep 'Bii')
+# PdBIUVT_TEMP_TEXT=$(echo $PdBIUVT_TEMP_TEXT | sed -e 's/^ *//g' | tr -s ' ') # clean string
+# PdBIUVT_LIIX_CENT=$(echo $PdBIUVT_TEMP_TEXT | cut -d ' ' -f 2)
+# PdBIUVT_BIIX_CENT=$(echo $PdBIUVT_TEMP_TEXT | cut -d ' ' -f 4)
+# ~/Software/iraf/iraf.macx.x86_64/noao/bin.macintel/x_astutil.e galactic in_coords="galactic" print_coords=yes << EOF
+# STDIN
+# $PdBIUVT_LIIX_CENT $PdBIUVT_BIIX_CENT 2000.
+# EOF
+# fi
+# <TODO> if telescope pointing not found, then use terminal input RA Dec
+if [[ x"$PdBIUVT_RANX_CENT" == x"00:00:00.000" || x"$PdBIUVT_DECX_CENT" == x"00:00:00.00" ]]; then
+PdBIUVT_RAND_CENT=$PdBIUVT_RAND_OBJT
+PdBIUVT_DECD_CENT=$PdBIUVT_DECD_OBJT
+PdBIUVT_RANX_CENT=$(degree2radec $PdBIUVT_RAND_CENT $PdBIUVT_DECD_CENT | cut -d ' ' -f 1)
+PdBIUVT_DECX_CENT=$(degree2radec $PdBIUVT_RAND_CENT $PdBIUVT_DECD_CENT | cut -d ' ' -f 2)
+else
+PdBIUVT_RAND_CENT=$(radec2degree $PdBIUVT_RANX_CENT $PdBIUVT_DECX_CENT | cut -d ' ' -f 1)
+PdBIUVT_DECD_CENT=$(radec2degree $PdBIUVT_RANX_CENT $PdBIUVT_DECX_CENT | cut -d ' ' -f 2)
+fi
+# 
+PdBIUVT_RANS_OFFT=$(printf "%0.3f\n" $(echo "calc ($PdBIUVT_RAND_OBJT - $PdBIUVT_RAND_CENT) * 3600.0" | sm)) # RA offset
+PdBIUVT_DECS_OFFT=$(printf "%0.3f\n" $(echo "calc ($PdBIUVT_DECD_OBJT - $PdBIUVT_DECD_CENT) * 3600.0" | sm)) # DEC offset
+echo Tel R.A. = $PdBIUVT_RANX_CENT 
+echo Tel Dec. = $PdBIUVT_DECX_CENT 
+echo Tel R.A. = $PdBIUVT_RAND_CENT 
+echo Tel Dec. = $PdBIUVT_DECD_CENT 
+echo Obj R.A. = $PdBIUVT_RAND_OBJT 
+echo Obj Dec. = $PdBIUVT_DECD_OBJT 
+echo Obj R.A. offset = $PdBIUVT_RANS_OFFT arcsec
+echo Obj Dec. offset = $PdBIUVT_DECS_OFFT arcsec
+# 
+# set chan_Width = 0 # 23 channels (23*36 = 828 km/s)
+PdBIUVT_FREQ_MINI=$(echo "calc ($PdBIUVT_CHAN_MINI-$PdBIUVT_CHAN_CENT)*$PdBIUVT_FREQ_RESL+$PdBIUVT_FREQ_CENT" | sm)
+PdBIUVT_FREQ_MAXI=$(echo "calc ($PdBIUVT_CHAN_MAXI-$PdBIUVT_CHAN_CENT)*$PdBIUVT_FREQ_RESL+$PdBIUVT_FREQ_CENT" | sm)
+# set chanFreq = freq1,freq2,freq_Bin
+# 
+# prepare gildas/mapping init and script and run
+PdBIUVT_TEMP_INIT="tmp_doUVFIT.init"
+PdBIUVT_TEMP_EXEC="tmp_doUVFIT.map"
+PdBIUVT_TEMP_LOGT="tmp_doUVFIT.log"
+echo  '! '                                                                                                                  > $PdBIUVT_TEMP_INIT
+echo  '! Task UV_FIT (new version R. Lucas)'                                                                               >> $PdBIUVT_TEMP_INIT
+echo  '! 6 parameters needed for all functions'                                                                            >> $PdBIUVT_TEMP_INIT
+echo  '!'                                                                                                                  >> $PdBIUVT_TEMP_INIT
+echo  'TASK\CHARACTER "UVtable name"                     UVTABLE$       "'$PdBIUVT_NAME'"'                                 >> $PdBIUVT_TEMP_INIT
+echo  'TASK\INTEGER   "Channels: (first,last) 0,0=all"   CHANNEL$[2]     '$PdBIUVT_CHAN_MINI $PdBIUVT_CHAN_MAXI            >> $PdBIUVT_TEMP_INIT
+echo  'TASK\REAL      "UV range: (min,max) in meters"    UV_RANGE$[2]    '"0 800"                                          >> $PdBIUVT_TEMP_INIT
+echo  'TASK\CHARACTER "fit table name"                   RESULT$        "'$PdBIUVT_NAME'"'                                 >> $PdBIUVT_TEMP_INIT
+echo  'TASK\CHARACTER "residuals UVtable"                RESIDUALS$     "'$PdBIUVT_NAME'"'                                 >> $PdBIUVT_TEMP_INIT
+echo  'TASK\INTEGER   "Number of functions"              NF$             '"1"                                              >> $PdBIUVT_TEMP_INIT
+echo  '! '                                                                                                                 >> $PdBIUVT_TEMP_INIT
+echo  '! valid functions are POINT, C_GAUSS, E_GAUSS, C_DISK, E_DISK, RING, EXP, POWER-2, POWER-3'                         >> $PdBIUVT_TEMP_INIT
+echo  '! '                                                                                                                 >> $PdBIUVT_TEMP_INIT
+echo  '! '                                                                                                                 >> $PdBIUVT_TEMP_INIT
+echo  'TASK\CHARACTER "Function #1"                      FUNCT01$       '"POINT"                                           >> $PdBIUVT_TEMP_INIT
+echo  'TASK\REAL      "Parameters"                       PARAM01$[7]    '$PdBIUVT_RANS_OFFT $PdBIUVT_DECS_OFFT 0 0 0 0 0   >> $PdBIUVT_TEMP_INIT
+echo  'TASK\REAL      "Starting range"                   RANGE01$[7]    ' 0 0 0 0 0 0 0                                    >> $PdBIUVT_TEMP_INIT
+if [[ $PdBIUVT_VARY -eq 1 ]]; then
+echo  'TASK\INTEGER   "numb. of starts"                  START01$[7]    ' 0 0 1 1 1 1 1                                    >> $PdBIUVT_TEMP_INIT
+else
+echo  'TASK\INTEGER   "numb. of starts"                  START01$[7]    '-1 -1 1 1 1 1 1                                   >> $PdBIUVT_TEMP_INIT
+fi
+echo  'TASK\LOGICAL   "Subtract function"                SUBSF01$       '"NO"                                              >> $PdBIUVT_TEMP_INIT
+echo  '! '                                                                                                                 >> $PdBIUVT_TEMP_INIT
+echo  '! ---'                                                                                                              >> $PdBIUVT_TEMP_INIT
+echo  '! repeat the following six for each function, changing the variable names ( e.g. FUNCT02$, ... )'                   >> $PdBIUVT_TEMP_INIT
+echo  '! <TODO> more functions if needed '                                                                                 >> $PdBIUVT_TEMP_INIT
+echo  '! '                                                                                                                 >> $PdBIUVT_TEMP_INIT
+echo  '! '                                                                                                                 >> $PdBIUVT_TEMP_INIT
+echo  '! end repeat ---'                                                                                                   >> $PdBIUVT_TEMP_INIT
+echo  '! '                                                                                                                 >> $PdBIUVT_TEMP_INIT
+echo  'TASK\GO'                                                                                                            >> $PdBIUVT_TEMP_INIT
+echo  "let name $PdBIUVT_NAME"                        > $PdBIUVT_TEMP_EXEC
+echo  "let type lmv"                                 >> $PdBIUVT_TEMP_EXEC
+echo  "let size $PdBIUVT_SIZE"                       >> $PdBIUVT_TEMP_EXEC
+echo  "run uv_fit $PdBIUVT_TEMP_INIT /NOWINDOW"      >> $PdBIUVT_TEMP_EXEC
+echo  '@tmp_doUVFIT.map  |  mapping  > '"$PdBIUVT_TEMP_LOGT"
+echo  '@tmp_doUVFIT.map' |  mapping  >  "$PdBIUVT_TEMP_LOGT"
+# 
+# 
+# Get the Result of Velocity
+PdBIUVT_VELO_OBJT=$(grep 'Velocity=' "$PdBIUVT_TEMP_LOGT" | cut -c 60- | sed -e 's/=//g' | tr -s ' ' | cut -d ' ' -f 2)
+# 
+# Get the Result of Flux
+PdBIUVT_FLUX_OBJT=$(grep 'POINT *FLUX *=' "$PdBIUVT_TEMP_LOGT" | sed -e 's/[()=]//g' | tr -s ' ' | cut -d ' ' -f 3)
+PdBIUVT_FERR_OBJT=$(grep 'POINT *FLUX *=' "$PdBIUVT_TEMP_LOGT" | sed -e 's/[()=]//g' | tr -s ' ' | cut -d ' ' -f 4)
+PdBIUVT_FMOD_OBJT=$(grep 'POINT *FLUX *=' "$PdBIUVT_TEMP_LOGT" | sed -e 's/[()=]//g' | tr -s ' ' | cut -d ' ' -f 1)
+PdBIUVT_FUNT_OBJT=$(grep 'POINT *FLUX *=' "$PdBIUVT_TEMP_LOGT" | sed -e 's/[()=]//g' | tr -s ' ' | cut -d ' ' -f 1)
+                    grep 'POINT *FLUX *=' "$PdBIUVT_TEMP_LOGT" | sed -e 's/[()=]//g'             > tmp_ObjFlux
+                    grep 'Velocity=' "$PdBIUVT_TEMP_LOGT" | cut -c 60- | sed -e 's/=//g'         > tmp_ObjVelo
+# 
+# do plot
+sm << EOF
+    set freq_Cen = $PdBIUVT_FREQ_CENT # MHz
+    set ra_Obj = $PdBIUVT_RAND_OBJT
+    set de_Obj = $PdBIUVT_DECD_OBJT
+    set id_Str = {"$PdBIUVT_NAME"}
+    set velo_Bin = $PdBIUVT_VELO_RESL
+    set velo_low = $PdBIUVT_VMIN
+    set velo_high = $PdBIUVT_VMAX
+    echo 
+    echo set freq_Cen = $PdBIUVT_FREQ_CENT # MHz
+    echo set ra_Obj = $PdBIUVT_RAND_OBJT
+    echo set de_Obj = $PdBIUVT_DECD_OBJT
+    echo set id_Str = {"$PdBIUVT_NAME"}
+    echo set velo_Bin = $PdBIUVT_VELO_RESL
+    echo macro read \""$(dirname $0)/pdbi-uvt-go-uvfit.sm"\" goUVFIT_PlotVeloAmpl
+    echo 
+    macro read "$(dirname $0)/pdbi-uvt-go-uvfit.sm" goUVFIT_PlotVeloAmpl
+EOF
+# open tmp_doUVFIT.eps
+

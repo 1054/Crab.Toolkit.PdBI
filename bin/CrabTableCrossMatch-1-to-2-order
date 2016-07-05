@@ -1,0 +1,67 @@
+#!/bin/bash
+if [[ $# -lt 3 ]]; then
+    echo "Usage: "
+    echo "    CrabTableCrossMatch-1-to-2  InputTable1  OutputTable1  ReferenceTable2  [MatchingColumnOfTable1(=1) [MatchingColumnOfTable2(=1)]]"
+    exit
+fi
+# 
+# which column should be used as the cross-match value?
+crtb_crossmatch_col1=1; if [[ x"$4" != x ]]; then crtb_crossmatch_col1=$4; fi
+crtb_crossmatch_col2=1; if [[ x"$5" != x ]]; then crtb_crossmatch_col2=$5; fi
+# 
+crtb_crossmath_newf="$2"
+echo -n We are about to write new file "$crtb_crossmath_newf", OK? "[y/n] "
+read crtb_crossmath_ok
+if [[ x"$crtb_crossmath_ok" != x"y"* && x"$crtb_crossmath_ok" != x"Y"* ]]; then
+    echo "Abort! We have done no change to any file. "
+    exit
+fi
+if [[ -f $crtb_crossmath_newf ]]; then
+    rm $crtb_crossmath_newf
+fi
+# 
+crtb_crossmath_tab2="$3"
+if [[ ! -f $crtb_crossmath_tab2 ]]; then
+    echo Error! The reference table file "$crtb_crossmath_tab2" does not exist?! Exit!
+    exit
+fi
+# 
+crtb_crossmath_tab1="$1"
+crtb_crossmath_rowi=0
+OLD_IFS="$IFS" ## see http://stackoverflow.com/questions/18055073/how-do-i-preserve-leading-whitespaces-with-echo-on-a-shell-script
+IFS=
+while read crtb_crossmath_row1
+do
+    # first read all starting empty lines and comment lines as header
+    crtb_crossmath_grep=$(echo "$crtb_crossmath_row1" | sed -e 's/^ *//g' | sed -e 's/^#.*$//g' | grep -v -E '^$' | wc -l)
+    if [[ $crtb_crossmath_grep -eq 0 ]]; then
+        echo "$crtb_crossmath_row1" >> "$crtb_crossmath_newf"
+    else 
+        break
+    fi
+done < "$crtb_crossmath_tab1"
+while read crtb_crossmath_row2
+do
+    # first check empty line or comment line
+    crtb_crossmath_grep=$(echo "$crtb_crossmath_row2" | sed -e 's/^ *//g' | sed -e 's/^#.*$//g' | grep -v -E '^$' | wc -l)
+    if [[ $crtb_crossmath_grep -gt 0 ]]; then
+        crtb_crossmath_mot2=$(echo "$crtb_crossmath_row2" | sed -e 's/^ *//g' | tr -s ' ' | cut -d ' ' -f $crtb_crossmatch_col2)
+        IFS=$'\n'
+        crtb_crossmath_row1=($(cat "$crtb_crossmath_tab1" | grep -E "[^0-9.+-]*$crtb_crossmath_mot2[^0-9.+-]*"))
+        IFS=
+        if [[ ${#crtb_crossmath_row1[@]} -gt 0 ]]; then
+            for (( i=0; i<${#crtb_crossmath_row1[@]}; i++ )); do
+                # cross match
+                crtb_crossmath_mot1=$(echo "${crtb_crossmath_row1[$i]}" | sed -e 's/^ *//g' | tr -s ' ' | cut -d ' ' -f $crtb_crossmatch_col1)
+                echo "$crtb_crossmath_rowi : $crtb_crossmath_mot1 : $crtb_crossmath_mot2"
+                if [[ "$crtb_crossmath_mot2" == "$crtb_crossmath_mot1" ]]; then 
+                    echo "${crtb_crossmath_row1[$i]}" >> "$crtb_crossmath_newf"
+                    break
+                fi
+            done
+        fi
+    fi
+    crtb_crossmath_rowi=$(expr $crtb_crossmath_rowi + 1)
+done < "$crtb_crossmath_tab2"
+IFS="$OLD_IFS"
+# 

@@ -1,0 +1,112 @@
+#!/bin/bash
+# 
+# spec plot
+# 
+PdBIUVT_SPEC=""
+PdBIUVT_COLN="1"
+PdBIUVT_COLF="5"
+PdBIUVT_OUTP="tmp-pdbi-spec-plot-output.pdf"
+PdBIUVT_COLORS=(blue seagreen firebrick magenta orange brown)
+PdBIUVT_LTYPES=(0    1        2         3       0      1    )
+PdBIUVT_smooth=1
+PdBIUVT_restfreq=""
+PdBIUVT_redshift=""
+# 
+if [[ "$*" == *"-spec"* ]]; then
+PdBIUVT_SPEC=($(expr "$*" : '.*-spec* \(.*\)' | sed -e 's/ -.*$//g'))
+echo Read ${#PdBIUVT_SPEC[@]} spec data: ${PdBIUVT_SPEC[@]}
+fi
+if [[ "$*" == *"-colfreq"* ]]; then
+PdBIUVT_COLN=$(expr "$*" : '.*-colfreq* \([^ ]*\)')
+fi
+if [[ "$*" == *"-colflux"* ]]; then
+PdBIUVT_COLN=$(expr "$*" : '.*-colflux* \([^ ]*\)')
+fi
+if [[ "$*" == *"-out"* ]]; then
+PdBIUVT_OUTP=$(expr "$*" : '.*-out* \([^ ]*\)')
+fi
+if [[ "$*" == *"-smooth"* ]]; then
+PdBIUVT_smooth=$(expr "$*" : '.*-smooth* \([^ ]*\)')
+fi
+if [[ "$*" == *"-restfreq"* ]]; then
+PdBIUVT_restfreq=$(expr "$*" : '.*-restfreq* \([^ ]*\)')
+fi
+if [[ "$*" == *"-redshift"* ]]; then
+PdBIUVT_redshift=$(expr "$*" : '.*-redshift* \([^ ]*\)')
+fi
+# 
+if [[ x"$PdBIUVT_SPEC" == x"" ]]; then
+    echo Usage: pdbi-spec-plot -spec spec1.dat spec2.dat spec3.dat -colfreq 1 -colflux 5 -redshift 2.5125 -restfreq 576.2679305 
+    exit
+fi
+# 
+rm ".pdbi-spec-plot.sm" 2>/dev/null
+echo "go"                                                       >> ".pdbi-spec-plot.sm"
+echo "    device pdf \"$PdBIUVT_OUTP\""                         >> ".pdbi-spec-plot.sm"
+echo "    define TeX_strings 1"                                 >> ".pdbi-spec-plot.sm"
+echo "    xtcolours"                                            >> ".pdbi-spec-plot.sm"
+echo "    declare full_freq 0"                                  >> ".pdbi-spec-plot.sm"
+echo "    declare full_flux 0"                                  >> ".pdbi-spec-plot.sm"
+for (( i=0; i<${#PdBIUVT_SPEC[@]}; i++ )); do
+    echo "    data \"${PdBIUVT_SPEC[$i]}\""                     >> ".pdbi-spec-plot.sm"
+    echo "    read {freq $PdBIUVT_COLN flux $PdBIUVT_COLF}"     >> ".pdbi-spec-plot.sm"
+    echo "    set flux = flux * 1.35"                           >> ".pdbi-spec-plot.sm"
+    echo "    set full_freq = full_freq concat freq"            >> ".pdbi-spec-plot.sm"
+    echo "    set full_flux = full_flux concat flux"            >> ".pdbi-spec-plot.sm"
+done
+echo "    limits full_freq full_flux"                           >> ".pdbi-spec-plot.sm"
+echo "    location 4000 31000 5000 28000"                       >> ".pdbi-spec-plot.sm"
+echo "    expand 1.35 lweight 3.0 box"                          >> ".pdbi-spec-plot.sm"
+echo "    expand 2.05 lweight 3.5 xlabel FREQUENCY [GHz]"       >> ".pdbi-spec-plot.sm"
+echo "    expand 2.05 lweight 3.5 ylabel FLUX DENSITY [mJy]"    >> ".pdbi-spec-plot.sm"
+echo "    ctype default expand 2.5 lweight 3.0 ltype 1"         >> ".pdbi-spec-plot.sm"
+echo "    rel \$fx1 0.0 draw \$fx2 0.0"                         >> ".pdbi-spec-plot.sm"
+echo "    ctype default expand 2.5 lweight 3.0 ltype 0"         >> ".pdbi-spec-plot.sm"
+for (( i=0; i<${#PdBIUVT_SPEC[@]}; i++ )); do
+    echo "    data \"${PdBIUVT_SPEC[$i]}\""                     >> ".pdbi-spec-plot.sm"
+    echo "    read {freq $PdBIUVT_COLN flux $PdBIUVT_COLF}"     >> ".pdbi-spec-plot.sm"
+    echo "    ctype ${PdBIUVT_COLORS[$i]} lweight 3.0"          >> ".pdbi-spec-plot.sm"
+    echo "    ltype ${PdBIUVT_LTYPES[$i]} lweight 3.0"          >> ".pdbi-spec-plot.sm"
+    echo "    if($PdBIUVT_smooth>1) { "                         >> ".pdbi-spec-plot.sm"
+    echo "        set flux_ori = flux "                         >> ".pdbi-spec-plot.sm"
+    echo "        smooth flux_ori flux $PdBIUVT_smooth"         >> ".pdbi-spec-plot.sm"
+    echo "    }"                                                >> ".pdbi-spec-plot.sm"
+    echo "    histogram freq flux"                              >> ".pdbi-spec-plot.sm"
+    echo "    #SHADE HISTOGRAM 20 freq flux"                    >> ".pdbi-spec-plot.sm"
+    echo "    ctype default lweight 3.0"                        >> ".pdbi-spec-plot.sm"
+done
+echo "    relocate (5000 $(bc <<< 5000+900*${#PdBIUVT_SPEC[@]}))"        >> ".pdbi-spec-plot.sm"
+for (( i=0; i<${#PdBIUVT_SPEC[@]}; i++ )); do
+    echo "    ctype ${PdBIUVT_COLORS[$i]} expand 1.05 lweight 3.0"       >> ".pdbi-spec-plot.sm"
+    echo "    puts \"$(echo ${PdBIUVT_SPEC[$i]}|sed -e 's/_/\\_/g')\""   >> ".pdbi-spec-plot.sm"
+    echo "    ctype default expand 2.5 lweight 3.0 ltype 0"              >> ".pdbi-spec-plot.sm"
+done
+if [[ x"$PdBIUVT_redshift" != x && x"$PdBIUVT_restfreq" != x ]]; then
+    PdBIUVT_linefreq=$(sm <<< "calc ($PdBIUVT_restfreq)/(1.0+$PdBIUVT_redshift)")
+    PdBIUVT_linefreL=$(sm <<< "calc ($PdBIUVT_restfreq-1.0)/(1.0+$PdBIUVT_redshift)")
+    PdBIUVT_linefreR=$(sm <<< "calc ($PdBIUVT_restfreq+1.0)/(1.0+$PdBIUVT_redshift)")
+    echo "    ctype default expand 2.5 lweight 5.0 ltype 0"              >> ".pdbi-spec-plot.sm"
+    echo "    ctype magenta"                                             >> ".pdbi-spec-plot.sm"
+    echo "    rel  $PdBIUVT_linefreq \$(1.00*\$fy2+0.00*\$fy1)"          >> ".pdbi-spec-plot.sm"
+    echo "    draw $PdBIUVT_linefreq \$(0.88*\$fy2+0.12*\$fy1)"          >> ".pdbi-spec-plot.sm"
+    echo "    rel  $PdBIUVT_linefreq \$(0.88*\$fy2+0.12*\$fy1)"          >> ".pdbi-spec-plot.sm"
+    echo "    draw $PdBIUVT_linefreL \$(0.92*\$fy2+0.08*\$fy1)"          >> ".pdbi-spec-plot.sm"
+    echo "    rel  $PdBIUVT_linefreq \$(0.88*\$fy2+0.12*\$fy1)"          >> ".pdbi-spec-plot.sm"
+    echo "    draw $PdBIUVT_linefreR \$(0.92*\$fy2+0.08*\$fy1)"          >> ".pdbi-spec-plot.sm"
+    echo "    rel  $PdBIUVT_linefreR \$(0.94*\$fy2+0.06*\$fy1)"          >> ".pdbi-spec-plot.sm"
+    echo "    expand 1.05 lweight 3.0 puts \\\\nu=$PdBIUVT_restfreq GHz" >> ".pdbi-spec-plot.sm"
+    echo "    expand 1.05 lweight 3.0 puts z=$PdBIUVT_redshift"          >> ".pdbi-spec-plot.sm"
+    echo "    ctype default expand 2.5 lweight 3.0 ltype 0"              >> ".pdbi-spec-plot.sm"
+fi
+echo "    device nodevice"                                               >> ".pdbi-spec-plot.sm"
+echo ""                                                                  >> ".pdbi-spec-plot.sm"
+echo ""                                                                  >> ".pdbi-spec-plot.sm"
+# 
+echo "sm <<< \"macro read \\\".pdbi-spec-plot.sm\\\" go\""
+      sm <<< "macro read \".pdbi-spec-plot.sm\" go"
+echo "Output to figure file: \"$PdBIUVT_OUTP\"!"
+# 
+echo "Done!"
+
+
+

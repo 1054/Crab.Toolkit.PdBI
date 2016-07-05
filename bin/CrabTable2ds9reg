@@ -1,0 +1,124 @@
+#!/bin/bash
+if [[ $# -lt 1 ]]; then
+    echo "Usage: CrabTable2ds9reg scosmos_mips_24_GO3_200810.tbl ds9.scosmos_mips_24_GO3_200810.fk5.reg -id 1 -ra 2 -de 3 -note 5 -radius 1.3 -color green [-image]"
+    echo "       For example, if -note refers to spec-z column, then we will append the spec-z text to the id text, like \"GN20,4.055\"."
+    exit
+else 
+    inputfile="$1"
+    echo "$inputfile"
+fi
+if [[ $# -lt 2 ]]; then
+    outputfile=$(echo "ds9.${1}.fk5.reg")
+else 
+    outputfile="$2"
+fi
+# id ra dec columns
+ctcolid=1
+ctcolra=2
+ctcolde=3
+ctcolnote=0  # note -- added 20160123 -- append to source ID
+if [[ "$*" == *"-id "* ]]; then
+ctcolid=$(expr "$*" : '.*-id \([^ ]*\)')
+fi
+if [[ "$*" == *"-ra "* ]]; then
+ctcolra=$(expr "$*" : '.*-ra \([^ ]*\)')
+fi
+if [[ "$*" == *"-de "* ]]; then
+ctcolde=$(expr "$*" : '.*-de \([^ ]*\)')
+fi
+if [[ "$*" == *"-dec "* ]]; then
+ctcolde=$(expr "$*" : '.*-dec \([^ ]*\)')
+fi
+if [[ "$*" == *"-note "* ]]; then
+ctcolnote=$(expr "$*" : '.*-note \([^ ]*\)')
+fi
+echo using column $ctcolid as ID
+echo using column $ctcolra as RA
+echo using column $ctcolde as Dec
+if [[ $ctcolnote -gt 0 ]]; then
+echo using column $ctcolnote as Note
+fi
+# color
+ctcolor="green"
+if [[ "$*" == *"-color "* ]]; then
+ctcolor=$(expr "$*" : '.*-color \([^ ]*\)')
+fi
+# radius
+ctccrad=1.3
+if [[ "$*" == *"-radius "* ]]; then
+ctccrad=$(expr "$*" : '.*-radius \([^ ]*\)')
+fi
+# point
+ctpoint=0
+if [[ "$*" == *"-point "* || "$*" == *"-point" ]]; then
+ctpoint=1
+fi
+# image/fk5
+ctctype="fk5"
+if [[ "$*" == *"-image"* ]]; then
+ctctype="image"
+fi
+# sky2xy
+ctsky2xy=""
+if [[ "$*" == *"-sky2xy "* ]]; then
+if [[ $(sky2xy 2>&1 | wc -l) -eq 1 ]]; then echo "Error! wcstools sky2xy not found!"; exit; fi # check wcstools
+ctsky2xy=$(expr "$*" : '.*-sky2xy \([^ ]*\)') # this fits is used for sky2xy
+if [[ ! -f "$ctsky2xy" ]]; then echo "Error! $ctsky2xy not found!"; exit; fi
+fi
+# xy2sky
+ctxy2sky=""
+if [[ "$*" == *"-xy2sky "* ]]; then
+if [[ $(xy2sky 2>&1 | wc -l) -eq 1 ]]; then echo "Error! wcstools sky2xy not found!"; exit; fi # check wcstools
+ctxy2sky=$(expr "$*" : '.*-xy2sky \([^ ]*\)') # this fits is used for xy2sky
+if [[ ! -f "$ctxy2sky" ]]; then echo "Error! $ctxy2sky not found!"; exit; fi
+fi
+# delimeters
+# TODO
+# 
+if [[ x"$outputfile" != x ]]; then
+    echo "# Region file format: DS9 version 4.1" > "$outputfile"
+    echo "global color=$ctcolor dashlist=8 3 width=1 font=\"helvetica 8 normal roman\" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1" >> "$outputfile"
+    echo "$ctctype"
+    echo "$ctctype" >> "$outputfile"
+else
+    echo Error! Output file not given!
+    exit 1
+fi
+# 
+cat "$inputfile" | while read -r line; do
+    if [[ x"$line" != x ]]; then
+     #  if [[ $(echo "$line" | grep -E "^ *SCOSMOS.*" | wc -l) -eq 1 ]]; then
+     #  if [[ $(echo "$line" | grep -E "^ *[0-9]+" | wc -l) -eq 1 ]]; then
+        if [[ $(echo "$line" | grep -v -E "^[\|#]" | wc -l) -eq 1 ]]; then
+            trimline=$(echo $line | sed -e 's/^ *//g')
+            # echo $trimline
+            trimcol1=$(echo $trimline | tr -s ' ' | cut -d ' ' -f $ctcolid) # id
+            trimcol2=$(echo $trimline | tr -s ' ' | cut -d ' ' -f $ctcolra) # ra
+            trimcol3=$(echo $trimline | tr -s ' ' | cut -d ' ' -f $ctcolde) # dec
+            if [[ $ctcolnote -gt 0 ]]; then
+            trimcol4=$(echo $trimline | tr -s ' ' | cut -d ' ' -f $ctcolnote) # note -- added 20160123 -- append to source ID
+            trimcol4=$(echo ",$trimcol4") # note -- added 20160123 -- append to source ID
+            else 
+            trimcol4=""
+            fi
+            # convert sky2xy
+            if [[ x"$ctsky2xy" != x ]]; then 
+              ctsky2xy_converted=$(sky2xy "$ctsky2xy" $trimcol2 $trimcol3)
+              trimcol2=$(echo $ctsky2xy_converted | tr -s ' ' | cut -d ' ' -f 5) # x
+              trimcol3=$(echo $ctsky2xy_converted | tr -s ' ' | cut -d ' ' -f 6) # y
+            fi
+            if [[ x"$ctxy2sky" != x ]]; then 
+              ctxy2sky_converted=$(xy2sky -d -n 7 "$ctxy2sky" $trimcol2 $trimcol3)
+              trimcol2=$(echo $ctxy2sky_converted | tr -s ' ' | cut -d ' ' -f 1) # ra
+              trimcol3=$(echo $ctxy2sky_converted | tr -s ' ' | cut -d ' ' -f 2) # dec
+            fi
+            if [[ "$ctpoint" -eq 1 ]]; then
+                echo "point($trimcol2,$trimcol3) # point=boxcircle $(bc <<< $ctccrad/1) text={${trimcol1}${trimcol4}}" >> "$outputfile"
+                echo "point($trimcol2,$trimcol3) # point=boxcircle $(bc <<< $ctccrad/1) text={${trimcol1}${trimcol4}}"
+            else
+                echo "circle($trimcol2,$trimcol3,$ctccrad\") # text={${trimcol1}${trimcol4}}" >> "$outputfile"
+                echo "circle($trimcol2,$trimcol3,$ctccrad\") # text={${trimcol1}${trimcol4}}"
+            fi
+        fi
+    fi
+done

@@ -1,0 +1,117 @@
+#!/bin/bash
+# 
+# Input: casa-ms-split output files *.chan.freq.spw*.txt
+# Output: run idl to plot the spw
+# 
+# 
+# LANG
+LANG=C
+# CHECK bc
+if [[ $(bc <<< 1+2 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo Error! gnu tool bc not found! Exit!
+    exit 1
+fi
+#echo Go
+# CHECK IDL
+if type idl 2>/dev/null | grep -q -w idl; then
+    echo "Found IDL"
+else
+    echo "Error! IDL not found or not working! \"echo \"print, 'hello'\" | idl\" not working! Exit!"
+    exit 1
+fi
+# 
+# Read input parameters
+# 
+CASAMS_NAME=()
+CASAMS_SAVE="run_dzliu_temp_plot_spw"
+CASAMS_REDSHIFT="0"
+CASAMS_GOOD=1
+CASAMS_TSTR=""
+CASAMS_RPAR=""
+while [[ "$#" -gt 0 ]]; do
+    #echo $1
+    CASAMS_TSTR=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+    case "$CASAMS_TSTR" in
+          "-name") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="name";;
+           "-out") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_SAVE="$1";;
+      "-redshift") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_REDSHIFT="$1";;
+    esac
+    if [[ "$CASAMS_RPAR" == "name" ]];  then 
+        CASAMS_NAME=(${CASAMS_NAME[@]} "$1")
+    fi
+    shift
+done
+# 
+# Check input parameters -- if not passed then print usage and exit
+# 
+if [[ ${#CASAMS_NAME[@]} -eq 0 ]]; then
+    CASAMS_GOOD=0
+fi
+if [[ x"$CASAMS_SAVE" == x ]]; then
+    CASAMS_GOOD=0
+else
+    CASAMS_SAVE=$(echo "$CASAMS_SAVE" | sed -e 's/.eps$//g' | sed -e 's/.EPS$//g')
+fi
+if [[ $CASAMS_GOOD -eq 0 ]]; then
+    echo "Usage: casa-ms-split-plot-spw -name *.chan.freq.spw*.txt -redshift 2.5 -out run_dzliu_temp_plot_spw"
+    exit
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#
+# readlink for Mac (because Mac readlink does not accept "-f" option)
+if [[ $(uname) == *"Darwin"* ]]; then
+    function readlink() {
+        if [[ $# -gt 1 ]]; then if [[ "$1" == "-f" ]]; then shift; fi; fi
+        DIR=$(echo "${1%/*}"); (cd "$DIR" && echo "$(pwd -P)/$(basename ${1})")
+    }
+fi
+# 
+# get current path and the "pdbi_uvt_super_combine_spw.pro"
+CASAMS_PWD=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+
+#echo '!PATH=!PATH+'\":${CASAMS_PWD}\"' & PdBI_UVT_Super_Combine_SPW, ['\"$(echo ${CASAMS_NAME[@]} | sed -e 's/ /\",\"/g')\"'], '\"$CASAMS_SAVE\"
+#idlo '!PATH=!PATH+'\":${CASAMS_PWD}\"' & PdBI_UVT_Super_Combine_SPW, ['\"$(echo ${CASAMS_NAME[@]} | sed -e 's/ /\",\"/g')\"'], '\"$CASAMS_SAVE\"
+echo "Running IDL"
+printf "%s\n" "#!/bin/bash"                           >  "$CASAMS_SAVE.bash"
+printf "%s\n" "#"                                     >> "$CASAMS_SAVE.bash"
+printf "%s\n" "IDL_PATH=\"\$IDL_PATH:+$CASAMS_PWD\""  >> "$CASAMS_SAVE.bash"
+printf "%s" "idl -quiet"                              >> "$CASAMS_SAVE.bash"
+printf "%s" " -e \"CrabSpecQuickLook\""               >> "$CASAMS_SAVE.bash"
+printf "%s" " -args "                                 >> "$CASAMS_SAVE.bash"
+for (( i=0; i<${#CASAMS_NAME[@]}; i++ )); do
+    printf "%s" "\"${CASAMS_NAME[i]}\" "              >> "$CASAMS_SAVE.bash"
+done
+printf "%s" "SaveEPS=\"${CASAMS_SAVE}\" "             >> "$CASAMS_SAVE.bash"
+printf "%s" "Redshift=\"${CASAMS_REDSHIFT}\" "        >> "$CASAMS_SAVE.bash"
+printf "%s" "XTitle=\"Frequency [GHz]\" "             >> "$CASAMS_SAVE.bash"
+printf "%s" "YTitle=\"Data Set\" "                    >> "$CASAMS_SAVE.bash"
+printf "\n"                                           >> "$CASAMS_SAVE.bash"
+chmod a+x                                                "$CASAMS_SAVE.bash"
+cat                                                      "$CASAMS_SAVE.bash"
+echo ""
+# 
+if id $USER | grep -q -w nointernetusergroup; then
+    # This can speed up IDL a lot
+    sg nointernetusergroup "./$CASAMS_SAVE.bash"
+else
+    "./$CASAMS_SAVE.bash"
+fi
+
+

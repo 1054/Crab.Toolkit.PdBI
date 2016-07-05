@@ -1,0 +1,114 @@
+#!/bin/bash
+# 
+# Input uvt
+# Output uvt with single polarization
+# 
+# Last update:
+#    2016-06-28 rewritting & beautifing
+# 
+# 
+PdBIUVT_EXMP=".pdbi-uvt-go-uvfit.mapping"
+PdBIUVT_EXPY=".pdbi-uvt-go-uvfit.py"
+PdBIUVT_STTY=".pdbi-uvt-go-uvfit.tty"
+PdBIUVT_NAME=()
+# LANG
+LANG=C
+# CHECK bc
+if [[ $(echo "3.1415926535 * 3" | bc -l 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! gnu tool bc not found! Exit!"
+    exit 1
+fi
+# CHECK awk
+if [[ $(echo "Go" | awk "NR==1" 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! gnu tool awk not found! Exit!"
+    exit 1
+fi
+# CHECK mapping
+if [[ $(echo "say hello" | mapping 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! GILDAS mapping not found! Exit!"
+    exit 1
+fi
+# 
+# Read input parameters
+# 
+PdBIUVT_GOOD=1
+PdBIUVT_TSTR=""
+PdBIUVT_RPAR=""
+while [[ "$#" -gt 0 ]]; do
+    # echo $1
+    PdBIUVT_TSTR=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+    case "$PdBIUVT_TSTR" in
+          "-name") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR=""; PdBIUVT_NAME="$1";;
+    esac
+    shift
+done
+# 
+# Check input parameters -- uvt file name
+# 
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]]; then
+    PdBIUVT_GOOD=0
+else
+    for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do 
+        # remove file extension suffix
+        PdBIUVT_NAME[i]=$(echo ${PdBIUVT_NAME[i]} | sed -E 's/[.]uvt$//g')
+        # check file existence
+        if [[ ! -f "${PdBIUVT_NAME[i]}.uvt" ]]; then
+            echo ""; echo "Error! The input uvt file \"${PdBIUVT_NAME[i]}.uvt\" was not found!"; echo ""; exit
+        fi
+    done
+fi
+# 
+# Check input parameters -- if not passed then print usage and exit
+# 
+if [[ $PdBIUVT_GOOD -eq 0 ]]; then
+    echo "Usage: pdbi-uvt-go-split-polar -name PdBIUVT_NAME.uvt"
+    exit
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 
+# Loop input uvt files
+# 
+for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do 
+    echo "Checking \"${PdBIUVT_NAME[i]}.uvt\""
+    if [[ ! -f "${PdBIUVT_NAME[i]}.uvt.header.txt" ]]; then
+        echo "header ${PdBIUVT_NAME[i]}.uvt" | mapping > "${PdBIUVT_NAME[i]}.uvt.header.txt"
+    fi
+    if [[ -f "${PdBIUVT_NAME[i]}.uvt.header.txt" ]]; then
+        PdBIUVT_Stokes=$(grep "Stokes: " "${PdBIUVT_NAME[i]}.uvt.header.txt" | sed -E 's/.*Stokes: *([0-9]*) *.*/\1/g')
+    else
+        echo ""; echo "Error! Could not run \"header ${PdBIUVT_NAME[i]}.uvt\" in GILDAS mapping and create \"${PdBIUVT_NAME[i]}.uvt.header.txt\"!"; echo ""; exit
+    fi
+    if [[ $PdBIUVT_Stokes -le 1 ]]; then
+        echo "Warning! The number of stokes in \"${PdBIUVT_NAME[i]}.uvt\" is already one, no need to split and combine!"
+    else
+        echo "Splitting \"${PdBIUVT_NAME[i]}.uvt\" polarizations and merge into single data with GILDAS mapping uv_splitpolar"
+        # check output file existence
+        if [[ -f "${PdBIUVT_NAME[i]}_spolar.uvt" ]]; then
+            echo "Warning! \"${PdBIUVT_NAME[i]}_spolar.uvt\" exists! Backup as \"${PdBIUVT_NAME[i]}_spolar.uvt.backup\"!"
+            mv "${PdBIUVT_NAME[i]}_spolar.uvt" "${PdBIUVT_NAME[i]}_spolar.uvt.backup"
+        fi
+        echo "TASK\\FILE      \"\"      INPUT\$ \"${PdBIUVT_NAME[i]}.uvt\""           > "${PdBIUVT_NAME[i]}_spolar.uvt.mapping.init"
+        echo "TASK\\FILE      \"\"     OUTPUT\$ \"${PdBIUVT_NAME[i]}_spolar.uvt\""   >> "${PdBIUVT_NAME[i]}_spolar.uvt.mapping.init"
+        echo "TASK\\CHARACTER \"\"     STOKES\$ \"NONE\""                            >> "${PdBIUVT_NAME[i]}_spolar.uvt.mapping.init"
+        echo "TASK\\GO"                                                              >> "${PdBIUVT_NAME[i]}_spolar.uvt.mapping.init"
+        echo "run uv_splitpolar ${PdBIUVT_NAME[i]}_spolar.uvt.mapping.init /NOWINDOW" > "${PdBIUVT_NAME[i]}_spolar.uvt.mapping"
+        echo "@${PdBIUVT_NAME[i]}_spolar.uvt.mapping" | mapping                       > "${PdBIUVT_NAME[i]}_spolar.uvt.mapping.log"
+        echo "header ${PdBIUVT_NAME[i]}_spolar.uvt" | mapping                         > "${PdBIUVT_NAME[i]}_spolar.uvt.header.txt"
+    fi
+done
+
+
+
+echo "Done!"

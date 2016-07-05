@@ -1,0 +1,43 @@
+#!/bin/bash
+# 
+# common caller for dzliu tools:
+#=  CrabFitsHeader
+#=  CrabFitsImageCrop
+#=  CrabPhotAperPhot
+#=  CrabPhotRingPhot
+#=  CrabPhotImageStatistics
+#=  CrabPhotMonteCarlo
+#=  CrabTableReadColumn
+#=  CrabTableReadInfo
+#=  degree2radec
+#=  radec2degree
+#=  lumdist
+#=  ttyecho
+#=  float2hex
+#=  hex2float
+#=  double2hex
+#=  hex2double
+# 
+# for ff in $(cat CrabFitsHeader | grep "^#= " | tr -s ' ' | cut -d ' ' -f 2); do cp CrabFitsHeader $ff; done
+#   
+# 
+# Linux
+if [[ $(uname -s) == Linux ]]; then
+    if [[ $(bc <<< "$(ldd --version | head -n 1 | tr -s ' ' | cut -d ' ' -f 4 | cut -d '.' -f 2) < 14") -eq 1 ]]; then
+        # For computer with old GLIBC version <TODO> Experimental
+        $(dirname $0)/bin_linux_Glibc_2.12/$(basename $0)_linux_x86_64 $*
+    else
+        $(dirname $0)/bin_linux/$(basename $0)_linux_x86_64 $*
+    fi
+fi
+# Darwin
+if [[ $(uname -s) == Darwin ]]; then
+    $(dirname $0)/bin_mac/$(basename $0)_mac $*
+fi
+# Cygwin
+if [[ $(uname -s) == *CYGWIN* ]]; then
+    $(dirname $0)/bin_cygwin/$(basename $0)_cygwin_x86.exe $*
+fi
+
+
+

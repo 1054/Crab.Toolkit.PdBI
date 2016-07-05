@@ -1,0 +1,330 @@
+#!/bin/bash
+# 
+# Input *.uvt
+# Output combined uvf
+# 
+# Last update:
+#    2015-03-23 make vrange also a list
+# 
+# Example test
+#     cd /home/dzliu/Temp/20160627_ALMA_H2O_van_der_Werf_2012/Level_3_Split/Try_1_split_spw
+#     pdbi-uvt-super-combine-spw -name split_Eyelash_spw0_spolar.uvt split_Eyelash_spw4_spolar.uvt -out aaa
+# 
+# 
+# LANG
+LANG=C
+# CHECK radec2degree
+if [[ $(radec2degree 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo Error! radec2degree not found! Please contact dzliu. 
+    exit 1
+fi
+# CHECK degree2radec
+if [[ $(degree2radec 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo Error! degree2radec not found! Please contact dzliu. 
+    exit 1
+fi
+# CHECK bc
+if [[ $(bc <<< 1+2 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo Error! gnu tool bc not found! Exit!
+    exit 1
+fi
+# CHECK awk
+if [[ $(echo "Go" | awk "NR==1" 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo Error! gnu tool awk not found! Exit!
+    exit 1
+fi
+# CHECK supermongo
+if [[ x$(echo echo hello | sm 2>/dev/null | tail -n 1) != xhello ]]; then
+    echo "Error! Supermongo not found or not working! \"echo echo hello | sm\" not working! Exit!"
+    exit 1
+fi
+#echo Go
+# CHECK IDL
+if type idl 2>/dev/null | grep -q -w idl; then
+    echo "Found IDL"
+else
+    echo "Error! IDL not found or not working! \"echo \"print, 'hello'\" | idl\" not working! Exit!"
+    exit 1
+fi
+# 
+# Read input parameters
+# 
+PdBIUVT_NAME=()
+PdBIUVT_SAVE=""
+PdBIUVT_GOOD=1
+PdBIUVT_TSTR=""
+PdBIUVT_RPAR=""
+while [[ "$#" -gt 0 ]]; do
+    #echo $1
+    PdBIUVT_TSTR=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+    case "$PdBIUVT_TSTR" in
+          "-name") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="name";;
+           "-out") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR=""; PdBIUVT_SAVE="$1";;
+    esac
+    if [[ "$PdBIUVT_RPAR" == "name" ]];  then 
+        PdBIUVT_NAME=(${PdBIUVT_NAME[@]} "$1")
+    fi
+    shift
+done
+# 
+# Check input parameters -- if not passed then print usage and exit
+# 
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]]; then
+    PdBIUVT_GOOD=0
+fi
+if [[ x"$PdBIUVT_SAVE" == x ]]; then
+    PdBIUVT_GOOD=0
+fi
+if [[ $PdBIUVT_GOOD -eq 0 ]]; then
+    echo "Usage: pdbi-uvt-super-combine-spw -name 1.uvt 2.uvt 3.uvt -out m.uvt"
+    exit
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#
+# readlink for Mac (because Mac readlink does not accept "-f" option)
+if [[ $(uname) == *"Darwin"* ]]; then
+    function readlink() {
+        if [[ $# -gt 1 ]]; then if [[ "$1" == "-f" ]]; then shift; fi; fi
+        DIR=$(echo "${1%/*}"); (cd "$DIR" && echo "$(pwd -P)/$(basename ${1})")
+    }
+fi
+# 
+# get current path and the "pdbi_uvt_super_combine_spw.pro"
+PdBIUVT_PWD=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+
+#echo '!PATH=!PATH+'\":${PdBIUVT_PWD}\"' & PdBI_UVT_Super_Combine_SPW, ['\"$(echo ${PdBIUVT_NAME[@]} | sed -e 's/ /\",\"/g')\"'], '\"$PdBIUVT_SAVE\"
+#idlo '!PATH=!PATH+'\":${PdBIUVT_PWD}\"' & PdBI_UVT_Super_Combine_SPW, ['\"$(echo ${PdBIUVT_NAME[@]} | sed -e 's/ /\",\"/g')\"'], '\"$PdBIUVT_SAVE\"
+echo "Running IDL"
+printf "%s\n" "#!/bin/bash"                           >  "$PdBIUVT_SAVE.bash"
+printf "%s\n" "#"                                     >> "$PdBIUVT_SAVE.bash"
+printf "%s\n" "IDL_PATH=\"\$IDL_PATH:+$PdBIUVT_PWD\"" >> "$PdBIUVT_SAVE.bash"
+printf "%s" "idl -quiet"                              >> "$PdBIUVT_SAVE.bash"
+printf "%s" " -e \"PdBI_UVT_Super_Combine_SPW\""      >> "$PdBIUVT_SAVE.bash"
+printf "%s" " -args "                                 >> "$PdBIUVT_SAVE.bash"
+for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do
+    printf "%s" "\"${PdBIUVT_NAME[i]}\" "             >> "$PdBIUVT_SAVE.bash"
+done
+printf "%s" "\"${PdBIUVT_SAVE}\""                     >> "$PdBIUVT_SAVE.bash"
+printf "\n"                                           >> "$PdBIUVT_SAVE.bash"
+chmod a+x                                                "$PdBIUVT_SAVE.bash"
+cat                                                      "$PdBIUVT_SAVE.bash"
+echo ""
+#idlsgexec
+#idlsgexec 'PRINT, !PATH'
+#idlsgexec "PdBI_UVT_Super_Combine_SPW" "${PdBIUVT_NAME[@]}" "$PdBIUVT_SAVE"
+if id $USER | grep -q -w nointernetusergroup; then
+    # This can speed up IDL a lot
+    sg nointernetusergroup "./$PdBIUVT_SAVE.bash"
+else
+    "./$PdBIUVT_SAVE.bash"
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###   # 
+###   # 
+###   # 
+###   # 
+###   # 
+###   # 
+###   # 
+###   # 
+###   # 
+###   # Define functions
+###   function gildashex2int() {
+###       if [[ $# -ge 1 ]]; then xxd -u -s $2 -l 4 "$1"
+###         echo "ibase=16;"$(xxd -ps -u -s $2 -l 4 "$1" | sed -E 's/(.)(.)/\2\1/g' | rev) | bc
+###       fi
+###   }
+###   function gildashex2long() {
+###       if [[ $# -ge 2 ]]; then xxd -u -s $2 -l 8 "$1"
+###         echo "ibase=16;"$(xxd -ps -u -s $2 -l 8 "$1" | sed -E 's/(.)(.)/\2\1/g' | rev) | bc
+###       fi
+###   }
+###   function gildashex2char() {
+###       if [[ $# -ge 3 ]]; then 
+###           xxd -u -s $(echo $2 | sed -E 's/^([0]+)([0-9]+)/\2/g') -l $(echo $3 | sed -E 's/^([0]+)([0-9]+)/\2/g')       "$1"
+###           xxd -u -s $(echo $2 | sed -E 's/^([0]+)([0-9]+)/\2/g') -l $(echo $3 | sed -E 's/^([0]+)([0-9]+)/\2/g') -c 30 "$1" | grep -oE "[^ ]+[ ]*$"
+###       fi
+###   }
+###   function gildashex2float() {
+###       if [[ $# -ge 2 ]]; then xxd -u -s $2 -l 4 "$1"
+###               hex2float $(xxd -ps -u -s $2 -l 4 "$1")
+###       fi
+###   }
+###   function gildashex2double() {
+###       if [[ $# -ge 2 ]]; then xxd -u -s $2 -l 8 "$1"
+###              hex2double $(xxd -ps -u -s $2 -l 8 "$1")
+###       fi
+###   }
+###   # 
+###   # 
+###   # 
+###   # 
+###   # 
+###   # 
+###   # 
+###   # 
+###   # 
+###   # Check consistency
+###   # 
+###   PdBIUVT_SOURCENAME=""
+###   PdBIUVT_POINTINGRA=""
+###   PdBIUVT_POINTINGDE=""
+###   PdBIUVT_CHANNELWID=""
+###   PdBIUVT_ReferChann=0
+###   PdBIUVT_TotalChann=0
+###   PdBIUVT_TotalBytes=0
+###   for (( PdBIUVT_i=0; PdBIUVT_i<${#PdBIUVT_NAME[@]}; PdBIUVT_i++ )); do
+###       # 
+###       # Read UVT file name
+###       PdBIUVT_NAME="${PdBIUVT_NAME[$PdBIUVT_i]}"
+###       echo "Checking consistency for \"$PdBIUVT_NAME\""
+###       # 
+###       # Check UVT format
+###       #       echo "gildashex2char \"$PdBIUVT_NAME\" 0x164 7"
+###       TempUVT_Str=$(gildashex2char  "$PdBIUVT_NAME"  0x164 7 | tail -n 1)
+###       #echo $TempUVT_Str
+###       if [[ x"$TempUVT_Str" != x"UV-DATA" ]]; then
+###           echo ""
+###           echo "********************************************************************"
+###           echo "Error! The input file \"$PdBIUVT_NAME\" does not have UV-DATA format!"
+###           echo "********************************************************************"
+###           echo ""
+###           exit 1
+###           #continue
+###       fi
+###       # 
+###       # Debug
+###       # 
+###       # Read UVT binary
+###       PdBIUVT_HEADNAXIS1=$(gildashex2int     "$PdBIUVT_NAME"  0x050     | tail -n 1) # NAXIS1 -- Number of Channels
+###       PdBIUVT_HEADNAXIS2=$(gildashex2int     "$PdBIUVT_NAME"  0x058     | tail -n 1) # NAXIS2 -- Number of Visibilities
+###       PdBIUVT_HEADCRPIX1=$(gildashex2double  "$PdBIUVT_NAME"  0x0A8     | tail -n 1) # CRPIX1 -- Reference Channel Number
+###       PdBIUVT_HEADCRVAL2=$(gildashex2double  "$PdBIUVT_NAME"  0x0B0     | tail -n 1) # CRVAL1 -- Reference Channel Frequency
+###       PdBIUVT_HEADCDELT1=$(gildashex2double  "$PdBIUVT_NAME"  0x0B8     | tail -n 1) # CDELT1 -- Increment Channel Width
+###       PdBIUVT_HEADCRPIX2=$(gildashex2double  "$PdBIUVT_NAME"  0x0C0     | tail -n 1) # CRPIX2 -- Reference Visibility Number
+###       PdBIUVT_HEADCRVAL2=$(gildashex2double  "$PdBIUVT_NAME"  0x0C8     | tail -n 1) # CRVAL2 -- Reference Visibility Value
+###       PdBIUVT_HEADCDELT2=$(gildashex2double  "$PdBIUVT_NAME"  0x0D0     | tail -n 1) # CDELT2 -- Increment Visibility 
+###       PdBIUVT_HEADSOURCE=$(gildashex2char    "$PdBIUVT_NAME"  0x208 024 | tail -n 1) # SOURCE NAME
+###       PdBIUVT_HEADRIGHTA=$(gildashex2double  "$PdBIUVT_NAME"  0x24C     | tail -n 1) # RA in radian (/!PI*180=degree)
+###       PdBIUVT_HEADDECLIN=$(gildashex2double  "$PdBIUVT_NAME"  0x254     | tail -n 1) # Dec in radian (/!PI*180=degree)
+###       PdBIUVT_HEADCHANNS=$(gildashex2int     "$PdBIUVT_NAME"  0x2D4     | tail -n 1) # Number of Channs
+###       PdBIUVT_HEADVISIBS=$(gildashex2int     "$PdBIUVT_NAME"  0x2D8     | tail -n 1) # Number of Visibs
+###       PdBIUVT_HEADSTOKES=$(gildashex2int     "$PdBIUVT_NAME"  0x2E0     | tail -n 1) # Number of Stokes
+###       # 
+###       # Set first read info as the default one for consistentcy check
+###       if [[ x"$PdBIUVT_SOURCENAME" == x"" ]]; then
+###           PdBIUVT_SOURCENAME="$PdBIUVT_HEADSOURCE"
+###       fi
+###       if [[ x"$PdBIUVT_POINTINGRA" == x"" ]]; then
+###           PdBIUVT_POINTINGRA="$PdBIUVT_HEADRIGHTA"
+###       fi
+###       if [[ x"$PdBIUVT_POINTINGDE" == x"" ]]; then
+###           PdBIUVT_POINTINGDE="$PdBIUVT_HEADDECLIN"
+###       fi
+###       if [[ x"$PdBIUVT_CHANNELWID" == x"" ]]; then
+###           PdBIUVT_CHANNELWID="$PdBIUVT_HEADCDELT1"
+###       fi
+###       # 
+###       # do the consistency check, TODO, RA Dec tolerant
+###       if [[ x"$PdBIUVT_SOURCENAME" != x"$PdBIUVT_HEADSOURCE" ]]; then
+###           echo ""
+###           echo "***************************************************************************************"
+###           echo "Error! The XXX is inconsistent for \"$PdBIUVT_NAME\"!"
+###           echo "PdBIUVT_SOURCENAME = \"$PdBIUVT_SOURCENAME\" but this uvt has \"$PdBIUVT_HEADSOURCE\"!"
+###           echo "***************************************************************************************"
+###           echo ""
+###           exit 2
+###       fi
+###       if [[ x"$PdBIUVT_POINTINGRA" != x"$PdBIUVT_HEADRIGHTA" ]]; then
+###           echo ""
+###           echo "***************************************************************************************"
+###           echo "Error! The XXX is inconsistent for \"$PdBIUVT_NAME\"!"
+###           echo "PdBIUVT_POINTINGRA = \"$PdBIUVT_POINTINGRA\" but this uvt has \"$PdBIUVT_HEADRIGHTA\"!"
+###           echo "***************************************************************************************"
+###           echo ""
+###           exit 2
+###       fi
+###       if [[ x"$PdBIUVT_POINTINGDE" != x"$PdBIUVT_HEADDECLIN" ]]; then
+###           echo ""
+###           echo "***************************************************************************************"
+###           echo "Error! The XXX is inconsistent for \"$PdBIUVT_NAME\"!"
+###           echo "PdBIUVT_POINTINGDE = \"$PdBIUVT_POINTINGDE\" but this uvt has \"$PdBIUVT_HEADDECLIN\"!"
+###           echo "***************************************************************************************"
+###           echo ""
+###           exit 2
+###       fi
+###       if [[ x"$PdBIUVT_CHANNELWID" != x"$PdBIUVT_HEADCDELT1" ]]; then
+###           echo ""
+###           echo "***************************************************************************************"
+###           echo "Error! The XXX is inconsistent for \"$PdBIUVT_NAME\"!"
+###           echo "PdBIUVT_CHANNELWID = \"$PdBIUVT_CHANNELWID\" but this uvt has \"$PdBIUVT_HEADCDELT1\"!"
+###           echo "***************************************************************************************"
+###           echo ""
+###           exit 2
+###       fi
+###       # 
+###       # Till now, we have passed the consistency check. 
+###       if [[ $PdBIUVT_i -eq 0 ]]; then
+###           # copy header 1024 bytes
+###           echo "dd if=\"$PdBIUVT_NAME\" of=\"$PdBIUVT_SAVE\" bs=1024 skip=0 seek=0 count=1024"
+###                 dd if="$PdBIUVT_NAME"   of="$PdBIUVT_SAVE"   bs=1024 skip=0 seek=0 count=1024
+###           PdBIUVT_TotalBytes=1024
+###       fi
+###       # 
+###       # add Channel Number
+###       # 
+###       # copy uvwddnnRIW data
+###       PdBIUVT_DATASIZEUNIT=$(bc -l <<< "4.0*(7+3*$PdBIUVT_HEADSTOKES*$PdBIUVT_HEADNAXIS1)")
+###       if [[ x"$PdBIUVT_DATASIZEUNIT" == x"" ]]; then
+###           echo ""
+###           echo "Error! Could not determine data size unit from Stokes and Channel Number! This should not happen! Please concact dzliu and provide more details!"
+###           echo ""
+###           exit 3
+###       fi
+###       echo "dd if=\"$PdBIUVT_NAME\" of=\"$PdBIUVT_SAVE\" bs=$PdBIUVT_DATASIZEUNIT skip=1024 seek=1024 count=$PdBIUVT_HEADNAXIS2"
+###             dd if="$PdBIUVT_NAME"   of="$PdBIUVT_SAVE"   bs=$PdBIUVT_DATASIZEUNIT skip=1024 seek=1024 count=$PdBIUVT_HEADNAXIS2
+###       PdBIUVT_TotalChann=$(bc -l <<< "$PdBIUVT_TotalChann + $PdBIUVT_HEADNAXIS")
+###       # 
+###       # NO
+###       # WE SHOULD STILL MAKE SURE THAT IN EACH VISIBIITY U V W ARE CONSISTENT!!!
+###       # MUST USE IDL TO DO THE CHECK!!!
+###   done
+###   
+###   
+###   

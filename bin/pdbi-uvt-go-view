@@ -1,0 +1,58 @@
+#!/bin/bash
+# 
+# go view
+# 
+PdBIUVT_EXMP=".pdbi-uvt-go-view.mapping"
+PdBIUVT_EXPY=".pdbi-uvt-go-view.py"
+PdBIUVT_STTY=".pdbi-uvt-go-view.tty"
+PdBIUVT_NAME=""
+PdBIUVT_SIZE="25"
+# 
+if [[ "$*" == *"-name"* ]]; then
+PdBIUVT_NAME=$(expr "$*" : '.*-name* \([^ ]*\)')
+PdBIUVT_NAME=$(echo $PdBIUVT_NAME | sed -E 's/[.]uvt$//g')
+echo uv table $PdBIUVT_NAME
+fi
+if [[ "$*" == *"-size"* ]]; then
+PdBIUVT_SIZE=$(expr "$*" : '.*-size* \([^ ]*\)')
+fi
+# 
+if [[ x"$PdBIUVT_NAME" == x"" ]]; then
+    echo Usage: pdbi-uvt-go-view -name PdBIUVT_NAME[no-suffix]
+    exit
+fi
+# 
+echo !                       > $PdBIUVT_EXMP
+echo LET NAME $PdBIUVT_NAME >> $PdBIUVT_EXMP
+echo LET SIZE $PdBIUVT_SIZE >> $PdBIUVT_EXMP
+echo GO UVMAP               >> $PdBIUVT_EXMP
+echo GO NOISE               >> $PdBIUVT_EXMP
+echo GO VIEW                >> $PdBIUVT_EXMP
+# 
+xterm -title "pdbi-uvt-go-view-mapping" -e "tty > $PdBIUVT_STTY; bash" &
+# 
+while [[ $(ps aux | grep 'xterm -title pdbi-uvt-go-view-mapping' | wc -l) -eq 1 ]]; do
+sleep 0.25
+done
+sleep 0.25
+# 
+while [[ $(ls -1 $PdBIUVT_STTY 2>/dev/null | wc -l) -ne 1 ]]; do
+sleep 0.25
+done
+sleep 0.25
+# 
+echo sudo ttyecho -n $(cat $PdBIUVT_STTY) mapping
+sudo ttyecho -n $(cat $PdBIUVT_STTY) mapping
+# 
+sleep 0.25
+# 
+echo sudo ttyecho -n $(cat $PdBIUVT_STTY) @$PdBIUVT_EXMP
+sudo ttyecho -n $(cat $PdBIUVT_STTY) @$PdBIUVT_EXMP
+# 
+#echo '#!/usr/bin/env python'                                                     > $PdBIUVT_EXPY
+#echo "import subprocess"                                                        >> $PdBIUVT_EXPY
+#echo "fp = open(\"$(cat $PdBIUVT_STTY)\",'w')"                                  >> $PdBIUVT_EXPY
+##echo "subprocess.Popen(\"echo @$PdBIUVT_EXMP\",shell=True,stdout=fp,stderr=fp)" >> $PdBIUVT_EXPY
+#echo "subprocess.Popen('mapping',stdout=fp, stderr=fp)"              >> $PdBIUVT_EXPY
+#chmod a+x $PdBIUVT_EXPY ; ./$PdBIUVT_EXPY
+

@@ -1,0 +1,236 @@
+! 
+! 
+! Usage:
+! 
+!     Please first define these:
+!     
+!     IF (.NOT.EXIST(obs_names)) DEFINE CHARACTER*30   obs_names[18]  /GLOBAL
+!     IF (.NOT.EXIST(obs_files)) DEFINE CHARACTER*200  obs_files[18]  /GLOBAL
+!     IF (.NOT.EXIST(obs_count)) DEFINE INTEGER        obs_count      /GLOBAL
+!     IF (.NOT.EXIST(obs_id))    DEFINE INTEGER        obs_id         /GLOBAL
+!     LET obs_count = 1
+!     LET obs_id = 1
+!     LET obs_names[1] = Obj1
+!     LET obs_files[1] = P1
+!     @doClick
+! 
+! 
+! DEFS
+IF (.NOT.EXIST(obs_names)) THEN
+IF (.NOT.EXIST(obs_names)) DEFINE CHARACTER*30   obs_names[10]  /GLOBAL
+IF (.NOT.EXIST(obs_files)) DEFINE CHARACTER*200  obs_files[10]  /GLOBAL
+IF (.NOT.EXIST(obs_count)) DEFINE INTEGER        obs_count      /GLOBAL
+IF (.NOT.EXIST(obs_id))    DEFINE INTEGER        obs_id         /GLOBAL
+LET obs_count = 1
+LET obs_id = 1
+LET obs_names[1] = 'name'
+LET obs_files[1] = 'name'
+ENDIF
+! 
+! OBJS
+!!DEFINE INTEGER obs_plot
+!!DEFINE CHARACTER*200 obj_list[20]
+!!ACCEPT obj_list /COLUMN "Source_Field_List_X3e5_Xa6" /FORMAT "7x,A"
+! 
+! DEFS
+DEFINE REAL diff_x diff_y diff_k
+DEFINE REAL doClick_Button1X doClick_Button1Y doClick_Button2X doClick_Button2Y
+LET doClick_Button1X = 21.2 
+LET doClick_Button1Y = 2.96
+LET doClick_Button2X = 24.2 
+LET doClick_Button2Y = 2.96
+! LET doClick_Button1X = -2.00
+! LET doClick_Button1Y = 19.0
+! LET doClick_Button2X = -0.00
+! LET doClick_Button2Y = 19.0
+! 
+! PLOT
+! let obs_id = 1 ! let's start from the beginning
+let name = 'obs_files[obs_id]'
+let type lmv
+! let size 6.5
+go noise
+let spacing noise
+go view
+SAY "--- "
+SAY "    obs_id = "'obs_id'
+SAY "    "'obs_files[obs_id]'
+SAY "--- "
+! SET COORDINATES CHARACTER
+! DRAW TEXT 21.2 1.96 "PREV" 5 /BOX 1 ! "DRAW 5"=mid-center; "BOX 1"=lower-left;
+! DRAW TEXT 24.2 1.96 "NEXT" 5 /BOX 1 ! "DRAW 5"=mid-center; "BOX 1"=lower-left;
+PEN 6
+IF (obs_id.GT.1)         DRAW TEXT doClick_Button1X doClick_Button1Y "PREV" 5
+IF (obs_id.LT.obs_count) DRAW TEXT doClick_Button2X doClick_Button2Y "NEXT" 5
+PEN 0
+! 
+! 
+FOR /WHILE (.true.) ! Infinite loop
+    DRAW RELOCATE
+    IF (cursor_code.EQ."E") BREAK
+    IF (cursor_code.EQ."Q") BREAK
+    LET diff_k = 0.0
+    LET diff_x = ABS(PHY_CURS[1]-BOX_XMIN-doClick_Button1X)
+    LET diff_y = ABS(PHY_CURS[2]-BOX_YMIN-doClick_Button1Y)
+    IF (diff_x.LT.0.55).AND.(diff_y.LT.0.22) LET diff_k = -99 ! PREV BUTTON CLICKED !
+    LET diff_x = ABS(PHY_CURS[1]-BOX_XMIN-doClick_Button2X)
+    LET diff_y = ABS(PHY_CURS[2]-BOX_YMIN-doClick_Button2Y)
+    IF (diff_x.LT.0.55).AND.(diff_y.LT.0.22) LET diff_k = +99 ! NEXT BUTTON CLICKED !
+    
+    ! EXAM diff_x diff_y
+    ! EXAM PHY_CURS PIX_CURS USE_CURS
+    
+    SAY " "
+    SAY "--- "
+    EXAM cursor_code
+    SAY "Click mouse for coordinate, press F for uvfit, press Q or E to quit. "
+    SAY "--- "
+    SAY " "
+    
+    IF (diff_k.LT.-10) THEN
+       IF (obs_id.GT.1) THEN 
+           SAY "PREV! "
+           LET obs_id = obs_id-1
+           LET name = 'obs_files[obs_id]'
+           go noise
+           let spacing noise
+           go view
+           SAY "--- "
+           SAY "    obs_id = "'obs_id'
+           SAY "    "'obs_files[obs_id]'
+           SAY "--- "
+       ELSE 
+           SAY "--- "
+           SAY "NO MORE!"
+           SAY "--- "
+       ENDIF
+       PEN 6
+       IF (obs_id.GT.1)         DRAW TEXT doClick_Button1X doClick_Button1Y "PREV" 5
+       IF (obs_id.LT.obs_count) DRAW TEXT doClick_Button2X doClick_Button2Y "NEXT" 5
+       PEN 0
+       ! BREAK
+    ELSE IF (diff_k.GT.+10) THEN
+       IF (obs_id.LT.obs_count) THEN 
+           SAY "NEXT! "
+           LET obs_id = obs_id+1
+           LET name = 'obs_files[obs_id]'
+           go noise
+           let spacing noise
+           go view
+           SAY "--- "
+           SAY "    obs_id = "'obs_id'
+           SAY "    "'obs_files[obs_id]'
+           SAY "--- "
+       ELSE 
+           SAY "NO MORE!"
+       ENDIF
+       PEN 6
+       IF (obs_id.GT.1)         DRAW TEXT doClick_Button1X doClick_Button1Y "PREV" 5
+       IF (obs_id.LT.obs_count) DRAW TEXT doClick_Button2X doClick_Button2Y "NEXT" 5
+       PEN 0
+       ! BREAK
+    ELSE 
+        
+        IF (PHY_CURS[1].GT.BOX_XMIN).AND.(PHY_CURS[1].LT.BOX_XMAX).AND.(PHY_CURS[2].GT.BOX_YMIN).AND.(PHY_CURS[2].LT.BOX_YMAX) THEN
+            SAY "--- "
+            DRAW VALUE PHY_CURS[1]-BOX_XMIN PHY_CURS[2]-BOX_YMIN
+        ENDIF
+        
+        IF ((cursor_code.EQ."P")) THEN
+            SAY "--- "
+            SAY "--- HARDCOPY"
+            SAY "--- "
+            HARDCOPY 'name'.FOV.'size[1]'.'size[2]'.eps /OVERWRITE
+        ENDIF
+        
+        IF ((cursor_code.EQ."F").OR.((cursor_code.EQ."G"))) THEN
+            SAY "--- "
+            SAY "--- UV_FIT"
+            SAY "--- "
+            ! EXAM PHY_CURS
+            ! EXAM PHY_CURS
+            ! EXAM PIX_CURS ! 512x512
+            ! EXAM USE_CURS ! rad.
+            ! EXAM POSITION ! normalized device coordinate
+            SAY Offset arcsec 'USE_CURS[1]/3.1415926*180.0*3600.0' 'USE_CURS[2]/3.1415926*180.0*3600.0'
+            ! 
+            ! DRAW A CROSS ! Note that when you draw USE_CURS will change !
+            PEN 6 /WEIGHT 3
+            DRAW LINE     'USE_CURS[1]' 'USE_CURS[2]-0.25/3600.0/180.0*3.1415926' /USER
+            DRAW LINE     'USE_CURS[1]' 'USE_CURS[2]+0.25/3600.0/180.0*3.1415926' /USER
+            DRAW LINE     'USE_CURS[1]' 'USE_CURS[2]+0.25/3600.0/180.0*3.1415926' /USER
+            DRAW LINE     'USE_CURS[1]' 'USE_CURS[2]-0.25/3600.0/180.0*3.1415926' /USER
+            DRAW LINE     'USE_CURS[1]-0.25/3600.0/180.0*3.1415926' 'USE_CURS[2]' /USER
+            DRAW LINE     'USE_CURS[1]+0.25/3600.0/180.0*3.1415926' 'USE_CURS[2]' /USER
+            DRAW LINE     'USE_CURS[1]+0.25/3600.0/180.0*3.1415926' 'USE_CURS[2]' /USER
+            DRAW LINE     'USE_CURS[1]-0.25/3600.0/180.0*3.1415926' 'USE_CURS[2]' /USER
+            PEN 0 /WEIGHT 1
+            ! 
+            ! PREPARE UV_FIT INIT (POINT)
+            $touch doClick_uvfit.init
+            IF (cursor_code.EQ."F") THEN
+            SIC OUTPUT doClick_uvfit.init
+            SAY TASK\CHARACTER %UVTABLE% UVTABLE$ %'name'%
+            SAY TASK\INTEGER   %CHANNEL% CHANNEL$[2] 0 0
+            SAY TASK\REAL      %UVRANGE% UV_RANGE$[2] 0 5000
+            SAY TASK\CHARACTER %UVTABLE% RESULT$ %'name'.uvfit.1.out%
+            SAY TASK\CHARACTER %UVTABLE% RESIDUALS$ %'name'.uvfit.1.uvt%
+            SAY TASK\INTEGER   %FUNCNUM% NF$ 1
+            SAY TASK\CHARACTER %FUNC001% FUNCT01$ %POINT%
+            SAY TASK\REAL      %FUNCPAR% PARAM01$[7] 'USE_CURS[1]/3.1415926*180.0*3600.0' 'USE_CURS[2]/3.1415926*180.0*3600.0' 1.0 0 0 0 0
+            SAY TASK\REAL      %PARPROF% RANGE01$[7] 0 0 0 0 0 0 0
+            SAY TASK\INTEGER   %PARVARY% START01$[7] 0 0 0 0 0 0 0
+            SAY TASK\LOGICAL   %FUNSUBS% SUBSF01$ NO
+            SAY TASK\GO
+            SIC OUTPUT
+            ENDIF
+            ! 
+            ! PREPARE UV_FIT INIT (C_GAUSS)
+            $touch doClick_uvfit.init
+            IF (cursor_code.EQ."G") THEN
+            SIC OUTPUT doClick_uvfit.init
+            SAY TASK\CHARACTER %UVTABLE% UVTABLE$ %'name'%
+            SAY TASK\INTEGER   %CHANNEL% CHANNEL$[2] 0 0
+            SAY TASK\REAL      %UVRANGE% UV_RANGE$[2] 0 5000
+            SAY TASK\CHARACTER %UVTABLE% RESULT$ %'name'.uvfit.2.out%
+            SAY TASK\CHARACTER %UVTABLE% RESIDUALS$ %'name'.uvfit.2.uvt%
+            SAY TASK\INTEGER   %FUNCNUM% NF$ 1
+            SAY TASK\CHARACTER %FUNC001% FUNCT01$ %C_GAUSS%
+            SAY TASK\REAL      %FUNCPAR% PARAM01$[7] 'USE_CURS[1]/3.1415926*180.0*3600.0' 'USE_CURS[2]/3.1415926*180.0*3600.0' 1.0 0.1 0.8 20 0
+            SAY TASK\REAL      %PARPROF% RANGE01$[7] 0 0 0 0 0 0 0
+            SAY TASK\INTEGER   %PARVARY% START01$[7] 0 0 0 0 0 0 0
+            SAY TASK\LOGICAL   %FUNSUBS% SUBSF01$ NO
+            SAY TASK\GO
+            SIC OUTPUT
+            ENDIF
+            ! 
+            ! DO SOME EDIT
+            $sed -i -e 's/%/"/g' 'doClick_uvfit.init'
+            ! 
+            ! DO SOME CLEAN
+            SIC FIND "doClick_uvfit.init-e"
+            IF (DIR%NFILE.GT.0) SIC DELETE "doClick_uvfit.init-e"
+            ! 
+            ! RUN UV_FIT IN WINDOW
+            run uv_fit doClick_uvfit.init
+            ! 
+            ! HARD COPY (POINT)
+            IF (cursor_code.EQ."F") THEN
+            SIC FIND 'name'.uvfit.1.eps
+            IF (DIR%NFILE.GT.0) SIC DELETE 'name'.uvfit.1.eps
+            hardcopy 'name'.uvfit.1.eps
+            ENDIF
+            ! 
+            ! HARD COPY (C_GAUSS)
+            IF (cursor_code.EQ."G") THEN
+            SIC FIND 'name'.uvfit.2.eps
+            IF (DIR%NFILE.GT.0) SIC DELETE 'name'.uvfit.2.eps
+            hardcopy 'name'.uvfit.2.eps
+            ENDIF
+            ! 
+            ! READ RESULTS
+            ! TODO
+        ENDIF
+        
+    ENDIF
+NEXT

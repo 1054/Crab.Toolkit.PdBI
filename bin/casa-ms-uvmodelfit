@@ -1,0 +1,307 @@
+#!/bin/bash
+# 
+# Input field, name, width, 
+# Output python script file (split,cvel,exportuvfits,uvmodelfit)
+# 
+# Last update:
+#    2015-04-02 created
+# 
+CASAMS_VIS="" # dataset name
+CASAMS_FID="0" # field id (SrcId)
+CASAMS_NOM="" # source name (Name)
+CASAMS_FEQ="" # obs freq
+CASAMS_SPW=(0) # spw
+CASAMS_WID="" # width for each spw
+CASAMS_ITERATION=5  # iteration number
+CASAMS_MODELTYPE=()  # model type, P, G, D
+CASAMS_SOURCEPAR=() # double array, 
+CASAMS_VARIEDPAR=() # boolean array,
+CASAMS_YES=0 # answer yes for any prompting
+# 
+# Read input parameters
+# 
+if [[ "$#" -eq 0 ]]; then
+    echo Usage: casa-ms-uvmodelfit -vis calibrated.ms -field 3 -name CDFS344 -freq 344 -width 3840
+    exit
+fi
+# 
+# Read input parameters
+# 
+CASAMS_GOOD=1
+CASAMS_RPAR=""
+while [[ "$#" -gt 0 ]]; do
+    # echo $1
+    case $1 in
+           "-vis") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_VIS="$1";;
+          "-name") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_NOM="$1";;
+        "-source") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_NOM="$1";;
+         "-field") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_FID="$1";;
+          "-freq") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_FEQ="$1";;
+      "-restfreq") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_FEQ="$1";;
+     "-frequency") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_FEQ="$1";;
+         "-width") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_WID="$1";;
+           "-spw") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="spw";;
+         "-radec") if [[ "$#" -lt 3 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="radec";;
+     "-sourcepar") if [[ "$#" -lt 4 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="sourcepar";;
+       "-varypar") if [[ "$#" -lt 4 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="varypar";;
+     "-modeltype") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="modeltype";;
+          "-iter") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_ITERATION="$1";;
+     "-iteration") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_ITERATION="$1";;
+           "-yes")                                                            CASAMS_RPAR=""; CASAMS_YES=1;;
+    esac
+    if [[ "$CASAMS_RPAR" == "spw" ]];  then 
+        if [[ "$#" -eq 0 ]]; then
+            break
+        fi
+        CASAMS_SPW=("${CASAMS_SPW[@]}" "$1")
+        # echo CASAMS_SPW="${CASAMS_SPW[@]}"
+    fi
+    if [[ "$CASAMS_RPAR" == "radec" ]];  then 
+        if [[ "$#" -lt 2 ]]; then
+            break
+        fi
+        if [[ "$1" == *":"*":"* ]]; then
+            CASAMS_RANX=("${CASAMS_RANX[@]}" "$1")
+            CASAMS_TEMP=$(radec2degree "$1" "$2" | cut -d ' ' -f 1)
+            CASAMS_RAND=("${CASAMS_RAND[@]}" "$CASAMS_TEMP")
+        else
+            CASAMS_RAND=("${CASAMS_RAND[@]}" "$1")
+            CASAMS_TEMP=$(degree2radec "$1" "$2" | cut -d ' ' -f 1)
+            CASAMS_RANX=("${CASAMS_RANX[@]}" "$CASAMS_TEMP")
+        fi
+        if [[ "$2" == *":"*":"* ]]; then
+            CASAMS_DECX=("${CASAMS_DECX[@]}" "$2")
+            CASAMS_TEMP=$(radec2degree "$1" "$2" | cut -d ' ' -f 2)
+            CASAMS_DECD=("${CASAMS_DECD[@]}" "$CASAMS_TEMP")
+        else
+            CASAMS_DECD=("${CASAMS_DECD[@]}" "$2")
+            CASAMS_TEMP=$(degree2radec "$1" "$2" | cut -d ' ' -f 2)
+            CASAMS_DECX=("${CASAMS_DECX[@]}" "$CASAMS_TEMP")
+        fi
+        shift
+    fi
+    if [[ "$CASAMS_RPAR" == "modeltype" ]];  then 
+        if [[ "$#" -eq 0 ]]; then
+            break
+        fi
+        CASAMS_MODELTYPE=("${CASAMS_MODELTYPE[@]}" "$1")
+        # echo CASAMS_MODELTYPE="${CASAMS_MODELTYPE[@]}"
+    fi
+    if [[ "$CASAMS_RPAR" == "sourcepar" ]];  then 
+        if [[ "$#" -eq 0 ]]; then
+            break
+        fi
+        CASAMS_SOURCEPAR=("${CASAMS_SOURCEPAR[@]}" "$1")
+        # echo CASAMS_SOURCEPAR="${CASAMS_SOURCEPAR[@]}"
+    fi
+    if [[ "$CASAMS_RPAR" == "varypar" ]];  then 
+        if [[ "$#" -eq 0 ]]; then
+            break
+        fi
+        CASAMS_VARIEDPAR=("${CASAMS_VARIEDPAR[@]}" "$1")
+        # echo CASAMS_VARIEDPAR="${CASAMS_VARIEDPAR[@]}"
+    fi
+    shift
+done
+# 
+# Check input parameter -- vis
+# 
+if [[ x"$CASAMS_VIS" == x ]]; then
+    CASAMS_GOOD=0
+    echo -n "Please input vis: "
+    read CASAMS_VIS
+    if [[ x"$CASAMS_VIS" != x ]]; then
+        CASAMS_GOOD=1
+    fi
+fi
+# 
+# Check input parameter -- field
+# 
+if [[ x"$CASAMS_FID" == x ]]; then
+    CASAMS_GOOD=0
+    echo -n "Please input field: "
+    read CASAMS_FID
+    if [[ x"$CASAMS_FID" != x ]]; then
+        CASAMS_GOOD=1
+    fi
+fi
+# 
+# Check input parameter -- name
+# 
+##if [[ x"$CASAMS_NOM" == x ]]; then
+##    CASAMS_GOOD=0
+##    echo -n "Please input source: "
+##    read CASAMS_NOM
+##    if [[ x"$CASAMS_NOM" != x ]]; then
+##        CASAMS_GOOD=1
+##    fi
+##fi
+# 
+# Check input parameter -- freq
+# 
+##if [[ x"$CASAMS_FEQ" == x ]]; then
+##    CASAMS_GOOD=0
+##    echo -n "Please input freq: "
+##    read CASAMS_FEQ
+##    if [[ x"$CASAMS_FEQ" != x ]]; then
+##        CASAMS_GOOD=1
+##    fi
+##fi
+# 
+# Check input parameter -- spw
+# 
+if [[ x"${CASAMS_SPW[@]}" == x ]]; then
+    echo -n "Please check default spw: '' -- press return to confirm, or input new values then return to use new values: "
+    read CASAMS_TMP
+    if [[ x"$CASAMS_TMP" != x ]]; then
+        CASAMS_SPW=($CASAMS_TMP)
+    fi
+fi
+# 
+# Check input parameter -- width
+# 
+##if [[ x"$CASAMS_WID" == x ]]; then
+##    CASAMS_WID=1
+##    echo -n "Please check default width: $CASAMS_WID -- press return to confirm, or input new value then return to use new value: "
+##    read CASAMS_TMP
+##    if [[ x"$CASAMS_TMP" != x ]]; then
+##        CASAMS_WID=$CASAMS_TMP
+##    fi
+##fi
+# 
+# Check input parameter -- sourcepar and modeltype
+# 
+if [[ x"${CASAMS_MODELTYPE[@]}" == x ]]; then
+    CASAMS_GOOD=0
+    read -e -p "Please input modeltype (options: P, G, or D): " -i "P" CASAMS_MODELTYPE
+    #CASAMS_MODELTYPE=${CASAMS_MODELTYPE:-"P"}
+    #echo $CASAMS_MODELTYPE
+    if [[ x"$CASAMS_MODELTYPE" != x ]]; then
+        CASAMS_GOOD=1
+        CASAMS_MODELTYPE=($CASAMS_MODELTYPE)
+    fi
+fi
+# 
+# Check input parameter -- sourcepar and modeltype
+# 
+if [[ x"${CASAMS_SOURCEPAR[@]}" == x ]]; then
+    CASAMS_GOOD=0
+    read -e -p "Please input sourcepar (note: [f,x,y] for P type, [f,x,y,r,b/a,PA] for other types): " -i "1.0 0.0 0.0" CASAMS_SOURCEPAR
+    #CASAMS_SOURCEPAR=${CASAMS_SOURCEPAR:-"1.0 0.0 0.0"}
+    #echo $CASAMS_SOURCEPAR
+    if [[ x"$CASAMS_SOURCEPAR" != x ]]; then
+        CASAMS_GOOD=1
+        CASAMS_SOURCEPAR=($CASAMS_SOURCEPAR)
+    fi
+fi
+# 
+# Check input parameter -- sourcepar and modeltype
+# 
+if [[ x"${CASAMS_VARIEDPAR[@]}" == x ]]; then
+    CASAMS_GOOD=0
+    read -e -p "Please input varied parameter booleans (example: [T,T,T] for P type, fitting all parameters): " -i "T T T" CASAMS_VARIEDPAR
+    #CASAMS_VARIEDPAR=${CASAMS_VARIEDPAR:-"T T T"}
+    #echo $CASAMS_VARIEDPAR
+    if [[ x"$CASAMS_VARIEDPAR" != x ]]; then
+        CASAMS_GOOD=1
+        CASAMS_VARIEDPAR=($CASAMS_VARIEDPAR)
+    fi
+fi
+# 
+# Check input parameter -- sourcepar and modeltype should have consistent array size
+# 
+CASAMS_JJJ=0
+for (( CASAMS_III=0; CASAMS_III<${#CASAMS_MODELTYPE[@]}; CASAMS_III++ )); do
+	echo -n "Checking input source parameters: TYPE=${CASAMS_MODELTYPE[$CASAMS_III]} "
+	if [[ "${CASAMS_MODELTYPE[$CASAMS_III]}" ==  "P"* ]]; then
+		echo "XOFF=${CASAMS_SOURCEPAR[$CASAMS_JJJ+1]} YOFF=${CASAMS_SOURCEPAR[$CASAMS_JJJ+2]} FLUX=${CASAMS_SOURCEPAR[$CASAMS_JJJ+0]}"
+		CASAMS_JJJ=$(($CASAMS_JJJ+3))
+	else
+		echo "XOFF=${CASAMS_SOURCEPAR[$CASAMS_JJJ+1]} YOFF=${CASAMS_SOURCEPAR[$CASAMS_JJJ+2]} FLUX=${CASAMS_SOURCEPAR[$CASAMS_JJJ+0]} maj=${CASAMS_SOURCEPAR[$CASAMS_JJJ+3]} b/a=${CASAMS_SOURCEPAR[$CASAMS_JJJ+4]} ang=${CASAMS_SOURCEPAR[$CASAMS_JJJ+5]}"
+		CASAMS_JJJ=$(($CASAMS_JJJ+6))
+	fi
+done
+# 
+# Check input parameter -- sourcepar and modeltype should have consistent array size
+# 
+if [[ $CASAMS_JJJ != ${#CASAMS_SOURCEPAR[@]} ]]; then
+    CASAMS_GOOD=0
+    echo "Error! Input sourcepar and modeltype have inconsistent size!"
+fi
+# 
+# Check input parameters ------ if not passed then print usage and exit
+# 
+if [[ $CASAMS_GOOD -eq 0 ]]; then
+    echo Usage: casa-ms-uvmodelfit -vis calibrated.ms -field 3 -name CDFS344 -freq 344 -spw 0 -modeltype P -sourcepar 1.0 0.0 0.0
+    exit
+fi
+# 
+# Revise input parameters
+# 
+# -- remove the suffix of the input vis name, and test whether the file exists
+if [[ x"$(echo $CASAMS_VIS | grep -E '.*\.ms.*')" == x ]]; then
+    CASAMS_VIS_SFIX=".ms"
+else
+    CASAMS_VIS_SFIX=$(echo $CASAMS_VIS | sed -E 's/.*(\.ms.*)$/\1/g')
+    CASAMS_VIS=$(echo $CASAMS_VIS | sed -E 's/(.*)(\.ms.*)$/\1/g')
+fi
+CASAMS_VIS=$(echo $CASAMS_VIS | sed -E 's/[.]ms$//g')
+if [[ ! -d "${CASAMS_VIS}${CASAMS_VIS_SFIX}" ]]; then
+    echo Error! "${CASAMS_VIS}${CASAMS_VIS_SFIX}" was not found! Exit!
+    exit
+fi
+# -- append the suffix of the input freq if it is not ending with "Hz"
+CASAMS_FEQ_UNIT=$(echo $CASAMS_FEQ | grep -E "Hz$" | sed -E "s/[0-9.+-]*([GMk]*Hz)$/\1/g")
+if [[ x"$CASAMS_FEQ_UNIT" == x ]]; then
+    CASAMS_FEQ_UNIT="GHz"
+    CASAMS_FEQ="${CASAMS_FEQ}GHz"
+fi
+# 
+# 
+# 
+# 
+# Write run_casa_ms_uvmodelfit.py
+# 
+CASAMS_FPY="run_casa_ms_uvmodelfit.py"
+CASAMS_LOG="run_casa_ms_uvmodelfit.log"
+echo "#!/bin/python" > "$CASAMS_FPY"
+CASAMS_JJJ=0
+for (( CASAMS_III=0; CASAMS_III<${#CASAMS_MODELTYPE[@]}; CASAMS_III++ )); do
+	if [[ "${CASAMS_MODELTYPE[$CASAMS_III]}" ==  "P"* ]]; then
+		CASAMS_MODELTYPE_PRINT="${CASAMS_MODELTYPE[$CASAMS_III]}"
+		CASAMS_SOURCEPAR_PRINT="${CASAMS_SOURCEPAR[$CASAMS_JJJ+0]}, ${CASAMS_SOURCEPAR[$CASAMS_JJJ+1]}, ${CASAMS_SOURCEPAR[$CASAMS_JJJ+2]}"
+		CASAMS_VARIEDPAR_PRINT="${CASAMS_VARIEDPAR[$CASAMS_JJJ+0]}, ${CASAMS_VARIEDPAR[$CASAMS_JJJ+1]}, ${CASAMS_VARIEDPAR[$CASAMS_JJJ+2]}"
+		CASAMS_JJJ=$(($CASAMS_JJJ+3))
+	else
+		CASAMS_MODELTYPE_PRINT="${CASAMS_MODELTYPE[$CASAMS_III]}"
+		CASAMS_SOURCEPAR_PRINT="${CASAMS_SOURCEPAR[$CASAMS_JJJ+0]}, ${CASAMS_SOURCEPAR[$CASAMS_JJJ+1]}, ${CASAMS_SOURCEPAR[$CASAMS_JJJ+2]}, ${CASAMS_SOURCEPAR[$CASAMS_JJJ+3]}, ${CASAMS_SOURCEPAR[$CASAMS_JJJ+4]}, ${CASAMS_SOURCEPAR[$CASAMS_JJJ+5]}"
+		CASAMS_VARIEDPAR_PRINT="${CASAMS_VARIEDPAR[$CASAMS_JJJ+0]}, ${CASAMS_VARIEDPAR[$CASAMS_JJJ+1]}, ${CASAMS_VARIEDPAR[$CASAMS_JJJ+2]}, ${CASAMS_VARIEDPAR[$CASAMS_JJJ+3]}, ${CASAMS_VARIEDPAR[$CASAMS_JJJ+4]}, ${CASAMS_VARIEDPAR[$CASAMS_JJJ+5]}"
+		CASAMS_JJJ=$(($CASAMS_JJJ+6))
+	fi
+    echo "vis         = '${CASAMS_VIS}${CASAMS_VIS_SFIX}'"                                 >> "$CASAMS_FPY" #<TODO># uvmodelfit for docvel and nocvel have different results!
+    echo "field       = '${CASAMS_FID[@]}'"                                                >> "$CASAMS_FPY" #<TODO># loop?
+    echo "spw         = '${CASAMS_SPW[@]}'"                                                >> "$CASAMS_FPY" #<TODO># loop?
+    echo "niter       = $CASAMS_ITERATION"                                                 >> "$CASAMS_FPY"
+    echo "comptype    = '$CASAMS_MODELTYPE_PRINT'"                                         >> "$CASAMS_FPY"
+    echo "sourcepar   = [$CASAMS_SOURCEPAR_PRINT] # flux, ra, dec, amajor, baratio, angle" >> "$CASAMS_FPY"
+    echo "varypar     = [$CASAMS_VARIEDPAR_PRINT] # flux, ra, dec, amajor, baratio, angle" >> "$CASAMS_FPY"
+    echo "inp(uvmodelfit)"                                                                 >> "$CASAMS_FPY"
+    echo "uvmodelfit()"                                                                    >> "$CASAMS_FPY"
+    echo ""                                                                                >> "$CASAMS_FPY"
+done
+echo "Wrote to python script: ${CASAMS_FPY}"
+
+# 
+# run casa now
+CASAMS_GOO="y"
+if [[ $CASAMS_YES -eq 0 ]]; then
+    read -e -p "Launch casa now? " -i "y" CASAMS_GOO
+else
+    echo "Launching casa "
+fi
+if [[ x"$CASAMS_GOO" == x"y"* || x"$CASAMS_GOO" == x"Y"* ]]; then
+	echo "casa --nogui -c ${CASAMS_FPY} | tee ${CASAMS_LOG}"
+	casa --nogui -c "${CASAMS_FPY}" | tee "${CASAMS_LOG}"
+fi
+
+echo "Done!"

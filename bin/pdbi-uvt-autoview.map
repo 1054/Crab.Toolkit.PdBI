@@ -1,0 +1,30 @@
+! 
+! Usage:
+!      $ls # to refresh
+!      @do_uvt_autoview
+!      @pdbi-uvt-autoview
+! 
+! Last update: 
+!      2015-03-17 modified to fit this dataset
+!      2015-06-11 modified to fit new bash command pdbi-uvt-autoview
+! 
+
+IF (.NOT.EXIST(obs_names)) DEFINE CHARACTER*200 obj_label     /GLOBAL
+IF (.NOT.EXIST(obs_names)) DEFINE CHARACTER*200 obs_names[99] /GLOBAL
+IF (.NOT.EXIST(obs_files)) DEFINE CHARACTER*200 obs_files[99] /GLOBAL
+IF (.NOT.EXIST(obs_count)) DEFINE INTEGER       obs_count     /GLOBAL
+IF (.NOT.EXIST(obs_id))    DEFINE INTEGER       obs_id        /GLOBAL
+
+!LET obj_label = ""
+!LET obs_count = 30
+!LET obs_id = 21
+!
+!FOR i 1 TO obs_count
+!    LET name = 'obs_files[i]'
+!    let map_size 512
+!    go uvmap
+!NEXT
+!
+!@pdbi-uvt-autoclick.greg
+
+

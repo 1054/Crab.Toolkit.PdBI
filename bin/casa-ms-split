@@ -1,0 +1,868 @@
+#!/bin/bash
+# 
+# Input field, name, width, 
+# Output python script file (split,cvel,exportuvfits,uvmodelfit)
+# 
+# Last update:
+#    2015-04-02 created
+#    2016-06-27 automatically read SOURCE table, check input source, or loop all sources
+# 
+CASAMS_VIS="" # dataset name
+CASAMS_FID="" # field id (SrcId)
+CASAMS_NOM="" # source name (Name)
+CASAMS_SOU=() # field id or source name
+CASAMS_FEQ=() # obs freq, sky freq
+CASAMS_SPW=() # split spw
+CASAMS_STK=() # split stokes
+CASAMS_WID=() # split width for each spw
+CASAMS_TYP="corrected" # data type, data or corrected
+# 
+# Usage
+# 
+function CASAMS_USG {
+    #echo "Usage: casa-ms-split -vis calibrated.ms -field 3 -name CDFS344 -freq 344 -width 3840"
+    echo "Usage: casa-ms-split -vis calibrated.ms -name CDFS344 CDFS345 -spw \"1 2 3 4 5 6\" \"1 2 3\" -width 4 -stokes \"RR LL\" \"RR LL\""
+    echo "Notes: This example command will create CASA python scripts for the two sources, "
+    echo "For the first source, we will split each of the spw 1 2 3 4 5 6, and for each spw we further split into two stokes RR and LL."
+    echo "For the second source, we will split each of the spw 1 2 3, and for each spw we further split into two stokes RR and LL."
+    echo "Acceptable arguments are \"-vis\" \"-name\" \"-spw\" \"-width\" \"-stokes\" \"-skyfreq\"."
+}
+# 
+# Read input parameters
+# 
+if [[ "$#" -eq 0 ]]; then
+    CASAMS_USG
+    exit
+fi
+# 
+# Read input parameters
+# 
+CASAMS_GOOD=1
+CASAMS_RPAR=""
+while [[ "$#" -gt 0 ]]; do
+    # echo $1
+    case $1 in
+           "-vis") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_VIS="$1";;
+          "-freq") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="freq";;
+       "-skyfreq") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="freq";;
+     "-frequency") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="freq";;  # <TODO> WHAT IS skyfreq WHAT IS restfreq ???
+          "-name") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="field";;
+         "-field") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="field";;
+        "-source") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="field";;
+           "-spw") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="spw";;
+        "-stokes") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="stokes";;
+         "-polar") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="stokes";;
+         "-width") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="width";;
+           "-bin") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="width";;
+         "-radec") if [[ "$#" -lt 3 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR="radec";;
+    esac
+    if [[ "$CASAMS_RPAR" == "field" ]];  then 
+        if [[ "$#" -eq 0 ]]; then
+            break
+        fi
+        CASAMS_SOU=("${CASAMS_SOU[@]}" "$1")
+        # echo CASAMS_SOU="${CASAMS_SOU[@]}"
+    fi
+    if [[ "$CASAMS_RPAR" == "freq" ]];  then 
+        if [[ "$#" -eq 0 ]]; then
+            break
+        fi
+        CASAMS_FEQ=("${CASAMS_FEQ[@]}" "$1")
+        # echo CASAMS_FEQ="${CASAMS_FEQ[@]}"
+    fi
+    if [[ "$CASAMS_RPAR" == "spw" ]];  then 
+        if [[ "$#" -eq 0 ]]; then
+            break
+        fi
+        CASAMS_SPW=("${CASAMS_SPW[@]}" "$1")
+        # echo CASAMS_SPW="${CASAMS_SPW[@]}"
+    fi
+    if [[ "$CASAMS_RPAR" == "stokes" ]];  then 
+        if [[ "$#" -eq 0 ]]; then
+            break
+        fi
+        CASAMS_STK=("${CASAMS_STK[@]}" "$1")
+        # echo CASAMS_STK="${CASAMS_STK[@]}"
+    fi
+    if [[ "$CASAMS_RPAR" == "width" ]];  then 
+        if [[ "$#" -eq 0 ]]; then
+            break
+        fi
+        CASAMS_WID=("${CASAMS_WID[@]}" "$1")
+        # echo CASAMS_WID="${CASAMS_WID[@]}"
+    fi
+    if [[ "$CASAMS_RPAR" == "radec" ]];  then 
+        if [[ "$#" -lt 2 ]]; then
+            break
+        fi
+        if [[ "$1" == *":"*":"* ]]; then
+            CASAMS_RANX=("${CASAMS_RANX[@]}" "$1")
+            CASAMS_TEMP=$(radec2degree "$1" "$2" | cut -d ' ' -f 1)
+            CASAMS_RAND=("${CASAMS_RAND[@]}" "$CASAMS_TEMP")
+        else
+            CASAMS_RAND=("${CASAMS_RAND[@]}" "$1")
+            CASAMS_TEMP=$(degree2radec "$1" "$2" | cut -d ' ' -f 1)
+            CASAMS_RANX=("${CASAMS_RANX[@]}" "$CASAMS_TEMP")
+        fi
+        if [[ "$2" == *":"*":"* ]]; then
+            CASAMS_DECX=("${CASAMS_DECX[@]}" "$2")
+            CASAMS_TEMP=$(radec2degree "$1" "$2" | cut -d ' ' -f 2)
+            CASAMS_DECD=("${CASAMS_DECD[@]}" "$CASAMS_TEMP")
+        else
+            CASAMS_DECD=("${CASAMS_DECD[@]}" "$2")
+            CASAMS_TEMP=$(degree2radec "$1" "$2" | cut -d ' ' -f 2)
+            CASAMS_DECX=("${CASAMS_DECX[@]}" "$CASAMS_TEMP")
+        fi
+        shift
+    fi
+    shift
+done
+# 
+# Check input parameter -- vis
+# 
+if [[ x"$CASAMS_VIS" == x ]]; then
+    CASAMS_GOOD=0
+    echo -n "Please input vis: "
+    read CASAMS_VIS
+    if [[ x"$CASAMS_VIS" != x ]]; then
+        CASAMS_GOOD=1
+    fi
+fi
+
+
+
+
+
+
+
+
+
+# 
+# Check CASA
+# 
+if [[ $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo ""
+    echo "Error! CASA was not found! Please check your \$PATH!"
+    echo ""
+    exit
+fi
+# 
+# Check SOURCE table
+# 
+if [[ ! -d "${CASAMS_VIS}${CASAMS_VIS_SFIX}/SOURCE" ]]; then
+    echo ""
+    echo "Error! Could not find \"${CASAMS_VIS}${CASAMS_VIS_SFIX}/SOURCE\"! The SOURCE table is missing?"
+    echo ""
+    exit
+fi
+# 
+# Check SOURCE and SPECTRAL_WINDOW table with casa
+# 
+CASAMS_TableSources=() # The list of sources in MS
+CASAMS_TableFields=() # The list of fields in MS, same dimension as source list. 
+CASAMS_TableChans=() # The channel number list for all spws, has a dimension of spw number. 
+CASAMS_TableSpws=() # The list of list of spw for each source, has a dimension of source number. 
+CASAMS_ScriptName="run_dzliu_temp_read_table"
+echo "#!/bin/python"                                                    > "$CASAMS_ScriptName.py"
+echo "tb.open('${CASAMS_VIS}${CASAMS_VIS_SFIX}/SOURCE')"               >> "$CASAMS_ScriptName.py"
+echo "fo = open('$CASAMS_ScriptName.name.txt','wb')"                   >> "$CASAMS_ScriptName.py"
+echo "fo.write('\n'.join(list(set(tb.getcol('NAME')))))"               >> "$CASAMS_ScriptName.py"
+echo "fo.write('\n')"                                                  >> "$CASAMS_ScriptName.py"
+echo "fo.close()"                                                      >> "$CASAMS_ScriptName.py"
+echo "fo = open('$CASAMS_ScriptName.field.txt','wb')"                  >> "$CASAMS_ScriptName.py"
+echo "fo.write('\n'.join(list(set(map(str,tb.getcol('SOURCE_ID'))))))" >> "$CASAMS_ScriptName.py"
+echo "fo.write('\n')"                                                  >> "$CASAMS_ScriptName.py"
+echo "fo.close()"                                                      >> "$CASAMS_ScriptName.py"
+echo "list_all_spw = tb.getcol('SPECTRAL_WINDOW_ID')"                  >> "$CASAMS_ScriptName.py"
+echo "list_all_sou = tb.getcol('NAME')"                                >> "$CASAMS_ScriptName.py"
+echo "list_uni_sou = list(set(list_all_sou))"                          >> "$CASAMS_ScriptName.py"
+echo "fo = open('$CASAMS_ScriptName.spw.txt','wb')"                    >> "$CASAMS_ScriptName.py"
+echo "for i in range(len(list_uni_sou)): "                             >> "$CASAMS_ScriptName.py"
+echo "    for j in range(len(list_all_sou)): "                         >> "$CASAMS_ScriptName.py"
+echo "        if list_all_sou[j] == list_uni_sou[i]: "                 >> "$CASAMS_ScriptName.py"
+echo "            fo.write('%s '%(list_all_spw[j]))"                   >> "$CASAMS_ScriptName.py"
+echo "    fo.write('\n')"                                              >> "$CASAMS_ScriptName.py"
+echo "fo.close()"                                                      >> "$CASAMS_ScriptName.py"
+echo "fo = open('$CASAMS_ScriptName.source.name.txt','wb')"            >> "$CASAMS_ScriptName.py"
+echo "for i in range(len(list_all_sou)): "                             >> "$CASAMS_ScriptName.py"
+echo "    fo.write('%s\n'%(list_all_sou[i]))"                          >> "$CASAMS_ScriptName.py"
+echo "fo.close()"                                                      >> "$CASAMS_ScriptName.py"
+echo "fo = open('$CASAMS_ScriptName.source.spw.txt','wb')"             >> "$CASAMS_ScriptName.py"
+echo "for i in range(len(list_all_sou)): "                             >> "$CASAMS_ScriptName.py"
+echo "    fo.write('%s\n'%(list_all_spw[i]))"                          >> "$CASAMS_ScriptName.py"
+echo "fo.close()"                                                      >> "$CASAMS_ScriptName.py"
+echo "fo = open('$CASAMS_ScriptName.source.freq.txt','wb')"            >> "$CASAMS_ScriptName.py"
+echo "for i in range(len(list_all_sou)): "                             >> "$CASAMS_ScriptName.py"
+echo "    try:"                                                        >> "$CASAMS_ScriptName.py"
+echo "        list_ref_feq = (tb.getcell('REST_FREQUENCY',i))[0]"      >> "$CASAMS_ScriptName.py"
+echo "    except:"                                                     >> "$CASAMS_ScriptName.py"
+echo "        list_ref_feq = 0.0"                                      >> "$CASAMS_ScriptName.py"
+echo "    fo.write('%s\n'%(list_ref_feq))"                             >> "$CASAMS_ScriptName.py"
+echo "fo.close()"                                                      >> "$CASAMS_ScriptName.py"
+echo ""                                                                >> "$CASAMS_ScriptName.py"
+echo "tb.close()"                                                      >> "$CASAMS_ScriptName.py"
+echo ""                                                                >> "$CASAMS_ScriptName.py"
+echo "tb.open('${CASAMS_VIS}${CASAMS_VIS_SFIX}/SPECTRAL_WINDOW')"      >> "$CASAMS_ScriptName.py"
+echo "fo = open('$CASAMS_ScriptName.chan.txt','wb')"                   >> "$CASAMS_ScriptName.py"
+echo "list_all_chn = tb.getcol('NUM_CHAN')"                            >> "$CASAMS_ScriptName.py"
+echo "for i in range(len(list_all_chn)):"                              >> "$CASAMS_ScriptName.py"
+echo "    fo.write('%g\n'%(list_all_chn[i]))"                          >> "$CASAMS_ScriptName.py"
+echo "fo.close()"                                                      >> "$CASAMS_ScriptName.py"
+echo "fo = open('$CASAMS_ScriptName.chan.freq.ref.txt','wb')"          >> "$CASAMS_ScriptName.py"
+echo "list_all_chs = tb.getcol('REF_FREQUENCY')"                       >> "$CASAMS_ScriptName.py"
+echo "for i in range(len(list_all_chs)):"                              >> "$CASAMS_ScriptName.py"
+echo "    fo.write('%g\n'%(list_all_chs[i]))"                          >> "$CASAMS_ScriptName.py"
+echo "fo.close()"                                                      >> "$CASAMS_ScriptName.py"
+echo "for i in range(len(list_all_chs)): "                             >> "$CASAMS_ScriptName.py"
+echo "    fo = open('$CASAMS_ScriptName.chan.freq.spw%d.txt'%(i),'wb')">> "$CASAMS_ScriptName.py"
+echo "    list_all_chk = tb.getcell('CHAN_FREQ',i)"                    >> "$CASAMS_ScriptName.py"
+echo "    for j in range(len(list_all_chk)): "                         >> "$CASAMS_ScriptName.py"
+echo "        fo.write('%g\n'%(list_all_chk[j]))"                      >> "$CASAMS_ScriptName.py"
+echo "    fo.close()"                                                  >> "$CASAMS_ScriptName.py"
+echo ""                                                                >> "$CASAMS_ScriptName.py"
+echo "tb.close()"                                                      >> "$CASAMS_ScriptName.py"
+echo ""                                                                >> "$CASAMS_ScriptName.py"
+echo "tb.open('${CASAMS_VIS}${CASAMS_VIS_SFIX}')"                      >> "$CASAMS_ScriptName.py"
+echo "fo = open('$CASAMS_ScriptName.datatype.txt','wb')"               >> "$CASAMS_ScriptName.py"
+echo "list_col = tb.colnames()"                                        >> "$CASAMS_ScriptName.py"
+echo "if 'CORRECTED_DATA' in list_col: "                               >> "$CASAMS_ScriptName.py"
+echo "    fo.write('corrected\n')"                                     >> "$CASAMS_ScriptName.py"
+echo "else: "                                                          >> "$CASAMS_ScriptName.py"
+echo "    fo.write('data\n')"                                          >> "$CASAMS_ScriptName.py" #<TODO># need to make sure that column corrected is not there
+echo ""                                                                >> "$CASAMS_ScriptName.py"
+echo "fo.close()"                                                      >> "$CASAMS_ScriptName.py"
+echo "tb.close()"                                                      >> "$CASAMS_ScriptName.py"
+echo ""                                                                >> "$CASAMS_ScriptName.py"
+echo "Running CASA to read measurement set tables: "
+echo "    \"${CASAMS_VIS}${CASAMS_VIS_SFIX}\"/SOURCE"
+echo "    \"${CASAMS_VIS}${CASAMS_VIS_SFIX}\"/SPECTRAL_WINDOW"
+casa --nogui -c "$CASAMS_ScriptName.py" > "$CASAMS_ScriptName.log" 2>&1
+#echo "debug aaa bbb ccc" >> "$CASAMS_ScriptName.name.txt"
+if [[ ! -f "$CASAMS_ScriptName.name.txt" ]]; then
+    echo ""
+    echo "Error! Failed to read \"${CASAMS_VIS}${CASAMS_VIS_SFIX}\"/SOURCE/table.* files! Please make sure the measurement set is complete!"
+    echo ""
+    exit
+else
+    IFS=$'\n' read -d '' -r -a CASAMS_TableSources < "$CASAMS_ScriptName.name.txt"
+fi
+if [[ ! -f "$CASAMS_ScriptName.field.txt" ]]; then
+    echo ""
+    echo "Error! Failed to read \"${CASAMS_VIS}${CASAMS_VIS_SFIX}\"/SOURCE/table.* files! Please make sure the measurement set is complete!"
+    echo ""
+    exit
+else
+    IFS=$'\n' read -d '' -r -a CASAMS_TableFields < "$CASAMS_ScriptName.field.txt"
+fi
+if [[ ! -f "$CASAMS_ScriptName.chan.txt" ]]; then
+    echo ""
+    echo "Error! Failed to read \"${CASAMS_VIS}${CASAMS_VIS_SFIX}\"/SPECTRAL_WINDOW/table.* files! Please make sure the measurement set is complete!"
+    echo ""
+    exit
+else
+    IFS=$'\n' read -d '' -r -a CASAMS_TableChans < "$CASAMS_ScriptName.chan.txt"
+fi
+if [[ ! -f "$CASAMS_ScriptName.spw.txt" ]]; then
+    echo ""
+    echo "Error! Failed to read \"${CASAMS_VIS}${CASAMS_VIS_SFIX}\"/SOURCE/table.* files! Please make sure the measurement set is complete!"
+    echo ""
+    exit
+else
+    IFS=$'\n' read -d '' -r -a CASAMS_TableSpws < "$CASAMS_ScriptName.spw.txt"
+fi
+if [[ ! -f "$CASAMS_ScriptName.datatype.txt" ]]; then
+    echo ""
+    echo "Error! Failed to read \"${CASAMS_VIS}${CASAMS_VIS_SFIX}\"/table.* files! Please make sure the measurement set is complete!"
+    echo ""
+    exit
+else
+    IFS=$'\n' read -d '' -r -a CASAMS_TYP < "$CASAMS_ScriptName.datatype.txt"
+fi
+#<DEBUG>#echo ${#CASAMS_TableSources[@]}
+# 
+# Check input source, if input source is empty, set to all sources in SOURCE table
+# 
+if [[ ${#CASAMS_SOU[@]} -eq 0 ]]; then
+    CASAMS_SOU=("${CASAMS_TableSources[@]}")
+    echo "Setting source list according to the SOURCE table"
+    for (( i=0; i<${#CASAMS_SOU[@]}; i++ )); do 
+        echo "    ${CASAMS_SOU[i]}"
+    done
+else
+    #echo "Checking source list"
+    echo "Setting source list according to input: "
+    for (( i=0; i<${#CASAMS_SOU[@]}; i++ )); do 
+        # The input source is a list, each element is a string. 
+        echo "    ${CASAMS_SOU[i]}"
+        CASAMS_TEMP=0
+        for (( j=0; j<${#CASAMS_TableSources[@]}; j++ )); do 
+            if [[ x"${CASAMS_SOU[i]}" == x"${CASAMS_TableSources[j]}" ]]; then
+                CASAMS_TEMP=1; break
+            fi
+        done
+        if [[ $CASAMS_TEMP -eq 0 ]]; then
+            echo ""
+            echo "Error! The input source \"${CASAMS_SOU[i]}\" was not found in the SOURCE table!"
+            echo ""
+            exit
+        fi
+    done
+fi
+# 
+# Check input spw, if input spw is empty, set to all spw in SPECTRAL_WINDOW table
+# 
+if [[ ${#CASAMS_SPW[@]} -eq 0 ]]; then
+    CASAMS_SPW=()
+    echo "Setting spw list according to the SOURCE table: "
+    for (( i=0; i<${#CASAMS_SOU[@]}; i++ )); do 
+        # 
+        # Match the name of this source
+        # 
+        for (( j=0; j<${#CASAMS_TableSources[@]}; j++ )); do 
+            # 
+            # <TODO> maybe add some wildcard name matching things
+            # 
+            if [[ x"${CASAMS_SOU[i]}" == x"${CASAMS_TableSources[j]}" ]]; then
+                # 
+                # Determine spw for this source
+                # 
+                if [[ $j -ge ${#CASAMS_TableSpws[@]} ]]; then
+                    CASAMS_SPW_LIST=()
+                else
+                    if [[ x"${CASAMS_TableSpws[j]}" == x"*" || x"${CASAMS_TableSpws[j]}" == x"" ]]; then
+                        CASAMS_SPW_LIST=()
+                    else
+                        CASAMS_SPW_LIST=(${CASAMS_TableSpws[j]}) # ($(echo ${CASAMS_TableSpws[j]} | sed -e 's/[,]/ /g'))
+                    fi
+                fi
+                # 
+                if [[ ${#CASAMS_SPW_LIST[@]} -eq 0 ]]; then
+                    echo "    *"
+                else
+                    echo "    ${CASAMS_SPW_LIST[@]}" # corresponding to each source, in the same order as source list
+                fi
+                # 
+                CASAMS_SPW[i]="${CASAMS_SPW_LIST[@]}"
+                #echo ${CASAMS_SPW[i]}
+                #echo ${CASAMS_SPW[$i]}
+                break
+            fi
+        done
+    done
+else
+    #echo "Checking source list"
+    echo "Setting spw list according to input: "
+    for (( i=0; i<${#CASAMS_SOU[@]}; i++ )); do 
+        # The input spw is a list, each element is the spw choice for each source
+        # so each element can also be a list, e.g. "1 2 3-4 5,6"
+        # <TODO>
+        # <TODO> resolve a range of spw, e.g. "3-6" this kind. 
+        # <TODO>
+        # 
+        # Determine spw for this source
+        # 
+        if [[ $i -gt ${#CASAMS_SPW[@]} ]]; then
+            CASAMS_SPW_LIST=()
+        else
+            if [[ x"${CASAMS_SPW[i]}" == x"*" || x"${CASAMS_SPW[i]}" == x"" ]]; then
+                CASAMS_SPW_LIST=()
+            else
+                CASAMS_SPW_LIST=($(echo ${CASAMS_SPW[i]} | sed -e 's/[,]/ /g')) # (${CASAMS_SPW[i]}) # ($(echo ${CASAMS_SPW[i]} | sed -e 's/[,]/ /g')) # <NOTE> here we need to check the input spw, so we need to expand all spw items. 
+            fi
+        fi
+        # 
+        if [[ ${#CASAMS_SPW_LIST[@]} -eq 0 ]]; then
+            echo "    *"
+        else
+            echo "    ${CASAMS_SPW[i]}" # corresponding to each source
+        fi
+        # 
+        # Check input spw list with the spw list in SPECTRAL_WINDOW table
+        # 
+        for (( spwj=0; spwj<${#CASAMS_SPW_LIST[@]}; spwj++ )); do 
+            CASAMS_TEMP=0
+            for (( spwk=0; spwk<${#CASAMS_TableSpws[@]}; spwk++ )); do 
+                if echo ${CASAMS_TableSpws[spwk]} | grep -q -w "${CASAMS_SPW_LIST[spwj]}"; then
+                    CASAMS_TEMP=1; break
+                fi
+            done
+            if [[ $CASAMS_TEMP -eq 0 ]]; then
+                echo ""
+                echo "Error! The input spw \"${CASAMS_SPW_LIST[spwj]}\" was not found in the SPECTRAL_WINDOW table!"
+                echo ""
+                exit
+            fi
+            CASAMS_TEMP=0
+            if [[ "${CASAMS_SPW_LIST[spwj]}" -lt ${#CASAMS_TableChans[@]} ]]; then
+                    CASAMS_TEMP=1; break
+            fi
+            if [[ $CASAMS_TEMP -eq 0 ]]; then
+                echo ""
+                echo "Error! The input spw \"${CASAMS_SPW_LIST[spwj]}\" seems exceed the spw numbers in the SPECTRAL_WINDOW table! (This should not happen?!)"
+                echo ""
+                exit
+            fi
+        done
+    done
+fi
+# 
+# Check input parameter -- field
+# 
+##if [[ x"$CASAMS_FID" == x ]]; then
+##    CASAMS_GOOD=0
+##    echo -n "Please input field: "
+##    read CASAMS_FID
+##    if [[ x"$CASAMS_FID" != x ]]; then
+##        CASAMS_GOOD=1
+##    fi
+##fi
+# 
+# Check input parameter -- name
+# 
+##if [[ x"$CASAMS_NOM" == x ]]; then
+##    CASAMS_GOOD=0
+##    echo -n "Please input source: "
+##    read CASAMS_NOM
+##    if [[ x"$CASAMS_NOM" != x ]]; then
+##        CASAMS_GOOD=1
+##    fi
+##fi
+# 
+# Check input parameter -- freq
+# 
+##if [[ x"$CASAMS_FEQ" == x ]]; then
+##    CASAMS_GOOD=0
+##    echo -n "Please input freq: "
+##    read CASAMS_FEQ
+##    if [[ x"$CASAMS_FEQ" != x ]]; then
+##        CASAMS_GOOD=1
+##    fi
+##fi
+# 
+# Check input parameter -- spw
+# 
+##if [[ x"${CASAMS_SPW[@]}" == x ]]; then
+##    echo -n "Please check default spw: '' -- press return to confirm, or input new values then return to use new values: "
+##    read CASAMS_TMP
+##    if [[ x"$CASAMS_TMP" != x ]]; then
+##        CASAMS_SPW=($CASAMS_TMP)
+##    fi
+##fi
+# 
+# Check input parameter -- width
+# 
+##if [[ x"$CASAMS_WID" == x ]]; then
+##    CASAMS_WID=1
+##    #echo -n "Please check default width: $CASAMS_WID -- press return to confirm, or input new value then return to use new value: "
+##    read -e -p "Setting channel width: " -i "$CASAMS_WID" CASAMS_TMP
+##    if [[ x"$CASAMS_TMP" != x"" ]]; then
+##        CASAMS_WID=$CASAMS_TMP
+##    fi
+##fi
+# 
+# Check input parameter -- width
+# 
+if [[ ${#CASAMS_WID[@]} -gt 0 ]]; then
+    echo "Setting channel width according to input: "
+    for (( i=0; i<${#CASAMS_SOU[@]}; i++ )); do 
+        if [[ $i -lt ${#CASAMS_WID[@]} ]]; then
+            echo "    ${CASAMS_WID[i]}"
+        else 
+            echo "    1"
+        fi
+    done
+else 
+    echo "Setting channel width as default value: "
+    for (( i=0; i<${#CASAMS_SOU[@]}; i++ )); do 
+        if [ 1 ]; then
+            echo "    1"
+        fi
+    done
+fi
+# 
+# Check input parameter -- stokes
+# 
+if [[ ${#CASAMS_STK[@]} -gt 0 ]]; then
+    echo "Setting stokes according to input: "
+    for (( i=0; i<${#CASAMS_SOU[@]}; i++ )); do 
+        if [[ $i -lt ${#CASAMS_STK[@]} ]]; then
+            echo "    ${CASAMS_STK[i]}"
+        else
+            echo "    ''"
+        fi
+    done
+else 
+    echo "Setting stokes as default value: "
+    for (( i=0; i<${#CASAMS_SOU[@]}; i++ )); do 
+        if [ 1 ]; then
+            echo "    ''"
+        fi
+    done
+fi
+# 
+# Check input parameter -- restfreq
+# 
+if [[ ${#CASAMS_FEQ[@]} -gt 0 ]]; then
+    echo "Setting sky frequency according to input: "
+    for (( i=0; i<${#CASAMS_SOU[@]}; i++ )); do 
+        if [[ $i -lt ${#CASAMS_FEQ[@]} ]]; then
+            echo "    '${CASAMS_FEQ[i]}GHz'"
+        else
+            echo "    ''"
+        fi
+    done
+fi
+# 
+# Check input parameters ------ if not passed then print usage and exit
+# 
+if [[ $CASAMS_GOOD -eq 0 ]]; then
+    CASAMS_USG
+    exit
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 
+# Revise input parameters
+# 
+# -- remove the suffix, and test whether vis dir exists
+if [[ x"$(echo $CASAMS_VIS | grep -E '.*\.ms.*')" == x ]]; then
+    CASAMS_VIS_SFIX=".ms"
+else
+    CASAMS_VIS_SFIX=$(echo $CASAMS_VIS | sed -E 's/.*(\.ms.*)$/\1/g')
+    CASAMS_VIS=$(echo $CASAMS_VIS | sed -E 's/(.*)(\.ms.*)$/\1/g')
+fi
+CASAMS_VIS=$(echo $CASAMS_VIS | sed -E 's/[.]ms$//g')
+if [[ ! -d "${CASAMS_VIS}${CASAMS_VIS_SFIX}" ]]; then
+    echo Error! "${CASAMS_VIS}${CASAMS_VIS_ SFIX}" was not found! Exit!
+    exit
+fi
+### -- append the suffix of the input freq if it is not ending with "Hz"
+##CASAMS_FEQ_UNIT=$(echo $CASAMS_FEQ | grep -E "Hz$" | sed -E "s/[0-9.+-]*([GMk]*Hz)$/\1/g")
+##if [[ x"$CASAMS_FEQ_UNIT" == x"" ]]; then
+##    CASAMS_FEQ_UNIT="GHz"
+##    CASAMS_FEQ="${CASAMS_FEQ}GHz"
+##fi
+### -- let CASAMS_STK='' if not given
+##if [[ ${#CASAMS_STK[@]} -eq 0 ]]; then
+##    CASAMS_STK=("")
+##fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 
+# Loop each source
+# 
+echo "Looping sources, spwins, and stokes: "
+for (( soui=0; soui<${#CASAMS_SOU[@]}; soui++ )); do
+    echo "  * looping sources ($(bc<<<"$soui+1")/${#CASAMS_SOU[@]})"
+    CASAMS_NOM=$(echo "${CASAMS_SOU[soui]}" | sed -e 's/ /-/g')
+    CASAMS_PFX="split_" # the prefix of vis data name
+    CASAMS_SFX="" # the suffix of vis data name
+    # 
+    # Determine spw for this source
+    # 
+    if [[ $soui -gt ${#CASAMS_SPW[@]} ]]; then
+        CASAMS_SPW_LIST=("")
+    else
+        if [[ x"${CASAMS_SPW[soui]}" == x"*" || x"${CASAMS_SPW[soui]}" == x"" ]]; then
+            CASAMS_SPW_LIST=("")
+        else
+            CASAMS_SPW_LIST=(${CASAMS_SPW[soui]}) # ($(echo ${CASAMS_SPW[soui]} | sed -e 's/[,]/ /g'))
+        fi
+    fi
+    # 
+    # Determine skyfreq for this source
+    # 
+    if [[ $soui -gt ${#CASAMS_FEQ[@]} ]]; then
+        CASAMS_FEQ_LIST=()
+    else
+        if [[ x"${CASAMS_FEQ[soui]}" == x"*" || x"${CASAMS_FEQ[soui]}" == x"" ]]; then
+            CASAMS_FEQ_LIST=()
+        else
+            CASAMS_FEQ_LIST=($(echo ${CASAMS_FEQ[soui]} | sed -e 's/[,]/ /g')) # ${CASAMS_FEQ[soui]}
+        fi
+    fi
+    # 
+    # Determine stokes for this source
+    # 
+    if [[ $soui -gt ${#CASAMS_STK[@]} ]]; then
+        CASAMS_STK_LIST=("")
+    else
+        if [[ x"${CASAMS_STK[soui]}" == x"*" || x"${CASAMS_STK[soui]}" == x"" ]]; then
+            CASAMS_STK_LIST=("")
+        else
+            CASAMS_STK_LIST=(${CASAMS_STK[soui]})
+        fi
+    fi
+    # 
+    # Determine width for this source
+    # 
+    if [[ $soui -gt ${#CASAMS_WID[@]} ]]; then
+        CASAMS_WID_NUMB=1
+    else
+        if [[ x"${CASAMS_WID[soui]}" == x"*" || x"${CASAMS_WID[soui]}" == x"" ]]; then
+            CASAMS_WID_NUMB=1
+        else
+            CASAMS_WID_NUMB=${CASAMS_WID[soui]}
+        fi
+    fi
+    # 
+    # 
+    # Prepare to write python script: run_casa_ms_step1_split.py
+    # 
+    CASAMS_Script1="run_${CASAMS_NOM}_step1_split.py"
+    CASAMS_Script2="run_${CASAMS_NOM}_step2_cvel.py"
+    CASAMS_Script3="run_${CASAMS_NOM}_step3_exportuvfits.py"
+    CASAMS_Script4="run_${CASAMS_NOM}_step4_clean.py"
+    CASAMS_Script5="run_${CASAMS_NOM}_step5_uvmodelfit.py"
+    CASAMS_Script6="run_${CASAMS_NOM}_step6_gildas_import_uvfits.map"
+    echo "#!/bin/python" > "$CASAMS_Script1"
+    echo "#!/bin/python" > "$CASAMS_Script2"
+    echo "#!/bin/python" > "$CASAMS_Script3"
+    echo "#!/bin/python" > "$CASAMS_Script4"
+    echo "#!/bin/python" > "$CASAMS_Script5"
+    echo "#!/usr/bin/mapping" > "$CASAMS_Script6"
+    # 
+    # Loop each spw
+    # 
+    for (( spwi=0; spwi<${#CASAMS_SPW_LIST[@]}; spwi++ )); do
+        echo "    * looping spwins ($(bc<<<"$spwi+1")/${#CASAMS_SPW_LIST[@]})"
+        # loop spw
+        # set output vis file suffix, which includes spw number
+        # for example, 
+        # input arguments are: -vis calibrated.ms -source AAAA BBBB -spw "1 2 3 4,5 6,7 8-10" ""
+        # then we will loop two sources, 
+        # for the first source AAA, we will loop spw (1 2 3 "4,5" "6,7" "8-10")
+        # while for the second source BBB, we will loop sow (""), i.e. all spw in one data. 
+        if [[ x"${CASAMS_SPW_LIST[spwi]}" == x"*" || x"${CASAMS_SPW_LIST[spwi]}" == x"" ]]; then
+            CASAMS_SFX_MORE="${CASAMS_SFX}_spw_all"
+        else
+            CASAMS_SFX_MORE="${CASAMS_SFX}_spw$(echo ${CASAMS_SPW_LIST[spwi]} | sed -e 's/[,]/_/g')"
+        fi
+        # 
+        # Determine skyfreq for this spw of this source
+        # 
+        if [[ $spwi -gt ${#CASAMS_FEQ_LIST[@]} ]]; then
+            CASAMS_FEQ_NUMB=""
+        else
+            if [[ x"${CASAMS_FEQ_LIST[spwi]}" == x"*" || x"${CASAMS_FEQ_LIST[spwi]}" == x"" ]]; then
+                CASAMS_FEQ_NUMB=""
+            else
+                CASAMS_FEQ_NUMB=${CASAMS_FEQ_LIST[spwi]}
+            fi
+        fi
+        if [[ ${CASAMS_WID_NUMB} -eq 1 ]]; then
+            CASAMS_SFX_MORE="${CASAMS_SFX_MORE}"
+        else
+            CASAMS_SFX_MORE="${CASAMS_SFX_MORE}_width${CASAMS_WID_NUMB}"
+        fi
+        # 
+        # Loop each stokes
+        # 
+        for (( stokesi=0; stokesi<${#CASAMS_STK_LIST[@]}; stokesi++ )); do
+            echo "      * looping stokes ($(bc<<<"$stokesi+1")/${#CASAMS_STK_LIST[@]})"
+            # loop stokes
+            # set output vis file suffix, which includes stokes flag: RR or LL
+            # for example, 
+            # input arguments are: -vis calibrated.ms -source AAAA BBBB -stokes "RR LL RL LR" "RR"
+            # then we will loop two sources, 
+            # for the first source AAA, we will loop stokes ("RR" "LL" "RL" "LR"). 
+            # while for the second source BBB, we will loop stokes (""), i.e. all stokes in one data. 
+            if [[ x"${CASAMS_STK_LIST[stokesj]}" == x"*" || x"${CASAMS_STK_LIST[stokesj]}" == x"" ]]; then
+                CASAMS_SFX_MORE="${CASAMS_SFX_MORE}"
+            else
+                CASAMS_SFX_MORE="${CASAMS_SFX_MORE}_stokes${CASAMS_STK_LIST[stokesj]}"
+            fi
+            # 
+            # Write python script: run_casa_ms_step1_split.py
+            # 
+            echo "vis         = '${CASAMS_VIS}${CASAMS_VIS_SFIX}'"                  >> "$CASAMS_Script1"
+            echo "outputvis   = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}.ms'"  >> "$CASAMS_Script1"
+            echo "field       = '${CASAMS_SOU[soui]}'"                              >> "$CASAMS_Script1"
+            echo "spw         = '${CASAMS_SPW_LIST[spwi]}'"                         >> "$CASAMS_Script1"
+            echo "width       =  ${CASAMS_WID_NUMB}"                                >> "$CASAMS_Script1"
+            echo "correlation = '${CASAMS_STK_LIST[stokesi]}'"                      >> "$CASAMS_Script1"
+            echo "datacolumn  = '${CASAMS_TYP}'"                                    >> "$CASAMS_Script1"
+            echo "keepflags   = F"                                                  >> "$CASAMS_Script1"
+            echo "inp(split)"                                                       >> "$CASAMS_Script1"
+            echo "split()"                                                          >> "$CASAMS_Script1"
+            echo ""                                                                 >> "$CASAMS_Script1"
+            echo ""                                                                 >> "$CASAMS_Script1"
+            echo ""                                                                 >> "$CASAMS_Script1"
+            # 
+            # Write python script: run_casa_ms_step2_cvel.py
+            # 
+            if [[ x"${CASAMS_FEQ_NUMB}" != x"" ]]; then
+            echo "vis         = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}.ms''"      >> "$CASAMS_Script2"
+            echo "outputvis   = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}_cvel.ms'"  >> "$CASAMS_Script2"
+            echo "field       = ''"                                                      >> "$CASAMS_Script2"
+            echo "spw         = ''"                                                      >> "$CASAMS_Script2"
+            echo "width       =  1"                                                      >> "$CASAMS_Script2"
+            echo "outframe    = 'LSRK'"                                                  >> "$CASAMS_Script2"
+            echo "restfreq    = '${CASAMS_FEQ_NUMB}GHz'"                                 >> "$CASAMS_Script2"
+            echo "inp(cvel)"                                                             >> "$CASAMS_Script2"
+            echo "cvel()"                                                                >> "$CASAMS_Script2"
+            echo ""                                                                      >> "$CASAMS_Script2"
+            echo ""                                                                      >> "$CASAMS_Script2"
+            echo ""                                                                      >> "$CASAMS_Script2"
+            fi
+            # 
+            # Write python script: run_casa_ms_step3_exportuvfits.py
+            # 
+            echo "vis         = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}.ms'"           >> "$CASAMS_Script3"
+            echo "fitsfile    = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}.uvfits'"       >> "$CASAMS_Script3"
+            echo "field       = ''"                                                          >> "$CASAMS_Script3"
+            echo "spw         = ''"                                                          >> "$CASAMS_Script3"
+            echo "datacolumn  = '${CASAMS_TYP}'"                                             >> "$CASAMS_Script3"
+            echo "multisource = F"                                                           >> "$CASAMS_Script3"
+            echo "inp(exportuvfits)"                                                         >> "$CASAMS_Script3"
+            echo "exportuvfits()"                                                            >> "$CASAMS_Script3"
+            echo ""                                                                          >> "$CASAMS_Script3"
+            if [[ x"${CASAMS_FEQ_NUMB}" != x"" ]]; then
+            echo "vis         = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}_cvel.ms'"      >> "$CASAMS_Script3"
+            echo "fitsfile    = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}_cvel.uvfits'"  >> "$CASAMS_Script3"
+            echo "field       = ''"                                                          >> "$CASAMS_Script3"
+            echo "spw         = ''"                                                          >> "$CASAMS_Script3"
+            echo "datacolumn  = '${CASAMS_TYP}'"                                             >> "$CASAMS_Script3"
+            echo "multisource = F"                                                           >> "$CASAMS_Script3"
+            echo "inp(exportuvfits)"                                                         >> "$CASAMS_Script3"
+            echo "exportuvfits()"                                                            >> "$CASAMS_Script3"
+            echo ""                                                                          >> "$CASAMS_Script3"
+            fi
+            echo ""                                                                          >> "$CASAMS_Script3"
+            echo ""                                                                          >> "$CASAMS_Script3"
+            # 
+            # Write python script: run_casa_ms_step4_clean.py
+            # 
+            echo "vis         = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}.ms'"           >> "$CASAMS_Script4"
+            echo "imagename   = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}_dirty'"        >> "$CASAMS_Script4"
+            echo "field       = ''"                                                          >> "$CASAMS_Script4"
+            echo "spw         = ''"                                                          >> "$CASAMS_Script4"
+            echo "width       =  ${CASAMS_WID_NUMB}"                                         >> "$CASAMS_Script3"
+            if [[ x"${CASAMS_FEQ_NUMB}" != x"" ]]; then
+            echo "outframe    = 'LSRK'"                                                      >> "$CASAMS_Script4"
+            echo "restfreq    = '${CASAMS_FEQ_NUMB}'GHz"                                     >> "$CASAMS_Script4"
+            fi
+            echo "niter       = 0"                                                           >> "$CASAMS_Script4" #<NOTE># set niter 0 so it do not do clean but just Fourier Transform.
+            echo "imsize      = 1024"                                                        >> "$CASAMS_Script4" #<TODO># 
+            echo "cell        = '0.1arcsec'"                                                 >> "$CASAMS_Script4" #<TODO># 
+            echo "datacolumn  = '${CASAMS_TYP}'"                                             >> "$CASAMS_Script4"
+            echo "multisource = F"                                                           >> "$CASAMS_Script4"
+            echo "inp(clean)"                                                                >> "$CASAMS_Script4"
+            echo "clean()"                                                                   >> "$CASAMS_Script4"
+            echo ""                                                                          >> "$CASAMS_Script4"
+            echo ""                                                                          >> "$CASAMS_Script4"
+            echo ""                                                                          >> "$CASAMS_Script4"
+            # 
+            # Write python script: run_casa_ms_step5_uvmodelfit.py
+            # 
+            echo "vis         = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}.ms'"                       >> "$CASAMS_Script5" #<TODO># uvmodelfit for docvel and nocvel have different results!
+            echo "field       = ''"                                                                      >> "$CASAMS_Script5"
+            echo "spw         = ''"                                                                      >> "$CASAMS_Script5"
+            echo "niter       = 25"                                                                      >> "$CASAMS_Script5"
+            echo "comptype    = 'G'"                                                                     >> "$CASAMS_Script5"
+            echo "sourcepar   = [1e-3, 0.0, 0.0, 0.2, 1.0, 0.0] # flux, ra, dec, major, abratio, angle"  >> "$CASAMS_Script5"
+            echo "varypar     = [   T,   T,   T,   T,   T,   T] # flux, ra, dec, major, abratio, angle"  >> "$CASAMS_Script5"
+            echo "inp(uvmodelfit)"                                                                       >> "$CASAMS_Script5"
+            echo "uvmodelfit()"                                                                          >> "$CASAMS_Script5"
+            echo ""                                                                                      >> "$CASAMS_Script5"
+            echo ""                                                                                      >> "$CASAMS_Script5"
+            echo ""                                                                                      >> "$CASAMS_Script5"
+            # 
+            # TODO: check the uvfits header CRVAL4 and RESTFREQ
+            # 
+            # 
+            # Write run_gildas_uvt_step6_importfits.py
+            # 
+            echo "FITS ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}.uvfits TO ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}.uvt /STYLE CASA"           >> "$CASAMS_Script6"
+            echo "let name ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}"                                                                              >> "$CASAMS_Script6"
+            echo "let size 15"                                                                                                                        >> "$CASAMS_Script6"
+            echo "let map_size 512"                                                                                                                   >> "$CASAMS_Script6"
+            echo "let map_cell 0.2"                                                                                                                   >> "$CASAMS_Script6"
+            echo "!go uvmap"                                                                                                                          >> "$CASAMS_Script6"
+            echo ""                                                                                                                                   >> "$CASAMS_Script6"
+            if [[ x"${CASAMS_FEQ_NUMB}" != x"" ]]; then
+            echo "FITS ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}_cvel.uvfits TO ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}_cvel.uvt /STYLE CASA" >> "$CASAMS_Script6"
+            echo "let name ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}_cvel"                                                                         >> "$CASAMS_Script6"
+            echo "let size 15"                                                                                                                        >> "$CASAMS_Script6"
+            echo "let map_size 512"                                                                                                                   >> "$CASAMS_Script6"
+            echo "let map_cell 0.2"                                                                                                                   >> "$CASAMS_Script6"
+            echo "!go uvmap"                                                                                                                          >> "$CASAMS_Script6"
+            echo ""                                                                                                                                   >> "$CASAMS_Script6"
+            fi
+            echo ""                                                                                                                                   >> "$CASAMS_Script6"
+            echo ""                                                                                                                                   >> "$CASAMS_Script6"
+        done
+    done
+    echo "    * written to python script: $CASAMS_Script1                   PLEASE RUN: casa --nogui -c \"execfile('$CASAMS_Script1')\""
+    echo "    * written to python script: $CASAMS_Script2                    PLEASE RUN: casa --nogui -c \"execfile('$CASAMS_Script2')\""
+    echo "    * written to python script: $CASAMS_Script3            PLEASE RUN: casa --nogui -c \"execfile('$CASAMS_Script3')\""
+    echo "    * written to python script: $CASAMS_Script4                   PLEASE RUN: casa --nogui -c \"execfile('$CASAMS_Script4')\""
+    echo "    * written to python script: $CASAMS_Script5              PLEASE RUN: casa --nogui -c \"execfile('$CASAMS_Script5')\""
+    echo "    * written to shell script:  $CASAMS_Script6   PLEASE RUN: echo \"@$CASAMS_Script6\" | mapping"
+    
+    
+    #<DEBUG>#exit
+    
+    
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+echo "Done!"

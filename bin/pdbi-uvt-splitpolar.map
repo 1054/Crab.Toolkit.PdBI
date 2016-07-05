@@ -1,0 +1,46 @@
+! 
+! Usage:
+!     @pdbi-uvt-splitpolar
+! 
+! Last update: 
+!      2015-03-17 created
+!      2015-03-17 now internally called by @do_uvt_import
+!      2015-03-17 now externally set map_size
+!      2015-04-13 small modification avoid the use of variable j
+!      2015-05-21 now make it very simple
+!      2015-07-07 now renamed to pdbi-uvt-splitpolar
+! 
+
+! LET name 
+
+for i 0 to 0
+    
+    SAY ""
+    SAY Splitting polarization for uvtable 'name'
+    SAY ""
+    
+    !!!!!!!!!!!!!!!!!!!!!!!!!
+    ! prepare uv_splitpolar !
+    !!!!!!!!!!!!!!!!!!!!!!!!!
+    
+    SIC OUTPUT uv_splitpolar_x.init
+    SAY TASK\FILE      %%      INPUT$ %'name'.uvt%
+    SAY TASK\FILE      %%     OUTPUT$ %'name'_SPOLAR.uvt%
+    SAY TASK\CHARACTER %%     STOKES$ "NONE"
+    SAY TASK\GO
+    SIC OUTPUT
+    $sed -i -e 's/%/"/g' 'uv_splitpolar_x.init'
+    SIC COPY uv_splitpolar_x.init 'name'_SPOLAR.init
+    run uv_splitpolar uv_splitpolar_x.init /NOWINDOW
+    
+    !!!!!!!!!!!!
+    ! go uvmap !
+    !!!!!!!!!!!!
+    
+    ! let name 'name'_SPOLAR
+    ! go uvmap
+    
+next
+
+
+

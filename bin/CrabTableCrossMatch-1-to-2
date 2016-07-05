@@ -1,0 +1,57 @@
+#!/bin/bash
+if [[ $# -lt 3 ]]; then
+    echo "Usage: "
+    echo "    CrabTableCrossMatch-1-to-2  InputTable1  OutputTable1  ReferenceTable2  [MatchingColumnOfTable1(=1) [MatchingColumnOfTable2(=1)]]"
+    exit
+fi
+# 
+# which column should be used as the cross-match value?
+crtb_crossmatch_col1=1; if [[ x"$4" != x ]]; then crtb_crossmatch_col1=$4; fi
+crtb_crossmatch_col2=1; if [[ x"$5" != x ]]; then crtb_crossmatch_col2=$5; fi
+# 
+crtb_crossmath_newf="$2"
+echo -n We are about to write new file "$crtb_crossmath_newf", OK? "[y/n] "
+read crtb_crossmath_ok
+if [[ x"$crtb_crossmath_ok" != x"y"* && x"$crtb_crossmath_ok" != x"Y"* ]]; then
+    echo "Abort! We have done no change to any file. "
+    exit
+fi
+if [[ -f $crtb_crossmath_newf ]]; then
+    rm $crtb_crossmath_newf
+fi
+# 
+crtb_crossmath_tab2="$3"
+if [[ ! -f $crtb_crossmath_tab2 ]]; then
+    echo Error! The reference table file "$crtb_crossmath_tab2" does not exist?! Exit!
+    exit
+fi
+# 
+crtb_crossmath_tab1="$1"
+crtb_crossmath_rowi=0
+OLD_IFS="$IFS" ## see http://stackoverflow.com/questions/18055073/how-do-i-preserve-leading-whitespaces-with-echo-on-a-shell-script
+IFS=
+while read crtb_crossmath_row1
+do
+    #if [[ $crtb_crossmath_rowi -le 5 ]]; then
+    #echo $crtb_crossmath_row1
+    #crtb_crossmath_rowi=$(expr $crtb_crossmath_rowi + 1)
+    #continue
+    #else 
+    #break
+    #fi
+    crtb_crossmath_grep=$(echo "$crtb_crossmath_row1" | sed -e 's/^ *//g' | sed -e 's/^#.*$//g' | grep -v -E '^$' | wc -l)
+    if [[ $crtb_crossmath_grep -gt 0 ]]; then
+        # cross match
+        crtb_crossmath_item=$(echo "$crtb_crossmath_row1" | sed -e 's/^ *//g' | tr -s ' ' | cut -d ' ' -f $crtb_crossmatch_col1)
+        crtb_crossmath_grep=$(cat  "$crtb_crossmath_tab2" | sed -e 's/^ *//g' | tr -s ' ' | cut -d ' ' -f $crtb_crossmatch_col2 | grep ^"$crtb_crossmath_item"$) # grep -E ^"$crtb_crossmath_item"$
+        echo $crtb_crossmath_rowi : $crtb_crossmath_item : $crtb_crossmath_grep
+        if [[ "$crtb_crossmath_item" == "$crtb_crossmath_grep" ]]; then 
+        echo "$crtb_crossmath_row1" >> "$crtb_crossmath_newf"
+        fi
+    else
+        echo "$crtb_crossmath_row1" >> "$crtb_crossmath_newf"
+    fi
+    crtb_crossmath_rowi=$(expr $crtb_crossmath_rowi + 1)
+done < "$crtb_crossmath_tab1"
+IFS="$OLD_IFS"
+# 
