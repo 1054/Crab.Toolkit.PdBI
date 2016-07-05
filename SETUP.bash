@@ -14,5 +14,17 @@ export CRABTOOLKITDIR
 if [[ $PATH != *"$CRABTOOLKITDIR/bin"* ]]; then
     export PATH="$CRABTOOLKITDIR/bin":$PATH
 fi
+#
+# LIST
+CRABTOOLKITCMD=(pdbi-uvt-go-average pdbi-uvt-go-uvfit)
+# 
+# CHECK
+# -- 20160427 only for interactive shell
+# -- http://stackoverflow.com/questions/12440287/scp-doesnt-work-when-echo-in-bashrc
+if [[ $- =~ "i" ]]; then 
+  for TEMPTOOLKITCMD in ${CRABTOOLKITCMD[@]}; do
+    type $TEMPTOOLKITCMD
+  done
+fi
 
 

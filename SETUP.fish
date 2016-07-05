@@ -57,5 +57,17 @@ export CRABTOOLKITDIR
 if not contains "$CRABTOOLKITDIR/bin" $PATH
     set -x PATH "$CRABTOOLKITDIR/bin" $PATH
 end
+#
+# LIST
+set -x CRABTOOLKITCMD pdbi-uvt-go-average pdbi-uvt-go-uvfit
+# 
+# CHECK
+# -- 20160427 only for interactive shell
+# -- http://stackoverflow.com/questions/12440287/scp-doesnt-work-when-echo-in-bashrc
+if status --is-interactive
+  for TEMPTOOLKITCMD in {$CRABTOOLKITCMD}
+    type $TEMPTOOLKITCMD
+  end
+end
 
 
