@@ -436,22 +436,22 @@ if [[ 1 == 1 ]]; then
     # read the pointing center of telescope i.e. center RA Dec of FoV , from 'Right Ascension.*Declination'
     # 
     if [[ x"$PdBIUVT_RANX_CENT" == x"" || x"$PdBIUVT_DECX_CENT" == x"" || x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
-        PdBIUVT_RANX_CENT=$(cat header.txt | grep 'Right Ascension.*Declination' | perl -p -e 's/.*Right Ascension[ ]*(.*)[ ]*Declination[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep -v "00:00:00.000")
-        PdBIUVT_DECX_CENT=$(cat header.txt | grep 'Right Ascension.*Declination' | perl -p -e 's/.*Right Ascension[ ]*(.*)[ ]*Declination[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep -v "00:00:00.00")
+        PdBIUVT_RANX_CENT=$(cat $PdBIUVT_SAVE.header.txt | grep 'Right Ascension.*Declination' | perl -p -e 's/.*Right Ascension[ ]*(.*)[ ]*Declination[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep -v "00:00:00.000")
+        PdBIUVT_DECX_CENT=$(cat $PdBIUVT_SAVE.header.txt | grep 'Right Ascension.*Declination' | perl -p -e 's/.*Right Ascension[ ]*(.*)[ ]*Declination[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep -v "00:00:00.00")
     fi
     # 
     # read the pointing center of telescope i.e. center RA Dec of FoV , from 'Axis 0 *A0.*Axis 0 *D0' if nothing in 'Right Ascension.*Declination'
     # 
     if [[ x"$PdBIUVT_RANX_CENT" == x"" || x"$PdBIUVT_DECX_CENT" == x"" || x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
-        PdBIUVT_RANX_CENT=$(cat header.txt | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep ":" |  grep -v "00:00:00.000")
-        PdBIUVT_DECX_CENT=$(cat header.txt | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep ":" | grep -v "00:00:00.00")
+        PdBIUVT_RANX_CENT=$(cat $PdBIUVT_SAVE.header.txt | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep ":" |  grep -v "00:00:00.000")
+        PdBIUVT_DECX_CENT=$(cat $PdBIUVT_SAVE.header.txt | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep ":" | grep -v "00:00:00.00")
     fi
     # 
     # read the pointing center of telescope if failed to get them, then try degree format
     # 
     if [[ x"$PdBIUVT_RANX_CENT" == x"" || x"$PdBIUVT_DECX_CENT" == x"" || x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
-        PdBIUVT_RAND_CENT=$(cat header.txt | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep -v ":")
-        PdBIUVT_DECD_CENT=$(cat header.txt | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep -v ":")
+        PdBIUVT_RAND_CENT=$(cat $PdBIUVT_SAVE.header.txt | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep -v ":")
+        PdBIUVT_DECD_CENT=$(cat $PdBIUVT_SAVE.header.txt | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep -v ":")
     fi
     # 
     # convert RANX DECX to degree or the opposite
@@ -471,7 +471,7 @@ if [[ 1 == 1 ]]; then
     # check Telescope pointing RA Dec
     # 
     if [[ x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
-        echo ""; echo "Error! Could not find telescope pointing information in the uv table header \"header.txt\"! Please input telescope pointing like \"-pointing 12:36:20 62:20:00\"!"; echo ""
+        echo ""; echo "Error! Could not find telescope pointing information in the uv table header \"$PdBIUVT_SAVE.header.txt\"! Please input telescope pointing like \"-pointing 12:36:20 62:20:00\"!"; echo ""
         exit
     fi
     # 

@@ -80,7 +80,7 @@ for (( PdBIUVT_ITER = 1; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ ))
     if [[ $PdBIUVT_ITER -eq 1 ]]; then 
     PdBIUVT_TEMP_TAB1="${PdBIUVT_NAME[$PdBIUVT_ITER-1]}"
     else
-    PdBIUVT_TEMP_TAB1="$PdBIUVT_SAVE".$(bc <<< $PdBIUVT_ITER-1)
+    PdBIUVT_TEMP_TAB1="$PdBIUVT_SAVE".$(($PdBIUVT_ITER-1))
     fi
     PdBIUVT_TEMP_TAB2="${PdBIUVT_NAME[$PdBIUVT_ITER]}"
     PdBIUVT_TEMP_TAB3="$PdBIUVT_SAVE.$PdBIUVT_ITER"
@@ -107,16 +107,23 @@ for (( PdBIUVT_ITER = 1; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ ))
     echo  "@$PdBIUVT_TEMP_EXEC  |  mapping  > ""$PdBIUVT_TEMP_LOGT"
     echo  "@$PdBIUVT_TEMP_EXEC" |  mapping  >  "$PdBIUVT_TEMP_LOGT"
     
+    # clean intermediate uvt
+    if [[ $PdBIUVT_ITER -gt 2 ]]; then 
+        if [[ $PdBIUVT_KEEP_FILES -eq 0 ]]; then
+            echo "rm \"$PdBIUVT_SAVE.$(($PdBIUVT_ITER-1)).\"*"
+            rm "$PdBIUVT_SAVE.$(($PdBIUVT_ITER-1))."*
+        fi
+    fi
+    
     if [[ $PdBIUVT_ITER -eq $((${#PdBIUVT_NAME[@]}-1)) ]]; then 
         # copy final uvt
         echo "cp \"$PdBIUVT_SAVE.$PdBIUVT_ITER.uvt\" \"$PdBIUVT_SAVE.uvt\""
         cp "$PdBIUVT_SAVE.$PdBIUVT_ITER.uvt" "$PdBIUVT_SAVE.uvt"
-        # clean intermediate uvt
+        # clean final intermediate uvt
         if [[ $PdBIUVT_KEEP_FILES -eq 0 ]]; then
             echo "rm \"$PdBIUVT_SAVE.$PdBIUVT_ITER.\"*"
             rm "$PdBIUVT_SAVE.$PdBIUVT_ITER."*
         fi
-        break
     fi
     
 done
