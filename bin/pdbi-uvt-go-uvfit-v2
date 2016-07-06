@@ -103,7 +103,7 @@ echo ""
 # Check output file
 # 
 # -- set output uvtable name, and check whether it exists
-if [[ x"$PdBIUVT_SAVE" == x"" || x"$PdBIUVT_SAVE" == x"tmp_pdbi_uvt" ]]; then
+if [[ x"$PdBIUVT_SAVE" == x"" || x"$PdBIUVT_SAVE" == x"tmp_pdbi_uvt_run_uv_fit" ]]; then
     echo "Warning! Output file name not defined, we will set it to be tmp_pdbi_uvt_run_uv_fit!"
     PdBIUVT_SAVE="tmp_pdbi_uvt_run_uv_fit"
 fi
@@ -442,20 +442,20 @@ EOF
     
     # copy "tmp_doUVFIT" to "tmp_doUVFIT.$OBJI"
     if [[ "${#PdBIUVT_RAND_OBJT[@]}" -gt 1 ]]; then
-        echo "mv tmp_doUVFIT.eps $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.eps"
-        echo "mv tmp_doUVFIT.log $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.log"
-        echo "mv tmp_doUVFIT.dat $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.dat"
-              mv tmp_doUVFIT.eps $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.eps
-              mv tmp_doUVFIT.log $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.log
-              mv tmp_doUVFIT.dat $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.dat
+        echo "cp tmp_doUVFIT.eps $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.eps"
+        echo "cp tmp_doUVFIT.log $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.log"
+        echo "cp tmp_doUVFIT.dat $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.dat"
+              cp tmp_doUVFIT.eps $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.eps
+              cp tmp_doUVFIT.log $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.log
+              cp tmp_doUVFIT.dat $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.dat
     else
       if [[ x"$PdBIUVT_SAVE" != x"tmp_pdbi_uvt_run_uv_fit" ]]; then
-        echo "mv tmp_doUVFIT.eps $PdBIUVT_SAVE.eps"
-        echo "mv tmp_doUVFIT.log $PdBIUVT_SAVE.log"
-        echo "mv tmp_doUVFIT.dat $PdBIUVT_SAVE.dat"
-              mv tmp_doUVFIT.eps $PdBIUVT_SAVE.eps
-              mv tmp_doUVFIT.log $PdBIUVT_SAVE.log
-              mv tmp_doUVFIT.dat $PdBIUVT_SAVE.dat
+        echo "cp tmp_doUVFIT.eps $PdBIUVT_SAVE.eps"
+        echo "cp tmp_doUVFIT.log $PdBIUVT_SAVE.log"
+        echo "cp tmp_doUVFIT.dat $PdBIUVT_SAVE.dat"
+              cp tmp_doUVFIT.eps $PdBIUVT_SAVE.eps
+              cp tmp_doUVFIT.log $PdBIUVT_SAVE.log
+              cp tmp_doUVFIT.dat $PdBIUVT_SAVE.dat
       fi
     fi
     # open tmp_doUVFIT.eps
