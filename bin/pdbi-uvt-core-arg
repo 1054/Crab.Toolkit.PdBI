@@ -87,7 +87,7 @@ while [[ "$#" -gt 0 ]]; do
                "-out") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_SAVE="$1";;
               "-save") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_SAVE="$1";;
           "-restfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_LINE_FREQ="$1";;
-          "-linefreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_LINE_FREQ="$1";;
+#         "-linefreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_LINE_FREQ="$1";;
       "-linerestfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_LINE_FREQ="$1";;
               "-vary") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY=1;;
       "-varyposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY=1;;
@@ -149,6 +149,7 @@ while [[ "$#" -gt 0 ]]; do
     "-sourcefunction") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="objfunction";;
 
          "-linewidth") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linewidth";; # km/s
+          "-linefreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="lineobsfreq";; # GHz
        "-lineobsfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="lineobsfreq";; # GHz
           "-linename") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linename";;
     esac
@@ -361,6 +362,9 @@ fi
 if [[ x"$PdBIUVT_SAVE" == x ]]; then 
     echo ""; echo "Warning! Output name was not given, setting to \"tmp_pdbi_uvt\""; echo ""
     PdBIUVT_SAVE="tmp_pdbi_uvt"
+else
+    # Remove the suffix of the input uvtable name, and <TODO> backup when the file exists
+    PdBIUVT_SAVE=$(echo $PdBIUVT_SAVE | sed -e 's/[.]uvt$//g')
 fi
 
 

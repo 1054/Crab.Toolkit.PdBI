@@ -212,14 +212,16 @@ for (( PdBIUVT_OBJI = 0; PdBIUVT_OBJI < $PdBIUVT_OBJN; PdBIUVT_OBJI++ )); do
     fi
     # 
     # Debug
-    ## echo TEMP_VMIN=$TEMP_VMIN
-    ## echo TEMP_VMAX=$TEMP_VMAX
-    ## echo TEMP_VWID=$TEMP_VWID
-    ## echo TEMP_VCEN=$TEMP_VCEN
-    ## echo TEMP_FMIN=$TEMP_FMIN
-    ## echo TEMP_FMAX=$TEMP_FMAX
-    ## echo TEMP_FWID=$TEMP_FWID
-    ## echo TEMP_FCEN=$TEMP_FCEN
+    ##echo TEMP_VMIN=$TEMP_VMIN
+    ##echo TEMP_VMAX=$TEMP_VMAX
+    ##echo TEMP_VWID=$TEMP_VWID
+    ##echo TEMP_VCEN=$TEMP_VCEN
+    ##echo TEMP_FMIN=$TEMP_FMIN
+    ##echo TEMP_FMAX=$TEMP_FMAX
+    ##echo TEMP_FWID=$TEMP_FWID
+    ##echo TEMP_FCEN=$TEMP_FCEN
+    ##echo TEMP_CMIN=$TEMP_CMIN
+    ##echo TEMP_CMAX=$TEMP_CMAX
     # 
     # If CMIN CMAX are invalid, then compute from VMIN VMAX or FMIN FMAX or lineobsfreq linewidth
     if [[ "$TEMP_CMIN" == "0" || "$TEMP_CMAX" == "0" ]]; then
@@ -367,7 +369,7 @@ for (( PdBIUVT_OBJI = 0; PdBIUVT_OBJI < $PdBIUVT_OBJN; PdBIUVT_OBJI++ )); do
         # 
         if [[ x"$PdBIUVT_LINE_FREQ" != x ]]; then
             TEMP_zRED=$(echo "($PdBIUVT_LINE_FREQ)/($TEMP_FCEN)-1" | bc -l | tail -n 1 | sed 's/^\./0./' | sed 's/^[-]\./-0./') # sed 's/^\./0./' -- http://stackoverflow.com/questions/8402181/how-do-i-get-bc1-to-print-the-leading-zero
-            printf '%s %10.5f %16s %10s\n' "--> The line rest frequency:" $TEMP_zRED " " "[GHz]"
+            printf '%s %10.5f %16s %10s\n' "--> The line rest frequency:" $PdBIUVT_LINE_FREQ " " "[GHz]"
             printf '%s %10.5f %16s %10s\n' "--> corresponds to redshift:" $TEMP_zRED " " " "
             echo "--"
         fi

@@ -75,7 +75,13 @@ fi
 # 
 # Prepare CRANGE list
 # 
-PdBIUVT_CAGE="${PdBIUVT_CMIN[0]} ${PdBIUVT_CMAX[0]}"
+for (( i=0; i<1; i++ )); do
+    if [[ ${PdBIUVT_CMIN[i]} -gt 0 && ${PdBIUVT_CMAX[i]} -gt 0 ]]; then
+        PdBIUVT_CAGE="${PdBIUVT_CMIN[i]} ${PdBIUVT_CMAX[i]}"
+    else
+        PdBIUVT_CAGE="$PdBIUVT_CHAN_MIN $PdBIUVT_CHAN_MAX"
+    fi
+done
 for (( i=1; i<${#PdBIUVT_CMIN[@]}; i++ )); do
     if [[ ${PdBIUVT_CMIN[i]} -gt 0 && ${PdBIUVT_CMAX[i]} -gt 0 ]]; then
         PdBIUVT_CAGE="$PdBIUVT_CAGE ${PdBIUVT_CMIN[i]} ${PdBIUVT_CMAX[i]}"
@@ -102,7 +108,7 @@ echo  'TASK\CHARACTER "Type of range"                    CTYPE$         "'"CHANN
 echo  'TASK\GO'                                                                                 >> $PdBIUVT_TEMP_INIT
 echo  "let name $PdBIUVT_NAME"                        > $PdBIUVT_TEMP_EXEC
 echo  "let type lmv"                                 >> $PdBIUVT_TEMP_EXEC
-echo  "let size $PdBIUVT_SIZE"                       >> $PdBIUVT_TEMP_EXEC
+#echo  "let size $PdBIUVT_SIZE"                       >> $PdBIUVT_TEMP_EXEC
 echo  "run uv_average $PdBIUVT_TEMP_INIT /NOWINDOW"  >> $PdBIUVT_TEMP_EXEC
 echo  '@tmp_doUVAVERAGE.map  |  mapping  > '"$PdBIUVT_TEMP_LOGT"
 echo  '@tmp_doUVAVERAGE.map' |  mapping  >  "$PdBIUVT_TEMP_LOGT"

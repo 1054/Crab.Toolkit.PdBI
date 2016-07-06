@@ -103,7 +103,7 @@ echo ""
 # Check output file
 # 
 # -- set output uvtable name, and check whether it exists
-if [[ x"$PdBIUVT_SAVE" == x"" || x"$PdBIUVT_SAVE" == x"tmp_pdbi_uvt_run_uv_fit" ]]; then
+if [[ x"$PdBIUVT_SAVE" == x"" || x"$PdBIUVT_SAVE" == x"tmp_pdbi_uvt" || x"$PdBIUVT_SAVE" == x"tmp_pdbi_uvt_run_uv_fit" ]]; then
     echo "Warning! Output file name not defined, we will set it to be tmp_pdbi_uvt_run_uv_fit!"
     PdBIUVT_SAVE="tmp_pdbi_uvt_run_uv_fit"
 fi

@@ -22,7 +22,7 @@ LANG=C
 PdBIUVT_GOOD=0; if [[ "$#" -gt 0 ]]; then PdBIUVT_GOOD=1; fi
 PdBIUVT_RPAR=""
 while [[ "$#" -gt 0 ]]; do
-    echo $1 "$#"
+    #echo $1 "$#"
     case $1 in
           "-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR=""; PdBIUVT_SIZE="$1";;
          "-radec") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR=""; PdBIUVT_MAP_RA="$1"; PdBIUVT_MAP_DEC="$2";;

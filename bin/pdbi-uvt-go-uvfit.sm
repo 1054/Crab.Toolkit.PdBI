@@ -298,25 +298,33 @@ goUVFIT_PlotVeloAmpl
     #error_y velo_plot ampl_plot ampl_err_plot
     
     
-    # plot further smoothed spectrum
-    if(dimen(velo_plot)>=30) {
-        smooth ampl_plot ampl_smooth_plot 3
-        ctype blue ltype 0 histogram velo_plot ampl_smooth_plot
-        smooth ampl_plot ampl_smooth15_plot 15
-        ctype magenta ltype 0 histogram velo_plot ampl_smooth15_plot
-        set ampl_plot = ampl_smooth15_plot
-        set ampl_smooth_calc = ampl_smooth15_plot
+    # plot spectrum and smoothed spectrum
+    if(dimen(velo_plot)>=1 && dimen(velo_plot)<=16) {
+        ctype default ltype 0 histogram velo_plot ampl_plot
     }
-    if(dimen(velo_plot)<30 && dimen(velo_plot)>=10) {
+    if(dimen(velo_plot)>16 && dimen(velo_plot)<=64) {
+        # smooth
         smooth ampl_plot ampl_smooth_plot 3
         ctype blue ltype 0 histogram velo_plot ampl_smooth_plot
-        smooth ampl_plot ampl_smooth10_plot 5
+        #set ampl_plot = ampl_smooth_plot
+        #set ampl_smooth_calc = ampl_smooth_plot
+        # further smooth
+        smooth ampl_smooth_plot ampl_smooth10_plot 5
         ctype magenta ltype 0 histogram velo_plot ampl_smooth10_plot
         set ampl_plot = ampl_smooth10_plot
         set ampl_smooth_calc = ampl_smooth10_plot
     }
-    if(dimen(velo_plot)<10 && dimen(velo_plot)>=1) {
-        ctype default ltype 0 histogram velo_plot ampl_plot
+    if(dimen(velo_plot)>64) {
+        # smooth
+        smooth ampl_plot ampl_smooth_plot 3
+        ctype blue ltype 0 histogram velo_plot ampl_smooth_plot
+        #set ampl_plot = ampl_smooth_plot
+        #set ampl_smooth_calc = ampl_smooth_plot
+        # further smooth
+        smooth ampl_smooth_plot ampl_smooth15_plot 15
+        ctype magenta ltype 0 histogram velo_plot ampl_smooth15_plot
+        set ampl_plot = ampl_smooth15_plot
+        set ampl_smooth_calc = ampl_smooth15_plot
     }
     ctype default ltype 0
     
@@ -347,7 +355,7 @@ goUVFIT_PlotVeloAmpl
     
     
     # print info
-    expand 1.01 lweight 2.5 
+    expand 0.85 lweight 2.5 
     relocate ( 5000 $($gy2-1100) ) 
                   # puts PdBI BEAM INT. SPEC.
                   # puts NOISE=$(sprintf('%0.3f',sqrt(sum(ampl_err_calc**2))*velo_Bin/1e3)) Jy km/s (default)
@@ -398,20 +406,19 @@ goUVFIT_PlotVeloAmpl
                 set velo_low = velo_tmp
             }
             ##print {velo_plot velo_low velo_high}
-            set velo_flag = ((velo_plot-velo_low)>=-0.5*abs(velo_Bin) && (velo_plot-velo_high)<=0.5*abs(velo_Bin))
-            if(sum(velo_flag)>0) {
-                set velo_plot_1 = velo_plot         if(velo_flag)
-                set ampl_plot_1 = ampl_plot         if(velo_flag)
-                set ampl_err_plot_1 = ampl_err_plot if(velo_flag)
-                set velo_calc_1 = velo_calc         if(velo_flag)
-                set ampl_calc_1 = ampl_calc         if(velo_flag)
-                set ampl_err_calc_1 = ampl_err_calc if(velo_flag)
+            set in_line_window = ((velo_plot-velo_low)>=-0.5*abs(velo_Bin) && (velo_plot-velo_high)<=0.5*abs(velo_Bin))
+            if(sum(in_line_window)>0) {
+                set shade_x = velo_plot             if(in_line_window)
+                set shade_y = ampl_plot             if(in_line_window)
+                set velo_calc_1 = velo_calc         if(in_line_window)
+                set ampl_calc_1 = ampl_calc         if(in_line_window)
+                set ampl_err_calc_1 = ampl_err_calc if(in_line_window)
                 if(is_vector(ampl_smooth_calc)) {
                     set text_plot = {"(smoothed,window)"}
                 } else {
                     set text_plot = {"(window)"}
                 }
-                expand 1.05 lweight 2.5 
+                expand 0.85 lweight 2.5 
                 ctype blue     puts WIDTH=$(sprintf('%0.3f',abs(velo_Bin)*dimen(ampl_calc_1))) km/s $(text_plot)
                 ctype blue     puts FLUX=$(sprintf('%0.3f',$(sum(ampl_calc_1)*abs(velo_Bin)/1e3))) Jy km/s $(text_plot)
                 ctype blue     puts ERROR=$(sprintf('%0.3f',$(sqrt(sum(ampl_err_calc_1**2))*abs(velo_Bin)/1e3))) Jy km/s $(text_plot)
@@ -426,7 +433,7 @@ goUVFIT_PlotVeloAmpl
                 #echo sigma-to-noise-ratio = $(sum(ampl_calc_1)/sqrt(sum(ampl_err_calc_1**2)))
                 echo 
                 ctype yellow lweight 0.5 angle 45 
-                SHADE HISTOGRAM 50 velo_plot_1 ampl_plot_1
+                SHADE HISTOGRAM 50 shade_x shade_y
                 ctype default lweight 3.0 angle 0
             } else {
                 print 'Warning! No channel has been selected within velocity range $(velo_low) $(velo_high) km/s!\n' {}
