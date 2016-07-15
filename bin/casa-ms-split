@@ -21,11 +21,14 @@ CASAMS_TYP="corrected" # data type, data or corrected
 # 
 function CASAMS_USG {
     #echo "Usage: casa-ms-split -vis calibrated.ms -field 3 -name CDFS344 -freq 344 -width 3840"
-    echo "Usage: casa-ms-split -vis calibrated.ms -name CDFS344 CDFS345 -spw \"1 2 3 4 5 6\" \"1 2 3\" -width 4 -stokes \"RR LL\" \"RR LL\""
-    echo "Notes: This example command will create CASA python scripts for the two sources, "
-    echo "For the first source, we will split each of the spw 1 2 3 4 5 6, and for each spw we further split into two stokes RR and LL."
-    echo "For the second source, we will split each of the spw 1 2 3, and for each spw we further split into two stokes RR and LL."
-    echo "Acceptable arguments are \"-vis\" \"-name\" \"-spw\" \"-width\" \"-stokes\" \"-skyfreq\"."
+    echo "Usage: "
+    echo "    casa-ms-split -name \"COScluster_z25\""
+    echo "    casa-ms-split -vis calibrated.ms -name CDFS344 CDFS345 -spw \"1 2 3 4 5 6\" \"1 2 3\" -width 4 -stokes \"RR LL\" \"RR LL\""
+    echo "Notes: "
+    echo "    This example command will create CASA python scripts for the two sources, "
+    echo "    For the first source, we will split each of the spw 1 2 3 4 5 6, and for each spw we further split into two stokes RR and LL."
+    echo "    For the second source, we will split each of the spw 1 2 3, and for each spw we further split into two stokes RR and LL."
+    echo "    Acceptable arguments are \"-vis\" \"-name\" \"-spw\" \"-width\" \"-stokes\" \"-skyfreq\"."
 }
 # 
 # Read input parameters
@@ -122,8 +125,19 @@ done
 # 
 if [[ x"$CASAMS_VIS" == x ]]; then
     CASAMS_GOOD=0
-    echo -n "Please input vis: "
-    read CASAMS_VIS
+    #echo -n "Please input vis: "
+    #read CASAMS_VIS
+    # Set default value
+    CASAMS_VIS="calibrated.ms"
+    # Now we can first print default value, then if user input anything we remove the default value and show the user input. 
+    echo -n "Please input vis: $CASAMS_VIS"
+    read -N 1 CASAMS_KEY
+    if [[ x"$CASAMS_KEY" != x ]]; then
+        echo -e -n "\r$(tput el)Please input vis: $CASAMS_KEY"
+        read CASAMS_VIS
+        CASAMS_VIS="${CASAMS_KEY}${CASAMS_VIS}"
+    fi
+    # Check again the input is not empty
     if [[ x"$CASAMS_VIS" != x ]]; then
         CASAMS_GOOD=1
     fi
@@ -666,7 +680,7 @@ for (( soui=0; soui<${#CASAMS_SOU[@]}; soui++ )); do
     echo "#!/bin/python" > "$CASAMS_Script3"
     echo "#!/bin/python" > "$CASAMS_Script4"
     echo "#!/bin/python" > "$CASAMS_Script5"
-    echo "#!/usr/bin/mapping" > "$CASAMS_Script6"
+    echo "!/usr/bin/mapping" > "$CASAMS_Script6"
     # 
     # Loop each spw
     # 
@@ -713,10 +727,10 @@ for (( soui=0; soui<${#CASAMS_SOU[@]}; soui++ )); do
             # then we will loop two sources, 
             # for the first source AAA, we will loop stokes ("RR" "LL" "RL" "LR"). 
             # while for the second source BBB, we will loop stokes (""), i.e. all stokes in one data. 
-            if [[ x"${CASAMS_STK_LIST[stokesj]}" == x"*" || x"${CASAMS_STK_LIST[stokesj]}" == x"" ]]; then
+            if [[ x"${CASAMS_STK_LIST[stokesi]}" == x"*" || x"${CASAMS_STK_LIST[stokesi]}" == x"" ]]; then
                 CASAMS_SFX_MORE="${CASAMS_SFX_MORE}"
             else
-                CASAMS_SFX_MORE="${CASAMS_SFX_MORE}_stokes${CASAMS_STK_LIST[stokesj]}"
+                CASAMS_SFX_MORE="${CASAMS_SFX_MORE}_stokes${CASAMS_STK_LIST[stokesi]}"
             fi
             # 
             # Write python script: run_casa_ms_step1_split.py
@@ -783,7 +797,7 @@ for (( soui=0; soui<${#CASAMS_SOU[@]}; soui++ )); do
             echo "imagename   = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}_dirty'"        >> "$CASAMS_Script4"
             echo "field       = ''"                                                          >> "$CASAMS_Script4"
             echo "spw         = ''"                                                          >> "$CASAMS_Script4"
-            echo "width       =  ${CASAMS_WID_NUMB}"                                         >> "$CASAMS_Script3"
+            echo "width       =  ${CASAMS_WID_NUMB}"                                         >> "$CASAMS_Script4"
             if [[ x"${CASAMS_FEQ_NUMB}" != x"" ]]; then
             echo "outframe    = 'LSRK'"                                                      >> "$CASAMS_Script4"
             echo "restfreq    = '${CASAMS_FEQ_NUMB}'GHz"                                     >> "$CASAMS_Script4"
@@ -845,6 +859,13 @@ for (( soui=0; soui<${#CASAMS_SOU[@]}; soui++ )); do
     echo "    * written to python script: $CASAMS_Script4                   PLEASE RUN: casa --nogui -c \"execfile('$CASAMS_Script4')\""
     echo "    * written to python script: $CASAMS_Script5              PLEASE RUN: casa --nogui -c \"execfile('$CASAMS_Script5')\""
     echo "    * written to shell script:  $CASAMS_Script6   PLEASE RUN: echo \"@$CASAMS_Script6\" | mapping"
+    
+    echo "casa --nogui -c \"execfile('$CASAMS_Script1')\"" >  "run_casa_ms_script.bash"
+    echo "casa --nogui -c \"execfile('$CASAMS_Script2')\"" >> "run_casa_ms_script.bash"
+    echo "casa --nogui -c \"execfile('$CASAMS_Script3')\"" >> "run_casa_ms_script.bash"
+    echo "casa --nogui -c \"execfile('$CASAMS_Script4')\"" >> "run_casa_ms_script.bash"
+    echo "echo \"@$CASAMS_Script6\" | mapping"             >> "run_casa_ms_script.bash"
+    echo "    * written to a global script: run_casa_ms_script.bash   (all the above commands are in it)"
     
     
     #<DEBUG>#exit

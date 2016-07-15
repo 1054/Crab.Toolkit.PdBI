@@ -5,6 +5,7 @@
 # 
 # Last update:
 #    2016-06-28 rewritting & beautifing
+#    2016-07-10 <TODO> what if multi-stokes?
 # 
 # 
 PdBIUVT_EXMP=".pdbi-uvt-go-uvfit.mapping"
@@ -93,7 +94,7 @@ for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do
     if [[ $PdBIUVT_Stokes -le 1 ]]; then
         echo "Warning! The number of stokes in \"${PdBIUVT_NAME[i]}.uvt\" is already one, no need to split and combine!"
     else
-        echo "Splitting \"${PdBIUVT_NAME[i]}.uvt\" polarizations and merge into single data with GILDAS mapping uv_splitpolar"
+        echo "Splitting \"${PdBIUVT_NAME[i]}.uvt\" polarizations and merging into single data"
         # check output file existence
         if [[ -f "${PdBIUVT_NAME[i]}_spolar.uvt" ]]; then
             echo "Warning! \"${PdBIUVT_NAME[i]}_spolar.uvt\" exists! Backup as \"${PdBIUVT_NAME[i]}_spolar.uvt.backup\"!"
@@ -104,6 +105,7 @@ for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do
         echo "TASK\\CHARACTER \"\"     STOKES\$ \"NONE\""                            >> "${PdBIUVT_NAME[i]}_spolar.uvt.mapping.init"
         echo "TASK\\GO"                                                              >> "${PdBIUVT_NAME[i]}_spolar.uvt.mapping.init"
         echo "run uv_splitpolar ${PdBIUVT_NAME[i]}_spolar.uvt.mapping.init /NOWINDOW" > "${PdBIUVT_NAME[i]}_spolar.uvt.mapping"
+        echo "@${PdBIUVT_NAME[i]}_spolar.uvt.mapping | mapping"
         echo "@${PdBIUVT_NAME[i]}_spolar.uvt.mapping" | mapping                       > "${PdBIUVT_NAME[i]}_spolar.uvt.mapping.log"
         echo "header ${PdBIUVT_NAME[i]}_spolar.uvt" | mapping                         > "${PdBIUVT_NAME[i]}_spolar.uvt.header.txt"
     fi

@@ -11,8 +11,17 @@ CASAMS_OUT="" # output listobs file
 # 
 # Read input parameters
 # 
-if [[ "$#" -eq 0 ]]; then
-    echo Usage: casa-ms-listobs -vis calibrated.ms [-out calibrated.ms.listobs.txt]
+#if [[ "$#" -eq 0 ]]; then
+#    echo "Usage: casa-ms-listobs -vis calibrated.ms [-out calibrated.ms.listobs.txt]"
+#    exit
+#fi
+# 
+# Check casa
+# 
+if [[ $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo ""
+    echo "Error! CASA was not found! Please check your \$PATH!"
+    echo ""
     exit
 fi
 # 
@@ -33,8 +42,19 @@ done
 # 
 if [[ x"$CASAMS_VIS" == x ]]; then
     CASAMS_GOOD=0
-    echo -n "Please input vis: "
-    read CASAMS_VIS
+    #echo -n "Please input vis: "
+    #read CASAMS_VIS
+    # Set default value
+    CASAMS_VIS="calibrated.ms"
+    # Now we can first print default value, then if user input anything we remove the default value and show the user input. 
+    echo -n "Please input vis: $CASAMS_VIS"
+    read -N 1 CASAMS_KEY
+    if [[ x"$CASAMS_KEY" != x ]]; then
+        echo -e -n "\r$(tput el)Please input vis: $CASAMS_KEY"
+        read CASAMS_VIS
+        CASAMS_VIS="${CASAMS_KEY}${CASAMS_VIS}"
+    fi
+    # Check again the input is not empty
     if [[ x"$CASAMS_VIS" != x ]]; then
         CASAMS_GOOD=1
     fi
@@ -43,7 +63,7 @@ fi
 # Check input parameters ------ if not passed then print usage and exit
 # 
 if [[ $CASAMS_GOOD -eq 0 ]]; then
-    echo Usage: casa-ms-split -vis calibrated.ms -field 3 -name CDFS344 -freq 344 -width 3840
+    echo "Usage: casa-ms-split -vis calibrated.ms -field 3 -name CDFS344 -freq 344 -width 3840"
     exit
 fi
 # 
@@ -65,6 +85,7 @@ fi
 # Revise input parameter -- out -- if not given, set to input vis+".listobs.txt"
 # 
 if [[ x"$CASAMS_OUT" == x ]]; then
+	echo "Output file name not given, set as \"${CASAMS_VIS}${CASAMS_VIS_SFIX}.listobs.txt\"!"
     CASAMS_OUT="${CASAMS_VIS}${CASAMS_VIS_SFIX}.listobs.txt"
 fi
 # 
