@@ -694,9 +694,9 @@ for (( soui=0; soui<${#CASAMS_SOU[@]}; soui++ )); do
         # for the first source AAA, we will loop spw (1 2 3 "4,5" "6,7" "8-10")
         # while for the second source BBB, we will loop sow (""), i.e. all spw in one data. 
         if [[ x"${CASAMS_SPW_LIST[spwi]}" == x"*" || x"${CASAMS_SPW_LIST[spwi]}" == x"" ]]; then
-            CASAMS_SFX_MORE="${CASAMS_SFX}_spw_all"
+            CASAMS_SFX_STR1="${CASAMS_SFX}_spw_all"
         else
-            CASAMS_SFX_MORE="${CASAMS_SFX}_spw$(echo ${CASAMS_SPW_LIST[spwi]} | sed -e 's/[,]/_/g')"
+            CASAMS_SFX_STR1="${CASAMS_SFX}_spw$(echo ${CASAMS_SPW_LIST[spwi]} | sed -e 's/[,]/_/g')"
         fi
         # 
         # Determine skyfreq for this spw of this source
@@ -711,9 +711,9 @@ for (( soui=0; soui<${#CASAMS_SOU[@]}; soui++ )); do
             fi
         fi
         if [[ ${CASAMS_WID_NUMB} -eq 1 ]]; then
-            CASAMS_SFX_MORE="${CASAMS_SFX_MORE}"
+            CASAMS_SFX_STR1="${CASAMS_SFX_STR1}"
         else
-            CASAMS_SFX_MORE="${CASAMS_SFX_MORE}_width${CASAMS_WID_NUMB}"
+            CASAMS_SFX_STR1="${CASAMS_SFX_STR1}_width${CASAMS_WID_NUMB}"
         fi
         # 
         # Loop each stokes
@@ -728,15 +728,15 @@ for (( soui=0; soui<${#CASAMS_SOU[@]}; soui++ )); do
             # for the first source AAA, we will loop stokes ("RR" "LL" "RL" "LR"). 
             # while for the second source BBB, we will loop stokes (""), i.e. all stokes in one data. 
             if [[ x"${CASAMS_STK_LIST[stokesi]}" == x"*" || x"${CASAMS_STK_LIST[stokesi]}" == x"" ]]; then
-                CASAMS_SFX_MORE="${CASAMS_SFX_MORE}"
+                CASAMS_SFX_STR2="${CASAMS_SFX_STR1}"
             else
-                CASAMS_SFX_MORE="${CASAMS_SFX_MORE}_stokes${CASAMS_STK_LIST[stokesi]}"
+                CASAMS_SFX_STR2="${CASAMS_SFX_STR1}_stokes${CASAMS_STK_LIST[stokesi]}"
             fi
             # 
             # Write python script: run_casa_ms_step1_split.py
             # 
             echo "vis         = '${CASAMS_VIS}${CASAMS_VIS_SFIX}'"                  >> "$CASAMS_Script1"
-            echo "outputvis   = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}.ms'"  >> "$CASAMS_Script1"
+            echo "outputvis   = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_STR2}.ms'"  >> "$CASAMS_Script1"
             echo "field       = '${CASAMS_SOU[soui]}'"                              >> "$CASAMS_Script1"
             echo "spw         = '${CASAMS_SPW_LIST[spwi]}'"                         >> "$CASAMS_Script1"
             echo "width       =  ${CASAMS_WID_NUMB}"                                >> "$CASAMS_Script1"
@@ -752,8 +752,8 @@ for (( soui=0; soui<${#CASAMS_SOU[@]}; soui++ )); do
             # Write python script: run_casa_ms_step2_cvel.py
             # 
             if [[ x"${CASAMS_FEQ_NUMB}" != x"" ]]; then
-            echo "vis         = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}.ms''"      >> "$CASAMS_Script2"
-            echo "outputvis   = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}_cvel.ms'"  >> "$CASAMS_Script2"
+            echo "vis         = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_STR2}.ms''"      >> "$CASAMS_Script2"
+            echo "outputvis   = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_STR2}_cvel.ms'"  >> "$CASAMS_Script2"
             echo "field       = ''"                                                      >> "$CASAMS_Script2"
             echo "spw         = ''"                                                      >> "$CASAMS_Script2"
             echo "width       =  1"                                                      >> "$CASAMS_Script2"
@@ -768,8 +768,8 @@ for (( soui=0; soui<${#CASAMS_SOU[@]}; soui++ )); do
             # 
             # Write python script: run_casa_ms_step3_exportuvfits.py
             # 
-            echo "vis         = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}.ms'"           >> "$CASAMS_Script3"
-            echo "fitsfile    = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}.uvfits'"       >> "$CASAMS_Script3"
+            echo "vis         = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_STR2}.ms'"           >> "$CASAMS_Script3"
+            echo "fitsfile    = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_STR2}.uvfits'"       >> "$CASAMS_Script3"
             echo "field       = ''"                                                          >> "$CASAMS_Script3"
             echo "spw         = ''"                                                          >> "$CASAMS_Script3"
             echo "datacolumn  = '${CASAMS_TYP}'"                                             >> "$CASAMS_Script3"
@@ -778,8 +778,8 @@ for (( soui=0; soui<${#CASAMS_SOU[@]}; soui++ )); do
             echo "exportuvfits()"                                                            >> "$CASAMS_Script3"
             echo ""                                                                          >> "$CASAMS_Script3"
             if [[ x"${CASAMS_FEQ_NUMB}" != x"" ]]; then
-            echo "vis         = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}_cvel.ms'"      >> "$CASAMS_Script3"
-            echo "fitsfile    = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}_cvel.uvfits'"  >> "$CASAMS_Script3"
+            echo "vis         = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_STR2}_cvel.ms'"      >> "$CASAMS_Script3"
+            echo "fitsfile    = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_STR2}_cvel.uvfits'"  >> "$CASAMS_Script3"
             echo "field       = ''"                                                          >> "$CASAMS_Script3"
             echo "spw         = ''"                                                          >> "$CASAMS_Script3"
             echo "datacolumn  = '${CASAMS_TYP}'"                                             >> "$CASAMS_Script3"
@@ -793,8 +793,8 @@ for (( soui=0; soui<${#CASAMS_SOU[@]}; soui++ )); do
             # 
             # Write python script: run_casa_ms_step4_clean.py
             # 
-            echo "vis         = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}.ms'"           >> "$CASAMS_Script4"
-            echo "imagename   = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}_dirty'"        >> "$CASAMS_Script4"
+            echo "vis         = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_STR2}.ms'"           >> "$CASAMS_Script4"
+            echo "imagename   = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_STR2}_dirty'"        >> "$CASAMS_Script4"
             echo "field       = ''"                                                          >> "$CASAMS_Script4"
             echo "spw         = ''"                                                          >> "$CASAMS_Script4"
             echo "width       =  ${CASAMS_WID_NUMB}"                                         >> "$CASAMS_Script4"
@@ -815,7 +815,7 @@ for (( soui=0; soui<${#CASAMS_SOU[@]}; soui++ )); do
             # 
             # Write python script: run_casa_ms_step5_uvmodelfit.py
             # 
-            echo "vis         = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}.ms'"                       >> "$CASAMS_Script5" #<TODO># uvmodelfit for docvel and nocvel have different results!
+            echo "vis         = '${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_STR2}.ms'"                       >> "$CASAMS_Script5" #<TODO># uvmodelfit for docvel and nocvel have different results!
             echo "field       = ''"                                                                      >> "$CASAMS_Script5"
             echo "spw         = ''"                                                                      >> "$CASAMS_Script5"
             echo "niter       = 25"                                                                      >> "$CASAMS_Script5"
@@ -833,16 +833,16 @@ for (( soui=0; soui<${#CASAMS_SOU[@]}; soui++ )); do
             # 
             # Write run_gildas_uvt_step6_importfits.py
             # 
-            echo "FITS ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}.uvfits TO ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}.uvt /STYLE CASA"           >> "$CASAMS_Script6"
-            echo "let name ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}"                                                                              >> "$CASAMS_Script6"
+            echo "FITS ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_STR2}.uvfits TO ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_STR2}.uvt /STYLE CASA"           >> "$CASAMS_Script6"
+            echo "let name ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_STR2}"                                                                              >> "$CASAMS_Script6"
             echo "let size 15"                                                                                                                        >> "$CASAMS_Script6"
             echo "let map_size 512"                                                                                                                   >> "$CASAMS_Script6"
             echo "let map_cell 0.2"                                                                                                                   >> "$CASAMS_Script6"
             echo "!go uvmap"                                                                                                                          >> "$CASAMS_Script6"
             echo ""                                                                                                                                   >> "$CASAMS_Script6"
             if [[ x"${CASAMS_FEQ_NUMB}" != x"" ]]; then
-            echo "FITS ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}_cvel.uvfits TO ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}_cvel.uvt /STYLE CASA" >> "$CASAMS_Script6"
-            echo "let name ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_MORE}_cvel"                                                                         >> "$CASAMS_Script6"
+            echo "FITS ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_STR2}_cvel.uvfits TO ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_STR2}_cvel.uvt /STYLE CASA" >> "$CASAMS_Script6"
+            echo "let name ${CASAMS_PFX}${CASAMS_NOM}${CASAMS_SFX_STR2}_cvel"                                                                         >> "$CASAMS_Script6"
             echo "let size 15"                                                                                                                        >> "$CASAMS_Script6"
             echo "let map_size 512"                                                                                                                   >> "$CASAMS_Script6"
             echo "let map_cell 0.2"                                                                                                                   >> "$CASAMS_Script6"
