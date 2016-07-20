@@ -28,7 +28,7 @@ PdBIUVT_SAVE=""           # the output save files base name
 # ----------------------- # fitting parameters
 PdBIUVT_SIZE=()
 PdBIUVT_POSA=()
-PdBIUVT_VARY=0
+PdBIUVT_VARY=()
 PdBIUVT_VARY_SIZE=()
 PdBIUVT_VARY_POSA=()
 PdBIUVT_FUNC=()           # "POINT"
@@ -89,13 +89,13 @@ while [[ "$#" -gt 0 ]]; do
           "-restfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_LINE_FREQ="$1";;
 #         "-linefreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_LINE_FREQ="$1";;
       "-linerestfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_LINE_FREQ="$1";;
-              "-vary") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY=1;;
-      "-varyposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY=1;;
-       "-fixposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY=0;;
-          "-varysize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY_SIZE=1;;
-           "-fixsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY_SIZE=0;;
-      "-varyposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY_POSA=1;;
-       "-fixposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY_POSA=0;;
+#             "-vary") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY=1;;
+#     "-varyposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY=1;;
+#      "-fixposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY=0;;
+#         "-varysize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY_SIZE=1;;
+#          "-fixsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY_SIZE=0;;
+#     "-varyposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY_POSA=1;;
+#      "-fixposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY_POSA=0;;
 #            "-gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_FUNC="E_GAUSS";;
 #           "-egauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_FUNC="E_GAUSS";;
 #           "-cgauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_FUNC="C_GAUSS";;
@@ -246,7 +246,7 @@ while [[ "$#" -gt 0 ]]; do
     
     if [[ "$PdBIUVT_RPAR" == "varyposition" ]];  then 
         if [[ "$#" -lt 1 ]]; then PdBIUVT_VARY+=("1"); break; fi
-        if echo "$1" | grep -q -E '^-'; then PdBIUVT_VARY+=("1"); break; fi
+        if echo "$1" | grep -q -E '^-'; then PdBIUVT_VARY+=("1"); continue; fi #<fixed><20160720><dzliu># should use continue instead of break!
         if echo "$1" | grep -q -v -i -E "^[01TF]*$"; then
             echo ""; echo "Error! Input -varyposition has a wrong format! Please input only 0 1 value to inindicate whether to vary position."; echo ""
             exit
@@ -255,7 +255,7 @@ while [[ "$#" -gt 0 ]]; do
     fi
     if [[ "$PdBIUVT_RPAR" == "varyobjsize" ]];  then 
         if [[ "$#" -lt 1 ]]; then PdBIUVT_VARY_SIZE+=("1"); break; fi
-        if echo "$1" | grep -q -E '^-'; then PdBIUVT_VARY_SIZE+=("1"); break; fi
+        if echo "$1" | grep -q -E '^-'; then PdBIUVT_VARY_SIZE+=("1"); continue; fi #<fixed><20160720><dzliu># should use continue instead of break!
         if echo "$1" | grep -q -v -i -E "^[01TF]*$"; then
             echo ""; echo "Error! Input -varyobjsize has a wrong format! Please input only 0 1 value to inindicate whether to vary object size."; echo ""
             exit
@@ -264,7 +264,7 @@ while [[ "$#" -gt 0 ]]; do
     fi
     if [[ "$PdBIUVT_RPAR" == "varyobjposangle" ]];  then 
         if [[ "$#" -lt 1 ]]; then PdBIUVT_VARY_POSA+=("1"); break; fi
-        if echo "$1" | grep -q -E '^-'; then PdBIUVT_VARY_POSA+=("1"); break; fi
+        if echo "$1" | grep -q -E '^-'; then PdBIUVT_VARY_POSA+=("1"); continue; fi #<fixed><20160720><dzliu># should use continue instead of break!
         if echo "$1" | grep -q -v -i -E "^[01TF]*$"; then
             echo ""; echo "Error! Input -varyobjposangle has a wrong format! Please input only 0 1 value to inindicate whether to vary object pos angle."; echo ""
             exit
@@ -557,13 +557,13 @@ else
     printf "%-15s%s\n" "varyposition" " # Allow fitting source position"
 fi
 if [[ $PdBIUVT_VARY_SIZE -eq 0 ]]; then
-    printf "%-15s%s\n" "fixsize" " # Prevent fitting source size"
-else
+#    printf "%-15s%s\n" "fixsize" " # Prevent fitting source size"
+#else
     printf "%-15s%s\n" "varysize" " # Allow fitting source size"
 fi
 if [[ $PdBIUVT_VARY_POSA -eq 0 ]]; then
-    printf "%-15s%s\n" "fixposangle" " # Prevent fitting source posangle"
-else
+#    printf "%-15s%s\n" "fixposangle" " # Prevent fitting source posangle"
+#else
     printf "%-15s%s\n" "varyposangle" " # Allow fitting source posangle"
 fi
 

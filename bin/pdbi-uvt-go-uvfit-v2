@@ -170,17 +170,17 @@ for (( PdBIUVT_OBJI = 0; PdBIUVT_OBJI < "${#PdBIUVT_RAND_OBJT[@]}"; PdBIUVT_OBJI
     if [[ ${#PdBIUVT_POSA[@]}0=$PdBIUVT_OBJI ]]; then
         PdBIUVT_POSA+=("0.0")
     fi
-    # Check input vary position, set default vary position
+    # Check input vary position, set default fix position
     if [[ ${#PdBIUVT_VARY[@]}<=$PdBIUVT_OBJI ]]; then
         PdBIUVT_VARY+=("0")
     fi
     # Check input vary size, set default vary size
     if [[ ${#PdBIUVT_VARY_SIZE[@]}<=$PdBIUVT_OBJI ]]; then
-        PdBIUVT_VARY_SIZE+=("0")
+        PdBIUVT_VARY_SIZE+=("1")
     fi
     # Check input vary posangle, set default vary posangle
     if [[ ${#PdBIUVT_VARY_POSA[@]}<=$PdBIUVT_OBJI ]]; then
-        PdBIUVT_VARY_POSA+=("0")
+        PdBIUVT_VARY_POSA+=("1")
     fi
     # Check input fit function, set default fit function
     if [[ ${#PdBIUVT_FUNC[@]}<=$PdBIUVT_OBJI ]]; then
