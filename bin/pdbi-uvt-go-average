@@ -119,4 +119,7 @@ tail -n 1 "$PdBIUVT_TEMP_LOGT"
 echo "I-RUN,  Output to $PdBIUVT_SAVE.uvt"
 echo 
 
+cp "$PdBIUVT_TEMP_INIT" "$PdBIUVT_SAVE.init"
+cp "$PdBIUVT_TEMP_EXEC" "$PdBIUVT_SAVE.map"
+cp "$PdBIUVT_TEMP_LOGT" "$PdBIUVT_SAVE.log"
 

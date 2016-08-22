@@ -32,7 +32,7 @@ PdBIUVT_VARY=()
 PdBIUVT_VARY_SIZE=()
 PdBIUVT_VARY_POSA=()
 PdBIUVT_FUNC=()           # "POINT"
-PdBIUVT_RSUB="YES"        # whether subtract the fit component or not (if we set PdBIUVT_RESI, then PdBIUVT_RSUB="YES")
+PdBIUVT_RSUB="NO"         # whether subtract the fit component or not (if we set PdBIUVT_RESI, then PdBIUVT_RSUB="YES")
 # ----------------------- # spectrum info
 PdBIUVT_VMIN=()
 PdBIUVT_VMAX=()
@@ -45,10 +45,12 @@ PdBIUVT_CCEN=()           #
 PdBIUVT_FMIN=()
 PdBIUVT_FMAX=()
 PdBIUVT_FWID=()           # 
-PdBIUVT_FCEN=()           # 
+PdBIUVT_FCEN=()           # obs-frame line frequency
 PdBIUVT_zRED=()           # 
+PdBIUVT_FLAB=()           # laboratory rest-frame line frequency
 PdBIUVT_LINE_NAME=()      # 
-PdBIUVT_LINE_FREQ=""      # 
+PdBIUVT_LINE_FREQ=()      # obs freq (obsolete)
+PdBIUVT_REST_FREQ=()      # rest freq (obsolete)
 PdBIUVT_CHAN_MIN=0        # 
 PdBIUVT_CHAN_MAX=0        # 
 PdBIUVT_CHAN_CEN=0        # 
@@ -66,6 +68,9 @@ PdBIUVT_RANX_CENT=""      # "09:59:38.101"
 PdBIUVT_DECX_CENT=""      # "02:28:57.108"
 PdBIUVT_RAND_CENT=""      # "150.000"
 PdBIUVT_DECD_CENT=""      # "30.0000"
+# ------------------------# uv taper
+PdBIUVT_UVRANGE_MIN="0"
+PdBIUVT_UVRANGE_MAX="36000"
 # ------------------------# program control
 PdBIUVT_PARALLELS=0
 
@@ -86,9 +91,6 @@ while [[ "$#" -gt 0 ]]; do
           "-residual") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_RESI="$1";;
                "-out") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_SAVE="$1";;
               "-save") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_SAVE="$1";;
-          "-restfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_LINE_FREQ="$1";;
-#         "-linefreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_LINE_FREQ="$1";;
-      "-linerestfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_LINE_FREQ="$1";;
 #             "-vary") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY=1;;
 #     "-varyposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY=1;;
 #      "-fixposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY=0;;
@@ -109,6 +111,9 @@ while [[ "$#" -gt 0 ]]; do
             "-crange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="crange";; # channel range pairs
             "-vrange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="vrange";; # km/s
             "-frange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="frange";; # GHz
+
+           "-uvrange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvrange";; # meter
+            
           "-redshift") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="redshift";;
 
               "-vary") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="varyposition";; # accepts input values e.g. -vary 1 0 F T
@@ -148,9 +153,13 @@ while [[ "$#" -gt 0 ]]; do
         "-sourcefunc") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="objfunction";;
     "-sourcefunction") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="objfunction";;
 
+          "-subtract") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_RSUB="YES";;
+
          "-linewidth") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linewidth";; # km/s
           "-linefreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="lineobsfreq";; # GHz
        "-lineobsfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="lineobsfreq";; # GHz
+          "-restfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linerestfreq";;
+      "-linerestfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linerestfreq";;
           "-linename") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linename";;
     esac
     if [[ "$PdBIUVT_RPAR" == "radec" ]];  then 
@@ -232,6 +241,25 @@ while [[ "$#" -gt 0 ]]; do
         fi
         shift # shift because we read a pair of values
     fi
+    if [[ "$PdBIUVT_RPAR" == "uvrange" ]];  then 
+        if [[ "$#" -lt 2 ]]; then
+            break
+        fi
+        if echo "$1" | grep -Eq '^[-+]?[0-9]+\.?[0-9]*$'; then
+            PdBIUVT_UVRANGE_MIN="$1"
+        else
+            echo "Error! Input UV range value \"$1\" is not a float number! Exit!"
+            exit
+        fi
+        if echo "$2" | grep -Eq '^[-+]?[0-9]+\.?[0-9]*$'; then
+            PdBIUVT_UVRANGE_MAX="$2"
+        else
+            echo "Error! Input UV range value \"$2\" is not a float number! Exit!"
+            exit
+        fi
+        shift # shift because we read a pair of values
+        PdBIUVT_RPAR="none" # set to none because for telescope pointing we only read one pair of values
+    fi
     if [[ "$PdBIUVT_RPAR" == "redshift" ]];  then 
         if [[ "$#" -lt 1 ]]; then
             break
@@ -276,7 +304,7 @@ while [[ "$#" -gt 0 ]]; do
     if [[ "$PdBIUVT_RPAR" == "objsize" ]];  then 
         if [[ "$#" -lt 1 ]]; then break; fi
         if echo "$1" | grep -q -v -E '^[0-9 ".+-]*$'; then # objsize allows input a pair of number, for major and minor axis size. 
-            echo ""; echo "Error! Input -objsize has a wrong format! Please input only number value of the object size."; echo ""
+            echo ""; echo "Error! Input -objsize $1 has a wrong format! Please input only number value of the object size."; echo ""
             exit
         fi
         PdBIUVT_SIZE+=("$1")
@@ -292,7 +320,7 @@ while [[ "$#" -gt 0 ]]; do
     
     if [[ "$PdBIUVT_RPAR" == "objfunction" ]];  then 
         if [[ "$#" -lt 1 ]]; then break; fi
-        if echo "$1" | grep -q -v -E '^[a-zA-Z "]*$'; then
+        if echo "$1" | grep -q -v -E '^[a-zA-Z _"]*$'; then
             echo ""; echo "Error! Input -objfunction has a wrong format! Please input only string value of the object model function."; echo ""
             exit
         fi
@@ -315,6 +343,14 @@ while [[ "$#" -gt 0 ]]; do
             exit
         fi
         PdBIUVT_FCEN+=("$1")
+    fi
+    if [[ "$PdBIUVT_RPAR" == "linerestfreq" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        if echo "$1" | grep -q -v -E "^[0-9.+-]*$"; then
+            echo ""; echo "Error! Input -linerestfreq has a wrong format! Please input only number value of the expected line observing frequency in unit of GHz."; echo ""
+            exit
+        fi
+        PdBIUVT_FLAB+=("$1")
     fi
     if [[ "$PdBIUVT_RPAR" == "linename" ]];  then 
         if [[ "$#" -lt 1 ]]; then break; fi

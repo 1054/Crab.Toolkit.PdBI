@@ -155,6 +155,27 @@ echo "***********************************"
 PdBIUVT_TEMP_INIT="$PdBIUVT_SAVE.init"
 PdBIUVT_TEMP_EXEC="$PdBIUVT_SAVE.map"
 PdBIUVT_TEMP_LOGT="$PdBIUVT_SAVE.log"
+if [[ x"$PdBIUVT_RSUB" == x"YES" ]]; then
+    # <20160809><dzliu> if subtract source model uv table, then set the output residual uv table name here
+    if [[ x"$PdBIUVT_RESI" == x ]]; then
+        PdBIUVT_TEMP_RESI="$PdBIUVT_SAVE.uvt"
+    else
+        if [[ x"$PdBIUVT_RESI" == x*".uvt" ]]; then
+            PdBIUVT_TEMP_RESI="$PdBIUVT_RESI"
+        else
+            PdBIUVT_TEMP_RESI="$PdBIUVT_RESI.uvt"
+        fi
+    fi
+    # <20160809><dzliu> if subtract source model uv table, then run uv_fit for only selected CRANGE to make the residual uv table
+    if [[ ${#PdBIUVT_CMIN[@]} -gt 0 && ${#PdBIUVT_CMAX[@]} -gt 0 ]]; then
+        PdBIUVT_TEMP_CHAN="${PdBIUVT_CMIN[0]} ${PdBIUVT_CMAX[0]}"
+    else
+        PdBIUVT_TEMP_CHAN="$PdBIUVT_CHAN_MIN $PdBIUVT_CHAN_MAX"
+    fi
+else
+    PdBIUVT_TEMP_RESI=""
+    PdBIUVT_TEMP_CHAN="$PdBIUVT_CHAN_MIN $PdBIUVT_CHAN_MAX"
+fi
 # 
 # loop each object (according to the input radec pairs)
 for (( PdBIUVT_OBJI = 0; PdBIUVT_OBJI < "${#PdBIUVT_RAND_OBJT[@]}"; PdBIUVT_OBJI++ )); do
@@ -203,10 +224,10 @@ for (( PdBIUVT_OBJI = 0; PdBIUVT_OBJI < "${#PdBIUVT_RAND_OBJT[@]}"; PdBIUVT_OBJI
         echo  '! 6 parameters needed for all functions'                                                                            >> $PdBIUVT_TEMP_INIT
         echo  '!'                                                                                                                  >> $PdBIUVT_TEMP_INIT
         echo  'TASK\CHARACTER "UV Table: "                     UVTABLE$       "'"$PdBIUVT_NAME"'"'                                 >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\INTEGER   "Channels: "                     CHANNEL$[2]     '"$PdBIUVT_CHAN_MIN" "$PdBIUVT_CHAN_MAX"            >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\REAL      "UV Range: "                     UV_RANGE$[2]    '"0 19600"                                          >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\CHARACTER "Result Fits Table: "            RESULT$        "'"${PdBIUVT_SAVE}_uv_fit_res.column"'"'             >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\CHARACTER "Residual UV Table: "            RESIDUALS$     "'"${PdBIUVT_SAVE}_uv_fit_res.uvt"'"'                >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\INTEGER   "Channels: "                     CHANNEL$[2]     '"$PdBIUVT_TEMP_CHAN"                               >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\REAL      "UV Range: "                     UV_RANGE$[2]    '"$PdBIUVT_UVRANGE_MIN $PdBIUVT_UVRANGE_MAX"        >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\CHARACTER "Result Fits Table: "            RESULT$        "'"$PdBIUVT_SAVE.column"'"'                          >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\CHARACTER "Residual UV Table: "            RESIDUALS$     "'"$PdBIUVT_TEMP_RESI"'"'                            >> $PdBIUVT_TEMP_INIT
         echo  'TASK\INTEGER   "Number of Functions"            NF$             '"${#PdBIUVT_RAND_OBJT[@]}"                         >> $PdBIUVT_TEMP_INIT
         echo  '! '                                                                                                                 >> $PdBIUVT_TEMP_INIT
         echo  '! Functions '                                                                                                       >> $PdBIUVT_TEMP_INIT
@@ -227,16 +248,20 @@ for (( PdBIUVT_OBJI = 0; PdBIUVT_OBJI < "${#PdBIUVT_RAND_OBJT[@]}"; PdBIUVT_OBJI
     PdBIUVT_PosAngle=$(echo ${PdBIUVT_POSA[PdBIUVT_OBJI]})
     PdBIUVT_PosAngle_Fit=$(echo ${PdBIUVT_VARY_POSA[PdBIUVT_OBJI]}-1 | bc)
     # 
+    # allow input function
+    PdBIUVT_Function=$(echo ${PdBIUVT_FUNC[PdBIUVT_OBJI]})
+    # 
     # print info
     echo Obj R.A. Offset = $PdBIUVT_PosX arcsec "(START=$PdBIUVT_PosX_Fit)"
     echo Obj Dec. Offset = $PdBIUVT_PosY arcsec "(START=$PdBIUVT_PosY_Fit)"
-    echo Obj FWHM Major = $PdBIUVT_DMajor arcsec "(START=$PdBIUVT_DMajor_Fit)"
-    echo Obj FWHM Minor = $PdBIUVT_DMinor arcsec "(START=$PdBIUVT_DMinor_Fit)"
-    echo Obj Pos. Angle = $PdBIUVT_PosAngle degree "(START=$PdBIUVT_PosAngle_Fit)"
+    if echo "$PdBIUVT_Function" | grep -q -i "GAUSS"; then
+        echo Obj FWHM Major = $PdBIUVT_DMajor arcsec "(START=$PdBIUVT_DMajor_Fit)"
+        if echo "$PdBIUVT_Function" | grep -q -i "E_GAUSS"; then
+            echo Obj FWHM Minor = $PdBIUVT_DMinor arcsec "(START=$PdBIUVT_DMinor_Fit)"
+            echo Obj Pos. Angle = $PdBIUVT_PosAngle degree "(START=$PdBIUVT_PosAngle_Fit)"
+        fi
+    fi
     echo "--"
-    # 
-    # allow input function
-    PdBIUVT_Function=$(echo ${PdBIUVT_FUNC[PdBIUVT_OBJI]})
     # 
     # <20160629><dzliu> allow size to vary/fixed
     if echo "$PdBIUVT_Function" | grep -q -i "POINT"; then

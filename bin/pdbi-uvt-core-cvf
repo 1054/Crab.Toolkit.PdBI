@@ -129,9 +129,15 @@ for (( PdBIUVT_OBJI = 0; PdBIUVT_OBJI < $PdBIUVT_OBJN; PdBIUVT_OBJI++ )); do
     if [[ "${#PdBIUVT_zRED[@]}"<=$PdBIUVT_OBJI ]]; then
         PdBIUVT_zRED+=("0.0")
     fi
-    TEMP_zRED="${PdBIUVT_zRED[$PdBIUVT_OBJI]}"
+    TEMP_REDSHIFT="${PdBIUVT_zRED[$PdBIUVT_OBJI]}"
     ##echo ${PdBIUVT_LINE_NAME[@]}
     ##echo $TEMP_LINE_NAME
+    # 
+    # Check the input restfreq of each object
+    if [[ "${#PdBIUVT_FLAB[@]}"<=$PdBIUVT_OBJI ]]; then
+        PdBIUVT_FLAB+=("0.0")
+    fi
+    TEMP_REST_FREQ="${PdBIUVT_FLAB[$PdBIUVT_OBJI]}"
     # 
     # Check the input channel range of each object
     # Channel range is given by "-crange CMIN1 CMAX1 CMIN2 CMAX2 ..."
@@ -185,10 +191,68 @@ for (( PdBIUVT_OBJI = 0; PdBIUVT_OBJI < $PdBIUVT_OBJN; PdBIUVT_OBJI++ )); do
     if [[ "${#PdBIUVT_FCEN[@]}"<=$PdBIUVT_OBJI ]]; then
         PdBIUVT_FCEN+=("0")
     fi
+    # 
+    # determine line rest frequency from line name if provided
+    if echo "$TEMP_REST_FREQ>0" | bc -l | grep -q "0"; then
+        if     [[ x"$TEMP_LINE_NAME" == x*"CO"* ]]; then
+            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"1-0"* ]]; then TEMP_REST_FREQ="115.2712018"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"2-1"* ]]; then TEMP_REST_FREQ="230.5380000"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"3-2"* ]]; then TEMP_REST_FREQ="345.7959899"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"4-3"* ]]; then TEMP_REST_FREQ="461.0407682"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"5-4"* ]]; then TEMP_REST_FREQ="576.2679305"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"6-5"* ]]; then TEMP_REST_FREQ="691.4730763"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"7-6"* ]]; then TEMP_REST_FREQ="806.6518060"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"8-7"* ]]; then TEMP_REST_FREQ="921.7997000"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"9-8"* ]]; then TEMP_REST_FREQ="1036.9123930"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"10-9"* ]]; then TEMP_REST_FREQ="1151.9854520"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO10"* ]]; then TEMP_REST_FREQ="115.2712018"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO21"* ]]; then TEMP_REST_FREQ="230.5380000"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO32"* ]]; then TEMP_REST_FREQ="345.7959899"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO43"* ]]; then TEMP_REST_FREQ="461.0407682"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO54"* ]]; then TEMP_REST_FREQ="576.2679305"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO65"* ]]; then TEMP_REST_FREQ="691.4730763"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO76"* ]]; then TEMP_REST_FREQ="806.6518060"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO87"* ]]; then TEMP_REST_FREQ="921.7997000"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO98"* ]]; then TEMP_REST_FREQ="1036.9123930"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CO109"* ]]; then TEMP_REST_FREQ="1151.9854520"; fi
+        fi
+        if     [[ x"$TEMP_LINE_NAME" == x*"CI"* ]]; then
+            if [[ x"$TEMP_LINE_NAME" == x*"CII"*"158"* ]]; then TEMP_REST_FREQ="1900.53690"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CI"*"2-1"* ]]; then TEMP_REST_FREQ="809.34197"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"CI"*"1-0"* ]]; then TEMP_REST_FREQ="492.16065"; fi
+        fi
+        if     [[ x"$TEMP_LINE_NAME" == x*"H2O"* ]]; then
+            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"110-101"* ]]; then TEMP_REST_FREQ="556.93599"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"111-000"* ]]; then TEMP_REST_FREQ="1113.34301"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"202-111"* ]]; then TEMP_REST_FREQ="987.92676"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"211-202"* ]]; then TEMP_REST_FREQ="752.03314"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"212-101"* ]]; then TEMP_REST_FREQ="1669.90477"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"220-211"* ]]; then TEMP_REST_FREQ="1228.78872"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"221-212"* ]]; then TEMP_REST_FREQ="1661.00764"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"302-212"* ]]; then TEMP_REST_FREQ="1716.76963"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"312-221"* ]]; then TEMP_REST_FREQ="1153.12682"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"312-303"* ]]; then TEMP_REST_FREQ="1097.36479"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"321-312"* ]]; then TEMP_REST_FREQ="1162.91160"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"322-313"* ]]; then TEMP_REST_FREQ="1919.35953"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"422-331"* ]]; then TEMP_REST_FREQ="916.17158"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"422-413"* ]]; then TEMP_REST_FREQ="1207.63873"; fi
+            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"423-330"* ]]; then TEMP_REST_FREQ="448.00108"; fi
+        fi
+    fi
+    # 
+    # If FCEN is invalid and Redshift and RestFreq are valid, then compute the former one from the latter two 
+    # <added><20160726><dzliu>
+    if [[ "${PdBIUVT_FCEN[$PdBIUVT_OBJI]}" == "0" ]]; then
+        if [[ "$TEMP_REDSHIFT" != "0.0" && "$TEMP_REST_FREQ" != "0.0" ]]; then
+            PdBIUVT_FCEN[$PdBIUVT_OBJI]=$(echo "$TEMP_REST_FREQ/(1.0+($TEMP_REDSHIFT))" | bc -l)
+        fi
+    fi
+    # 
+    # Convert from GHz to MHz
     TEMP_FMIN=$(echo ${PdBIUVT_FMIN[$PdBIUVT_OBJI]}*1000 | bc -l) # MHz
     TEMP_FMAX=$(echo ${PdBIUVT_FMAX[$PdBIUVT_OBJI]}*1000 | bc -l) # MHz
     TEMP_FWID=$(echo ${PdBIUVT_FWID[$PdBIUVT_OBJI]}*1000 | bc -l) # MHz
-    TEMP_FCEN=$(echo ${PdBIUVT_FCEN[$PdBIUVT_OBJI]}*1000 | bc -l) # MHz -- This can also be input by giving "-lineobsfreq"
+    TEMP_FCEN=$(echo ${PdBIUVT_FCEN[$PdBIUVT_OBJI]}*1000 | bc -l) # MHz -- This can also be input by giving "-lineobsfreq" or by giving both "-linerestfreq" and "-redshift"
     # 
     # If CMIN>CMAX, then swap
     if echo "($TEMP_CMIN)>($TEMP_CMAX)" | bc -l | grep -q "1"; then
@@ -321,62 +385,18 @@ for (( PdBIUVT_OBJI = 0; PdBIUVT_OBJI < $PdBIUVT_OBJN; PdBIUVT_OBJI++ )); do
         printf "%s %16.10f %16s %10s\n"    "Selecting Freq. width:" $TEMP_FWID " "                                              " [GHz]"
         printf "%s %16.10g %16s %10s\n"    "Selecting Velo. width:" $TEMP_VWID " "                                              "[km/s]"
         # 
-        # determine line frequency from line name if provided
-        if     [[ x"$TEMP_LINE_NAME" == x*"CO"* ]]; then
-            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"1-0"* ]]; then PdBIUVT_LINE_FREQ="115.2712018"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"2-1"* ]]; then PdBIUVT_LINE_FREQ="230.5380000"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"3-2"* ]]; then PdBIUVT_LINE_FREQ="345.7959899"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"4-3"* ]]; then PdBIUVT_LINE_FREQ="461.0407682"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"5-4"* ]]; then PdBIUVT_LINE_FREQ="576.2679305"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"6-5"* ]]; then PdBIUVT_LINE_FREQ="691.4730763"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"7-6"* ]]; then PdBIUVT_LINE_FREQ="806.6518060"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"8-7"* ]]; then PdBIUVT_LINE_FREQ="921.7997000"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"9-8"* ]]; then PdBIUVT_LINE_FREQ="1036.9123930"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO"*"10-9"* ]]; then PdBIUVT_LINE_FREQ="1151.9854520"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO10"* ]]; then PdBIUVT_LINE_FREQ="115.2712018"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO21"* ]]; then PdBIUVT_LINE_FREQ="230.5380000"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO32"* ]]; then PdBIUVT_LINE_FREQ="345.7959899"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO43"* ]]; then PdBIUVT_LINE_FREQ="461.0407682"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO54"* ]]; then PdBIUVT_LINE_FREQ="576.2679305"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO65"* ]]; then PdBIUVT_LINE_FREQ="691.4730763"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO76"* ]]; then PdBIUVT_LINE_FREQ="806.6518060"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO87"* ]]; then PdBIUVT_LINE_FREQ="921.7997000"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO98"* ]]; then PdBIUVT_LINE_FREQ="1036.9123930"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CO109"* ]]; then PdBIUVT_LINE_FREQ="1151.9854520"; fi
-        fi
-        if     [[ x"$TEMP_LINE_NAME" == x*"CI"* ]]; then
-            if [[ x"$TEMP_LINE_NAME" == x*"CII"*"158"* ]]; then PdBIUVT_LINE_FREQ="1900.53690"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CI"*"2-1"* ]]; then PdBIUVT_LINE_FREQ="809.34197"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"CI"*"1-0"* ]]; then PdBIUVT_LINE_FREQ="492.16065"; fi
-        fi
-        if     [[ x"$TEMP_LINE_NAME" == x*"H2O"* ]]; then
-            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"110-101"* ]]; then PdBIUVT_LINE_FREQ="556.93599"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"111-000"* ]]; then PdBIUVT_LINE_FREQ="1113.34301"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"202-111"* ]]; then PdBIUVT_LINE_FREQ="987.92676"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"211-202"* ]]; then PdBIUVT_LINE_FREQ="752.03314"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"212-101"* ]]; then PdBIUVT_LINE_FREQ="1669.90477"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"220-211"* ]]; then PdBIUVT_LINE_FREQ="1228.78872"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"221-212"* ]]; then PdBIUVT_LINE_FREQ="1661.00764"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"302-212"* ]]; then PdBIUVT_LINE_FREQ="1716.76963"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"312-221"* ]]; then PdBIUVT_LINE_FREQ="1153.12682"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"312-303"* ]]; then PdBIUVT_LINE_FREQ="1097.36479"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"321-312"* ]]; then PdBIUVT_LINE_FREQ="1162.91160"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"322-313"* ]]; then PdBIUVT_LINE_FREQ="1919.35953"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"422-331"* ]]; then PdBIUVT_LINE_FREQ="916.17158"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"422-413"* ]]; then PdBIUVT_LINE_FREQ="1207.63873"; fi
-            if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"423-330"* ]]; then PdBIUVT_LINE_FREQ="448.00108"; fi
-        fi
-        # 
-        if [[ x"$PdBIUVT_LINE_FREQ" != x ]]; then
-            TEMP_zRED=$(echo "($PdBIUVT_LINE_FREQ)/($TEMP_FCEN)-1" | bc -l | tail -n 1 | sed 's/^\./0./' | sed 's/^[-]\./-0./') # sed 's/^\./0./' -- http://stackoverflow.com/questions/8402181/how-do-i-get-bc1-to-print-the-leading-zero
-            printf '%s %10.5f %16s %10s\n' "--> The line rest frequency:" $PdBIUVT_LINE_FREQ " " "[GHz]"
-            printf '%s %10.5f %16s %10s\n' "--> corresponds to redshift:" $TEMP_zRED " " " "
+        # Print info of redshift and line rest frequency
+        if echo "$TEMP_REST_FREQ>0" | bc -l | grep -q "1"; then
+            TEMP_REDSHIFT=$(echo "($TEMP_REST_FREQ)/($TEMP_FCEN)-1" | bc -l | tail -n 1 | sed 's/^\./0./' | sed 's/^[-]\./-0./') # sed 's/^\./0./' -- http://stackoverflow.com/questions/8402181/how-do-i-get-bc1-to-print-the-leading-zero
+            printf '%s %10.5f %16s %10s\n' "--> The line rest frequency:" $TEMP_REST_FREQ " " "[GHz]"
+            printf '%s %10.5f %16s %10s\n' "--> corresponds to redshift:" $TEMP_REDSHIFT " " " "
             echo "--"
         fi
         # 
         # Save into PdBIUVT_LINE_NAME
         PdBIUVT_LINE_NAME[PdBIUVT_OBJI]="$TEMP_LINE_NAME"
-        PdBIUVT_zRED[PdBIUVT_OBJI]="$TEMP_zRED"
+        PdBIUVT_FLAB[PdBIUVT_OBJI]="$TEMP_REST_FREQ"
+        PdBIUVT_zRED[PdBIUVT_OBJI]="$TEMP_REDSHIFT"
     fi
 done
 

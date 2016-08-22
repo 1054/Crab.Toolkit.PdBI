@@ -108,7 +108,7 @@ for (( PdBIUVT_ITER = 1; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ ))
     echo  "@$PdBIUVT_TEMP_EXEC" |  mapping  >  "$PdBIUVT_TEMP_LOGT"
     
     # clean intermediate uvt
-    if [[ $PdBIUVT_ITER -gt 2 ]]; then 
+    if [[ $PdBIUVT_ITER -ge 2 ]]; then 
         if [[ $PdBIUVT_KEEP_FILES -eq 0 ]]; then
             echo "rm \"$PdBIUVT_SAVE.$(($PdBIUVT_ITER-1)).\"*"
             rm "$PdBIUVT_SAVE.$(($PdBIUVT_ITER-1))."*

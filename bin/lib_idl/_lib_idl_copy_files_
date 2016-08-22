@@ -1,0 +1,5 @@
+cp -r /home/dzliu/Softwares/IDL/lib/crab/crabspec \
+      /home/dzliu/Softwares/IDL/lib/crab/crabarray/crabminmax.pro \
+      /home/dzliu/Softwares/IDL/lib/crab/crabstring/crabstringreplace.pro \
+      /home/dzliu/Softwares/IDL/lib/crab/crabfigure/crabcolorbrewer.pro \
+      .
