@@ -313,6 +313,9 @@ else
             if [[ x"${CASAMS_SOU[i]}" == x"${CASAMS_TableSources[j]}" ]]; then
                 CASAMS_TEMP=1; break
             fi
+            if [[ x"${CASAMS_SOU[i]}" == x"\"${CASAMS_TableSources[j]}\"" ]]; then
+                CASAMS_TEMP=1; break #<20160823># fixed the source name with quotes problem
+            fi
         done
         if [[ $CASAMS_TEMP -eq 0 ]]; then
             echo ""
@@ -614,7 +617,7 @@ fi
 echo "Looping sources, spwins, and stokes: "
 for (( soui=0; soui<${#CASAMS_SOU[@]}; soui++ )); do
     echo "  * looping sources ($(bc<<<"$soui+1")/${#CASAMS_SOU[@]})"
-    CASAMS_NOM=$(echo "${CASAMS_SOU[soui]}" | sed -e 's/ /-/g')
+    CASAMS_NOM=$(echo "${CASAMS_SOU[soui]}" | sed -e 's/ /-/g' | sed -e 's/\"//g')
     CASAMS_PFX="split_" # the prefix of vis data name
     CASAMS_SFX="" # the suffix of vis data name
     # 

@@ -97,6 +97,7 @@ printf "%s\n" "fi"                                            >> "$CASAMS_SAVE.b
 printf "%s\n" "IDL_PATH=\"+$CASAMS_PWD/lib_idl:\$IDL_PATH\""  >> "$CASAMS_SAVE.bash"
 printf "%s\n" "IDL_PATH=\"+$CASAMS_PWD/lib_idl/crabspec:\$IDL_PATH\""  >> "$CASAMS_SAVE.bash"
 printf "%s\n" "echo IDL_PATH=\"\$IDL_PATH\""                  >> "$CASAMS_SAVE.bash"
+printf "%s\n" "export IDL_PATH"                               >> "$CASAMS_SAVE.bash"
 printf "%s" "idl -quiet"                                      >> "$CASAMS_SAVE.bash"
 printf "%s" " -e \"CrabSpecQuickLook\""                       >> "$CASAMS_SAVE.bash"
 printf "%s" " -args "                                         >> "$CASAMS_SAVE.bash"
