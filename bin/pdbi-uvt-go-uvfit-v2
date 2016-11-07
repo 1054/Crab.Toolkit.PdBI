@@ -167,11 +167,13 @@ if [[ x"$PdBIUVT_RSUB" == x"YES" ]]; then
         fi
     fi
     # <20160809><dzliu> if subtract source model uv table, then run uv_fit for only selected CRANGE to make the residual uv table
-    if [[ ${#PdBIUVT_CMIN[@]} -gt 0 && ${#PdBIUVT_CMAX[@]} -gt 0 ]]; then
-        PdBIUVT_TEMP_CHAN="${PdBIUVT_CMIN[0]} ${PdBIUVT_CMAX[0]}"
-    else
-        PdBIUVT_TEMP_CHAN="$PdBIUVT_CHAN_MIN $PdBIUVT_CHAN_MAX"
-    fi
+    ## if [[ ${#PdBIUVT_CMIN[@]} -gt 0 && ${#PdBIUVT_CMAX[@]} -gt 0 ]]; then
+    ##     PdBIUVT_TEMP_CHAN="${PdBIUVT_CMIN[0]} ${PdBIUVT_CMAX[0]}"
+    ## else
+    ##     PdBIUVT_TEMP_CHAN="$PdBIUVT_CHAN_MIN $PdBIUVT_CHAN_MAX"
+    ## fi
+    # <20161022><dzliu> if subtract source model uv table, then run uv_fit still for all CRANGE
+    PdBIUVT_TEMP_CHAN="$PdBIUVT_CHAN_MIN $PdBIUVT_CHAN_MAX"
 else
     PdBIUVT_TEMP_RESI=""
     PdBIUVT_TEMP_CHAN="$PdBIUVT_CHAN_MIN $PdBIUVT_CHAN_MAX"

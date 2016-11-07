@@ -101,8 +101,8 @@ echo  '! '                                                                      
 echo  '! Task UV_AVERAGE'                                                                       >> $PdBIUVT_TEMP_INIT
 echo  '! 6 parameters needed for all functions'                                                 >> $PdBIUVT_TEMP_INIT
 echo  '!'                                                                                       >> $PdBIUVT_TEMP_INIT
-echo  'TASK\CHARACTER "Input UV table"                   UV_INPUT$      "'$PdBIUVT_NAME'.uvt"'  >> $PdBIUVT_TEMP_INIT
-echo  'TASK\CHARACTER "Output UV table"                  UV_OUTPUT$     "'$PdBIUVT_SAVE'.uvt"'  >> $PdBIUVT_TEMP_INIT
+echo  'TASK\CHARACTER "Input UV table"                   UV_INPUT$      "'$PdBIUVT_NAME'"'      >> $PdBIUVT_TEMP_INIT
+echo  'TASK\CHARACTER "Output UV table"                  UV_OUTPUT$     "'$PdBIUVT_SAVE'"'      >> $PdBIUVT_TEMP_INIT
 echo  'TASK\VALUES    "Channel range"                    RANGES$         '$PdBIUVT_CAGE         >> $PdBIUVT_TEMP_INIT
 echo  'TASK\CHARACTER "Type of range"                    CTYPE$         "'"CHANNEL"'"'          >> $PdBIUVT_TEMP_INIT
 echo  'TASK\GO'                                                                                 >> $PdBIUVT_TEMP_INIT
