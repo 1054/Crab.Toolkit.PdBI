@@ -1,0 +1,97 @@
+#!/bin/bash
+# 
+# Input uvfits
+# Output uvt
+# 
+# Last update:
+#    2016-06-28 rewritting & beautifing
+# 
+# 
+PdBIUVT_EXMP=".pdbi-uvt-go-uvfit.mapping"
+PdBIUVT_EXPY=".pdbi-uvt-go-uvfit.py"
+PdBIUVT_STTY=".pdbi-uvt-go-uvfit.tty"
+PdBIUVT_NAME=()
+# LANG
+LANG=C
+# CHECK bc
+if [[ $(echo "3.1415926535 * 3" | bc -l 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! gnu tool bc not found! Exit!"
+    exit 1
+fi
+# CHECK awk
+if [[ $(echo "Go" | awk "NR==1" 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! gnu tool awk not found! Exit!"
+    exit 1
+fi
+# CHECK mapping
+if [[ $(echo "say hello" | mapping 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! GILDAS mapping not found! Exit!"
+    exit 1
+fi
+# 
+# Read input parameters
+# 
+PdBIUVT_GOOD=1
+PdBIUVT_TSTR=""
+PdBIUVT_RPAR=""
+while [[ "$#" -gt 0 ]]; do
+    # echo $1
+    PdBIUVT_TSTR=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+    case "$PdBIUVT_TSTR" in
+          "-name") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR=""; PdBIUVT_NAME="$1";;
+    esac
+    shift
+done
+# 
+# Check input parameters -- uvfits file name
+# 
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]]; then
+    PdBIUVT_GOOD=0
+else
+    for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do 
+        # remove file extension suffix
+        PdBIUVT_NAME[i]=$(echo ${PdBIUVT_NAME[i]} | sed -E 's/[.]uvfits$//g')
+        # check file existence
+        if [[ ! -f "${PdBIUVT_NAME[i]}.uvfits" ]]; then
+            echo ""; echo "Error! The input uvfits file \"${PdBIUVT_NAME[i]}.uvfits\" was not found!"; echo ""; exit
+        fi
+    done
+fi
+# 
+# Check input parameters -- if not passed then print usage and exit
+# 
+if [[ $PdBIUVT_GOOD -eq 0 ]]; then
+    echo "Usage: pdbi-uvt-go-import-uvfits -name PdBIUVT_NAME.uvfits"
+    exit
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 
+# Loop input uvfits files
+# 
+for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do 
+    echo "Converting \"${PdBIUVT_NAME[i]}.uvfits\" to \"${PdBIUVT_NAME[i]}.uvt\""
+    echo "FITS \"${PdBIUVT_NAME[i]}.uvfits\" TO \"${PdBIUVT_NAME[i]}.uvt\" /STYLE CASA" > "${PdBIUVT_NAME[i]}.uvt.mapping"
+    if [[ -f "${PdBIUVT_NAME[i]}.uvt" ]]; then
+        echo "Warning! Found existing \"${PdBIUVT_NAME[i]}.uvt\"! Backup as \"${PdBIUVT_NAME[i]}.uvt.backup\"!"
+        mv "${PdBIUVT_NAME[i]}.uvt" "${PdBIUVT_NAME[i]}.uvt.backup"
+    fi
+    echo "Running @${PdBIUVT_NAME[i]}.uvt.mapping in GILDAS mapping"
+    echo "@${PdBIUVT_NAME[i]}.uvt.mapping" | mapping > "${PdBIUVT_NAME[i]}.uvt.mapping.log"
+    echo "header ${PdBIUVT_NAME[i]}.uvt" | mapping > "${PdBIUVT_NAME[i]}.uvt.header.txt"
+done
+
+
+
+echo "Done!"

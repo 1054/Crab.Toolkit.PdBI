@@ -1,0 +1,78 @@
+#!/bin/bash
+# 
+# Input field or name
+# Output python script file which runs CASA exportfits() task
+# 
+# Last update:
+#    2016-02-09 created, copied from casa-ms-uvmodelfit
+# 
+
+
+
+# Function to print usage
+function usage() {
+    echo "Usage: casa-ms-exportfits -image aaa -out aaa.fits"
+}
+
+
+
+# 
+# Read input parameters
+# 
+. $(dirname ${BASH_SOURCE[0]})/"casa-command-line-arguments" "$@"
+
+
+
+# 
+# Check input parameter -- image
+# 
+if [[ ${#CASA_INP_IMAGE[@]} -eq 0 ]]; then usage; exit; fi
+
+
+
+# 
+# Write run_casa_ms_exportfits.py
+# 
+CASAMS_EXE="run_casa_ms_exportfits.py"
+CASAMS_LOG="run_casa_ms_exportfits.log"
+echo "#!/bin/python" > "$CASAMS_EXE"
+for (( i=0; i<${#CASA_INP_IMAGE[@]}; i++ )); do
+    if [[ $i -lt ${#CASA_INP_OUTPUT[@]} ]]; then
+        TempOutput=${CASA_INP_OUTPUT[i]}
+    else
+        TempOutput="${CASA_INP_IMAGE[i]}.fits"
+    fi
+    echo "imagename   = '${CASA_INP_IMAGE[i]}'"         >> "$CASAMS_EXE"
+    echo "fitsimage   = '$TempOutput'"                  >> "$CASAMS_EXE"
+    echo "inp(exportfits)"                              >> "$CASAMS_EXE"
+    echo "exportfits()"                                 >> "$CASAMS_EXE"
+    echo ""                                             >> "$CASAMS_EXE"
+done
+echo "Wrote to python script: ${CASAMS_EXE}"
+
+
+
+# 
+# run casa now
+# 
+if [[ $CASA_INP_NO -eq 0 ]]; then
+    
+    CASAMS_GOO="y"
+    if [[ $CASA_INP_YES -eq 0 ]]; then
+        read -e -p "Launch casa now? " -i "y" CASAMS_GOO
+    else
+        echo "Launching casa "
+    fi
+    if [[ x"$CASAMS_GOO" == x"y"* || x"$CASAMS_GOO" == x"Y"* ]]; then
+    	echo "casa --nogui --nologfile -c ${CASAMS_EXE} | tee ${CASAMS_LOG}"
+    	casa --nogui --nologfile -c "${CASAMS_EXE}" | tee "${CASAMS_LOG}"
+    fi
+else
+    echo "OK, we will not run casa now. Please run the following command by yourself"
+    echo "    casa --nogui --nologfile -c ${CASAMS_EXE} | tee ${CASAMS_LOG}"
+    echo ""
+fi
+
+echo "Done!"
+
+

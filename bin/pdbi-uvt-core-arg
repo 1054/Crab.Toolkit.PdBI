@@ -16,6 +16,11 @@ if [[ $(echo "Go" | awk "NR==1" 2>/dev/null | wc -l) -eq 0 ]]; then
     echo Error! gnu tool awk not found! Exit!
     exit 1
 fi
+# CHECK mapping
+if [[ $(echo "say hello" | mapping 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! GILDAS mapping not found! Exit!"
+    exit 1
+fi
 
 
 # 
@@ -23,8 +28,13 @@ fi
 # 
 # ----------------------- # files
 PdBIUVT_NAME=""
+PdBIUVT_TYPE=""           # the input file name extension, uvt, uvfits, lmv, etc.
 PdBIUVT_RESI=""           # the output residual uvtable after subtraction
 PdBIUVT_SAVE=""           # the output save files base name
+PdBIUVT_OVERWRITE="NO"    # 
+# ----------------------- # uvmap parameters
+PdBIUVT_MAP_SIZE=()
+PdBIUVT_MAP_CELL=()
 # ----------------------- # fitting parameters
 PdBIUVT_SIZE=()
 PdBIUVT_POSA=()
@@ -84,13 +94,15 @@ PdBIUVT_RPAR="none"
 while [[ "$#" -gt 0 ]]; do
     #echo $1
     PdBIUVT_TSTR=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-    #echo "$PdBIUVT_TSTR"
+    echo "$PdBIUVT_TSTR"
     case "$PdBIUVT_TSTR" in
               "-name") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_NAME="$1";;
+              "-type") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_TYPE="$1";;
                "-res") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_RESI="$1";;
           "-residual") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_RESI="$1";;
                "-out") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_SAVE="$1";;
               "-save") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_SAVE="$1";;
+         "-overwrite") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_OVERWRITE="YES";;
 #             "-vary") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY=1;;
 #     "-varyposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY=1;;
 #      "-fixposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_VARY=0;;
@@ -101,6 +113,7 @@ while [[ "$#" -gt 0 ]]; do
 #            "-gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_FUNC="E_GAUSS";;
 #           "-egauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_FUNC="E_GAUSS";;
 #           "-cgauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_FUNC="C_GAUSS";;
+             "-point") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_FUNC+=("POINT");;
              "-gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_FUNC+=("E_GAUSS");;
             "-egauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_FUNC+=("E_GAUSS");;
             "-cgauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_FUNC+=("C_GAUSS");;
@@ -115,6 +128,11 @@ while [[ "$#" -gt 0 ]]; do
            "-uvrange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvrange";; # meter
             
           "-redshift") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="redshift";;
+
+          "-map_size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
+          "-map-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
+          "-map_cell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_cell";;
+          "-map-cell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_cell";;
 
               "-vary") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="varyposition";; # accepts input values e.g. -vary 1 0 F T
            "-varypos") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="varyposition";;
@@ -271,6 +289,28 @@ while [[ "$#" -gt 0 ]]; do
         PdBIUVT_zRED+=("$1")
     fi
     
+    if [[ "$PdBIUVT_RPAR" == "map_size" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        if echo "$1" | grep -q -v -E "^[0-9.+- ]*$"; then
+            echo ""; echo "Error! Input -map_size has a wrong format! Please input only number value."; echo ""
+            exit
+        fi
+        PdBIUVT_MAP_SIZE+=("$1")
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "map_cell" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        if echo "$1" | grep -q -v -E "^[0-9.+- ]*$"; then
+            echo ""; echo "Error! Input -map_cell has a wrong format! Please input only number value."; echo ""
+            exit
+        fi
+        PdBIUVT_MAP_CELL+=("$1")
+    fi
+    
     
     if [[ "$PdBIUVT_RPAR" == "varyposition" ]];  then 
         if [[ "$#" -lt 1 ]]; then PdBIUVT_VARY+=("1"); break; fi
@@ -363,15 +403,36 @@ done
 # 
 # Check input uv table name
 # 
-if [[ x"${PdBIUVT_NAME[@]}" == x ]]; then
+if [[ x"$PdBIUVT_NAME" == x ]]; then
     echo ""; echo "Error! UV table name was not given! Exit!"; echo ""
     PdBIUVT_GOOD=0
     exit
 else
     # Remove the suffix of the input uvtable name, and test whether the file exists
-    PdBIUVT_NAME=$(echo $PdBIUVT_NAME | sed -e 's/[.]uvt$//g')
-    if [[ ! -f "$PdBIUVT_NAME.uvt" ]]; then
-        echo ""; echo "Error! \"$PdBIUVT_NAME.uvt\" was not found! Exit!"; echo ""
+    if [[ "$PdBIUVT_NAME" == *".uvt" ]]; then
+        PdBIUVT_TYPE="uvt"
+        PdBIUVT_NAME=$(echo $PdBIUVT_NAME | sed -e 's/[.]uvt$//g')
+    elif [[ "$PdBIUVT_NAME" == *".UVT" ]]; then
+        PdBIUVT_TYPE="UVT"
+        PdBIUVT_NAME=$(echo $PdBIUVT_NAME | sed -e 's/[.]UVT$//g')
+    elif [[ "$PdBIUVT_NAME" == *".fits" ]]; then
+        PdBIUVT_TYPE="fits"
+        PdBIUVT_NAME=$(echo $PdBIUVT_NAME | sed -e 's/[.]fits$//g')
+    elif [[ "$PdBIUVT_NAME" == *".FITS" ]]; then
+        PdBIUVT_TYPE="FITS"
+        PdBIUVT_NAME=$(echo $PdBIUVT_NAME | sed -e 's/[.]FITS$//g')
+    elif [[ "$PdBIUVT_NAME" == *".uvfits" ]]; then
+        PdBIUVT_TYPE="uvfits"
+        PdBIUVT_NAME=$(echo $PdBIUVT_NAME | sed -e 's/[.]uvfits$//g')
+    elif [[ "$PdBIUVT_NAME" == *".UVFITS" ]]; then
+        PdBIUVT_TYPE="UVFITS"
+        PdBIUVT_NAME=$(echo $PdBIUVT_NAME | sed -e 's/[.]UVFITS$//g')
+    else
+        PdBIUVT_TYPE="uvt"
+    fi
+    # test whether the file exists
+    if [[ ! -f "$PdBIUVT_NAME.$PdBIUVT_TYPE" ]]; then
+        echo ""; echo "Error! \"$PdBIUVT_NAME.$PdBIUVT_TYPE\" was not found! Exit!"; echo ""
         PdBIUVT_GOOD=0
         exit
     fi
@@ -408,15 +469,17 @@ fi
 # 
 # Running GILDAS mapping to get uvtable header
 # 
-if [[ ! -f "$PdBIUVT_NAME.uvt" ]]; then 
-    echo ""; echo "Error! \"$PdBIUVT_NAME.uvt\" was not found!"; echo ""
-    exit
-else
-    echo "header $PdBIUVT_NAME.uvt" | mapping | sed 's/[^[:print:]]//g' > "$PdBIUVT_SAVE.header.txt"
-fi
-if [[ ! -f "$PdBIUVT_SAVE.header.txt" ]]; then
-    echo ""; echo "Error! Failed to run \"echo \"header $PdBIUVT_NAME.uvt\" | mapping\" > \"$PdBIUVT_SAVE.header.txt\"! Please make sure mapping is working!"; echo ""
-    exit
+if [[ x"$PdBIUVT_TYPE" == x"uvt" || x"$PdBIUVT_TYPE" == x"UVT" ]]; then
+    if [[ ! -f "$PdBIUVT_NAME.$PdBIUVT_TYPE" ]]; then 
+        echo ""; echo "Error! \"$PdBIUVT_NAME.$PdBIUVT_TYPE\" was not found!"; echo ""
+        exit
+    else
+        echo "header $PdBIUVT_NAME.$PdBIUVT_TYPE" | mapping | sed 's/[^[:print:]]//g' > "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt"
+    fi
+    if [[ ! -f "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" ]]; then
+        echo ""; echo "Error! Failed to run \"echo \"header $PdBIUVT_NAME.$PdBIUVT_TYPE\" | mapping\" > \"$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt\"! Please make sure mapping is working!"; echo ""
+        exit
+    fi
 fi
 
 
@@ -424,15 +487,15 @@ fi
 # 
 # Get Spectrum information from input uvt header
 # 
-if [[ 1 == 1 ]]; then
+if [[ x"$PdBIUVT_TYPE" == x"uvt" || x"$PdBIUVT_TYPE" == x"UVT" ]]; then
     # 
     # get line name and rest frequency <Corrected><20150217><DADDI><DZLIU> the rest frequency is not reference frequency
     # 
     if [[ ${#PdBIUVT_LINE_NAME[@]} -eq 0 ]]; then
-        PdBIUVT_LINE_NAME=($(cat $PdBIUVT_SAVE.header.txt | grep 'Line Name.* Rest Frequency' | perl -p -e 's/.*Line Name[ ]*(.*)[ ]*Rest Frequency[ ]*(.*)[ ]*$/\1/g' | sed -e 's/^ *$//g'))
+        PdBIUVT_LINE_NAME=($(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Line Name.* Rest Frequency' | perl -p -e 's/.*Line Name[ ]*(.*)[ ]*Rest Frequency[ ]*(.*)[ ]*$/\1/g' | sed -e 's/^ *$//g'))
     fi
     if [[ x"$PdBIUVT_LINE_FREQ" == x ]]; then
-        PdBIUVT_LINE_FREQ=$(cat $PdBIUVT_SAVE.header.txt | grep 'Line Name.* Rest Frequency' | perl -p -e 's/.*Line Name[ ]*(.*)[ ]*Rest Frequency[ ]*(.*)[ ]*$/\2/g' | sed -e 's/^ *$//g')
+        PdBIUVT_LINE_FREQ=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Line Name.* Rest Frequency' | perl -p -e 's/.*Line Name[ ]*(.*)[ ]*Rest Frequency[ ]*(.*)[ ]*$/\2/g' | sed -e 's/^ *$//g')
         if [[ x"$PdBIUVT_LINE_FREQ" != x ]]; then
             PdBIUVT_LINE_FREQ=$(echo "$PdBIUVT_LINE_FREQ/1000.0" | bc -l) # conver from MHz to GHz
         fi
@@ -441,29 +504,29 @@ if [[ 1 == 1 ]]; then
     # 
     # get velocity resolution (and frequency resolution)
     # 
-    PdBIUVT_VELO_BIN=$(cat $PdBIUVT_SAVE.header.txt | grep 'Resolution in Velocity.* in Frequency' | perl -p -e 's/.*Resolution in Velocity[ ]*(.*)[ ]*in Frequency[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g')
-    PdBIUVT_FREQ_BIN=$(cat $PdBIUVT_SAVE.header.txt | grep 'Resolution in Velocity.* in Frequency' | perl -p -e 's/.*Resolution in Velocity[ ]*(.*)[ ]*in Frequency[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g')
+    PdBIUVT_VELO_BIN=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Resolution in Velocity.* in Frequency' | perl -p -e 's/.*Resolution in Velocity[ ]*(.*)[ ]*in Frequency[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g')
+    PdBIUVT_FREQ_BIN=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Resolution in Velocity.* in Frequency' | perl -p -e 's/.*Resolution in Velocity[ ]*(.*)[ ]*in Frequency[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g')
     
     # 
     # get velocity offset
     # 
-    PdBIUVT_VELO_REF=$(cat $PdBIUVT_SAVE.header.txt | grep 'Offset in Velocity.* Doppler' | perl -p -e 's/.*Offset in Velocity[ ]*(.*)[ ]*Doppler[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g')
+    PdBIUVT_VELO_REF=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Offset in Velocity.* Doppler' | perl -p -e 's/.*Offset in Velocity[ ]*(.*)[ ]*Doppler[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g')
     
     # 
     # get channel min max and center
     # 
     PdBIUVT_CHAN_MIN=1
-    PdBIUVT_CHAN_MAX=$(cat $PdBIUVT_SAVE.header.txt | grep 'UV Data * Channels:.*, Stokes:.*Visibilities:' | perl -p -e 's/.*UV Data[ ]* Channels:[ ]*(.*)[ ]*, Stokes:[ ]*(.*)[ ]*Visibilities:[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g')
+    PdBIUVT_CHAN_MAX=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'UV Data * Channels:.*, Stokes:.*Visibilities:' | perl -p -e 's/.*UV Data[ ]* Channels:[ ]*(.*)[ ]*, Stokes:[ ]*(.*)[ ]*Visibilities:[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g')
     PdBIUVT_CHAN_CEN=$(echo "$PdBIUVT_CHAN_MAX/2+1" | bc) # for example 100 channels, the central channel is 51 in gildas, starting from 1.
     
     # 
     # get reference channel freq (and frequency resolution)
     # 
-    PdBIUVT_TEMP_TEXT=$(cat $PdBIUVT_SAVE.header.txt | grep -A 1 'Size *Reference Pixel *Value *Increment' | tail -n 1) # get the line after 'Size *Reference Pixel *Value *Increment' line
-    PdBIUVT_TEMP_TEXT=$(echo $PdBIUVT_TEMP_TEXT | sed -e 's/^ *//g' | tr -s ' ') # clean string
-    PdBIUVT_CHAN_REF=$(echo $PdBIUVT_TEMP_TEXT | cut -d ' ' -f 2)
-    PdBIUVT_FREQ_REF=$(echo $PdBIUVT_TEMP_TEXT | cut -d ' ' -f 3)
-    PdBIUVT_FREQ_BIN=$(echo $PdBIUVT_TEMP_TEXT | cut -d ' ' -f 4)
+    PdBIUVT_TEMP_TEXT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep -A 1 'Size *Reference Pixel *Value *Increment' | tail -n 1) # get the line after 'Size *Reference Pixel *Value *Increment' line
+    PdBIUVT_TEMP_TEXT=$(echo "$PdBIUVT_TEMP_TEXT" | sed -e 's/^ *//g' | tr -s ' ') # clean string
+    PdBIUVT_CHAN_REF=$(echo "$PdBIUVT_TEMP_TEXT" | cut -d ' ' -f 2)
+    PdBIUVT_FREQ_REF=$(echo "$PdBIUVT_TEMP_TEXT" | cut -d ' ' -f 3)
+    PdBIUVT_FREQ_BIN=$(echo "$PdBIUVT_TEMP_TEXT" | cut -d ' ' -f 4)
 fi
 
 
@@ -471,27 +534,27 @@ fi
 # 
 # Get Pointing information from input uvt header
 # 
-if [[ 1 == 1 ]]; then
+if [[ x"$PdBIUVT_TYPE" == x"uvt" || x"$PdBIUVT_TYPE" == x"UVT" ]]; then
     # 
     # read the pointing center of telescope i.e. center RA Dec of FoV , from 'Right Ascension.*Declination'
     # 
     if [[ x"$PdBIUVT_RANX_CENT" == x"" || x"$PdBIUVT_DECX_CENT" == x"" || x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
-        PdBIUVT_RANX_CENT=$(cat $PdBIUVT_SAVE.header.txt | grep 'Right Ascension.*Declination' | perl -p -e 's/.*Right Ascension[ ]*(.*)[ ]*Declination[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep -v "00:00:00.000")
-        PdBIUVT_DECX_CENT=$(cat $PdBIUVT_SAVE.header.txt | grep 'Right Ascension.*Declination' | perl -p -e 's/.*Right Ascension[ ]*(.*)[ ]*Declination[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep -v "00:00:00.00")
+        PdBIUVT_RANX_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Right Ascension.*Declination' | perl -p -e 's/.*Right Ascension[ ]*(.*)[ ]*Declination[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep -v "00:00:00.000")
+        PdBIUVT_DECX_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Right Ascension.*Declination' | perl -p -e 's/.*Right Ascension[ ]*(.*)[ ]*Declination[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep -v "00:00:00.00")
     fi
     # 
     # read the pointing center of telescope i.e. center RA Dec of FoV , from 'Axis 0 *A0.*Axis 0 *D0' if nothing in 'Right Ascension.*Declination'
     # 
     if [[ x"$PdBIUVT_RANX_CENT" == x"" || x"$PdBIUVT_DECX_CENT" == x"" || x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
-        PdBIUVT_RANX_CENT=$(cat $PdBIUVT_SAVE.header.txt | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep ":" |  grep -v "00:00:00.000")
-        PdBIUVT_DECX_CENT=$(cat $PdBIUVT_SAVE.header.txt | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep ":" | grep -v "00:00:00.00")
+        PdBIUVT_RANX_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep ":" |  grep -v "00:00:00.000")
+        PdBIUVT_DECX_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep ":" | grep -v "00:00:00.00")
     fi
     # 
     # read the pointing center of telescope if failed to get them, then try degree format
     # 
     if [[ x"$PdBIUVT_RANX_CENT" == x"" || x"$PdBIUVT_DECX_CENT" == x"" || x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
-        PdBIUVT_RAND_CENT=$(cat $PdBIUVT_SAVE.header.txt | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep -v ":")
-        PdBIUVT_DECD_CENT=$(cat $PdBIUVT_SAVE.header.txt | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep -v ":")
+        PdBIUVT_RAND_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep -v ":")
+        PdBIUVT_DECD_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep -v ":")
     fi
     # 
     # convert RANX DECX to degree or the opposite
@@ -511,7 +574,7 @@ if [[ 1 == 1 ]]; then
     # check Telescope pointing RA Dec
     # 
     if [[ x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
-        echo ""; echo "Error! Could not find telescope pointing information in the uv table header \"$PdBIUVT_SAVE.header.txt\"! Please input telescope pointing like \"-pointing 12:36:20 62:20:00\"!"; echo ""
+        echo ""; echo "Error! Could not find telescope pointing information in the uv table header \"$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt\"! Please input telescope pointing like \"-pointing 12:36:20 62:20:00\"!"; echo ""
         exit
     fi
     # 
@@ -541,66 +604,70 @@ fi
 
 
 # 
-echo ""
-echo "************************"
-echo "* UV table header info *"
-echo "************************"
-echo "Pointing Center = $PdBIUVT_RANX_CENT $PdBIUVT_DECX_CENT"
-echo "Line Rest Freq. = $(printf '%0.3f' $PdBIUVT_LINE_FREQ) GHz"
-echo "Line Name   = $PdBIUVT_LINE_NAME"
-echo "Chan. Min.  = $PdBIUVT_CHAN_MIN"
-echo "Chan. Cen.  = $PdBIUVT_CHAN_CEN"
-echo "Chan. Max.  = $PdBIUVT_CHAN_MAX"
-echo "Chan. Bin.  = 1"
-echo "Velo. Bin.  = $PdBIUVT_VELO_BIN km/s"
-echo "Freq. Bin.  = $PdBIUVT_FREQ_BIN MHz"
-echo "Chan. Ref.  = $PdBIUVT_CHAN_REF"
-echo "Velo. Ref.  = $PdBIUVT_VELO_REF km/s"
-echo "Freq. Ref.  = $PdBIUVT_FREQ_REF MHz"
+if [[ x"$PdBIUVT_TYPE" == x"uvt" || x"$PdBIUVT_TYPE" == x"UVT" ]]; then
+    echo ""
+    echo "************************"
+    echo "* UV table header info *"
+    echo "************************"
+    echo "Pointing Center = $PdBIUVT_RANX_CENT $PdBIUVT_DECX_CENT"
+    echo "Line Rest Freq. = $(printf '%0.3f' $PdBIUVT_LINE_FREQ) GHz"
+    echo "Line Name   = $PdBIUVT_LINE_NAME"
+    echo "Chan. Min.  = $PdBIUVT_CHAN_MIN"
+    echo "Chan. Cen.  = $PdBIUVT_CHAN_CEN"
+    echo "Chan. Max.  = $PdBIUVT_CHAN_MAX"
+    echo "Chan. Bin.  = 1"
+    echo "Velo. Bin.  = $PdBIUVT_VELO_BIN km/s"
+    echo "Freq. Bin.  = $PdBIUVT_FREQ_BIN MHz"
+    echo "Chan. Ref.  = $PdBIUVT_CHAN_REF"
+    echo "Velo. Ref.  = $PdBIUVT_VELO_REF km/s"
+    echo "Freq. Ref.  = $PdBIUVT_FREQ_REF MHz"
+fi
 
 
 
 # 
-echo ""
-echo "************************"
-echo "* User input parameter *"
-echo "************************"
-# -- print channel range input
-printf "%-15s" "crange ${PdBIUVT_CMIN[i]} ${PdBIUVT_CMAX[i]}"
-printf "%s\n" " # Input channel range"
-for (( i=1; i<${#PdBIUVT_CMIN[@]}; i++ )); do
+if [[ x"$PdBIUVT_TYPE" == x"uvt" || x"$PdBIUVT_TYPE" == x"UVT" ]]; then
+    echo ""
+    echo "************************"
+    echo "* User input parameter *"
+    echo "************************"
+    # -- print channel range input
     printf "%-15s" "crange ${PdBIUVT_CMIN[i]} ${PdBIUVT_CMAX[i]}"
-    printf "%s\n" " # Input channel range (pair $(($i+1)))"
-done
-# -- print velocity range input
-printf "%-15s" "vrange ${PdBIUVT_VMIN[i]} ${PdBIUVT_VMAX[i]}"
-printf "%s\n" " # Input velocity range in km/s"
-for (( i=1; i<${#PdBIUVT_VMIN[@]}; i++ )); do
+    printf "%s\n" " # Input channel range"
+    for (( i=1; i<${#PdBIUVT_CMIN[@]}; i++ )); do
+        printf "%-15s" "crange ${PdBIUVT_CMIN[i]} ${PdBIUVT_CMAX[i]}"
+        printf "%s\n" " # Input channel range (pair $(($i+1)))"
+    done
+    # -- print velocity range input
     printf "%-15s" "vrange ${PdBIUVT_VMIN[i]} ${PdBIUVT_VMAX[i]}"
-    printf "%s\n" " # Input velocity range in km/s (pair $(($i+1)))"
-done
-# -- print frequency range input
-printf "%-15s" "frange ${PdBIUVT_FMIN[i]} ${PdBIUVT_FMAX[i]}"
-printf "%s\n" " # Input frequency range in GHz"
-for (( i=1; i<${#PdBIUVT_VMIN[@]}; i++ )); do
+    printf "%s\n" " # Input velocity range in km/s"
+    for (( i=1; i<${#PdBIUVT_VMIN[@]}; i++ )); do
+        printf "%-15s" "vrange ${PdBIUVT_VMIN[i]} ${PdBIUVT_VMAX[i]}"
+        printf "%s\n" " # Input velocity range in km/s (pair $(($i+1)))"
+    done
+    # -- print frequency range input
     printf "%-15s" "frange ${PdBIUVT_FMIN[i]} ${PdBIUVT_FMAX[i]}"
-    printf "%s\n" " # Input frequency range in GHz (pair $(($i+1)))"
-done
-# -- print whether vary position or not
-if [[ $PdBIUVT_VARY -eq 0 ]]; then
-    printf "%-15s%s\n" "fixposition" " # Prevent fitting source position"
-else
-    printf "%-15s%s\n" "varyposition" " # Allow fitting source position"
-fi
-if [[ $PdBIUVT_VARY_SIZE -eq 0 ]]; then
-#    printf "%-15s%s\n" "fixsize" " # Prevent fitting source size"
-#else
-    printf "%-15s%s\n" "varysize" " # Allow fitting source size"
-fi
-if [[ $PdBIUVT_VARY_POSA -eq 0 ]]; then
-#    printf "%-15s%s\n" "fixposangle" " # Prevent fitting source posangle"
-#else
-    printf "%-15s%s\n" "varyposangle" " # Allow fitting source posangle"
+    printf "%s\n" " # Input frequency range in GHz"
+    for (( i=1; i<${#PdBIUVT_VMIN[@]}; i++ )); do
+        printf "%-15s" "frange ${PdBIUVT_FMIN[i]} ${PdBIUVT_FMAX[i]}"
+        printf "%s\n" " # Input frequency range in GHz (pair $(($i+1)))"
+    done
+    # -- print whether vary position or not
+    if [[ $PdBIUVT_VARY -eq 0 ]]; then
+        printf "%-15s%s\n" "fixposition" " # Prevent fitting source position"
+    else
+        printf "%-15s%s\n" "varyposition" " # Allow fitting source position"
+    fi
+    if [[ $PdBIUVT_VARY_SIZE -eq 0 ]]; then
+    #    printf "%-15s%s\n" "fixsize" " # Prevent fitting source size"
+    #else
+        printf "%-15s%s\n" "varysize" " # Allow fitting source size"
+    fi
+    if [[ $PdBIUVT_VARY_POSA -eq 0 ]]; then
+    #    printf "%-15s%s\n" "fixposangle" " # Prevent fitting source posangle"
+    #else
+        printf "%-15s%s\n" "varyposangle" " # Allow fitting source posangle"
+    fi
 fi
 
 

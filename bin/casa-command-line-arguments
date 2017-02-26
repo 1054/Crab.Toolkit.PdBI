@@ -1,0 +1,223 @@
+#!/bin/bash
+# 
+# Aim:
+#    This code recognizes command line arguments for CASA scripts
+# 
+# Usage:
+#    
+# Updates:
+#    20170209 created
+# 
+# 
+# 
+
+# 
+# Check CASA
+# 
+if [[ $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo ""
+    echo "Error! CASA was not found! Please check your \$PATH!"
+    echo ""
+    exit
+fi
+
+# 
+# Prepare necessary functions
+# 
+# Function to readlink
+function readlink() {
+    if [[ $# -gt 1 ]]; then if [[ "$1" == "-f" ]]; then shift; fi; fi; DIR=$(echo "${1%/*}"); (cd "$DIR" && echo "$(pwd -P)/$(basename ${1})")
+}
+# Is_File
+function Is_File() {
+    if [[ $# -ge 1 ]]; then if [[ -f "$1" ]]; then return 0; else seq  -f "*" -s '' $(echo "${#1}+24" | bc); echo; echo "Error! \"$1\" was not found!"; seq  -f "*" -s '' $(echo "${#1}+24" | bc); echo; exit -1; return -1; fi; fi; return -1
+}
+# Is_Float_Number
+function Is_Float_Number() {
+    # http://stackoverflow.com/questions/13790763/bash-regex-to-check-floating-point-numbers-from-user-input
+    if [[ $# -ge 1 ]]; then regExp='^([+-])?([0-9]+\.?|[0-9]*\.[0-9]+)([eE][+-]?[0-9]+)?$'; if [[ "$1" =~ $regExp ]]; then return 0; else seq  -f "*" -s '' $(echo "${#1}+7+2+23" | bc); echo; echo "Error! \"$1\" is not a float number!"; seq  -f "*" -s '' $(echo "${#1}+7+2+23" | bc); echo; exit -1; return -1; fi; fi; return -1
+}
+# checkDirExistence
+checkDirExistence() {
+    if [[ $# -ge 1 ]]; then if [[ ! -d "$1" ]]; then seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; echo "Error! \"$1\" does not exist!"; seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; exit -1; return -1; else return 0; fi; fi
+}
+# checkFileExistence
+checkFileExistence() {
+    if [[ $# -ge 1 ]]; then if [[ ! -f "$1" ]]; then seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; echo "Error! \"$1\" does not exist!"; seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; exit -1; return -1; else return 0; fi; fi
+}
+
+# 
+# Prepare data arrays
+# 
+CASA_INP_DEBUG=0
+CASA_INP_GOOD=1
+CASA_INP_YES=0
+CASA_INP_NO=0
+CASA_INP_VIS=()
+CASA_INP_IMAGE=()
+CASA_INP_FIELD=() # i.e. string type FIELD with two quotes in CASA, or string type FIELD but is a number in CASA
+CASA_INP_FREQ=()
+CASA_INP_SPW=()
+CASA_INP_WIDTH=()
+CASA_INP_STOKES=()
+CASA_INP_INTENT=()
+CASA_INP_MISC=()
+CASA_INP_OUTPUT=()
+CASA_INP_OVERWRITE=()
+CASA_INP_UVFIT_ITERATION=() # 
+CASA_INP_UVFIT_MODELTYPE=() # P, G
+CASA_INP_UVFIT_SOURCEPAR=() # [flux, xoff, yoff, [majar, minor, PA]]
+CASA_INP_UVFIT_VARIEDPAR=() # T or F, for the sourcepar list [flux, xoff, yoff, [majar, minor, PA]]
+CASA_INP_RANX=()
+CASA_INP_RAND=()
+CASA_INP_DECX=()
+CASA_INP_DECD=()
+CASA_INP_CONCAT_FREQTOL=() # freqtolerance for concat()
+CASA_INP_CONCAT_DIRTOL=() # freqtolerance for concat()
+CASA_CMD_TYPE="n/a"
+
+if [[ $CASA_INP_DEBUG -eq 1 ]]; then
+    echo "Input argument number: $#"
+fi
+
+while [[ "$#" -gt 0 ]]; do
+    # echo $1
+    TempStr=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+    # echo $TempStr
+    case $1 in
+           "-vis") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="vis";;
+         "-image") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="image";;
+          "-name") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-name";;
+        "-source") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-name";;
+     "-source-id") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-name";;
+         "-field") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-id";;
+      "-field-id") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-id";;
+          "-freq") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="freq";;
+      "-restfreq") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="freq";;
+     "-frequency") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="freq";;
+           "-spw") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="spw";;
+         "-width") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="spw-width";;
+     "-spw-width") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="spw-width";;
+         "-nchan") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="spw-width";;
+  "-polarization") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="stokes";;
+         "-polar") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="stokes";;
+         "-stoke") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="stokes";;
+        "-stokes") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="stokes";;
+        "-intent") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="intent";;
+         "-radec") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="radec";;
+          "-iter") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-iteration";;
+     "-iteration") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-iteration";;
+     "-modeltype") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-modeltype";;
+      "-comptype") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-modeltype";;
+         "-model") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-modeltype";;
+     "-sourcepar") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-sourcepar";;
+          "-vary") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-varypar";;
+       "-varypar") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-varypar";;
+       "-freqtol") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="concat-freqtol";;
+        "-dirtol") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="concat-dirtol";;
+           "-out") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="output";;
+        "-output") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="output";;
+       "-outfile") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="output";;
+     "-overwrite") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="overwrite";;
+           "-yes") CASA_CMD_TEXT="$1";        CASA_CMD_TYPE="yes";;
+            "-no") CASA_CMD_TEXT="$1";        CASA_CMD_TYPE="no";;
+    esac
+    # echo "$CASA_CMD_TYPE"
+    case "$CASA_CMD_TYPE" in 
+            "vis") if [[ $# -gt 0 ]]; then CASA_INP_VIS+=("$1"); fi;;
+          "image") if [[ $# -gt 0 ]]; then CASA_INP_IMAGE+=("$1"); fi;;
+     "field-name") if [[ $# -gt 0 ]]; then CASA_INP_FIELD+=("$(echo $1)"); fi;;
+       "field-id") if [[ $# -gt 0 ]]; then CASA_INP_FIELD+=("\"$(echo $1)\""); fi;;
+           "freq") if [[ $# -gt 0 ]]; then CASA_INP_FREQ+=("$1"); fi;;
+            "spw") if [[ $# -gt 0 ]]; then CASA_INP_SPW+=("$1"); fi;;
+      "spw-width") if [[ $# -gt 0 ]]; then CASA_INP_WIDTH+=("$1"); fi;;
+         "stokes") if [[ $# -gt 0 ]]; then CASA_INP_STOKES+=("$1"); fi;;
+         "intent") if [[ $# -gt 0 ]]; then CASA_INP_INTENT+=("$1"); fi;;
+"uvfit-iteration") if [[ $# -gt 0 ]]; then CASA_INP_UVFIT_ITERATION+=("$1"); fi;;
+"uvfit-modeltype") if [[ $# -gt 0 ]]; then CASA_INP_UVFIT_MODELTYPE+=("$1"); fi;;
+"uvfit-sourcepar") if [[ $# -gt 0 ]]; then CASA_INP_UVFIT_SOURCEPAR+=("$1"); fi;;
+  "uvfit-varypar") if [[ $# -gt 0 ]]; then CASA_INP_UVFIT_VARIEDPAR+=("$1"); fi;;
+ "concat-freqtol") if [[ $# -gt 0 ]]; then CASA_INP_CONCAT_FREQTOL+=("$1"); fi;;
+  "concat-dirtol") if [[ $# -gt 0 ]]; then CASA_INP_CONCAT_DIRTOL+=("$1"); fi;;
+         "output") if [[ $# -gt 0 ]]; then CASA_INP_OUTPUT+=("$1"); fi;;
+      "overwrite") if [[ $# -gt 0 ]]; then CASA_INP_OVERWRITE+=("$1"); fi;;
+            "yes")                         CASA_INP_YES=1;;
+             "no")                         CASA_INP_NO=1;;
+    esac
+    
+    if [[ "$CASA_CMD_TYPE" == "radec" ]];  then 
+        if [[ "$#" -lt 2 ]]; then
+            break
+        fi
+        if [[ "$1" == *":"*":"* ]]; then
+            CASA_INP_RANX=("${CASA_INP_RANX[@]}" "$1")
+            CASA_INP_TEMP=$(radec2degree "$1" "$2" | cut -d ' ' -f 1)
+            CASA_INP_RAND=("${CASA_INP_RAND[@]}" "$CASA_INP_TEMP")
+        else
+            CASA_INP_RAND=("${CASA_INP_RAND[@]}" "$1")
+            CASA_INP_TEMP=$(degree2radec "$1" "$2" | cut -d ' ' -f 1)
+            CASA_INP_RANX=("${CASA_INP_RANX[@]}" "$CASA_INP_TEMP")
+        fi
+        if [[ "$2" == *":"*":"* ]]; then
+            CASA_INP_DECX=("${CASA_INP_DECX[@]}" "$2")
+            CASA_INP_TEMP=$(radec2degree "$1" "$2" | cut -d ' ' -f 2)
+            CASA_INP_DECD=("${CASA_INP_DECD[@]}" "$CASA_INP_TEMP")
+        else
+            CASA_INP_DECD=("${CASA_INP_DECD[@]}" "$2")
+            CASA_INP_TEMP=$(degree2radec "$1" "$2" | cut -d ' ' -f 2)
+            CASA_INP_DECX=("${CASA_INP_DECX[@]}" "$CASA_INP_TEMP")
+        fi
+        shift
+    fi
+    
+    if [[ "$CASA_CMD_TYPE" == "n/a" ]];  then 
+        CASA_INP_MISC+=("$1")
+    fi
+    
+    if [[ $# -gt 0 ]]; then shift; fi
+    
+done
+
+
+
+if [[ $CASA_INP_DEBUG -eq 1 ]]; then
+    echo "CASA_INP_VIS              = "$(printf "'%s', " "${CASA_INP_VIS[@]}"               | sed -e 's/, $//g')
+    echo "CASA_INP_YES              = "$(printf "'%s', " "${CASA_INP_YES}"                  | sed -e 's/, $//g')
+    echo "CASA_INP_NO               = "$(printf "'%s', " "${CASA_INP_NO}"                   | sed -e 's/, $//g')
+    echo "CASA_INP_IMAGE            = "$(printf "'%s', " "${CASA_INP_IMAGE[@]}"             | sed -e 's/, $//g')
+    echo "CASA_INP_FIELD            = "$(printf "'%s', " "${CASA_INP_FIELD[@]}"             | sed -e 's/, $//g')
+    echo "CASA_INP_FREQ             = "$(printf "'%s', " "${CASA_INP_FREQ[@]}"              | sed -e 's/, $//g')
+    echo "CASA_INP_SPW              = "$(printf "'%s', " "${CASA_INP_SPW[@]}"               | sed -e 's/, $//g')
+    echo "CASA_INP_WIDTH            = "$(printf "'%s', " "${CASA_INP_WIDTH[@]}"             | sed -e 's/, $//g')
+    echo "CASA_INP_MISC             = "$(printf "'%s', " "${CASA_INP_MISC[@]}"              | sed -e 's/, $//g')
+    echo "CASA_INP_OUTPUT           = "$(printf "'%s', " "${CASA_INP_OUTPUT[@]}"            | sed -e 's/, $//g')
+    echo "CASA_INP_UVFIT_MODELTYPE  = "$(printf "'%s', " "${CASA_INP_UVFIT_MODELTYPE[@]}"   | sed -e 's/, $//g')
+    echo "CASA_INP_UVFIT_SOURCEPAR  = "$(printf "'%s', " "${CASA_INP_UVFIT_SOURCEPAR[@]}"   | sed -e 's/, $//g')
+    echo "CASA_INP_UVFIT_VARIEDPAR  = "$(printf "'%s', " "${CASA_INP_UVFIT_VARIEDPAR[@]}"   | sed -e 's/, $//g')
+    echo "CASA_INP_RANX             = "$(printf "'%s', " "${CASA_INP_RANX[@]}"              | sed -e 's/, $//g')
+    echo "CASA_INP_RAND             = "$(printf "'%s', " "${CASA_INP_RAND[@]}"              | sed -e 's/, $//g')
+    echo "CASA_INP_DECX             = "$(printf "'%s', " "${CASA_INP_DECX[@]}"              | sed -e 's/, $//g')
+    echo "CASA_INP_DECD             = "$(printf "'%s', " "${CASA_INP_DECD[@]}"              | sed -e 's/, $//g')
+fi
+
+
+
+# Check Files or Dirs
+
+for (( i=0; i<${#CASA_INP_VIS[@]}; i++ )); do
+    checkDirExistence "${CASA_INP_VIS[i]}"
+    # remove trailing "/"
+    if [[ "${CASA_INP_VIS[i]}" == *"/" ]]; then CASA_INP_VIS[i]=$(echo "${CASA_INP_VIS[i]}" | sed -e 's%/$%%g'); fi
+done
+
+for (( i=0; i<${#CASA_INP_IMAGE[@]}; i++ )); do
+    checkDirExistence "${CASA_INP_IMAGE[i]}"
+    # remove trailing "/"
+    if [[ "${CASA_INP_IMAGE[i]}" == *"/" ]]; then CASA_INP_IMAGE[i]=$(echo "${CASA_INP_IMAGE[i]}" | sed -e 's%/$%%g'); fi
+done
+
+
+
+
+
+

@@ -1,0 +1,194 @@
+#!/bin/bash
+# 
+# Input vis
+# Output plot pointing figures
+# 
+# Last update:
+#    2016-12-23 
+# 
+CASAMS_VIS="" # dataset name
+CASAMS_OUT="" # output plot pointing figure basename
+CASAMS_ASDM="" # raw ASDM name
+# 
+# Read input parameters
+# 
+#if [[ "$#" -eq 0 ]]; then
+#    echo "Usage: casa-ms-listobs -vis calibrated.ms [-out calibrated.ms.listobs.txt]"
+#    exit
+#fi
+# 
+# Check casa
+# 
+if [[ $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo ""
+    echo "Error! CASA was not found! Please check your \$PATH!"
+    echo ""
+    exit
+fi
+# 
+# Read input parameters
+# 
+CASAMS_GOOD=1
+CASAMS_RPAR=""
+while [[ "$#" -gt 0 ]]; do
+    # echo $1
+    case $1 in
+           "-vis") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_VIS="$1";;
+           "-out") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_OUT="$1";;
+           "-asdm") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_ASDM="$1";;
+    esac
+    shift
+done
+# 
+# Check input parameter -- vis
+# 
+if [[ x"$CASAMS_ASDM" != x ]]; then
+    CASAMS_GOOD=1
+elif [[ x"$CASAMS_VIS" == x ]]; then
+    CASAMS_GOOD=0
+    #echo -n "Please input vis: "
+    #read CASAMS_VIS
+    # Set default value
+    CASAMS_VIS="calibrated.ms"
+    # Now we can first print default value, then if user input anything we remove the default value and show the user input. 
+    echo -n "Please input vis: $CASAMS_VIS"
+    read -N 1 CASAMS_KEY
+    if [[ x"$CASAMS_KEY" != x ]]; then
+        echo -e -n "\r$(tput el)Please input vis: $CASAMS_KEY"
+        read CASAMS_VIS
+        CASAMS_VIS="${CASAMS_KEY}${CASAMS_VIS}"
+    fi
+    # Check again the input is not empty
+    if [[ x"$CASAMS_VIS" != x ]]; then
+        CASAMS_GOOD=1
+    fi
+fi
+# 
+# Check input parameters ------ if not passed then print usage and exit
+# 
+if [[ $CASAMS_GOOD -eq 0 ]]; then
+    echo "Usage: casa-ms-plot-pointing -vis calibrated.ms -asdm uid__XXXX_XX_XX -out myPlot"
+    exit
+fi
+# 
+# Revise input parameters
+# 
+# -- remove the suffix of the input vis name, and test whether the file exists
+if [[ x"$CASAMS_ASDM" != x ]]; then
+    if [[ ! -d "${CASAMS_ASDM}" ]]; then
+        echo "Error! \"${CASAMS_ASDM}\" directory was not found! Exit!"
+        exit
+    fi
+elif [[ x"$CASAMS_VIS" != x ]]; then
+    if [[ x"$(echo $CASAMS_VIS | grep -E '.*\.ms.*')" == x ]]; then
+        CASAMS_VIS_SFIX=".ms"
+    else
+        CASAMS_VIS_SFIX=$(echo $CASAMS_VIS | sed -E 's/.*(\.ms.*)$/\1/g')
+        CASAMS_VIS=$(echo $CASAMS_VIS | sed -E 's/(.*)(\.ms.*)$/\1/g')
+    fi
+    CASAMS_VIS=$(echo $CASAMS_VIS | sed -E 's/[.]ms$//g')
+    if [[ ! -d "${CASAMS_VIS}${CASAMS_VIS_SFIX}" ]]; then
+        echo "Error! \"${CASAMS_VIS}${CASAMS_VIS_SFIX}\" directory was not found! Exit!"
+        exit
+    fi
+fi
+# 
+# Revise input parameter -- out -- if not given, set to input vis+".plot.pointing"
+# 
+if [[ x"$CASAMS_OUT" == x ]]; then
+    if [[ x"$CASAMS_ASDM" != x ]]; then
+        echo "Output file name not given, set as \"${CASAMS_ASDM}.plot.pointing\"!"
+        CASAMS_OUT="$(basename ${CASAMS_ASDM}).plot.pointing"
+    elif [[ x"$CASAMS_VIS" != x ]]; then
+	    echo "Output file name not given, set as \"${CASAMS_VIS}${CASAMS_VIS_SFIX}.plot.pointing\"!"
+        CASAMS_OUT="${CASAMS_VIS}${CASAMS_VIS_SFIX}.plot.pointing"
+    fi
+fi
+# 
+# 
+# 
+# 
+# Write run_dzliu_plot_pointing.py
+# -- see https://www.safe.nrao.edu/wiki/bin/view/ALMA/PlotPointingResults
+# -- see https://www.safe.nrao.edu/wiki/bin/view/ALMA/PlotPointingResultsFromASDM
+# 
+CASAMS_FPY="run_dzliu_plot_pointing.py"
+if [[ x"$CASAMS_ASDM" != x ]]; then
+    echo "# CASAPY "                                        >  "$CASAMS_FPY"
+    echo "import analysisUtils as au"                       >> "$CASAMS_FPY"
+    echo "au.plotPointingResultsFromASDM(                "  >> "$CASAMS_FPY"
+    echo "   asdm               = '${CASAMS_ASDM}',      "  >> "$CASAMS_FPY"
+    echo "   figfile            = '${CASAMS_OUT}',       "  >> "$CASAMS_FPY"
+    echo "   figfiledir         = '',                    "  >> "$CASAMS_FPY"
+    echo "   buildpdf           = True,                  "  >> "$CASAMS_FPY"
+    echo "   doplot             = True,                  "  >> "$CASAMS_FPY"
+    echo "   interactive        = True,                  "  >> "$CASAMS_FPY"
+    echo "   labels             = False,                 "  >> "$CASAMS_FPY"
+    echo "   xrange             = [0,0],                 "  >> "$CASAMS_FPY"
+    echo "   yrange             = [0,0],                 "  >> "$CASAMS_FPY"
+    echo "   gs                 = 'gs',                  "  >> "$CASAMS_FPY"
+    echo "   convert            = 'convert',             "  >> "$CASAMS_FPY"
+    echo "   pdftk              = 'pdftk',               "  >> "$CASAMS_FPY"
+    echo "   thresholdArcsec    = 5.0,                   "  >> "$CASAMS_FPY"
+    echo "   nsigma             = 2,                     "  >> "$CASAMS_FPY"
+    echo "   fractionOfScansBad = 0.68,                  "  >> "$CASAMS_FPY"
+    echo "   antenna            = None,                  "  >> "$CASAMS_FPY"
+    echo "   listsigma          = False,                 "  >> "$CASAMS_FPY"
+    echo "   scienceSpws        = None                   "  >> "$CASAMS_FPY"
+    echo ")"                                                >> "$CASAMS_FPY"
+elif [[ x"$CASAMS_VIS" != x ]]; then
+    echo "# CASAPY "                                                     >  "$CASAMS_FPY"
+    echo "import analysisUtils as au"                                    >> "$CASAMS_FPY"
+    echo "au.plotPointingResults(                                     "  >> "$CASAMS_FPY"
+    echo "   vis                = '${CASAMS_VIS}${CASAMS_VIS_SFIX}',  "  >> "$CASAMS_FPY"
+    echo "   source             = '',                                 "  >> "$CASAMS_FPY"
+    echo "   figfile            = '${CASAMS_OUT}',                    "  >> "$CASAMS_FPY"
+    echo "   buildpdf           = True,                               "  >> "$CASAMS_FPY"
+    echo "   labels             = False,                              "  >> "$CASAMS_FPY" # labels: set to True to draw the antenna names at each point, otherwise, it only draws the name if the offset is > nsigma times the standard deviation for that scan.
+    echo "   gs                 = 'gs',                               "  >> "$CASAMS_FPY"
+    echo "   convert            = 'convert',                          "  >> "$CASAMS_FPY"
+    echo "   pdftk              = 'pdftk',                            "  >> "$CASAMS_FPY"
+    echo "   interactive        = True,                               "  >> "$CASAMS_FPY"
+    echo "   thresholdArcsec    = 5.0,                                "  >> "$CASAMS_FPY"
+    echo "   nsigma             = 2,                                  "  >> "$CASAMS_FPY"
+    echo "   fractionOfScansBad = 0.68,                               "  >> "$CASAMS_FPY"
+    echo "   doplot             = True                                "  >> "$CASAMS_FPY"
+    echo ")"                                                             >> "$CASAMS_FPY"
+fi
+echo "Wrote to python script: \"${CASAMS_FPY}\""
+echo "Please run bash -c 'casa --nologfile -c \"${CASAMS_FPY}\"'"
+# 
+# 
+# 
+# 
+# Run casa
+# 
+CASAMS_YES="Yes"
+echo ""
+echo -n "Ready to run CASA now? $CASAMS_YES"
+read -N 1 CASAMS_KEY
+if [[ x"$CASAMS_KEY" != x ]]; then
+    echo -e -n "\r$(tput el)Ready to run CASA now? $CASAMS_KEY"
+    read CASAMS_YES
+    CASAMS_YES="${CASAMS_KEY}${CASAMS_YES}"
+fi
+# Check again the input is not empty
+if [[ x"$CASAMS_YES" != x"Y"* && x"$CASAMS_YES" != x"y"* ]]; then
+    echo "Exit!"
+    exit
+fi
+# Run
+if [[ $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo ""
+    echo "Error! CASA was not found! Please check your \$PATH!"
+    echo ""
+    exit
+else
+    echo "Running casa, please wait"
+    casa --nologfile -c "${CASAMS_FPY}"
+    echo "Finished casa, output to \"$CASAMS_OUT\"."
+fi
+
+
+
+echo "Done!"

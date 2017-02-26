@@ -1,0 +1,100 @@
+#!/bin/bash
+# 
+# Input field or name
+# Output python script file which runs CASA concat() task
+# 
+# Last update:
+#    2016-02-09 created, copied from casa-ms-uvmodelfit
+# 
+
+
+
+# Function to print usage
+function usage() {
+    echo "Usage: casa-ms-concat -vis a1.ms a2.ms a3.ms -out aaa.ms"
+}
+
+
+
+# 
+# Read input parameters
+# 
+. $(dirname ${BASH_SOURCE[0]})/"casa-command-line-arguments" "$@"
+
+
+
+# 
+# Check input parameter -- image
+# 
+if [[ ${#CASA_INP_VIS[@]} -eq 0 ]]; then usage; exit; fi
+
+
+
+# 
+# Write run_casa_ms_concat.py
+# 
+CASAMS_EXE="run_casa_ms_concat.py"
+CASAMS_LOG="run_casa_ms_concat.log"
+echo "#!/bin/python" > "$CASAMS_EXE"
+TempInput="['${CASA_INP_VIS[0]}'"
+for (( i=1; i<${#CASA_INP_VIS[@]}; i++ )); do
+    TempInput="$TempInput, '${CASA_INP_VIS[i]}'"
+done
+TempInput="$TempInput]"
+#echo "$TempInput"
+if [[ ${#CASA_INP_OUTPUT[@]} -gt 0 ]]; then
+    TempOutput=${CASA_INP_OUTPUT[0]}
+else
+    TempOutput=$(basename "${CASA_INP_VIS[0]//'.ms'//}_concat.ms")
+fi
+echo "vis            = $TempInput"                        >> "$CASAMS_EXE"
+echo "concatvis      = '$TempOutput'"                     >> "$CASAMS_EXE"
+
+if [[ ${#CASA_INP_CONCAT_FREQTOL} -gt 0 ]]; then
+echo "freqtol        = '${CASA_INP_CONCAT_FREQTOL[0]}'"   >> "$CASAMS_EXE"   # default is 1 Hz
+fi
+
+if [[ ${#CASA_INP_CONCAT_DIRTOL} -gt 0 ]]; then
+echo "dirtol         = '${CASA_INP_CONCAT_DIRTOL[0]}'"    >> "$CASAMS_EXE"
+fi
+
+echo "inp(concat)"                                        >> "$CASAMS_EXE"
+echo "concat()"                                           >> "$CASAMS_EXE"
+echo ""                                                   >> "$CASAMS_EXE"
+echo "Wrote to python script: ${CASAMS_EXE}"
+
+
+
+# 
+# run casa now
+# 
+if [[ $CASA_INP_NO -eq 0 ]]; then
+    
+    CASAMS_GOO="y"
+    if [[ $CASA_INP_YES -eq 0 ]]; then
+        read -e -p "Launch casa now? " -i "y" CASAMS_GOO
+    else
+        echo "Launching casa "
+    fi
+    if [[ x"$CASAMS_GOO" == x"y"* || x"$CASAMS_GOO" == x"Y"* ]]; then
+    	echo "casa --nogui --nologfile -c ${CASAMS_EXE} | tee ${CASAMS_LOG}"
+    	      casa --nogui --nologfile -c "${CASAMS_EXE}" | tee "${CASAMS_LOG}"
+    fi
+    
+    # copy EXE and LOG
+    for (( i=0; i<${#CASA_INP_UVFIT_MODELTYPE[@]}; i++ )); do
+        if [[ $i -lt ${#CASA_INP_OUTPUT[@]} ]]; then 
+            cp "$CASAMS_EXE" $(echo "$TempOutput" | sed -e 's/\.ms$//g')".py"
+            cp "$CASAMS_LOG" $(echo "$TempOutput" | sed -e 's/\.ms$//g')".log"
+        fi
+    done
+    
+else
+    echo "OK, we will not run casa now. Please run the following command by yourself"
+    echo "    casa --nogui --nologfile -c ${CASAMS_EXE} | tee ${CASAMS_LOG}"
+    echo ""
+fi
+
+echo "Done!"
+
+

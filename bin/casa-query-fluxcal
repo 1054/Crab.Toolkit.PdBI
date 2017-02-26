@@ -1,0 +1,54 @@
+#!/usr/bin/env python2.7
+# 
+
+# Copied from "a_dzliu_code_query_alma_calibrator.py"
+
+import os, sys
+
+# Check input argument
+# The input argument is the ALMA calibrator name
+if len(sys.argv) <= 1:
+    print("Usage: ")
+    print("    casa-query-fluxcal \"J1058+0133\"")
+    print("")
+    sys.exit()
+
+import json, pprint, astropy
+from mechanize import Browser
+from operator import itemgetter # for sorted()
+import astropy.io.ascii as asciiTable
+
+#pprint.pprint(sys.argv)
+
+# set parameters
+browser = Browser()
+browser.open('https://almascience.nrao.edu/sc/#queryFormTab')
+
+browser.select_form(nr=0)
+
+#print [control.name for control in browser.form.controls]
+
+browser['resolveName'] = str(sys.argv[1]) # 'J1058+0133'
+browser['dateObservedFrom'] = '2010-01-01'
+browser['dateObservedTo']   = '2020-12-01'
+
+response = browser.submit()
+
+content = response.read()
+
+results = json.loads(content)['data']
+
+output_keys = ('sourceRaDeg', 'sourceDecDeg', 'bandName', 'dateObserved', 'frequency', 'flux', 'fluxUncertainty')
+output_columns = [ {x:y[x] for x in output_keys} for y in results ]
+output_results = sorted(output_columns, key = itemgetter('frequency', 'dateObserved') )
+
+#pprint.pprint(results)
+
+#pprint.pprint(output_results)
+
+#asciiTable.write(output_results, '1.txt', format='fixed_width_two_line')
+asciiTable.write(output_results, sys.stdout, format='fixed_width_two_line')
+
+#os.system('cat 1.txt')
+
+

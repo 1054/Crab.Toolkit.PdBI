@@ -102,7 +102,7 @@ echo "inp(listobs)"                                    >> "$CASAMS_FPY"
 echo "listobs()"                                       >> "$CASAMS_FPY"
 echo ""                                                >> "$CASAMS_FPY"
 echo "Wrote to python script: \"${CASAMS_FPY}\""
-echo "Please run bash -c 'casa --nogui -c \"${CASAMS_FPY}\"'"
+echo "Please run bash -c 'casa --nologfile --nogui -c \"${CASAMS_FPY}\"'"
 # 
 # 
 # 
@@ -116,7 +116,7 @@ if [[ $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
     exit
 else
     echo "Running casa, please wait"
-    casa --nogui -c "${CASAMS_FPY}"
+    casa --nologfile --nogui -c "${CASAMS_FPY}"
     echo "Finished casa, now reading listobs text file"
     cat ${CASAMS_OUT} | awk '/Fields: /,/Spectral Windows: /' | head -n -1
     cat ${CASAMS_OUT} | awk '/Spectral Windows: /,/Sources: /' | head -n -1

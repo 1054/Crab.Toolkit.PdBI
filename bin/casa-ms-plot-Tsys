@@ -1,0 +1,258 @@
+#!/bin/bash
+# 
+# Input vis
+# Output python script file (gencal and plotcal)
+# 
+# Last update:
+#    2016-12-24 
+# 
+CASAMS_VIS="" # dataset name
+CASAMS_OUT="" # the output directory containing Tsys figures
+# 
+# Read input parameters
+# 
+#if [[ "$#" -eq 0 ]]; then
+#    echo "Usage: casa-ms-plot-Tsys -vis calibrated.ms [-out calibrated.ms.listobs.txt]"
+#    exit
+#fi
+# 
+# Check casa
+# 
+if [[ $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo ""
+    echo "Error! CASA was not found! Please check your \$PATH!"
+    echo ""
+    exit
+fi
+# 
+# Read input parameters
+# 
+CASAMS_GOOD=1
+CASAMS_RPAR=""
+while [[ "$#" -gt 0 ]]; do
+    # echo $1
+    case $1 in
+           "-vis") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_VIS="$1";;
+           "-out") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_OUT="$1";;
+    esac
+    shift
+done
+# 
+# Check input parameter -- vis
+# 
+if [[ x"$CASAMS_VIS" == x ]]; then
+    CASAMS_GOOD=0
+    #echo -n "Please input vis: "
+    #read CASAMS_VIS
+    # Set default value
+    CASAMS_VIS="calibrated.ms"
+    # Now we can first print default value, then if user input anything we remove the default value and show the user input. 
+    echo -n "Please input vis: $CASAMS_VIS"
+    read -N 1 CASAMS_KEY
+    if [[ x"$CASAMS_KEY" != x ]]; then
+        echo -e -n "\r$(tput el)Please input vis: $CASAMS_KEY"
+        read CASAMS_VIS
+        CASAMS_VIS="${CASAMS_KEY}${CASAMS_VIS}"
+    fi
+    # Check again the input is not empty
+    if [[ x"$CASAMS_VIS" != x ]]; then
+        CASAMS_GOOD=1
+    fi
+fi
+# 
+# Check input parameters ------ if not passed then print usage and exit
+# 
+if [[ $CASAMS_GOOD -eq 0 ]]; then
+    echo "Usage: casa-ms-plot-Tsys -vis calibrated.ms -out output_dir_name"
+    exit
+fi
+# 
+# Revise input parameters
+# 
+# -- remove the suffix of the input vis name, and test whether the file exists
+if [[ x"$(echo $CASAMS_VIS | grep -E '.*\.ms.*')" == x ]]; then
+    CASAMS_VIS_SFIX=".ms"
+else
+    CASAMS_VIS_SFIX=$(echo $CASAMS_VIS | sed -E 's/.*(\.ms.*)$/\1/g')
+    CASAMS_VIS=$(echo $CASAMS_VIS | sed -E 's/(.*)(\.ms.*)$/\1/g')
+fi
+CASAMS_VIS=$(echo $CASAMS_VIS | sed -E 's/[.]ms$//g')
+if [[ ! -d "${CASAMS_VIS}${CASAMS_VIS_SFIX}" ]]; then
+    echo Error! "${CASAMS_VIS}${CASAMS_VIS_SFIX}" was not found! Exit!
+    exit
+fi
+# 
+# Revise input parameter -- output directory -- if not given, set to input vis+".plot.Tsys"
+# 
+if [[ x"$CASAMS_OUT" == x ]]; then
+	echo "Output file name not given, set as \"$(basename ${CASAMS_VIS}).plot.Tsys\"!"
+    CASAMS_OUT="$(basename ${CASAMS_VIS}${CASAMS_VIS_SFIX}).plot.Tsys"
+fi
+# 
+# Backup and make output directory
+# 
+if [[ -d "$CASAMS_OUT.backup" ]]; then
+    echo "Found existing \"$CASAMS_OUT.backup\"! Backuping it as \"$CASAMS_OUT.backup.backup\"!"
+    mv "$CASAMS_OUT.backup" "$CASAMS_OUT.backup.backup"
+fi
+if [[ -d "$CASAMS_OUT" ]]; then
+    echo "Found existing \"$CASAMS_OUT\"! Backuping it as \"$CASAMS_OUT.backup\"!"
+    mv "$CASAMS_OUT" "$CASAMS_OUT.backup"
+fi
+if [[ ! -d "$CASAMS_OUT" ]]; then
+    mkdir "$CASAMS_OUT"
+fi
+if [[ ! -d "$CASAMS_OUT" ]]; then
+    echo "Error! Failed to create output directory \"$CASAMS_OUT\"!"
+    exit 1
+fi
+# 
+# Check caltable
+# 
+#CASAMS_CAL="$(basename ${CASAMS_VIS}${CASAMS_VIS_SFIX}).caltable.Tsys"
+CASAMS_CAL="caltable.Tsys" # shortened name for better display in output figures
+# 
+# 
+# 
+# 
+# Write run_dzliu_plot_Tsys.py
+# -- see plotcal() -- https://casa.nrao.edu/docs/TaskRef/plotcal-task.html
+# 
+CASAMS_FPY="run_dzliu_plot_Tsys.py"
+echo "# CASAPY "                                           >  "$CASAMS_FPY"
+echo "# "                                                  >> "$CASAMS_FPY"
+echo ""                                                    >> "$CASAMS_FPY"
+echo "import os, sys"                                      >> "$CASAMS_FPY"
+echo ""                                                    >> "$CASAMS_FPY"
+echo "# "                                                  >> "$CASAMS_FPY"
+echo "# -- gencal"                                         >> "$CASAMS_FPY"
+echo "if not os.path.exists(\"${CASAMS_CAL}\"):"           >> "$CASAMS_FPY"
+echo "    gencal("                                         >> "$CASAMS_FPY"
+echo "           vis='${CASAMS_VIS}${CASAMS_VIS_SFIX}', "  >> "$CASAMS_FPY"
+echo "           caltable='${CASAMS_CAL}', "               >> "$CASAMS_FPY"
+echo "           caltype='tsys'"                           >> "$CASAMS_FPY"
+echo "    )"                                               >> "$CASAMS_FPY"
+echo ""                                                    >> "$CASAMS_FPY"
+echo "# "                                                  >> "$CASAMS_FPY"
+echo "# -- count antenna number"                           >> "$CASAMS_FPY"
+echo "tb.open('${CASAMS_CAL}/ANTENNA')"                    >> "$CASAMS_FPY"
+echo "anacount = len(tb.rownumbers())"                     >> "$CASAMS_FPY"
+echo "tb.close()"                                          >> "$CASAMS_FPY"
+echo ""                                                    >> "$CASAMS_FPY"
+echo "# "                                                  >> "$CASAMS_FPY"
+echo "# -- count spectral window number"                   >> "$CASAMS_FPY"
+echo "tb.open('${CASAMS_CAL}/SPECTRAL_WINDOW')"            >> "$CASAMS_FPY"
+echo "spwcount = len(tb.rownumbers())"                     >> "$CASAMS_FPY"
+echo "spwnchan = tb.getcol('NUM_CHAN').tolist()"           >> "$CASAMS_FPY"
+echo "tb.close()"                                          >> "$CASAMS_FPY"
+echo ""                                                    >> "$CASAMS_FPY"
+echo "# "                                                  >> "$CASAMS_FPY"
+echo "# -- list sources"                                   >> "$CASAMS_FPY"
+echo "tb.open('${CASAMS_CAL}/FIELD')"                      >> "$CASAMS_FPY"
+echo "sources = tb.getcol('NAME').tolist()"                >> "$CASAMS_FPY"
+echo "tb.close()"                                          >> "$CASAMS_FPY"
+echo ""                                                                                                                >> "$CASAMS_FPY"
+echo "# "                                                                                                              >> "$CASAMS_FPY"
+echo "# -- plotcal"                                                                                                    >> "$CASAMS_FPY"
+echo "print \"Plotting Tsys vs. time for ${CASAMS_CAL}\""                                                              >> "$CASAMS_FPY"
+echo "for anai in range(1,anacount,8): "                                                                               >> "$CASAMS_FPY"
+echo "    for spwi in range(spwcount): "                                                                               >> "$CASAMS_FPY"
+echo "        plotcal( "                                                                                               >> "$CASAMS_FPY"
+echo "            caltable  = '${CASAMS_CAL}', "                                                                       >> "$CASAMS_FPY"
+echo "            xaxis     = 'time', "                                                                                >> "$CASAMS_FPY"
+echo "            yaxis     = 'tsys', "                                                                                >> "$CASAMS_FPY"
+echo "            antenna   = '%d~%d'%(anai,anai+7), "                                                                 >> "$CASAMS_FPY"
+echo "            plotrange = [0,0,30,350], "                                                                          >> "$CASAMS_FPY"
+echo "            iteration = 'antenna', "                                                                             >> "$CASAMS_FPY"
+echo "            subplot   = 421, "                                                                                   >> "$CASAMS_FPY"
+echo "            poln      = '', "                                                                                    >> "$CASAMS_FPY"
+echo "            spw       = '%d:%d~%d'%(spwi,0.1*spwnchan[spwi],spwnchan[spwi]-0.1*spwnchan[spwi]), "                >> "$CASAMS_FPY" #<TODO># mask +-10% edge channels
+echo "            field     = '*', "                                                                                   >> "$CASAMS_FPY"
+echo "            fontsize  = 9.0, "                                                                                   >> "$CASAMS_FPY"
+echo "            figfile   = '${CASAMS_OUT}/Tsys_vs_time_Antennae_%02d_%02d_spw_%d.png'%(anai,anai+7,spwi) "          >> "$CASAMS_FPY"
+echo "        )"                                                                                                       >> "$CASAMS_FPY"
+echo "        os.system('ls \"%s\"'%('${CASAMS_OUT}/Tsys_vs_time_Antennae_%02d_%02d_spw_%d.png'%(anai,anai+7,spwi)))"  >> "$CASAMS_FPY"
+echo ""                                                                                                                >> "$CASAMS_FPY"
+echo "# "                                                                                                                                   >> "$CASAMS_FPY"
+echo "# -- plotcal"                                                                                                                         >> "$CASAMS_FPY"
+echo "print \"Plotting Tsys vs. time for ${CASAMS_CAL}\""                                                                                   >> "$CASAMS_FPY"
+echo "for source in sources: "                                                                                                              >> "$CASAMS_FPY"
+echo "    for anai in range(1,anacount,8): "                                                                                                >> "$CASAMS_FPY"
+echo "        for spwi in range(spwcount): "                                                                                                >> "$CASAMS_FPY"
+echo "            plotcal( "                                                                                                                >> "$CASAMS_FPY"
+echo "                caltable  = '${CASAMS_CAL}', "                                                                                        >> "$CASAMS_FPY"
+echo "                xaxis     = 'time', "                                                                                                 >> "$CASAMS_FPY"
+echo "                yaxis     = 'tsys', "                                                                                                 >> "$CASAMS_FPY"
+echo "                antenna   = '%d~%d'%(anai,anai+7), "                                                                                  >> "$CASAMS_FPY"
+echo "                plotrange = [0,0,30,350], "                                                                                           >> "$CASAMS_FPY"
+echo "                iteration = 'antenna', "                                                                                              >> "$CASAMS_FPY"
+echo "                subplot   = 421, "                                                                                                    >> "$CASAMS_FPY"
+echo "                poln      = '', "                                                                                                     >> "$CASAMS_FPY"
+echo "                spw       = '%d:%d~%d'%(spwi,0.1*spwnchan[spwi],spwnchan[spwi]-0.1*spwnchan[spwi]), "                                 >> "$CASAMS_FPY" #<TODO># mask +-10% edge channels
+echo "                field     = source, "                                                                                                 >> "$CASAMS_FPY"
+echo "                fontsize  = 9.0, "                                                                                                    >> "$CASAMS_FPY"
+echo "                figfile   = '${CASAMS_OUT}/Tsys_vs_time_Source_%s_Antennae_%02d_%02d_spw_%d.png'%(source,anai,anai+7,spwi) "          >> "$CASAMS_FPY"
+echo "            )"                                                                                                                        >> "$CASAMS_FPY"
+echo "            os.system('ls \"%s\"'%('${CASAMS_OUT}/Tsys_vs_time_Source_%s_Antennae_%02d_%02d_spw_%d.png'%(source,anai,anai+7,spwi)))"  >> "$CASAMS_FPY"
+echo ""                                                                                                                                     >> "$CASAMS_FPY"
+echo "# "                                                                                                  >> "$CASAMS_FPY"
+echo "# -- plotcal"                                                                                        >> "$CASAMS_FPY"
+echo "print \"Plotting Tsys vs. frequency for ${CASAMS_CAL}\""                                             >> "$CASAMS_FPY"
+echo "for source in sources: "                                                                             >> "$CASAMS_FPY"
+echo "    for spwi in range(spwcount): "                                                                   >> "$CASAMS_FPY"
+echo "        plotbandpass( "                                                                              >> "$CASAMS_FPY"
+echo "            caltable    = '${CASAMS_CAL}', "                                                         >> "$CASAMS_FPY"
+echo "            xaxis       = 'freq', "                                                                  >> "$CASAMS_FPY"
+echo "            yaxis       = 'amp', "                                                                   >> "$CASAMS_FPY"
+echo "            showtsky    = T, "                                                                       >> "$CASAMS_FPY"
+echo "            subplot     = 42, "                                                                      >> "$CASAMS_FPY"
+echo "            field       = source, "                                                                  >> "$CASAMS_FPY"
+echo "            spw         = spwi, "                                                                    >> "$CASAMS_FPY"
+echo "            buildpdf    = False,  "                                                                  >> "$CASAMS_FPY"
+echo "            interactive = False,  "                                                                  >> "$CASAMS_FPY"
+echo "            plotrange   = [0,0,30,350], "                                                            >> "$CASAMS_FPY"
+echo "            figfile     = '${CASAMS_OUT}/Tsys_vs_freq_Source_%s_spw_%d.png'%(source,spwi) "          >> "$CASAMS_FPY"
+echo "        ) "                                                                                          >> "$CASAMS_FPY"
+echo "        os.system('ls \"%s\"'%('${CASAMS_OUT}/Tsys_vs_freq_Source_%s_spw_%d.*png'%(source,spwi))) "  >> "$CASAMS_FPY"
+echo "" >> "$CASAMS_FPY"
+echo "" >> "$CASAMS_FPY"
+echo "" >> "$CASAMS_FPY"
+echo "Wrote to python script: \"${CASAMS_FPY}\""
+echo "Please run bash -c 'casa --nologfile -c \"${CASAMS_FPY}\"'"
+# 
+# 
+# 
+# 
+# Run casa
+# 
+CASAMS_YES="Yes"
+echo ""
+echo -n "Ready to run CASA now? $CASAMS_YES"
+read -N 1 CASAMS_KEY
+if [[ x"$CASAMS_KEY" != x ]]; then
+    echo -e -n "\r$(tput el)Ready to run CASA now? $CASAMS_KEY"
+    read CASAMS_YES
+    CASAMS_YES="${CASAMS_KEY}${CASAMS_YES}"
+fi
+# Check again the input is not empty
+if [[ x"$CASAMS_YES" != x"Y"* && x"$CASAMS_YES" != x"y"* ]]; then
+    echo "Exit!"
+    exit
+fi
+# Run
+if [[ $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo ""
+    echo "Error! CASA was not found! Please check your \$PATH!"
+    echo ""
+    exit
+else
+    echo "Running casa, please wait"
+    casa --nologfile -c "${CASAMS_FPY}"
+    echo "Finished casa, now reading listobs text file"
+    cat ${CASAMS_OUT} | awk '/Fields: /,/Spectral Windows: /' | head -n -1
+    cat ${CASAMS_OUT} | awk '/Spectral Windows: /,/Sources: /' | head -n -1
+fi
+
+
+
+echo "Done!"

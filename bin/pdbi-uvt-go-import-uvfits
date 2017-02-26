@@ -4,69 +4,63 @@
 # Output uvt
 # 
 # Last update:
-#    2016-06-28 rewritting & beautifing
+#    2017-02-19 rewritten, beautified, used "pdbi-uvt-core-arg"
 # 
 # 
-PdBIUVT_EXMP=".pdbi-uvt-go-uvfit.mapping"
-PdBIUVT_EXPY=".pdbi-uvt-go-uvfit.py"
-PdBIUVT_STTY=".pdbi-uvt-go-uvfit.tty"
-PdBIUVT_NAME=()
-# LANG
-LANG=C
-# CHECK bc
-if [[ $(echo "3.1415926535 * 3" | bc -l 2>/dev/null | wc -l) -eq 0 ]]; then
-    echo "Error! gnu tool bc not found! Exit!"
+
+
+
+# CHECK wcstools gethead
+if [[ $(type gethead 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! WCSTOOLS gethead not found! Exit!"
     exit 1
 fi
-# CHECK awk
-if [[ $(echo "Go" | awk "NR==1" 2>/dev/null | wc -l) -eq 0 ]]; then
-    echo "Error! gnu tool awk not found! Exit!"
-    exit 1
+
+
+
+# 
+# Uage
+# 
+usage() {
+    echo "Usage: "
+    echo "  pdbi-uvt-go-import-uvfits -name PdBIUVT_NAME.uvt -size 15 -map_size 512 -map_cell 0.2 -out aaa.eps -overwrite"
+    echo ""
+}
+
+
+
+#
+# readlink
+# 
+if [[ $(uname) == *"Darwin"* ]]; then
+    function readlink() {
+        if [[ $# -gt 1 ]]; then if [[ "$1" == "-f" ]]; then shift; fi; fi
+        DIR=$(echo "${1%/*}"); (cd "$DIR" && echo "$(pwd -P)/$(basename ${1})")
+    }
 fi
-# CHECK mapping
-if [[ $(echo "say hello" | mapping 2>/dev/null | wc -l) -eq 0 ]]; then
-    echo "Error! GILDAS mapping not found! Exit!"
-    exit 1
-fi
+PdBIUVT_DIR=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
+
+
+
 # 
-# Read input parameters
+# Read input parameters by calling "pdbi-uvt-core-arg"
 # 
-PdBIUVT_GOOD=1
-PdBIUVT_TSTR=""
-PdBIUVT_RPAR=""
-while [[ "$#" -gt 0 ]]; do
-    # echo $1
-    PdBIUVT_TSTR=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-    case "$PdBIUVT_TSTR" in
-          "-name") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR=""; PdBIUVT_NAME="$1";;
-    esac
-    shift
-done
-# 
-# Check input parameters -- uvfits file name
-# 
-if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]]; then
-    PdBIUVT_GOOD=0
+if [[ -f "$PdBIUVT_DIR/pdbi-uvt-core-arg" ]]; then
+    source "$PdBIUVT_DIR/pdbi-uvt-core-arg" "$@"
 else
-    for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do 
-        # remove file extension suffix
-        PdBIUVT_NAME[i]=$(echo ${PdBIUVT_NAME[i]} | sed -E 's/[.]uvfits$//g')
-        # check file existence
-        if [[ ! -f "${PdBIUVT_NAME[i]}.uvfits" ]]; then
-            echo ""; echo "Error! The input uvfits file \"${PdBIUVT_NAME[i]}.uvfits\" was not found!"; echo ""; exit
-        fi
-    done
-fi
-# 
-# Check input parameters -- if not passed then print usage and exit
-# 
-if [[ $PdBIUVT_GOOD -eq 0 ]]; then
-    echo "Usage: pdbi-uvt-go-import-uvfits -name PdBIUVT_NAME.uvfits"
+    echo ""; echo "Error! Could not find \"$PdBIUVT_DIR/pdbi-uvt-core-arg\"! Please contact software supplier!"; echo ""
     exit
 fi
 
 
 
+# 
+# Check input parameters -- uvt file name
+# 
+if [[ x"$PdBIUVT_NAME" == x ]]; then
+    usage; exit
+fi
+
 
 
 
@@ -78,20 +72,62 @@ fi
 
 
 # 
-# Loop input uvfits files
+# Set default output file as
+# "$PdBIUVT_SAVE.uvt.go.uvmap.eps"
 # 
-for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do 
-    echo "Converting \"${PdBIUVT_NAME[i]}.uvfits\" to \"${PdBIUVT_NAME[i]}.uvt\""
-    echo "FITS \"${PdBIUVT_NAME[i]}.uvfits\" TO \"${PdBIUVT_NAME[i]}.uvt\" /STYLE CASA" > "${PdBIUVT_NAME[i]}.uvt.mapping"
-    if [[ -f "${PdBIUVT_NAME[i]}.uvt" ]]; then
-        echo "Warning! Found existing \"${PdBIUVT_NAME[i]}.uvt\"! Backup as \"${PdBIUVT_NAME[i]}.uvt.backup\"!"
-        mv "${PdBIUVT_NAME[i]}.uvt" "${PdBIUVT_NAME[i]}.uvt.backup"
-    fi
-    echo "Running @${PdBIUVT_NAME[i]}.uvt.mapping in GILDAS mapping"
-    echo "@${PdBIUVT_NAME[i]}.uvt.mapping" | mapping > "${PdBIUVT_NAME[i]}.uvt.mapping.log"
-    echo "header ${PdBIUVT_NAME[i]}.uvt" | mapping > "${PdBIUVT_NAME[i]}.uvt.header.txt"
-done
+if [[ x"$PdBIUVT_SAVE" == x || x"$PdBIUVT_SAVE" == x"tmp_pdbi_uvt" ]]; then 
+    PdBIUVT_SAVE="$PdBIUVT_NAME"
+    echo ""; echo "Warning! Output name was not given, setting to \"$PdBIUVT_SAVE.uvt\""; echo ""
+fi
+
+# 
+# Backup existing output file
+# 
+if [[ -f "$PdBIUVT_SAVE.uvt" ]]; then
+    echo "Warning! Found existing \"$PdBIUVT_SAVE.uvt\"! Backup as \"$PdBIUVT_SAVE.uvt.backup\"!"
+    mv "$PdBIUVT_SAVE.uvt" "$PdBIUVT_SAVE.uvt.backup"
+fi
+
+
+
+# 
+# Deal with the input uvfits file
+# Output to mapping script
+# "$PdBIUVT_SAVE.uvt.import.uvfits.script"
+# 
+PdBIUVT_EXE="$PdBIUVT_SAVE.uvt.import.uvfits.script"
+PdBIUVT_LOG="$PdBIUVT_SAVE.uvt.import.uvfits.log"
+PdBIUVT_INI="$PdBIUVT_SAVE.uvt.import.uvfits.init"
+PdBIUVT_GETHEAD="$PdBIUVT_SAVE.uvt.import.uvfits.gethead"
+PdBIUVT_SETHEAD="$PdBIUVT_SAVE.uvt.import.uvfits.sethead"
+
+echo "" >  "$PdBIUVT_EXE"
+
+echo "Checking \"$PdBIUVT_NAME.$PdBIUVT_TYPE\" frequencies"
+PdBIUVT_CRVAL4=$(gethead "$PdBIUVT_NAME.$PdBIUVT_TYPE" "CRVAL4")
+PdBIUVT_RESTFREQ=$(gethead "$PdBIUVT_NAME.$PdBIUVT_TYPE" "RESTFREQ")
+echo "CRVAL4   = $PdBIUVT_CRVAL4" > "$PdBIUVT_GETHEAD"
+echo "RESTFREQ = $PdBIUVT_RESTFREQ" >> "$PdBIUVT_GETHEAD"
+cat "$PdBIUVT_GETHEAD"
+#echo "BEGIN {val=(($PdBIUVT_CRVAL4)-($PdBIUVT_RESTFREQ))/((($PdBIUVT_CRVAL4)+($PdBIUVT_RESTFREQ))/2.0); print (val>0)?(val<0.001):(-val<0.001)}"
+PdBIUVT_CHECK=$(awk "BEGIN {val=(($PdBIUVT_CRVAL4)-($PdBIUVT_RESTFREQ))/((($PdBIUVT_CRVAL4)+($PdBIUVT_RESTFREQ))/2.0); print (val>0)?(val<0.001):(-val<0.001)}")
+if [[ $PdBIUVT_CHECK -eq 0 ]]; then
+    echo "sethead \"$PdBIUVT_NAME.$PdBIUVT_TYPE\" RESTFREQ=$PdBIUVT_CRVAL4" > "$PdBIUVT_SETHEAD"
+          sethead  "$PdBIUVT_NAME.$PdBIUVT_TYPE"  RESTFREQ=$PdBIUVT_CRVAL4
+    cat "$PdBIUVT_SETHEAD"
+fi
+
+
+echo "Converting \"$PdBIUVT_NAME.$PdBIUVT_TYPE\" to \"$PdBIUVT_SAVE.uvt\""
+echo "FITS \"$PdBIUVT_NAME.$PdBIUVT_TYPE\" TO \"$PdBIUVT_SAVE.uvt\" /STYLE CASA" >> "$PdBIUVT_EXE"
+
+
+echo "Running @$PdBIUVT_EXE in GILDAS mapping"
+echo "@$PdBIUVT_EXE" | mapping > "$PdBIUVT_LOG"
+#echo "header $PdBIUVT_NAME.uvt" | mapping > "$PdBIUVT_SAVE.uvt.header.txt"
 
 
 
 echo "Done!"
+
+

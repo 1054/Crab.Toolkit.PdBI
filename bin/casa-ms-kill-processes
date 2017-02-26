@@ -1,0 +1,33 @@
+#!/bin/bash
+#
+
+
+killtree() {
+    local parent=$1 child
+    for child in $(ps -o ppid= -o pid= | awk "\$1==$parent {print \$2}"); do
+        echo "killtree $child"
+        killtree $child
+    done
+    echo "kill -9 $parent"
+    kill -9 $parent
+}
+
+
+ps af
+
+
+if [[ $# -gt 0 ]]; then
+    killtree $1
+fi
+
+
+# List_of_casa=$(ps af | grep "$USER" | grep "/casa" | grep -v "grep" | tr -s ' ' | cut -d ' ' -f 2,)
+# 
+# for PID_of_casa in ${List_of_casa[@]}; do
+#     kill -9 $PID_of_casa
+# done
+
+
+sleep 1.5
+
+ps af
