@@ -25,9 +25,15 @@ fi
 # Prepare necessary functions
 # 
 # Function to readlink
-function readlink() {
-    if [[ $# -gt 1 ]]; then if [[ "$1" == "-f" ]]; then shift; fi; fi; DIR=$(echo "${1%/*}"); (cd "$DIR" && echo "$(pwd -P)/$(basename ${1})")
-}
+if [[ $(uname) == *"Darwin"* ]]; then
+    function readlink() {
+        if [[ $# -gt 1 ]]; then if [[ "$1" == "-f" ]]; then shift; fi; fi
+        DIR="$1"; if [[ "$DIR" != *"/"* ]]; then DIR="./$DIR"; fi # 20170228: fixed bug: path without "/"
+        DIR=$(echo "${DIR%/*}") # 20160410: fixed bug: source SETUP just under the Softwares dir
+        if [[ -d "$DIR" ]]; then cd "$DIR" && echo "$(pwd -P)/$(basename ${1})"; 
+        else echo "$(pwd -P)/$(basename ${1})"; fi
+    }
+fi
 # Is_File
 function Is_File() {
     if [[ $# -ge 1 ]]; then if [[ -f "$1" ]]; then return 0; else seq  -f "*" -s '' $(echo "${#1}+24" | bc); echo; echo "Error! \"$1\" was not found!"; seq  -f "*" -s '' $(echo "${#1}+24" | bc); echo; exit -1; return -1; fi; fi; return -1

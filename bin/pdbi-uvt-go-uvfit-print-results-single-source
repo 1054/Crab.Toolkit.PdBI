@@ -1,0 +1,134 @@
+#!/bin/bash
+# 
+# Input the pdbi-uvt-go-uvfit output log file, 
+# Output formatted data table: Source, reduced_chi2, flux, ferr, xoff, xerr, ...
+# 
+# Last update:
+#    2017-02-22 created. 
+# 
+
+
+
+# Function to print usage
+function usage() {
+    echo "Usage: "
+    echo "    pdbi-uvt-go-uvfit-print-results aaa_uvmodelfit.log"
+    echo ""
+}
+
+
+
+# 
+# Read input parameters
+# 
+if [[ $# -eq 0 ]]; then
+    usage
+    exit
+fi
+
+
+
+# 
+# Check input parameters
+# 
+if [[ ! -f "$1" ]]; then 
+    echo "Error! Input file \"$1\" was not found!"
+    exit 1
+fi
+Result_file="$1"
+
+
+
+# 
+# Read the header file
+# 
+if [[ -f "$Result_file.header.txt" ]]; then
+    Result_freq=$(cat "$Result_file.header.txt" | grep "Rest Frequency" | perl -p -e 's/.*Rest Frequency *([0-9.+-]*)/\1/g')
+    Result_freq=$(awk "BEGIN {print ($Result_freq)/1e3}")
+else
+    Result_freq="0"
+fi
+
+
+
+# 
+# Read the input uvmodelfit log file
+# 
+Result_npar=$(cat "$Result_file" | grep "=" | grep -v "r.m.s." | grep -v "%" | grep -v "I-UV_FIT" | wc -l | sed -e 's/^ *//g')
+#echo "## Result_npar = $Result_npar"
+
+Result_source="N/A" # $(cat "$Result_file" | grep "vis *=" | tail -n 1 | perl -p -e "s/vis[^ ]* *=[^ ]* *['](.*)['] *.*/\1/g")
+#echo "## Result_source = $Result_source"
+
+Source_Name=$(echo "$Result_source")
+for (( i=1; i<=$#; i++ )); do
+    if [[ $(echo "${!i}" | grep -i "^-source" | wc -l) -ge 1 || \
+          $(echo "${!i}" | grep -i "^-name"   | wc -l) -ge 1 || \
+          $(echo "${!i}" | grep -i "^-target" | wc -l) -ge 1 ]]; then
+        if [[ $i -lt $# ]]; then
+            j=$(($i+1)); Source_Name=${!j}; break
+        fi
+    fi
+done
+
+Has_Printed_Head=0
+
+Result_text=$(cat "$Result_file"  | grep "=")
+
+Result_chi2=$(echo "$Result_text" | grep "r.m.s.=" | perl -p -e 's/.*r.m.s.= *([0-9.+-eE]*)(.*)/\1/g') # reduced chi2
+Result_flux=$(echo "$Result_text" | grep " = " | grep -i " FLUX " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\1%g')
+Result_ferr=$(echo "$Result_text" | grep " = " | grep -i " FLUX " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\2%g')
+Result_funit=$(echo "$Result_text" | grep " = " | grep -i " FLUX " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\3%g')
+Result_xoff=$(echo "$Result_text" | grep " = " | grep -i " R.A. " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\1%g')
+Result_xerr=$(echo "$Result_text" | grep " = " | grep -i " R.A. " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\2%g')
+Result_yoff=$(echo "$Result_text" | grep " = " | grep -i " DEC. " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\1%g')
+Result_yerr=$(echo "$Result_text" | grep " = " | grep -i " DEC. " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\2%g')
+if [[ $Result_npar -eq 6 ]]; then
+    Result_maj=$(   echo "$Result_text" | grep " = " | grep -i " Major    " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\1%g')
+    Result_majerr=$(echo "$Result_text" | grep " = " | grep -i " Major    " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\2%g')
+    Result_min=$(   echo "$Result_text" | grep " = " | grep -i " Minor    " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\1%g')
+    Result_minerr=$(echo "$Result_text" | grep " = " | grep -i " Minor    " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\2%g')
+    Result_ang=$(   echo "$Result_text" | grep " = " | grep -i " Pos.Ang. " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\1%g')
+    Result_angerr=$(echo "$Result_text" | grep " = " | grep -i " Pos.Ang. " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\2%g')
+    Result_rba=$(awk "BEGIN {print ($Result_min)/($Result_maj)}")
+    Result_rbaerr=$(awk "BEGIN {print ($Result_minerr)/($Result_min)*($Result_rba)}")
+fi
+# convert flux unit
+if   echo "$Result_funit" | sed -e 's/ *//g' | grep -q "microJy"; then
+    Result_flux=$(awk "BEGIN {print ($Result_flux)/1e3}") # make flux mJy
+    Result_ferr=$(awk "BEGIN {print ($Result_ferr)/1e3}") # make flux mJy
+elif echo "$Result_funit" | sed -e 's/ *//g' | grep -q "^Jy$"; then
+    Result_flux=$(awk "BEGIN {print ($Result_flux)*1e3}") # make flux mJy
+    Result_ferr=$(awk "BEGIN {print ($Result_ferr)*1e3}") # make flux mJy
+fi
+# deal with "fixed" error
+if [[ "$Result_ferr" == *"fixed"* ]]; then Result_ferr="0"; fi
+if [[ "$Result_xerr" == *"fixed"* ]]; then Result_xerr="0"; fi
+if [[ "$Result_yerr" == *"fixed"* ]]; then Result_yerr="0"; fi
+# compute SNR
+Result_fsnr=$(awk "BEGIN {print ($Result_flux)/($Result_ferr)}") # 
+# print results
+#echo "$Result_text"  | grep "="
+if [[ $Has_Printed_Head == 0 ]]; then
+    printf "# %16s %12s %12s %12s %12s %12s %12s %12s" "Source_Name" "reduced_chi2" "flux" "ferr" "xoff" "xerr" "yoff" "yerr"
+    if [[ $Result_npar -eq 3 ]]; then printf " %12s" "SNR"; fi
+    if [[ $Result_npar -eq 6 ]]; then printf " %12s %12s %12s %12s %12s %12s" "major" "major_err" "rminmaj" "rminmaj_err" "posangle" "posangle_err"; fi
+    printf "\n"
+    # 
+    printf "# %16s %12s %12s %12s %12s %12s %12s %12s"  " "  " "  "mJy"  "mJy" "arcsec" "arcsec" "arcsec" "arcsec"
+    if [[ $Result_npar -eq 3 ]]; then printf " %12s" " "; fi
+    if [[ $Result_npar -eq 6 ]]; then printf " %12s %12s %12s %12s %12s %12s"  "arcsec"  "arcsec"  " "  " "  "degree"  "degree"; fi
+    printf "\n"
+    # 
+    Has_Printed_Head=1
+fi
+if [[ $i -ge 0 ]]; then
+    printf "%18s %12g %12g %12g %12g %12g %12g %12g" "$Source_Name" "$Result_chi2" "$Result_flux" "$Result_ferr" "$Result_xoff" "$Result_xerr" "$Result_yoff" "$Result_yerr"
+    if [[ $Result_npar -eq 3 ]]; then printf " %12g" "$Result_fsnr"; fi
+    if [[ $Result_npar -eq 6 ]]; then printf " %12g %12g %12g %12g %12g %12g" "$Result_maj" "$Result_majerr" "$Result_rba" "$Result_rbaerr" "$Result_ang" "$Result_angerr"; fi
+    printf "\n"
+fi
+
+# echo "## Done!"
+
+

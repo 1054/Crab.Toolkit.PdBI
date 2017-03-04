@@ -36,16 +36,16 @@ Then run uv_fit at the phase center:
 ```
 pdbi-uvt-go-uvfit-v2 -name "ID-6406-1mm" -fixpos -point -out "ID-6406-1mm.uvt.uvfit.P.FixedPos"
 pdbi-uvt-go-uvfit-v2 -name "ID-6406-1mm" -varypos -point -out "ID-6406-1mm.uvt.uvfit.P.VariedPos"
-pdbi-uvt-go-uvfit-v2 -name "ID-6406-1mm" -varypos -c_gauss -out "ID-6406-1mm.uvt.uvfit.C.VariedPos"
-pdbi-uvt-go-uvfit-v2 -name "ID-6406-1mm" -varypos -e_gauss -out "ID-6406-1mm.uvt.uvfit.G.VariedPos"
+pdbi-uvt-go-uvfit-v2 -name "ID-6406-1mm" -varypos -cgauss -out "ID-6406-1mm.uvt.uvfit.C.VariedPos"
+pdbi-uvt-go-uvfit-v2 -name "ID-6406-1mm" -varypos -egauss -out "ID-6406-1mm.uvt.uvfit.G.VariedPos"
 ```
 The output fitting log file will be "ID-6406-1mm.uvt.uvfit.P.VariedPos.log". 
 
 Or run uv_fit for multiple source by giving the "-radec" argument list:
 ```
 pdbi-uvt-go-uvfit-v2 -name "ID-6406-1mm" -radec 12:01:56.0 55:55:55.0 -fixpos -point \
-                                         -radec 12:02:56.0 55:55:55.0 -fixpos -e_gauss \
-                                         -radec 12:03:56.0 55:55:55.0 -fixpos -e_gauss \
+                                         -radec 12:02:56.0 55:55:55.0 -fixpos -egauss \
+                                         -radec 12:03:56.0 55:55:55.0 -fixpos -egauss \
                                          -out "output_multi_source_uv_fit"
 ```
 The output fitting log file will be "output_multi_source_uv_fit.log". 

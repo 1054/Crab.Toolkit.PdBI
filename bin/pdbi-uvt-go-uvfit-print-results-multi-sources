@@ -1,0 +1,339 @@
+#!/bin/bash
+# 
+# Input the pdbi-uvt-go-uvfit output log file, 
+# Output formatted data table: Source, reduced_chi2, flux, ferr, xoff, xerr, ...
+# 
+# Last update:
+#    2017-02-22 created. 
+# 
+
+
+
+# Function to print usage
+function usage() {
+    echo "Usage: "
+    echo "    pdbi-uvt-go-uvfit-print-results aaa_uvmodelfit.log"
+    echo ""
+}
+
+
+
+# 
+# Read input parameters
+# 
+if [[ $# -eq 0 ]]; then
+    usage
+    exit
+fi
+
+
+
+# 
+# Read input parameters
+# 
+if [[ ! -f "$1" ]]; then 
+    echo "Error! Input file \"$1\" was not found!"
+    exit 1
+fi
+Result_file="$1"
+
+
+
+# 
+# Read the header file
+# 
+if [[ -f "$Result_file.header.txt" ]]; then
+    Result_freq=$(cat "$Result_file.header.txt" | grep "Rest Frequency" | perl -p -e 's/.*Rest Frequency *([0-9.+-]*)/\1/g')
+    Result_freq=$(awk "BEGIN {print ($Result_freq)/1e3}")
+else
+    Result_freq="0"
+fi
+
+
+# 
+# Read all valid lines
+# 
+#cat "$Result_file" | grep "=" | tr -s ' ' | perl -p -e 's/([^ ]*) *= *([^ ]*) *[(]*[ ]*([a-zA-Z0-9.+-]*)[ ]*[)]*(.*)/\1 --- \2 --- \3 --- \4/g'
+cat "$Result_file" | grep "=" \
+                   | perl -p -e 's/(.*) (channel) +([0-9]+) +(velocity) *= *([0-9.+-]*) *(.*)/\2 --- \3 --- \4 --- \5/i' \
+                   | perl -p -e 's/(.*) ([^ ]+) *= *([^ ]*)[ ]*[(]*[ ]*([a-zA-Z0-9.+-]*)[ ]*[)]*(.*)/\2 --- \3 --- \4 --- \5/g' \
+                   | perl -p -e 's/(.*) --- $/\1 --- NULL/g'
+                   
+        
+
+
+# Result_nchan=0
+# for (( i=0; i<${#Result_lines[@]}; i++ )); do
+#     Result_line="${Result_lines[i]}"
+#     echo ${Result_line}
+#     if echo "$Result_line" | grep -q -i "channel"; then
+#         Result_nchan=$(($Result_nchan+1))
+#         Result_line="${Result_lines[i+1]}"
+#         if echo "$Result_line" | grep -q -i "r.m.s."; then
+#             Result_chi2=$(echo "$Result_line" | cut -d '---' -f 2 | sed -e 's/ //g')
+#             echo $Result_chi2
+#         fi
+#     fi
+#     break
+# done
+
+exit
+
+
+
+
+begin_chan() {
+        # debug
+        if [[ $Debug_Level -ge 1 ]]; then echo "begin_chan"; fi
+        # 
+        Result_nobj=0
+}
+
+end_chan() {
+        # debug
+        if [[ $Debug_Level -ge 1 ]]; then echo "end_chan"; fi
+        # 
+        Results_nchan=$(($Results_nchan+1))
+        Results_nobj+=("$Result_nobj")
+        echo "Read channel ${Results_nchan[(${#Results_nchan[@]}-1)]}"
+}
+
+begin_obj() {
+            # debug
+            if [[ $Debug_Level -ge 1 ]]; then echo "begin_obj"; fi
+            #Result_chi2="-99"
+            Result_flux="-99"
+            Result_ferr="-99"
+            Result_funi="-99"
+            Result_xoff="-99"
+            Result_xerr="-99"
+            Result_yoff="-99"
+            Result_yerr="-99"
+            Result_maj="-99"
+            Result_majerr="-99"
+            Result_min="-99"
+            Result_minerr="-99"
+            Result_ang="-99"
+            Result_angerr="-99"
+            Result_rba="-99"
+            Result_rbaerr="-99"
+}
+
+end_obj() {
+            # debug
+            if [[ $Debug_Level -ge 1 ]]; then echo "end_obj"; fi
+            # convert flux unit
+            if [[ x"$Result_funi" != x && x"$Result_flux" != x && x"$Result_ferr" != x ]]; then
+                if   echo "$Result_funi" | sed -e 's/ *//g' | grep -q "microJy"; then
+                    Result_flux=$(awk "BEGIN {print ($Result_flux)/1e3}") # make flux mJy
+                    Result_ferr=$(awk "BEGIN {print ($Result_ferr)/1e3}") # make flux mJy
+                elif echo "$Result_funi" | sed -e 's/ *//g' | grep -q "^Jy$"; then
+                    Result_flux=$(awk "BEGIN {print ($Result_flux)*1e3}") # make flux mJy
+                    Result_ferr=$(awk "BEGIN {print ($Result_ferr)*1e3}") # make flux mJy
+                fi
+            fi
+            # append to the output data array
+            Results_chi2+=("$Result_chi2")
+            Results_flux+=("$Result_flux")
+            Results_ferr+=("$Result_ferr")
+            Results_funi+=("$Result_funi")
+            Results_xoff+=("$Result_xoff")
+            Results_xerr+=("$Result_xerr")
+            Results_yoff+=("$Result_yoff")
+            Results_yerr+=("$Result_yerr")
+            Results_maj+=("$Result_maj")
+            Results_majerr+=("$Result_majerr")
+            Results_min+=("$Result_min")
+            Results_minerr+=("$Result_minerr")
+            Results_ang+=("$Result_ang")
+            Results_angerr+=("$Result_angerr")
+            Results_rba+=("$Result_rba")
+            Results_rbaerr+=("$Result_rbaerr")
+            # 
+            # print results
+            if [[ $Has_Printed_Head == 0 ]]; then
+                printf "# %16s %12s %12s %12s %12s %12s %12s %12s" "Source_Name" "reduced_chi2" "flux" "ferr" "xoff" "xerr" "yoff" "yerr"
+                if [[ $Result_npar -eq 3 ]]; then printf " %12s" "SNR"; fi
+                if [[ $Result_npar -eq 6 ]]; then printf " %12s %12s %12s %12s %12s %12s" "major" "major_err" "rminmaj" "rminmaj_err" "posangle" "posangle_err"; fi
+                printf "\n"
+                # 
+                printf "# %16s %12s %12s %12s %12s %12s %12s %12s"  " "  " "  "mJy"  "mJy" "arcsec" "arcsec" "arcsec" "arcsec"
+                if [[ $Result_npar -eq 3 ]]; then printf " %12s" " "; fi
+                if [[ $Result_npar -eq 6 ]]; then printf " %12s %12s %12s %12s %12s %12s"  "arcsec"  "arcsec"  " "  " "  "degree"  "degree"; fi
+                printf "\n"
+                # 
+                Has_Printed_Head=1
+            fi
+            if [[ $i -ge 0 ]]; then
+                printf "%18s %12g %12g %12g %12g %12g %12g %12g" "$Source_Name" "$Result_chi2" "$Result_flux" "$Result_ferr" "$Result_xoff" "$Result_xerr" "$Result_yoff" "$Result_yerr"
+                if [[ $Result_npar -eq 3 ]]; then printf " %12g" "$Result_fsnr"; fi
+                if [[ $Result_npar -eq 6 ]]; then printf " %12g %12g %12g %12g %12g %12g" "$Result_maj" "$Result_majerr" "$Result_rba" "$Result_rbaerr" "$Result_ang" "$Result_angerr"; fi
+                printf "\n"
+            fi
+            # 
+            Result_nobj=$(($Result_nobj+1))
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Has_Printed_Head=0
+Debug_Level=1
+
+
+
+# 
+# Read the input uvmodelfit log file
+# 
+Results_nchan=0
+Results_nobj=() # dimension = nchan
+Results_chi2=()
+Results_flux=()
+Results_ferr=()
+Results_funi=()
+Results_xoff=()
+Results_xerr=()
+Results_yoff=()
+Results_yerr=()
+Results_maj=()
+Results_majerr=()
+Results_min=()
+Results_minerr=()
+Results_ang=()
+Results_angerr=()
+Results_rba=()
+Results_rbaerr=()
+
+while IFS='' read -r Result_line || [[ -n "$Result_line" ]]; do
+    # 
+    # When we think we have read one source info
+    # -- when we meet "Successful completion"
+    # -- when we meet "*r.m.s.*="
+    # -- when we meed "* R.A. *="
+    # 
+    # When we think we have read one channel info
+    # -- when we meet "Successful completion"
+    # -- when we meet "r.m.s.*="
+    # 
+    if [[ $(echo "$Result_line" | grep -i "S-UV_FIT*Successful completion" | wc -l) -eq 1 ]]; then
+        if [[ $Result_nobj -gt 0 ]]; then end_obj; fi
+        end_chan
+    fi
+    if [[ $(echo "$Result_line" | grep -i "* R.A. *=" | wc -l) -eq 1 ]]; then
+        if [[ $Result_nobj -gt 0 ]]; then end_obj; fi
+        begin_obj
+    fi
+    
+    echo "$Result_line"
+    
+    if echo "$Result_line" | grep -q -i "r.m.s.*="   ; then  Result_chi2=$(   echo "$Result_line" | grep "=  " | grep "r.m.s.="       | perl -p -e 's/.*r.m.s.= *([0-9.+-eE]*)(.*)/\1/g'); fi # reduced chi2
+    if echo "$Result_line" | grep -q -i " FLUX "     ; then  Result_flux=$(   echo "$Result_line" | grep " = " | grep -i " FLUX "     | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\1%g' ); fi
+    if echo "$Result_line" | grep -q -i " FLUX "     ; then  Result_ferr=$(   echo "$Result_line" | grep " = " | grep -i " FLUX "     | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\2%g' ); fi
+    if echo "$Result_line" | grep -q -i " FLUX "     ; then  Result_funi=$(   echo "$Result_line" | grep " = " | grep -i " FLUX "     | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\3%g' ); fi
+    if echo "$Result_line" | grep -q -i " FLUX "     ; then  if [[ "$Result_ferr" == *"fixed"* ]]; then Result_ferr="0"; fi; fi # deal with "fixed" error
+    if echo "$Result_line" | grep -q -i " FLUX "     ; then  if [[ "$Result_xerr" == *"fixed"* ]]; then Result_xerr="0"; fi; fi
+    if echo "$Result_line" | grep -q -i " FLUX "     ; then  if [[ "$Result_yerr" == *"fixed"* ]]; then Result_yerr="0"; fi; fi
+    if echo "$Result_line" | grep -q -i " FLUX "     ; then  if [[ $(awk "BEGIN {if($Result_ferr>0) print 1; else print 0;}") -eq 1 ]]; then Result_fsnr=$(awk "BEGIN {print ($Result_flux)/($Result_ferr)}"); fi; fi # compute SNR
+    if echo "$Result_line" | grep -q -i " R.A. "     ; then  Result_xoff=$(   echo "$Result_line" | grep " = " | grep -i " R.A. "     | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\1%g' ); fi
+    if echo "$Result_line" | grep -q -i " R.A. "     ; then  Result_xerr=$(   echo "$Result_line" | grep " = " | grep -i " R.A. "     | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\2%g' ); fi
+    if echo "$Result_line" | grep -q -i " DEC. "     ; then  Result_yoff=$(   echo "$Result_line" | grep " = " | grep -i " DEC. "     | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\1%g' ); fi
+    if echo "$Result_line" | grep -q -i " DEC. "     ; then  Result_yerr=$(   echo "$Result_line" | grep " = " | grep -i " DEC. "     | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\2%g' ); fi
+    if echo "$Result_line" | grep -q -i " Major    " ; then  Result_maj=$(    echo "$Result_line" | grep " = " | grep -i " Major    " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\1%g' ); fi
+    if echo "$Result_line" | grep -q -i " Major    " ; then  Result_majerr=$( echo "$Result_line" | grep " = " | grep -i " Major    " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\2%g' ); fi
+    if echo "$Result_line" | grep -q -i " Minor    " ; then  Result_min=$(    echo "$Result_line" | grep " = " | grep -i " Minor    " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\1%g' ); fi
+    if echo "$Result_line" | grep -q -i " Minor    " ; then  Result_minerr=$( echo "$Result_line" | grep " = " | grep -i " Minor    " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\2%g' ); fi
+    if echo "$Result_line" | grep -q -i " Pos.Ang. " ; then  Result_ang=$(    echo "$Result_line" | grep " = " | grep -i " Pos.Ang. " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\1%g' ); fi
+    if echo "$Result_line" | grep -q -i " Pos.Ang. " ; then  Result_angerr=$( echo "$Result_line" | grep " = " | grep -i " Pos.Ang. " | perl -p -e 's%.* *= *([0-9.+-eE]*) \(([0-9.+-eE fixed]*)\)(.*)%\2%g' ); fi
+    if echo "$Result_line" | grep -q -i " Pos.Ang. " ; then  Result_rba=$(    awk "BEGIN {print ($Result_min)/($Result_maj)}" ); fi
+    if echo "$Result_line" | grep -q -i " Pos.Ang. " ; then  Result_rbaerr=$( awk "BEGIN {print ($Result_minerr)/($Result_min)*($Result_rba)}" ); fi
+    
+done < "$Result_file"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+echo "# ${#Results_nchan} channels"
+
+Result_npar=6
+Has_Printed_Head=0
+
+k=0
+for (( j=0; j<${#Results_nchan[@]}; j++ )); do
+    for (( i=0; i<${#Results_nobj[@]}; i++ )); do
+        # get results
+        Result_chi2="${Results_chi2[k]}"
+        Result_flux="${Results_flux[k]}"
+        Result_ferr="${Results_ferr[k]}"
+        Result_funi="${Results_funi[k]}"
+        Result_xoff="${Results_xoff[k]}"
+        Result_xerr="${Results_xerr[k]}"
+        Result_yoff="${Results_yoff[k]}"
+        Result_yerr="${Results_yerr[k]}"
+        Result_maj="${Results_maj[k]}"
+        Result_majerr="${Results_majerr[k]}"
+        Result_min="${Results_min[k]}"
+        Result_minerr="${Results_minerr[k]}"
+        Result_ang="${Results_ang[k]}"
+        Result_angerr="${Results_angerr[k]}"
+        Result_rba="${Results_rba[k]}"
+        Result_rbaerr="${Results_rbaerr[k]}"
+        # print results
+        if [[ $Has_Printed_Head == 0 ]]; then
+            printf "# %16s %12s %12s %12s %12s %12s %12s %12s" "Source_Name" "reduced_chi2" "flux" "ferr" "xoff" "xerr" "yoff" "yerr"
+            if [[ $Result_npar -eq 3 ]]; then printf " %12s" "SNR"; fi
+            if [[ $Result_npar -eq 6 ]]; then printf " %12s %12s %12s %12s %12s %12s" "major" "major_err" "rminmaj" "rminmaj_err" "posangle" "posangle_err"; fi
+            printf "\n"
+            # 
+            printf "# %16s %12s %12s %12s %12s %12s %12s %12s"  " "  " "  "mJy"  "mJy" "arcsec" "arcsec" "arcsec" "arcsec"
+            if [[ $Result_npar -eq 3 ]]; then printf " %12s" " "; fi
+            if [[ $Result_npar -eq 6 ]]; then printf " %12s %12s %12s %12s %12s %12s"  "arcsec"  "arcsec"  " "  " "  "degree"  "degree"; fi
+            printf "\n"
+            # 
+            Has_Printed_Head=1
+        fi
+        if [[ $i -ge 0 ]]; then
+            printf "%18s %12g %12g %12g %12g %12g %12g %12g" "$Source_Name" "$Result_chi2" "$Result_flux" "$Result_ferr" "$Result_xoff" "$Result_xerr" "$Result_yoff" "$Result_yerr"
+            if [[ $Result_npar -eq 3 ]]; then printf " %12g" "$Result_fsnr"; fi
+            if [[ $Result_npar -eq 6 ]]; then printf " %12g %12g %12g %12g %12g %12g" "$Result_maj" "$Result_majerr" "$Result_rba" "$Result_rbaerr" "$Result_ang" "$Result_angerr"; fi
+            printf "\n"
+        fi
+        k=$(($k+1))
+    done
+done
+
+
+
+
+
+
+

@@ -94,7 +94,7 @@ PdBIUVT_RPAR="none"
 while [[ "$#" -gt 0 ]]; do
     #echo $1
     PdBIUVT_TSTR=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-    echo "$PdBIUVT_TSTR"
+    #echo "$PdBIUVT_TSTR"
     case "$PdBIUVT_TSTR" in
               "-name") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_NAME="$1";;
               "-type") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_TYPE="$1";;
@@ -117,6 +117,8 @@ while [[ "$#" -gt 0 ]]; do
              "-gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_FUNC+=("E_GAUSS");;
             "-egauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_FUNC+=("E_GAUSS");;
             "-cgauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_FUNC+=("C_GAUSS");;
+           "-e_gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_FUNC+=("E_GAUSS");;
+           "-c_gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_FUNC+=("C_GAUSS");;
       "-simultaneous") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run
           "-parallel") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run
           "-pointing") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="pointing";;
@@ -585,7 +587,8 @@ if [[ x"$PdBIUVT_TYPE" == x"uvt" || x"$PdBIUVT_TYPE" == x"UVT" ]]; then
         PdBIUVT_DECD_OBJT=("$PdBIUVT_DECD_CENT")
         PdBIUVT_RANX_OBJT=("$PdBIUVT_RANX_CENT")
         PdBIUVT_DECX_OBJT=("$PdBIUVT_DECX_CENT")
-        echo ""; echo "Warning! Object RA Dec was not given! We will use telescope pointing RA Dec for fitting! (will continue in 2.5 seconds)"; echo ""; sleep 2.5
+        #echo ""; echo "Warning! Object RA Dec was not given! We will use telescope pointing RA Dec for fitting! (will continue in 2.5 seconds)"; echo ""; sleep 2.5
+        echo ""; echo "Warning! Object RA Dec was not given! We will use telescope pointing RA Dec when needed (e.g. for uv_fit)!"; echo ""; sleep 2.5
     fi
     # 
     # if telescope pointing not found, then use object RA Dec
