@@ -441,6 +441,8 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "#!/usr/bin/env python" > "$CASAMS_Script4"
                     echo "#!/usr/bin/env python" > "$CASAMS_Script5"
                     echo "#!/bin/bash"           > "$CASAMS_Script6"
+                    
+                    echo "import os, sys" >> "$CASAMS_Script4"
                 fi
                 # 
                 if [[ $ispw -ge 0 ]]; then 
@@ -492,20 +494,26 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "inp(exportuvfits)"                                        >> "$CASAMS_Script3"
                     echo "exportuvfits()"                                           >> "$CASAMS_Script3"
                     if [[ x"${SPLIT_FEQ}" != x ]]; then
-                    echo "vis         = '${SPLIT_OutputName}_cvel.ms'"              >> "$CASAMS_Script3"
-                    echo "fitsfile    = '${SPLIT_OutputName}_cvel.uvfits'"          >> "$CASAMS_Script3"
-                    echo "field       = ''"                                         >> "$CASAMS_Script3"
-                    echo "spw         = ''"                                         >> "$CASAMS_Script3"
-                    echo "datacolumn  = '${CASAMS_TYP}'"                            >> "$CASAMS_Script3"
-                    echo "multisource = F"                                          >> "$CASAMS_Script3"
-                    echo "inp(exportuvfits)"                                        >> "$CASAMS_Script3"
-                    echo "exportuvfits()"                                           >> "$CASAMS_Script3"
+                    echo ""                                                         >> "$CASAMS_Script3"
+                    echo ""                                                         >> "$CASAMS_Script3"
+                    echo "if os.path.isdir('${SPLIT_OutputName}_cvel.ms'):"         >> "$CASAMS_Script3"
+                    echo "    vis         = '${SPLIT_OutputName}_cvel.ms'"          >> "$CASAMS_Script3"
+                    echo "    fitsfile    = '${SPLIT_OutputName}_cvel.uvfits'"      >> "$CASAMS_Script3"
+                    echo "    field       = ''"                                     >> "$CASAMS_Script3"
+                    echo "    spw         = ''"                                     >> "$CASAMS_Script3"
+                    echo "    datacolumn  = '${CASAMS_TYP}'"                        >> "$CASAMS_Script3"
+                    echo "    multisource = F"                                      >> "$CASAMS_Script3"
+                    echo "    inp(exportuvfits)"                                    >> "$CASAMS_Script3"
+                    echo "    exportuvfits()"                                       >> "$CASAMS_Script3"
                     fi
                     echo ""                                                         >> "$CASAMS_Script3"
                     echo ""                                                         >> "$CASAMS_Script3"
                     # 
                     # Write python script: run_casa_ms_step4_clean.py
                     # 
+                    echo ""                                                         >> "$CASAMS_Script4"
+                    echo "if os.path.isdir('${SPLIT_OutputName}_dirty'):"           >> "$CASAMS_Script4"
+                    echo "    os.system('rm -rf \"${SPLIT_OutputName}_dirty\"')"    >> "$CASAMS_Script4"
                     echo ""                                                         >> "$CASAMS_Script4"
                     echo "vis         = '${SPLIT_OutputName}.ms'"                   >> "$CASAMS_Script4"
                     echo "imagename   = '${SPLIT_OutputName}_dirty'"                >> "$CASAMS_Script4"
@@ -532,6 +540,8 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "exportfits()"                                             >> "$CASAMS_Script4"
                     echo ""                                                         >> "$CASAMS_Script4"
                     echo ""                                                         >> "$CASAMS_Script4"
+                    echo "if os.path.isdir('${SPLIT_OutputName}_clean'):"           >> "$CASAMS_Script4"
+                    echo "    os.system('rm -rf \"${SPLIT_OutputName}_clean\"')"    >> "$CASAMS_Script4"
                     echo ""                                                         >> "$CASAMS_Script4"
                     echo "vis         = '${SPLIT_OutputName}.ms'"                   >> "$CASAMS_Script4"
                     echo "imagename   = '${SPLIT_OutputName}_clean'"                >> "$CASAMS_Script4"
@@ -581,14 +591,16 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     # 
                     # Write run_gildas_uvt_step6_importfits.py
                     # 
-                    echo ""                                                                                                             >> "$CASAMS_Script6"
-                    echo "pdbi-uvt-go-import-uvfits -name \"${SPLIT_OutputName}.uvfits\" -out \"${SPLIT_OutputName}.uvt\""              >> "$CASAMS_Script6"
+                    echo ""                                                                                                              >> "$CASAMS_Script6"
+                    echo "pdbi-uvt-go-import-uvfits -name \"${SPLIT_OutputName}.uvfits\" -out \"${SPLIT_OutputName}.uvt\""               >> "$CASAMS_Script6"
                     if [[ x"${SPLIT_FEQ}" != x ]]; then
-                    echo ""                                                                                                             >> "$CASAMS_Script6"
-                    echo "pdbi-uvt-go-import-uvfits -name \"${SPLIT_OutputName}_cvel.uvfits\" -out \"${SPLIT_OutputName}_cvel.uvt\""    >> "$CASAMS_Script6"
+                    echo ""                                                                                                              >> "$CASAMS_Script6"
+                    echo "if [[ -f \"${SPLIT_OutputName}_cvel.uvfits\" ]]; then"                                                         >> "$CASAMS_Script6"
+                    echo "    pdbi-uvt-go-import-uvfits -name \"${SPLIT_OutputName}_cvel.uvfits\" -out \"${SPLIT_OutputName}_cvel.uvt\"" >> "$CASAMS_Script6"
+                    echo "fi"                                                                                                            >> "$CASAMS_Script6"
                     fi
-                    echo ""                                                                                                             >> "$CASAMS_Script6"
-                    echo ""                                                                                                             >> "$CASAMS_Script6"
+                    echo ""                                                                                                              >> "$CASAMS_Script6"
+                    echo ""                                                                                                              >> "$CASAMS_Script6"
                     
                 fi
             done # end loop each stokes
