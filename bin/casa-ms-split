@@ -640,7 +640,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 echo ""
                 casa --nogui --nologfile -c "execfile('$CASAMS_Script2')"
             fi
-            if [[ "${CASA_INP_STEPS[istep]}" == "3" || "${CASA_INP_STEPS[istep]}" == "uvmodelfit" ]]; then
+            if [[ "${CASA_INP_STEPS[istep]}" == "3" || "${CASA_INP_STEPS[istep]}" == "exportuvfits" ]]; then
                 echo ""
                 echo "Running casa --nogui --nologfile -c \"execfile('$CASAMS_Script3')\""
                 echo ""
