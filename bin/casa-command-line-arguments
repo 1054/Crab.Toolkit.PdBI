@@ -59,6 +59,7 @@ CASA_INP_DEBUG=0
 CASA_INP_GOOD=1
 CASA_INP_YES=0
 CASA_INP_NO=0
+CASA_INP_STEPS=()
 CASA_INP_VIS=()
 CASA_INP_IMAGE=()
 CASA_INP_FIELD=() # i.e. string type FIELD with two quotes in CASA, or string type FIELD but is a number in CASA
@@ -91,6 +92,8 @@ while [[ "$#" -gt 0 ]]; do
     TempStr=$(echo "$1" | tr '[:upper:]' '[:lower:]')
     # echo $TempStr
     case $1 in
+          "-step") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="steps";;
+         "-steps") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="steps";;
            "-vis") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="vis";;
          "-image") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="image";;
           "-name") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-name";;
@@ -130,6 +133,7 @@ while [[ "$#" -gt 0 ]]; do
     esac
     # echo "$CASA_CMD_TYPE"
     case "$CASA_CMD_TYPE" in 
+          "steps") if [[ $# -gt 0 ]]; then CASA_INP_STEPS+=("$1"); fi;;
             "vis") if [[ $# -gt 0 ]]; then CASA_INP_VIS+=("$1"); fi;;
           "image") if [[ $# -gt 0 ]]; then CASA_INP_IMAGE+=("$1"); fi;;
      "field-name") if [[ $# -gt 0 ]]; then CASA_INP_FIELD+=("$(echo $1)"); fi;;
