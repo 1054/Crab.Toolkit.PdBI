@@ -106,7 +106,7 @@ echo "" >  "$PdBIUVT_EXE"
 echo "Checking \"$PdBIUVT_NAME.$PdBIUVT_TYPE\" frequencies"
 PdBIUVT_CRVAL4=$(gethead "$PdBIUVT_NAME.$PdBIUVT_TYPE" "CRVAL4")
 PdBIUVT_RESTFREQ=$(gethead "$PdBIUVT_NAME.$PdBIUVT_TYPE" "RESTFREQ")
-if [[ x"$PdBIUVT_RESTFREQ" == x ]]; then PdBIUVT_RESTFREQ="$PdBIUVT_CRVAL4"; fi #<added><20170304><dzliu># 
+if [[ x"$PdBIUVT_RESTFREQ" == x ]]; then PdBIUVT_RESTFREQ="0"; fi #<added><20170304><dzliu># 
 echo "CRVAL4   = $PdBIUVT_CRVAL4" > "$PdBIUVT_GETHEAD"
 echo "RESTFREQ = $PdBIUVT_RESTFREQ" >> "$PdBIUVT_GETHEAD"
 cat "$PdBIUVT_GETHEAD"
