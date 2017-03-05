@@ -14,13 +14,14 @@
 # 
 # Check CASA
 # 
-if [[ $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
+if [[ $(type casapy 2>/dev/null | wc -l) -eq 0 ]]; then
     echo ""
-    echo "Error! CASA was not found! Please check your \$PATH!"
+    echo "Error! CASA (casapy) was not found! Please check your \$PATH!"
     echo ""
     exit
 else
-    CASA_VERSION=($(casa --help | grep "CASA Version" | head -n 1 | perl -p -e 's/CASA Version *([0-9]*)\.([0-9]*)\.([0-9]*)/${1} ${2} ${3}/g'))
+    CASA_VERSION=($(casapy --help | grep "CASA Version" | head -n 1 | perl -p -e 's/CASA Version *([0-9]*)\.([0-9]*)\.([0-9]*)/${1} ${2} ${3}/g'))
+    echo CASA Version $CASA_VERSION
 fi
 
 # 

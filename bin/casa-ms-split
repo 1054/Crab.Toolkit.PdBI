@@ -214,13 +214,13 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     echo "fo.close()"                                                      >> "$CASAMS_ScriptName.py"
     echo "tb.close()"                                                      >> "$CASAMS_ScriptName.py"
     echo ""                                                                >> "$CASAMS_ScriptName.py"
-    echo "Running CASA to read measurement set data tables: "
+    echo "Running CASA (casapy) to read measurement set data tables: "
     echo "    \"${CASAMS_VIS}\"/SOURCE"
     echo "    \"${CASAMS_VIS}\"/SPECTRAL_WINDOW"
     echo "Running "
-    echo "    casa --nogui --nologfile -c \"$CASAMS_ScriptName.py\" > \"$CASAMS_ScriptName.log\" 2>&1"
+    echo "    casapy --nogui --nologfile -c \"$CASAMS_ScriptName.py\" > \"$CASAMS_ScriptName.log\" 2>&1"
     
-    casa --nogui --nologfile -c "$CASAMS_ScriptName.py" > "$CASAMS_ScriptName.log" 2>&1
+    casapy --nogui --nologfile -c "$CASAMS_ScriptName.py" > "$CASAMS_ScriptName.log" 2>&1
     
     echo "Finished casa!"
     
@@ -611,23 +611,23 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             done # end loop each stokes
         done # end loop each spw
         
-        echo "    * written to python script: $CASAMS_Script1                   PLEASE RUN: casa --nogui --nologfile -c \"execfile('$CASAMS_Script1')\""
-        echo "    * written to python script: $CASAMS_Script2                    PLEASE RUN: casa --nogui --nologfile -c \"execfile('$CASAMS_Script2')\""
-        echo "    * written to python script: $CASAMS_Script3            PLEASE RUN: casa --nogui --nologfile -c \"execfile('$CASAMS_Script3')\""
-        echo "    * written to python script: $CASAMS_Script4                   PLEASE RUN: casa --nogui --nologfile -c \"execfile('$CASAMS_Script4')\""
-        echo "    * written to python script: $CASAMS_Script5              PLEASE RUN: casa --nogui --nologfile -c \"execfile('$CASAMS_Script5')\""
+        echo "    * written to python script: $CASAMS_Script1                   PLEASE RUN: casapy --nogui --nologfile -c \"execfile('$CASAMS_Script1')\""
+        echo "    * written to python script: $CASAMS_Script2                    PLEASE RUN: casapy --nogui --nologfile -c \"execfile('$CASAMS_Script2')\""
+        echo "    * written to python script: $CASAMS_Script3            PLEASE RUN: casapy --nogui --nologfile -c \"execfile('$CASAMS_Script3')\""
+        echo "    * written to python script: $CASAMS_Script4                   PLEASE RUN: casapy --nogui --nologfile -c \"execfile('$CASAMS_Script4')\""
+        echo "    * written to python script: $CASAMS_Script5              PLEASE RUN: casapy --nogui --nologfile -c \"execfile('$CASAMS_Script5')\""
         echo "    * written to shell script:  $CASAMS_Script6    PLEASE RUN: \"./$CASAMS_Script6\""
         
         echo ""                                                            >> "run_casa_ms_split_all.bash" 
-        echo "casa --nogui --nologfile -c \"execfile('$CASAMS_Script1')\"" >> "run_casa_ms_split_all.bash"
-        echo "casa --nogui --nologfile -c \"execfile('$CASAMS_Script2')\"" >> "run_casa_ms_split_all.bash"
-        echo "casa --nogui --nologfile -c \"execfile('$CASAMS_Script3')\"" >> "run_casa_ms_split_all.bash"
-        echo "casa --nogui --nologfile -c \"execfile('$CASAMS_Script4')\"" >> "run_casa_ms_split_all.bash"
+        echo "casapy --nogui --nologfile -c \"execfile('$CASAMS_Script1')\"" >> "run_casa_ms_split_all.bash"
+        echo "casapy --nogui --nologfile -c \"execfile('$CASAMS_Script2')\"" >> "run_casa_ms_split_all.bash"
+        echo "casapy --nogui --nologfile -c \"execfile('$CASAMS_Script3')\"" >> "run_casa_ms_split_all.bash"
+        echo "casapy --nogui --nologfile -c \"execfile('$CASAMS_Script4')\"" >> "run_casa_ms_split_all.bash"
         echo "./$CASAMS_Script6"                                           >> "run_casa_ms_split_all.bash"
         echo "    * written to a global script: run_casa_ms_split_all.bash   (all the above commands are in it)"
         
         echo ""                                                            >> "run_casa_ms_split_all_step1.bash"
-        echo "casa --nogui --nologfile -c \"execfile('$CASAMS_Script1')\"" >> "run_casa_ms_split_all_step1.bash"
+        echo "casapy --nogui --nologfile -c \"execfile('$CASAMS_Script1')\"" >> "run_casa_ms_split_all_step1.bash"
         
         #<DEBUG>#exit
         #<DEBUG># break
@@ -635,33 +635,33 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         for (( istep=0; istep<${#CASA_INP_STEPS[@]}; istep++ )); do
             if [[ "${CASA_INP_STEPS[istep]}" == "1" || "${CASA_INP_STEPS[istep]}" == "split" ]]; then
                 echo ""
-                echo "Running casa --nogui --nologfile -c \"execfile('$CASAMS_Script1')\""
+                echo "Running casapy --nogui --nologfile -c \"execfile('$CASAMS_Script1')\""
                 echo ""
-                casa --nogui --nologfile -c "execfile('$CASAMS_Script1')"
+                casapy --nogui --nologfile -c "execfile('$CASAMS_Script1')"
             fi
             if [[ "${CASA_INP_STEPS[istep]}" == "2" || "${CASA_INP_STEPS[istep]}" == "cvel" ]]; then
                 echo ""
-                echo "Running casa --nogui --nologfile -c \"execfile('$CASAMS_Script2')\""
+                echo "Running casapy --nogui --nologfile -c \"execfile('$CASAMS_Script2')\""
                 echo ""
-                casa --nogui --nologfile -c "execfile('$CASAMS_Script2')"
+                casapy --nogui --nologfile -c "execfile('$CASAMS_Script2')"
             fi
             if [[ "${CASA_INP_STEPS[istep]}" == "3" || "${CASA_INP_STEPS[istep]}" == "exportuvfits" ]]; then
                 echo ""
-                echo "Running casa --nogui --nologfile -c \"execfile('$CASAMS_Script3')\""
+                echo "Running casapy --nogui --nologfile -c \"execfile('$CASAMS_Script3')\""
                 echo ""
-                casa --nogui --nologfile -c "execfile('$CASAMS_Script3')"
+                casapy --nogui --nologfile -c "execfile('$CASAMS_Script3')"
             fi
             if [[ "${CASA_INP_STEPS[istep]}" == "4" || "${CASA_INP_STEPS[istep]}" == "clean" ]]; then
                 echo ""
-                echo "Running casa --nogui --nologfile -c \"execfile('$CASAMS_Script4')\""
+                echo "Running casapy --nogui --nologfile -c \"execfile('$CASAMS_Script4')\""
                 echo ""
-                casa --nogui --nologfile -c "execfile('$CASAMS_Script4')"
+                casapy --nogui --nologfile -c "execfile('$CASAMS_Script4')"
             fi
             if [[ "${CASA_INP_STEPS[istep]}" == "5" || "${CASA_INP_STEPS[istep]}" == "uvmodelfit" ]]; then
                 echo ""
-                echo "Running casa --nogui --nologfile -c \"execfile('$CASAMS_Script5')\""
+                echo "Running casapy --nogui --nologfile -c \"execfile('$CASAMS_Script5')\""
                 echo ""
-                casa --nogui --nologfile -c "execfile('$CASAMS_Script5')"
+                casapy --nogui --nologfile -c "execfile('$CASAMS_Script5')"
             fi
             if [[ "${CASA_INP_STEPS[istep]}" == "6" || "${CASA_INP_STEPS[istep]}" == "gildas" ]]; then
                 echo ""
