@@ -653,7 +653,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     # 
                     echo ""                                                                                                 >> "$CASAMS_Script6"
                     echo "uvfits_list=(\$(ls \"${SPLIT_OutputName}\"_mosaic_*.uvfits 2>/dev/null))"                         >> "$CASAMS_Script6"
-                    echo "if [[ \${#{uvfits_list[@]} -eq 0 ]]; then"                                                        >> "$CASAMS_Script6"
+                    echo "if [[ \${#uvfits_list[@]} -eq 0 ]]; then"                                                         >> "$CASAMS_Script6"
                     echo "    uvfits_list=(\$(ls \"${SPLIT_OutputName}\".uvfits 2>/dev/null))"                              >> "$CASAMS_Script6"
                     echo "fi"                                                                                               >> "$CASAMS_Script6"
                     echo "for (( i=0; i<\${#uvfits_list[@]}; i++ )); do"                                                    >> "$CASAMS_Script6"
@@ -663,7 +663,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     if [[ x"${SPLIT_FEQ}" != x ]]; then
                     echo ""                                                                                                 >> "$CASAMS_Script6"
                     echo "uvfits_list=(\$(ls \"${SPLIT_OutputName}_cvel\"_mosaic_*.uvfits 2>/dev/null))"                    >> "$CASAMS_Script6"
-                    echo "if [[ \${#{uvfits_list[@]} -eq 0 ]]; then"                                                        >> "$CASAMS_Script6"
+                    echo "if [[ \${#uvfits_list[@]} -eq 0 ]]; then"                                                         >> "$CASAMS_Script6"
                     echo "    uvfits_list=(\$(ls \"${SPLIT_OutputName}_cvel\".uvfits 2>/dev/null))"                         >> "$CASAMS_Script6"
                     echo "fi"                                                                                               >> "$CASAMS_Script6"
                     echo "for (( i=0; i<\${#uvfits_list[@]}; i++ )); do"                                                    >> "$CASAMS_Script6"
