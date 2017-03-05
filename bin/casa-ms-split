@@ -454,7 +454,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "        else:"                                                   >> "$CASAMS_Script1"
                     echo "            dirback = 'backup_'+dirpath"                         >> "$CASAMS_Script1"
                     echo "        if os.path.isdir(dirback):"                              >> "$CASAMS_Script1"
-                    echo "            os.system('rm -rf \"%s\"'%(dirback)"                 >> "$CASAMS_Script1"
+                    echo "            os.system('rm -rf \"%s\"'%(dirback))"                >> "$CASAMS_Script1"
                     echo "        os.system('mv \"%s\" \"%s\"'%(dirpath, dirback))"        >> "$CASAMS_Script1"
                     echo "        print('Backed up \"%s\" as \"%s\".'%(dirpath, dirback))" >> "$CASAMS_Script1"
                     echo ""                                                                >> "$CASAMS_Script1"
