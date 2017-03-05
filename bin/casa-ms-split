@@ -467,17 +467,17 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     # 
                     # Write python script: run_casa_ms_step1_split.py
                     # 
-                    echo ""                                                                                   >> "$CASAMS_Script1"
-                    echo ""                                                                                   >> "$CASAMS_Script1"
-                    echo "vis         = '${CASAMS_VIS}'"                                                      >> "$CASAMS_Script1"
-                    echo "outputvis   = '${SPLIT_OutputName}.ms'"                                             >> "$CASAMS_Script1"
-                    echo "field       = '${SPLIT_SOU}'"                                                       >> "$CASAMS_Script1"
-                    echo "spw         = '${SPLIT_SPW}'"                                                       >> "$CASAMS_Script1"
-                    echo "width       =  ${SPLIT_WID}"                                                        >> "$CASAMS_Script1"
-                    echo "correlation = '${SPLIT_STK}'"                                                       >> "$CASAMS_Script1"
-                    echo "datacolumn  = '${CASAMS_TYP}'"                                                      >> "$CASAMS_Script1"
-                    echo "combinespw  = F"                                                                    >> "$CASAMS_Script1"
-                    echo "keepflags   = F"                                                                    >> "$CASAMS_Script1"
+                    echo ""                                                              >> "$CASAMS_Script1"
+                    echo ""                                                              >> "$CASAMS_Script1"
+                    echo "vis         = '${CASAMS_VIS}'"                                 >> "$CASAMS_Script1"
+                    echo "outputvis   = '${SPLIT_OutputName}.ms'"                        >> "$CASAMS_Script1"
+                    echo "field       = '${SPLIT_SOU}'"                                  >> "$CASAMS_Script1"
+                    echo "spw         = '${SPLIT_SPW}'"                                  >> "$CASAMS_Script1"
+                    echo "width       =  ${SPLIT_WID}"                                   >> "$CASAMS_Script1"
+                    echo "correlation = '${SPLIT_STK}'"                                  >> "$CASAMS_Script1"
+                    echo "datacolumn  = '${CASAMS_TYP}'"                                 >> "$CASAMS_Script1"
+                    echo "combinespw  = F"                                               >> "$CASAMS_Script1"
+                    echo "keepflags   = F"                                               >> "$CASAMS_Script1"
                     if [[ ${#CASA_VERSION[@]} -eq 3 ]]; then
                     if [[ ${CASA_VERSION[0]} -ge 4 && ${CASA_VERSION[1]} -ge 6 ]]; then
                     echo "keepmms     = F"                                               >> "$CASAMS_Script1"
@@ -495,7 +495,8 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "if mosaic_numb>1:"                                             >> "$CASAMS_Script1"
                     echo "    for i in range(mosaic_numb):"                              >> "$CASAMS_Script1"
                     echo "        outputvis = '${SPLIT_OutputName}_mosaic_%d.ms'%(i)"    >> "$CASAMS_Script1"
-                    echo "        field = '%d'%(i)"                                      >> "$CASAMS_Script1"
+                    echo "        field     = '%d'%(i)"                                  >> "$CASAMS_Script1"
+                    echo "        spw       = ''"                                        >> "$CASAMS_Script1"
                     echo "        dirbackup(outputvis)"                                  >> "$CASAMS_Script1"
                     echo "        inp(split)"                                            >> "$CASAMS_Script1"
                     echo "        split()"                                               >> "$CASAMS_Script1"
