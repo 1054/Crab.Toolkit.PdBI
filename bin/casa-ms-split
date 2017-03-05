@@ -7,6 +7,7 @@
 #    2015-04-02 created
 #    2016-06-27 automatically read SOURCE table, check input source, or loop all sources
 #    2017-02-21 largely modified, using casa-command-line-arguments now.
+#    2017-03-05 split each mosaic if there are multiple mosaic pointing for a same source name. 
 # 
 
 
@@ -488,6 +489,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "split()"                                                       >> "$CASAMS_Script1"
                     echo ""                                                              >> "$CASAMS_Script1"
                     echo "# We also try to split each mosaic pointing"                   >> "$CASAMS_Script1"
+                    echo "vis = outputvis"                                               >> "$CASAMS_Script1"
                     echo "tb.open(vis+os.sep+'FIELD')"                                   >> "$CASAMS_Script1"
                     echo "mosaic_list = tb.getcol('PHASE_DIR')"                          >> "$CASAMS_Script1"
                     echo "mosaic_numb = len(mosaic_list)"                                >> "$CASAMS_Script1"
