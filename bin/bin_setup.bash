@@ -3,6 +3,10 @@
 # Aim:
 #    This code will add the directory of this script into the PATH system variable. 
 # 
+# Usage:
+#    sources /some/path/to/bin_setup.bash -check command_1 command_2
+#    sources /some/path/to/bin_setup.bash -var LD_LIBRARY_PATH -path /my/lib 
+# 
 
 
 # 
@@ -11,24 +15,33 @@ Crab_BIN_SETUP_INPUT_FLAG="n/a"
 Crab_BIN_SETUP_DEBUG_FLAG=0
 Crab_BIN_SETUP_CLEAR_LIST=()
 Crab_BIN_SETUP_CHECK_LIST=()
+Crab_BIN_SETUP_INPUT_PATH=""
+Crab_BIN_SETUP_VARIABLE="PATH"
 for (( i=1; i<=$#; i++ )); do
     #echo "${!i}"
     if echo "${!i}" | grep -q -i "^-debug"; then Crab_BIN_SETUP_INPUT_FLAG="n/a"; Crab_BIN_SETUP_DEBUG_FLAG=1; continue; fi
     if echo "${!i}" | grep -q -i "^-check"; then Crab_BIN_SETUP_INPUT_FLAG="check"; continue; fi
     if echo "${!i}" | grep -q -i "^-clear"; then Crab_BIN_SETUP_INPUT_FLAG="clear"; continue; fi
+    if echo "${!i}" | grep -q -i "^-path";  then Crab_BIN_SETUP_INPUT_FLAG="path"; continue; fi
+    if echo "${!i}" | grep -q -i "^-var";   then Crab_BIN_SETUP_INPUT_FLAG="var"; continue; fi
     if echo "${!i}" | grep -q -i "^-";      then Crab_BIN_SETUP_INPUT_FLAG="n/a"; continue; fi
     # 
     if [[ "$Crab_BIN_SETUP_INPUT_FLAG" == "check" ]]; then Crab_BIN_SETUP_CHECK_LIST+=("${!i}"); fi
     if [[ "$Crab_BIN_SETUP_INPUT_FLAG" == "clear" ]]; then Crab_BIN_SETUP_CLEAR_LIST+=("${!i}"); fi
+    if [[ "$Crab_BIN_SETUP_INPUT_FLAG" == "path"  ]]; then Crab_BIN_SETUP_INPUT_PATH="${!i}"; fi
+    if [[ "$Crab_BIN_SETUP_INPUT_FLAG" == "var"   ]]; then Crab_BIN_SETUP_VARIABLE="${!i}"; fi
 done
 
 
 # 
-# get Crab_BIN_SETUP_PATH
-Crab_BIN_SETUP_PATH=""
+# get current script directory as the Crab_BIN_SETUP_PATH (if not given by the input argument -path)
+# 
+if [[ x"$Crab_BIN_SETUP_INPUT_PATH" == x ]]; then
+    Crab_BIN_SETUP_INPUT_PATH=$(dirname "${BASH_SOURCE[0]}")
+fi
 if [[ $(uname) == *"Darwin"* ]]; then
     if [[ $(type greadlink 2>/dev/null | wc -l) -eq 1 ]]; then
-        Crab_BIN_SETUP_PATH=$(dirname $(greadlink -f "${BASH_SOURCE[0]}"))
+        Crab_BIN_SETUP_PATH=$(greadlink -f "$Crab_BIN_SETUP_INPUT_PATH")
     else
         function greadlink() {
             if [[ $# -gt 1 ]]; then if [[ "$1" == "-f" ]]; then shift; fi; fi
@@ -37,15 +50,17 @@ if [[ $(uname) == *"Darwin"* ]]; then
             if [[ -d "$DIR" ]]; then cd "$DIR" && echo "$(pwd -P)/$(basename ${1})"; 
             else echo "$(pwd -P)/$(basename ${1})"; fi
         }
-        Crab_BIN_SETUP_PATH=$(dirname $(greadlink -f "${BASH_SOURCE[0]}"))
+        Crab_BIN_SETUP_PATH=$(greadlink -f "$Crab_BIN_SETUP_INPUT_PATH")
     fi
 else
-    Crab_BIN_SETUP_PATH=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
+    Crab_BIN_SETUP_PATH=$(readlink -f "$Crab_BIN_SETUP_INPUT_PATH")
 fi
 
 if [[ $Crab_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
     echo "Crab_BIN_SETUP_PATH=$Crab_BIN_SETUP_PATH"
 fi
+
+export Crab_BIN_SETUP_PATH
 
 Crab_BIN_SETUP_CLEAR_LIST+=("$Crab_BIN_SETUP_PATH")
 
@@ -57,10 +72,10 @@ Crab_BIN_SETUP_CLEAR_LIST+=("$Crab_BIN_SETUP_PATH")
 if [[ 1 == 1 ]]; then
     # split system path variable into a list
     Old_IFS=$IFS
-    IFS=$":" Crab_BIN_SETUP_PATH_LIST=($PATH)
+    IFS=$":" Crab_BIN_SETUP_PATH_LIST=(${!Crab_BIN_SETUP_VARIABLE})
     IFS=$Old_IFS
     if [[ $Crab_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
-        echo -n "Checking PATH="
+        echo -n "Checking $Crab_BIN_SETUP_VARIABLE="
         echo "${Crab_BIN_SETUP_PATH_LIST[@]}" "(${#Crab_BIN_SETUP_PATH_LIST[@]})"
     fi
     Crab_BIN_SETUP_PATH_POOL=()
@@ -96,19 +111,24 @@ if [[ 1 == 1 ]]; then
     done
     # finally append current directory as the last system path item
     if [[ x"$Crab_BIN_SETUP_PATH_TEXT" != x ]]; then
-        export PATH="$Crab_BIN_SETUP_PATH_TEXT:."
+        declare $Crab_BIN_SETUP_VARIABLE="$Crab_BIN_SETUP_PATH_TEXT:."
     fi
     # print sorted/dup-removed/cleared PATH
     if [[ $Crab_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
-        echo "Sorting PATH=$PATH"
+        echo "Sorting $Crab_BIN_SETUP_VARIABLE=${!Crab_BIN_SETUP_VARIABLE}"
     fi
 fi
 
-if [[ "$PATH" != *"$Crab_BIN_SETUP_PATH"* ]]; then
-    export PATH="$Crab_BIN_SETUP_PATH:$PATH"
+if [[ ":${!Crab_BIN_SETUP_VARIABLE}:" != *":$Crab_BIN_SETUP_PATH:"* ]]; then
+    declare $Crab_BIN_SETUP_VARIABLE="$Crab_BIN_SETUP_PATH:${!Crab_BIN_SETUP_VARIABLE}"
     if [[ $Crab_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
-        echo "Prepending PATH=$PATH"
+        echo "Prepending $Crab_BIN_SETUP_VARIABLE=${!Crab_BIN_SETUP_VARIABLE}"
     fi
+fi
+
+export $Crab_BIN_SETUP_VARIABLE
+if [[ $Crab_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
+    echo "Exporting $Crab_BIN_SETUP_VARIABLE=${!Crab_BIN_SETUP_VARIABLE}"
 fi
 
 
