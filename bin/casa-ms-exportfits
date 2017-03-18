@@ -33,8 +33,9 @@ if [[ ${#CASA_INP_IMAGE[@]} -eq 0 ]]; then usage; exit; fi
 # 
 # Write run_casa_ms_exportfits.py
 # 
-CASAMS_EXE="run_casa_ms_exportfits.py"
-CASAMS_LOG="run_casa_ms_exportfits.log"
+CASAMS_UTC=$(date +%Y%m%d.%Hh%Mm%Ss.%Z)
+CASAMS_EXE="run_casa_ms_exportfits.$CASAMS_UTC.py"
+CASAMS_LOG="run_casa_ms_exportfits.$CASAMS_UTC.log"
 echo "#!/bin/python" > "$CASAMS_EXE"
 for (( i=0; i<${#CASA_INP_IMAGE[@]}; i++ )); do
     if [[ $i -lt ${#CASA_INP_OUTPUT[@]} ]]; then

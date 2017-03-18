@@ -44,8 +44,9 @@ CASA_DEFAULT_ITERATION=15
 # 
 # Write run_casa_ms_uvmodelfit.py
 # 
-CASAMS_EXE="run_casa_ms_uvmodelfit.py"
-CASAMS_LOG="run_casa_ms_uvmodelfit.log"
+CASAMS_UTC=$(date +%Y%m%d.%Hh%Mm%Ss.%Z)
+CASAMS_EXE="run_casa_ms_uvmodelfit.$CASAMS_UTC.py"
+CASAMS_LOG="run_casa_ms_uvmodelfit.$CASAMS_UTC.log"
 echo "#!/usr/bin/env python" > "$CASAMS_EXE"
 j=0
 for (( i=0; i<${#CASA_INP_UVFIT_MODELTYPE[@]}; i++ )); do

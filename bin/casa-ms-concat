@@ -33,8 +33,9 @@ if [[ ${#CASA_INP_VIS[@]} -eq 0 ]]; then usage; exit; fi
 # 
 # Write run_casa_ms_concat.py
 # 
-CASAMS_EXE="run_casa_ms_concat.py"
-CASAMS_LOG="run_casa_ms_concat.log"
+CASAMS_UTC=$(date +%Y%m%d.%Hh%Mm%Ss.%Z)
+CASAMS_EXE="run_casa_ms_concat.$CASAMS_UTC.py"
+CASAMS_LOG="run_casa_ms_concat.$CASAMS_UTC.log"
 echo "#!/bin/python" > "$CASAMS_EXE"
 TempInput="['${CASA_INP_VIS[0]}'"
 for (( i=1; i<${#CASA_INP_VIS[@]}; i++ )); do

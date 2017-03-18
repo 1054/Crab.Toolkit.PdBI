@@ -94,7 +94,8 @@ fi
 # 
 # Write run_casa_ms_step0_listobs.py
 # 
-CASAMS_FPY="run_dzliu_listobs.py"
+CASAMS_UTC=$(date +%Y%m%d.%Hh%Mm%Ss.%Z)
+CASAMS_FPY="run_casa_ms_listobs.$CASAMS_UTC.py"
 echo "#!/bin/python"                                    > "$CASAMS_FPY"
 echo "vis        = '${CASAMS_VIS}${CASAMS_VIS_SFIX}'"  >> "$CASAMS_FPY"
 echo "listfile   = '${CASAMS_OUT}'"                    >> "$CASAMS_FPY"

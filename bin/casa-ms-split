@@ -699,15 +699,15 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         echo "    * written to python script: $CASAMS_Script5              PLEASE RUN: $CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script5')\""
         echo "    * written to shell script:  $CASAMS_Script6    PLEASE RUN: \"./$CASAMS_Script6\""
         
-        echo ""                                                            >> "run_casa_ms_split_all.bash" 
+        echo ""                                                                     >> "run_casa_ms_split_all.bash" 
         echo "$CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script1')\"" >> "run_casa_ms_split_all.bash"
         echo "$CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script2')\"" >> "run_casa_ms_split_all.bash"
         echo "$CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script3')\"" >> "run_casa_ms_split_all.bash"
         echo "$CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script4')\"" >> "run_casa_ms_split_all.bash"
-        echo "./$CASAMS_Script6"                                           >> "run_casa_ms_split_all.bash"
+        echo "./$CASAMS_Script6"                                                    >> "run_casa_ms_split_all.bash"
         echo "    * written to a global script: run_casa_ms_split_all.bash   (all the above commands are in it)"
         
-        echo ""                                                            >> "run_casa_ms_split_all_step1.bash"
+        echo ""                                                                     >> "run_casa_ms_split_all_step1.bash"
         echo "$CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script1')\"" >> "run_casa_ms_split_all_step1.bash"
         
         #<DEBUG>#exit
