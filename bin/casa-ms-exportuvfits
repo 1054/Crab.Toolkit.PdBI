@@ -11,7 +11,7 @@
 
 # Function to print usage
 function usage() {
-    echo "Usage: casa-ms-exportuvfits -image aaa -out aaa.fits"
+    echo "Usage: casa-ms-exportuvfits -vis aaa.ms -out aaa.fits"
 }
 
 
