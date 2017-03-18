@@ -4,7 +4,6 @@
 
 Crab_BIN_SETUP_SCRIPT=$(dirname "$0")/bin/bin_setup.bash
 
-source "$Crab_BIN_SETUP_SCRIPT" -check pdbi-uvt-go-average pdbi-uvt-go-uvfit
-
+source "$Crab_BIN_SETUP_SCRIPT" -check casa-ms-split casa-ms-concat pdbi-uvt-go-splitpolar pdbi-uvt-go-import-uvfits pdbi-uvt-go-average pdbi-uvt-go-uvfit
 
 

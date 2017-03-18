@@ -16,10 +16,12 @@ Crab_BIN_SETUP_DEBUG_FLAG=0
 Crab_BIN_SETUP_CLEAR_LIST=()
 Crab_BIN_SETUP_CHECK_LIST=()
 Crab_BIN_SETUP_INPUT_PATH=""
+Crab_BIN_SETUP_PRINT_FLAG=0
 Crab_BIN_SETUP_VARIABLE="PATH"
 for (( i=1; i<=$#; i++ )); do
     #echo "${!i}"
     if echo "${!i}" | grep -q -i "^-debug"; then Crab_BIN_SETUP_INPUT_FLAG="n/a"; Crab_BIN_SETUP_DEBUG_FLAG=1; continue; fi
+    if echo "${!i}" | grep -q -i "^-print"; then Crab_BIN_SETUP_INPUT_FLAG="n/a"; Crab_BIN_SETUP_PRINT_FLAG=1; continue; fi
     if echo "${!i}" | grep -q -i "^-check"; then Crab_BIN_SETUP_INPUT_FLAG="check"; continue; fi
     if echo "${!i}" | grep -q -i "^-clear"; then Crab_BIN_SETUP_INPUT_FLAG="clear"; continue; fi
     if echo "${!i}" | grep -q -i "^-path";  then Crab_BIN_SETUP_INPUT_FLAG="path"; continue; fi
@@ -31,6 +33,15 @@ for (( i=1; i<=$#; i++ )); do
     if [[ "$Crab_BIN_SETUP_INPUT_FLAG" == "path"  ]]; then Crab_BIN_SETUP_INPUT_PATH="${!i}"; fi
     if [[ "$Crab_BIN_SETUP_INPUT_FLAG" == "var"   ]]; then Crab_BIN_SETUP_VARIABLE="${!i}"; fi
 done
+
+
+# 
+# if Crab_BIN_SETUP_PRINT_FLAG == 1 then Crab_BIN_SETUP_DEBUG_FLAG = 0
+# 
+if [[ $Crab_BIN_SETUP_PRINT_FLAG -eq 1 ]]; then
+    Crab_BIN_SETUP_DEBUG_FLAG=0
+    Crab_BIN_SETUP_CHECK_LIST=()
+fi
 
 
 # 
@@ -147,6 +158,15 @@ fi
         type ${Crab_BIN_SETUP_CHECK_LIST[i]}
     done
 #fi
+
+
+
+# 
+# Final print
+# 
+if [[ $Crab_BIN_SETUP_PRINT_FLAG -eq 1 ]]; then
+    echo "${!Crab_BIN_SETUP_VARIABLE}"
+fi
 
 
 
