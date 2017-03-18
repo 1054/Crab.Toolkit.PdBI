@@ -1,0 +1,528 @@
+#!/bin/bash
+# 
+# Input RA Dec
+# Output spec & uvfit
+# 
+# Last update:
+#    2015-03-23 make vrange also a list
+#    2016-06-29 supermongo tail -n 1
+#    2016-07-01 use bc -l to replace all supermongo calculations except final plotting
+#    2016-07-01 use perl -p -e to replace sed -E where regex \S \s are used
+#    2016-07-01 support simultaneous running now
+#    2017-03-17 now object-oriented
+# 
+
+
+
+# 
+# Usage
+# 
+PdBIUVT_PrintUsage() {
+    echo "Usage: "
+    echo "    pdbi-uvt-go-uvfit -name NAME.uvt -out OUTPUT_NAME [-varypos] [-radec RA DEC] [-cgauss] [-residual residual.uvt]"
+    echo ""
+    echo "Example:"
+    echo "    pdbi-uvt-go-uvfit-v3 -name NAME.uvt -crange 1 10                                        # This will highlight channel range 1 to 10 in the resulting plot and compute the integrated flux"
+    echo "    pdbi-uvt-go-uvfit-v3 -name NAME.uvt -vrange -300 300                                    # This will highlight velocity range -300 to 300 km/s in the resulting plot and compute the integrated flux"
+    echo "    pdbi-uvt-go-uvfit-v3 -name NAME.uvt -frange 115.1 115.2                                 # This will highlight frequency range 115.1 to 115.2 GHz in the resulting plot and compute the integrated flux"
+    echo "    pdbi-uvt-go-uvfit-v3 -name NAME.uvt -parallel                                           # This will allow simultaneous running. Without this running more than two uv_fit at the same time will cause error."
+    echo ""
+    echo "    cd \"$(dirname ${BASH_SOURCE[0]})/../data/example_uvfit/\""
+    echo "    pdbi-uvt-go-uvfit-v3 -name NAME.uvt \\"
+    echo "                         -crange 1 100 \\"
+    echo "                         -radec 150.035 2.315 -fixpos -point \\"
+    echo "                         -radec 150.036 2.316 -fixpos -cgauss \\"
+    echo "                         -radec 150.037 2.317 -fixpos -egauss \\"
+    echo "                         -radec 150.038 2.318 -fixpos -size 1.5 -fixsize -cgauss \\"
+    echo "                         -radec 150.039 2.319 -fixpos -size 1.5 0.75 -fixsize -varyangle -egauss \\"
+    echo "                         -radec 150.040 2.320 -fixpos -size 1.5 0.75 -fixsize -angle 90 -fixangle -egauss \\"
+    echo "                         -out OUTPUT_NAME"
+    echo ""
+    echo "Output:"
+    echo "    OUTPUT_NAME.uvfit   # the GILDAS mapping COLUMN binary file, can be read by GILDAS \"go plotfit\"."
+    echo "    OUTPUT_NAME.log     # the log file of GILDAS MAPPING which contains all the output information."
+    echo "    OUTPUT_NAME.eps     # the spectrum of flux versus channel (if single channel then just a flat line)."
+    echo "    OUTPUT_NAME.dat     # data table of channel frequency [GHz], velocity [km/s], measured flux [mJy] and error [mJy]."
+    echo "                        # note that the default output name is \"tmp_doUVFIT\"."
+    echo ""
+    echo ""
+}
+if [[ $# -eq 0 ]]; then
+    PdBIUVT_PrintUsage
+    exit
+fi
+
+
+
+# 
+# LANG
+# 
+LANG=C
+
+
+
+# 
+# CHECK supermongo
+# 
+PdBIUVT_HAS_SUPERMONGO=1
+if [[ x$(echo echo hello | sm 2>/dev/null | tail -n 1) != xhello ]]; then
+    echo ""; echo "Warning! Supermongo was not found or not working! We will not produce the spectrum figures."
+    PdBIUVT_HAS_SUPERMONGO=0
+    #exit 1
+fi
+
+
+
+# 
+# SOURCE pdbi-uvt-core-cvf-v3
+# 
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v3" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v3" "$@"
+else
+    echo ""
+    echo "Error! Could not find \"$(dirname "${BASH_SOURCE[0]}")/pdbi-uvt-core-cvf-v3\"!"
+    echo ""
+    exit 1
+fi
+
+
+
+# 
+# Check UVT name and Object RADec
+# 
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 || ${#PdBIUVT_RAND_OBJT[@]} -eq 0 ]]; then
+    PdBIUVT_PrintUsage
+    exit
+fi
+
+
+
+# 
+# Check output file
+# 
+# -- set output uvtable name, and check whether it exists
+if [[ x"$PdBIUVT_SAVE" == x"" || x"$PdBIUVT_SAVE" == x"tmp_pdbi_uvt" || x"$PdBIUVT_SAVE" == x"tmp_pdbi_uvt_run_uv_fit" ]]; then
+    PdBIUVT_SAVE=$(basename "$PdBIUVT_NAME")"_go_uvfit"
+    echo "Warning! Output name was not defined, we will set it as \"$PdBIUVT_SAVE\"!"
+fi
+for PdBIUVT_SAVE_TYPE in "log" "eps" "dat" "txt" "map" "ipar" "init" "uvfit"; do
+    if [[ -f "$PdBIUVT_SAVE.$PdBIUVT_SAVE_TYPE" ]]; then
+        echo "Warning! Found previous \"$PdBIUVT_SAVE.$PdBIUVT_SAVE_TYPE\"! Backup as \"$PdBIUVT_SAVE.$PdBIUVT_SAVE_TYPE.backup\"!"
+        mv "$PdBIUVT_SAVE.$PdBIUVT_SAVE_TYPE" "$PdBIUVT_SAVE.$PdBIUVT_SAVE_TYPE.backup"
+    fi
+done
+
+
+
+# 
+# Print message
+# 
+echo ""
+echo "***********************************"
+echo "* Setting object info for fitting *"
+echo "***********************************"
+
+
+
+# 
+# 
+# 
+##################################################
+# prepare GILDAS mapping init and script and run #
+##################################################
+PdBIUVT_TEMP_INIT="$PdBIUVT_SAVE.init"
+PdBIUVT_TEMP_EXEC="$PdBIUVT_SAVE.map"
+PdBIUVT_TEMP_LOGT="$PdBIUVT_SAVE.log"
+if [[ x"$PdBIUVT_RSUB" == x"YES" ]]; then
+    # <20160809><dzliu> if subtract source model uv table, then set the output residual uv table name here
+    if [[ x"$PdBIUVT_RESI" == x ]]; then
+        PdBIUVT_TEMP_RESI="$PdBIUVT_SAVE.uvt"
+    else
+        if [[ x"$PdBIUVT_RESI" == x*".uvt" ]]; then
+            PdBIUVT_TEMP_RESI="$PdBIUVT_RESI"
+        else
+            PdBIUVT_TEMP_RESI="$PdBIUVT_RESI.uvt"
+        fi
+    fi
+    # <20160809><dzliu> if subtract source model uv table, then run uv_fit for only selected CRANGE to make the residual uv table
+    ## if [[ ${#PdBIUVT_CMIN[@]} -gt 0 && ${#PdBIUVT_CMAX[@]} -gt 0 ]]; then
+    ##     PdBIUVT_TEMP_CHAN="${PdBIUVT_CMIN[0]} ${PdBIUVT_CMAX[0]}"
+    ## else
+    ##     PdBIUVT_TEMP_CHAN="$PdBIUVT_CHAN_MIN $PdBIUVT_CHAN_MAX"
+    ## fi
+    # <20161022><dzliu> if subtract source model uv table, then run uv_fit still for all CRANGE
+    PdBIUVT_TEMP_CHAN="$PdBIUVT_CHAN_MIN $PdBIUVT_CHAN_MAX"
+else
+    PdBIUVT_TEMP_RESI=""
+    PdBIUVT_TEMP_CHAN="$PdBIUVT_CHAN_MIN $PdBIUVT_CHAN_MAX"
+fi
+# 
+# loop each object (according to the input radec pairs)
+for (( i=0; i<$PdBIUVT_OBJ_NUMB; i++ )); do
+    # 
+    PdBIUVT_PosX=$(printf "%0.3f" "${PdBIUVT_OBJ_POS[2*i+0]}")
+    PdBIUVT_PosY=$(printf "%0.3f" "${PdBIUVT_OBJ_POS[2*i+1]}")
+    # 
+    #echo Tel R.A. = $PdBIUVT_RANX_CENT 
+    #echo Tel Dec. = $PdBIUVT_DECX_CENT 
+    #echo Tel R.A. = $PdBIUVT_RAND_CENT 
+    #echo Tel Dec. = $PdBIUVT_DECD_CENT 
+    echo Obj R.A. = ${PdBIUVT_RANX_OBJT[$i]} 
+    echo Obj Dec. = ${PdBIUVT_DECX_OBJT[$i]} 
+    #echo Obj R.A. = ${PdBIUVT_RAND_OBJT[$i]} 
+    #echo Obj Dec. = ${PdBIUVT_DECD_OBJT[$i]} 
+    # 
+    # write to PdBIUVT_TEMP_INIT
+    if [[ $i -eq 0 ]]; then
+        echo  '! '                                                                                                                  > $PdBIUVT_TEMP_INIT
+        echo  '! Task UV_FIT (new version R. Lucas)'                                                                               >> $PdBIUVT_TEMP_INIT
+        echo  '! 6 parameters needed for all functions'                                                                            >> $PdBIUVT_TEMP_INIT
+        echo  '!'                                                                                                                  >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\CHARACTER "UV Table: "                     UVTABLE$       "'"$PdBIUVT_NAME"'"'                                 >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\INTEGER   "Channels: "                     CHANNEL$[2]     '"$PdBIUVT_TEMP_CHAN"                               >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\REAL      "UV Range: "                     UV_RANGE$[2]    '"$PdBIUVT_UVRANGE_MIN $PdBIUVT_UVRANGE_MAX"        >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\CHARACTER "Result Fits Table: "            RESULT$        "'"$PdBIUVT_SAVE.uvfit"'"'                           >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\CHARACTER "Residual UV Table: "            RESIDUALS$     "'"$PdBIUVT_TEMP_RESI"'"'                            >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\INTEGER   "Number of Functions"            NF$             '"$PdBIUVT_OBJ_NUMB"                                >> $PdBIUVT_TEMP_INIT
+        echo  '! '                                                                                                                 >> $PdBIUVT_TEMP_INIT
+        echo  '! Functions '                                                                                                       >> $PdBIUVT_TEMP_INIT
+        echo  '! (POINT, C_GAUSS, E_GAUSS, C_DISK, '                                                                               >> $PdBIUVT_TEMP_INIT
+        echo  '!  E_DISK, RING, EXP, POWER-2, POWER-3)'                                                                            >> $PdBIUVT_TEMP_INIT
+        echo  '! '                                                                                                                 >> $PdBIUVT_TEMP_INIT
+        echo  '! --- begin repeat ---'                                                                                             >> $PdBIUVT_TEMP_INIT
+    fi
+    # 
+    # allow parameter to vary/fixed
+    PdBIUVT_Obj_ID=$(printf "%02d" $(($i+1)))
+    PdBIUVT_Obj_Maj="${PdBIUVT_OBJ_SIZE[2*i+0]}"
+    PdBIUVT_Obj_Min="${PdBIUVT_OBJ_SIZE[2*i+1]}"
+    PdBIUVT_Obj_Ang="${PdBIUVT_OBJ_ANGLE[i]}"
+    PdBIUVT_Fit_X=$((${PdBIUVT_OBJ_VARY_POS[i]}-1))
+    PdBIUVT_Fit_Y=$((${PdBIUVT_OBJ_VARY_POS[i]}-1))
+    PdBIUVT_Fit_Maj=$((${PdBIUVT_OBJ_VARY_SIZE[i]}-1)) # -1 is because GIDLAS use 0 means to fit, -1 means to be fixed. 
+    PdBIUVT_Fit_Min=$((${PdBIUVT_OBJ_VARY_SIZE[i]}-1)) # -1 is because GIDLAS use 0 means to fit, -1 means to be fixed. 
+    PdBIUVT_Fit_Ang=$((${PdBIUVT_OBJ_VARY_ANGLE[i]}-1)) # -1 is because GIDLAS use 0 means to fit, -1 means to be fixed. 
+    # 
+    # allow input function
+    PdBIUVT_Function="${PdBIUVT_OBJ_FUNC[i]}"
+    # 
+    # print info
+    echo Obj R.A. Offset = $PdBIUVT_PosX arcsec "(START=$PdBIUVT_Fit_X)"
+    echo Obj Dec. Offset = $PdBIUVT_PosY arcsec "(START=$PdBIUVT_Fit_Y)"
+    if echo "$PdBIUVT_Function" | grep -q -i "GAUSS"; then
+        echo Obj FWHM Major = $PdBIUVT_Obj_Maj arcsec "(START=$PdBIUVT_Fit_Maj)"
+        if echo "$PdBIUVT_Function" | grep -q -i "E_GAUSS"; then
+            echo Obj FWHM Minor = $PdBIUVT_Obj_Min arcsec "(START=$PdBIUVT_Fit_Min)"
+            echo Obj Pos. Angle = $PdBIUVT_Obj_Ang degree "(START=$PdBIUVT_Fit_Ang)"
+        fi
+    fi
+    # 
+    # print separator
+    echo "--"
+    # 
+    # Continue to write to PdBIUVT_TEMP_INIT
+    echo  '! '                                                                                                                                                                        >> $PdBIUVT_TEMP_INIT
+    echo  "! --- $PdBIUVT_Obj_ID"                                                                                                                                                     >> $PdBIUVT_TEMP_INIT
+    echo  '! '                                                                                                                                                                        >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "Function"            FUNCT'$PdBIUVT_Obj_ID'$       '"$PdBIUVT_Function"                                                                                    >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\REAL      "Parameters"          PARAM'$PdBIUVT_Obj_ID'$[7]    '$PdBIUVT_PosX $PdBIUVT_PosY 1.0 $PdBIUVT_Obj_Maj $PdBIUVT_Obj_Min $PdBIUVT_Obj_Ang 0                    >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\REAL      "Starting range"      RANGE'$PdBIUVT_Obj_ID'$[7]    '0 0 0 0 0 0 0                                                                                          >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\INTEGER   "number of starts"    START'$PdBIUVT_Obj_ID'$[7]    '$PdBIUVT_Fit_X $PdBIUVT_Fit_Y 0 $PdBIUVT_Fit_Maj $PdBIUVT_Fit_Min $PdBIUVT_Fit_Ang 0  >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\LOGICAL   "Subtract function"   SUBSF'$PdBIUVT_Obj_ID'$       '$PdBIUVT_RSUB                                                                                          >> $PdBIUVT_TEMP_INIT
+    # 
+    # Final write to PdBIUVT_TEMP_INIT
+    if [[ $(bc <<< $i+1) -eq "$PdBIUVT_OBJ_NUMB" ]]; then
+        echo  '! '                                                                                                                                                                      >> $PdBIUVT_TEMP_INIT
+        echo  '! --- end repeat ---'                                                                                                                                                    >> $PdBIUVT_TEMP_INIT
+        echo  '! '                                                                                                                                                                      >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\GO'                                                                                                                                                                 >> $PdBIUVT_TEMP_INIT
+        echo  "let SIC%TEE .TRUE."                            >  $PdBIUVT_TEMP_EXEC
+        echo  "let name $PdBIUVT_NAME"                        >> $PdBIUVT_TEMP_EXEC
+        echo  "run uv_fit $PdBIUVT_TEMP_INIT /NOWINDOW"       >> $PdBIUVT_TEMP_EXEC
+    fi
+done
+# 
+# DEBUG
+# 
+# exit
+# 
+# Run GILDAS/mapping
+# 
+echo ""
+echo "**************************"
+echo "* Running GILDAS mapping *"
+echo "**************************"
+###echo "@$PdBIUVT_TEMP_EXEC  | mapping > "$PdBIUVT_TEMP_LOGT
+###echo "@$PdBIUVT_TEMP_EXEC" | mapping >  $PdBIUVT_TEMP_LOGT
+# GOT MAPPING RUNNING PROBLEM 
+# can not run multiple mapping simultaneously because mapping wirtes to the same log file $HOME/.gag/log/*
+# -nw -nl
+##echo "@$PdBIUVT_TEMP_EXEC  | mapping -nw -nl > "$PdBIUVT_TEMP_LOGT
+##echo "@$PdBIUVT_TEMP_EXEC" | mapping -nw -nl >  $PdBIUVT_TEMP_LOGT
+# still can not run multiple mapping simultaneously because mapping wirtes to the same log file $HOME/.gag/log/uv_fit.gildas
+# found a solution by calling uv_fit.exe directly
+if [[ -f "$PdBIUVT_TEMP_LOGT" ]];then
+    mv "$PdBIUVT_TEMP_LOGT" "$PdBIUVT_TEMP_LOGT.backup"
+fi
+if [[ $PdBIUVT_PARALLELS -eq 0 ]]; then
+    # do not do parallel, just wait for on-going uv_fit
+    if ps aux | grep -v 'grep' | grep -q "logs/uv_fit.gildas"; then
+        echo -n "Waiting for on-going uv_fit ."
+        sleep 2.0
+    fi
+    while ps aux | grep -v 'grep' | grep -q "logs/uv_fit.gildas"; do
+        echo -n "."
+        sleep 2.5
+    done
+    #echo ""
+    echo "Running GILDAS mapping uv_fit"
+    echo "echo @$PdBIUVT_TEMP_EXEC | mapping -nw -nl > $PdBIUVT_TEMP_LOGT"
+    echo "@$PdBIUVT_TEMP_EXEC" | mapping -nw -nl > "$PdBIUVT_TEMP_LOGT"
+else
+    # do parallel! directly call $GAG_EXEC_DIR/tasks/uv_fit.exe
+    # <TODO> this needs more test and confirmation!
+    echo "Running GILDAS mapping in parallel mode"
+    if [[ -z "$GAG_EXEC_DIR" && -f "/opt/local/lib/gildas/x86_64-darwin-gfortran/tasks/uv_fit.exe" ]]; then
+        export GAG_EXEC_DIR="/opt/local/lib/gildas/x86_64-darwin-gfortran"
+        export GAG_EXEC_SYSTEM="x86_64-darwin-gfortran"
+        export GAG_ROOT_DIR="/opt/local/lib/gildas"
+        export GAG_PATH="/opt/local/lib/gildas/etc"
+    fi
+    if [[ -f "$GAG_EXEC_DIR/tasks/uv_fit.exe" ]]; then
+        cat "$PdBIUVT_SAVE.init" | grep '^TASK' | grep -v '^TASK\\GO' | perl -p -e 's/.*\s+(\S*)(\$)\S*\s*(.*)/\1\2\3/g' | grep -v '^RES' | perl -p -e 's/\$/\$\n/g' | sed 's/["]//g' | sed 's/^YES$/.TRUE./g' | sed 's/^NO$/.FALSE./g' >  "$PdBIUVT_SAVE.ipar"
+        cat "$PdBIUVT_SAVE.init" | grep '^TASK' | grep -v '^TASK\\GO' | perl -p -e 's/.*\s+(\S*)(\$)\S*\s*(.*)/\1\2\3/g' | grep    '^RES' | perl -p -e 's/\$/\$\n/g' | sed 's/["]//g' | sed 's/^YES$/.TRUE./g' | sed 's/^NO$/.FALSE./g' >> "$PdBIUVT_SAVE.ipar"
+        echo "" >> "$PdBIUVT_SAVE.ipar"
+        echo "" >> "$PdBIUVT_SAVE.ipar"
+        echo "" >> "$PdBIUVT_SAVE.ipar"
+        echo "# now executing the following command to run gildas mapping uv_fit, this might take a while" >> "$PdBIUVT_SAVE.ipar"
+        echo "# cat \"$PdBIUVT_SAVE.ipar\" | \"$GAG_EXEC_DIR/tasks/uv_fit.exe\" > \"$PdBIUVT_TEMP_LOGT\"" >> "$PdBIUVT_SAVE.ipar"
+                cat  "$PdBIUVT_SAVE.ipar"  |  tail -n 2
+                cat  "$PdBIUVT_SAVE.ipar"  |  "$GAG_EXEC_DIR/tasks/uv_fit.exe"  >  "$PdBIUVT_TEMP_LOGT"
+        if tail -n 1 "$PdBIUVT_TEMP_LOGT" | grep -q "F-SYSTEM,  Exit code"; then
+            echo "Error! Failed to run cat \"$PdBIUVT_SAVE.ipar\" | \"$GAG_EXEC_DIR/tasks/uv_fit.exe\" > \"$PdBIUVT_TEMP_LOGT\"! Perhaps GILDAS is not set well? Sorry!"
+            exit
+        fi
+    else
+        echo "Error! For parallelly runing GILDAS mapping, we need system environment \$GAG_EXEC_DIR, however it is not defined! Exit!"
+        exit
+    fi
+fi
+echo "! GIDLAS mapping script"                  >  "$PdBIUVT_SAVE.plotfit.map"
+echo "let name $PdBIUVT_SAVE"                   >> "$PdBIUVT_SAVE.plotfit.map"
+echo "go plotfit"                               >> "$PdBIUVT_SAVE.plotfit.map"
+echo "hardcopy 'name'.plotfit.eps /overwrite"   >> "$PdBIUVT_SAVE.plotfit.map"
+echo ""                                         >> "$PdBIUVT_SAVE.plotfit.map"
+echo "Finished GILDAS mapping uv_fit! Output to text file \"$PdBIUVT_SAVE.log\" and binary file \"$PdBIUVT_SAVE.uvfit\" (you can run \"mapping @$PdBIUVT_SAVE.plotfit.map\" to plot the result)!"
+echo "--"
+#echo ""
+
+
+
+# 
+# Check $PdBIUVT_SAVE.uvfit
+# 
+if [[ ! -f "$PdBIUVT_SAVE.uvfit" ]]; then
+    echo ""
+    echo "Error! Failed to run GILDAS mapping and output \"$PdBIUVT_SAVE.uvfit\"! Sometimes too tight (or too loose) constraints on the input parameters is the reason. Please check the log file \"$PdBIUVT_SAVE.log\" (but not many useful information there), and try to change the input parameters."
+    echo "Exit!"
+    echo ""
+    exit 1
+fi
+
+    
+# 
+# print message
+echo ""
+echo "**************************"
+echo "* Plotting for $PdBIUVT_OBJ_NUMB objects *"
+echo "**************************"
+# 
+# loop each object (according to the input radec pairs)
+# 
+for (( i=0; i<$PdBIUVT_OBJ_NUMB; i++ )); do
+    
+    # 
+    # print message
+    echo "${PdBIUVT_OBJ_NAME[i]}"
+    
+    # 
+    # Run GILDAS mapping plotfit
+    echo "! GIDLAS mapping script"                                                    >  "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo ""                                                                           >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "let name $PdBIUVT_SAVE"                                                     >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "define image f 'name'.uvfit read /global"                                   >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map" # see -- /Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_plotfit.map
+    echo "define integer nlength ilength"                                             >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "nlength = f%dim[2]-4"                                                       >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "if (mod(nlength,15).eq.0) then"                                             >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "  ilength = 15 ! Old uvfit format"                                          >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "else if (mod(nlength,17).eq.0) then"                                        >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "  ilength = 17 ! New uvfit format"                                          >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "endif"                                                                      >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "define integer i1 i2"                                                       >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "let i1 1"                                                                   >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "let i2 f%dim[1]"                                                            >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "define integer iorder kx ky kz kc"                                          >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "let iorder $(($i+1))"                                                       >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "define integer nchan"                                                       >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "let nchan f%dim[1]"                                                         >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "define real x[nchan] y[nchan] z[nchan] snr[nchan]"                          >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "sic output $PdBIUVT_SAVE.uvfit.${PdBIUVT_OBJ_NAME[i]}.txt new"              >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "say \"#\" \"freq\" \"flux\" \"error\" \"SNR\" /format A1 A14 A19 A19 A10"   >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "say \"#\" \"GHz\" \"mJy\" \"mJy\" \" \" /format A1 A14 A19 A19 A10"         >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "for ichan i1 to i2"                                                         >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "    let kx -1 ! freq [MHz], see -- gildas-exe-10feb17/pro/p_plotfit.map"    >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "    let kc 4"                                                               >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "    let x[ichan] -(f[ichan,4]-f%veloff)*f%restfre/299792.458+f%restfre"     >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "    let ky 12 ! flux [Jy], see -- gildas-exe-10feb17/pro/p_plotfit.map"     >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "    let kc ky+(iorder-1)*ilength"                                           >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "    let y[ichan] f[ichan,kc]"                                               >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "    let kz 13 ! flux error [Jy]"                                            >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "    let kc kz+(iorder-1)*ilength"                                           >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "    let z[ichan] f[ichan,kc]"                                               >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "    let x[ichan] x[ichan]/1e3 ! to GHz"                                     >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "    let y[ichan] y[ichan]*1e3 ! to mJy"                                     >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "    let z[ichan] z[ichan]*1e3 ! to mJy"                                     >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "    let snr[ichan] y[ichan]/x[ichan]"                                       >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "    if (snr[ichan].LT.0) let snr[ichan] 0"                                  >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "    say x[ichan] y[ichan] z[ichan] snr[ichan] /format F15.3 E19.7 E19.7 F10.2" >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "next"                                                                       >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "say \"\""                                                                   >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "sic output"                                                                 >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo ""                                                                           >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "go plotfit"                                                                 >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "hardcopy $PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.eps /overwrite"       >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo ""                                                                           >> "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+    echo "echo @$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map | mapping -nw -nl > $PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.log"
+    echo "@$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map" | mapping -nw -nl > "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.log"
+    echo "Output to \"$PdBIUVT_SAVE.uvfit.${PdBIUVT_OBJ_NAME[i]}.txt\"!   (The uv_fit result data table with frequency [GHz], flux and error [mJy])"
+    echo "Output to \"$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.eps\"!   (The uv_fit result go plotfit figure)"
+    
+    # 
+    # skip if no supermongo
+    if [[ $PdBIUVT_HAS_SUPERMONGO -eq 0 ]]; then 
+        continue
+    fi
+    
+    # 
+    # skip anyway <TODO>
+    if [[ 1 == 1 ]]; then 
+        continue
+    fi
+    
+    # 
+    # Get the Result of Velocity
+    PdBIUVT_VELO_OBJT=$(grep 'Velocity=' "$PdBIUVT_TEMP_LOGT" | cut -c 60- | sed -e 's/=//g' | tr -s ' ' | cut -d ' ' -f 2)
+    PdBIUVT_TEMP_OBJJ=$(bc <<< "($i+1)")
+    
+    # 
+    # Get the Result of Flux
+    ##PdBIUVT_TEMP_OBJM=$(bc <<< "${#PdBIUVT_RAND_OBJT[@]}*3") # r.m.s. and N*3 following lines
+    ##PdBIUVT_TEMP_TEXT=$(grep -A $PdBIUVT_TEMP_OBJM ' r.m.s. *=' "$PdBIUVT_TEMP_LOGT")
+    ##PdBIUVT_TEMP_OBJJ=$(bc <<< "($i+1)")
+    #PdBIUVT_TEMP_OBJI=$(bc <<< "($i+1)*3+1") # 1+3p, 1+6p, 1+9p is flux # <TODO> NOT ALWAYS # GILDAS mapping -- column x '7+1' /table cont351+362GHz_uv_fit.column
+    #PdBIUVT_TEMP_OBJM=$(bc <<< "${#PdBIUVT_RAND_OBJT[@]}*3+1+1") 
+    #PdBIUVT_TEMP_OBJI="$i"
+    #PdBIUVT_TEMP_OBJM="${#PdBIUVT_RAND_OBJT[@]}" 
+    # echo awk "NR%$PdBIUVT_TEMP_OBJM==$PdBIUVT_TEMP_OBJI"
+    # PdBIUVT_FMOD_OBJT=$(grep -v 'STOP' "$PdBIUVT_TEMP_LOGT" | grep -A $PdBIUVT_TEMP_OBJM ' r.m.s. *=' | awk "NR%$PdBIUVT_TEMP_OBJM==$PdBIUVT_TEMP_OBJI" | sed -E 's/ *(.*) *FLUX *=(.*) [(](.*)[)]/\1/g')
+    # PdBIUVT_FLUX_OBJT=$(grep -v 'STOP' "$PdBIUVT_TEMP_LOGT" | grep -A $PdBIUVT_TEMP_OBJM ' r.m.s. *=' | awk "NR%$PdBIUVT_TEMP_OBJM==$PdBIUVT_TEMP_OBJI" | sed -E 's/ *(.*) *FLUX *=(.*) [(](.*)[)]/\2/g')
+    # PdBIUVT_FERR_OBJT=$(grep -v 'STOP' "$PdBIUVT_TEMP_LOGT" | grep -A $PdBIUVT_TEMP_OBJM ' r.m.s. *=' | awk "NR%$PdBIUVT_TEMP_OBJM==$PdBIUVT_TEMP_OBJI" | sed -E 's/ *(.*) *FLUX *=(.*) [(](.*)[)]/\3/g')
+                    ##  grep -v 'STOP' "$PdBIUVT_TEMP_LOGT" | grep -A $PdBIUVT_TEMP_OBJM ' r.m.s. *=' | awk "NR%$PdBIUVT_TEMP_OBJM==$PdBIUVT_TEMP_OBJI" | perl -p -e 's/ *(.*) *=(.*) [(](.*)[)]/\1 \2 \3/g' > tmp_ObjFlux.$PdBIUVT_TEMP_OBJJ
+                      # grep -v 'STOP' "$PdBIUVT_TEMP_LOGT" | grep -B  2                 ' r.m.s. *=' | awk "NR%4==1"                                   | perl -p -e 's/.*Velocity *= *(.*)/Velocity   \1/g' > tmp_ObjVelo.$PdBIUVT_TEMP_OBJJ
+                # echo "grep -v 'STOP' \"$PdBIUVT_TEMP_LOGT\" | grep -i ' FLUX *='                                        | awk \"(NR-1)%${#PdBIUVT_RAND_OBJT[@]}==$i\" | perl -p -e 's/ *(.*) *=(.*) [(](.*)[)]/\1 \2 \3/g' > tmp_ObjFlux.$PdBIUVT_TEMP_OBJJ"
+                        grep -v 'STOP'  "$PdBIUVT_TEMP_LOGT"  | grep -i ' FLUX *='                                        | awk  "(NR-1)%${#PdBIUVT_RAND_OBJT[@]}==$i"  | perl -p -e 's/ *(.*) *=(.*) [(](.*)[)]/\1 \2 \3/g' > tmp_ObjFlux.$PdBIUVT_TEMP_OBJJ
+                # echo "grep -v 'STOP' \"$PdBIUVT_TEMP_LOGT\" | grep -i 'Starting minimization on channel.*Velocity.*=.*' | perl -p -e 's/.*Velocity *= *(.*)/Velocity   \1/g' > tmp_ObjVelo.$PdBIUVT_TEMP_OBJJ"
+                        grep -v 'STOP'  "$PdBIUVT_TEMP_LOGT"  | grep -i 'Starting minimization on channel.*Velocity.*=.*' | perl -p -e 's/.*Velocity *= *(.*)/Velocity   \1/g' > tmp_ObjVelo.$PdBIUVT_TEMP_OBJJ
+    # 
+    # echo PdBIUVT_FMOD_OBJT=$PdBIUVT_FMOD_OBJT
+    # echo PdBIUVT_FLUX_OBJT=$PdBIUVT_FLUX_OBJT
+    # echo PdBIUVT_FERR_OBJT=$PdBIUVT_FERR_OBJT
+    # echo PdBIUVT_FUNT_OBJT=$PdBIUVT_FUNT_OBJT
+    # exit
+    
+    # 
+    # prepare plot
+    rm "tmp_ObjFlux" 2>/dev/null
+    rm "tmp_ObjVelo" 2>/dev/null
+    cp "tmp_ObjFlux.$PdBIUVT_TEMP_OBJJ" "tmp_ObjFlux"
+    cp "tmp_ObjVelo.$PdBIUVT_TEMP_OBJJ" "tmp_ObjVelo"
+    if [[ x"$PdBIUVT_SAVE" != x"tmp_doUVFIT" ]]; then
+        rm "tmp_doUVFIT.log" 2>/dev/null
+        cp "$PdBIUVT_TEMP_LOGT" "tmp_doUVFIT.log"
+    fi
+    
+    
+    # 
+    # prepare supermongo label text
+    PdBIUVT_NAME_TEX=$(echo $PdBIUVT_NAME | sed -e 's/_/\\_/g')
+    
+    # 
+    # copy supermongo script
+    cp "$(dirname $0)/pdbi-uvt-go-uvfit-v3.sm" .
+    
+    # 
+    # do plot
+    # 
+sm << EOF
+    # set freq_Cen = $PdBIUVT_LINE_FREQ # GHz
+    set freq_Ref = $PdBIUVT_FREQ_REF # MHz
+    #set velo_Wth = $(echo "(${PdBIUVT_CMAX[$i]}-(${PdBIUVT_CMIN[$i]})+1)*$(abs $PdBIUVT_VELO_BIN)" | bc -l | tail -n 1 | sed 's/^\./0./') # km/s
+    #set freq_Bin = $PdBIUVT_FREQ_BIN # MHz
+    #set chan_Ref = $PdBIUVT_CHAN_REF # 
+    #set velo_Ref = $PdBIUVT_VELO_REF # km/s
+    #set velo_Ref = $PdBIUVT_VELO_REF # km/s
+    #set velo_Wid = $PdBIUVT_VELO_BIN # km/s
+    set velo_Bin = $PdBIUVT_VELO_BIN # km/s
+    #set velo_Off = $PdBIUVT_VELO_REF # km/s
+    set ra_Obj = ${PdBIUVT_RAND_OBJT[$i]}
+    set de_Obj = ${PdBIUVT_DECD_OBJT[$i]}
+    set raX_Obj = '${PdBIUVT_RANX_OBJT[$i]}'
+    set deX_Obj = '${PdBIUVT_DECX_OBJT[$i]}'
+    set id_Str = {"$PdBIUVT_NAME_TEX"}
+    set velo_low = ${PdBIUVT_VMIN[$i]} # $PdBIUVT_VMIN
+    set velo_high = ${PdBIUVT_VMAX[$i]} # $PdBIUVT_VMAX
+    #echo set freq_Ref = \$(freq_Ref)
+    #echo set velo_Wth = \$(velo_Wth)
+    #echo set freq_Ref = $PdBIUVT_FREQ_REF # MHz
+    #echo set freq_Bin = $PdBIUVT_FREQ_BIN # MHz
+    #echo set chan_Ref = $PdBIUVT_CHAN_REF # 
+    #echo set velo_Ref = $PdBIUVT_VELO_REF # km/s
+    #echo set velo_Bin = \$(velo_Bin)
+    #echo set velo_Off = $PdBIUVT_VELO_REF # km/s
+    #echo set ra_Obj = \$(ra_Obj)
+    #echo set de_Obj = \$(de_Obj)
+    #echo set raX_Obj = '\$(raX_Obj)'
+    #echo set deX_Obj = '\$(deX_Obj)'
+    #echo set id_Str = '$PdBIUVT_NAME_TEX'
+    #echo set velo_low = \$(velo_low)
+    #echo set velo_high = \$(velo_high)
+    echo macro read \""pdbi-uvt-go-uvfit-v3.sm"\" goUVFIT_PlotVeloAmpl
+    macro read "pdbi-uvt-go-uvfit-v3.sm" goUVFIT_PlotVeloAmpl
+    
+EOF
+    
+    
+    # copy "tmp_doUVFIT" to "tmp_doUVFIT.$OBJI"
+    if [[ "$PdBIUVT_OBJ_NUMB" -gt 1 ]]; then
+        echo "Output to $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.log!   # The GIDLAS mapping running log file."
+        echo "Output to $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.dat!   # The result data table of frequency [GHz], velocity [km/s], flux and error [mJy]."
+        echo "Output to $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.eps!   # The result spectrum of flux versus frequency."
+        cp tmp_doUVFIT.eps $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.eps
+        cp tmp_doUVFIT.log $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.log
+        cp tmp_doUVFIT.dat $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.dat
+    else
+        if [[ x"$PdBIUVT_SAVE" != x"tmp_doUVFIT" ]]; then
+            echo "Output to $PdBIUVT_SAVE.log!   # The GIDLAS mapping running log file."
+            echo "Output to $PdBIUVT_SAVE.dat!   # The result data table of frequency [GHz], velocity [km/s], flux and error [mJy]."
+            echo "Output to $PdBIUVT_SAVE.eps!   # The result spectrum of flux versus frequency."
+            cp tmp_doUVFIT.eps $PdBIUVT_SAVE.eps
+            cp tmp_doUVFIT.log $PdBIUVT_SAVE.log
+            cp tmp_doUVFIT.dat $PdBIUVT_SAVE.dat
+        fi
+    fi
+    echo "--"
+    # open tmp_doUVFIT.eps
+    
+done
+
+

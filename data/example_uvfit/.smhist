@@ -1,0 +1,244 @@
+    #echo set velo_high = $(velo_high)
+    echo macro read \""pdbi-uvt-go-uvfit-v3.sm"\" goUVFIT_PlotVeloAmpl
+    macro read "pdbi-uvt-go-uvfit-v3.sm" goUVFIT_PlotVeloAmpl
+QUIT
+echo hello
+QUIT
+    # set freq_Cen = 233.96000000000000000000 # GHz
+    set freq_Ref = 233960.000000000 # MHz
+    #set velo_Wth = 10.000000 # km/s
+    #set freq_Bin = -7.80450396909138 # MHz
+    #set chan_Ref = 101.000000000000 #
+    #set velo_Ref = 0.0000000 # km/s
+    #set velo_Wid = 10.000000 # km/s
+    set velo_Bin = 10.000000 # km/s
+    #set velo_Off = 0.0000000 # km/s
+    set ra_Obj = 150.039
+    set de_Obj = 2.319
+    set raX_Obj = '10:00:09.360'
+    set deX_Obj = '02:19:08.400'
+    set id_Str = {"NAME"}
+    set velo_low = -1010.000000000000000000 # -1010.000000000000000000
+    set velo_high = -1010.000000000000000000 # -1010.000000000000000000
+    #echo set freq_Ref = $(freq_Ref)
+    #echo set velo_Wth = $(velo_Wth)
+    #echo set freq_Ref = 233960.000000000 # MHz
+    #echo set freq_Bin = -7.80450396909138 # MHz
+    #echo set chan_Ref = 101.000000000000 #
+    #echo set velo_Ref = 0.0000000 # km/s
+    #echo set velo_Bin = $(velo_Bin)
+    #echo set velo_Off = 0.0000000 # km/s
+    #echo set ra_Obj = $(ra_Obj)
+    #echo set de_Obj = $(de_Obj)
+    #echo set raX_Obj = '$(raX_Obj)'
+    #echo set deX_Obj = '$(deX_Obj)'
+    #echo set id_Str = 'NAME'
+    #echo set velo_low = $(velo_low)
+    #echo set velo_high = $(velo_high)
+    echo macro read \""pdbi-uvt-go-uvfit-v3.sm"\" goUVFIT_PlotVeloAmpl
+    macro read "pdbi-uvt-go-uvfit-v3.sm" goUVFIT_PlotVeloAmpl
+QUIT
+echo hello
+QUIT
+    # set freq_Cen = 233.96000000000000000000 # GHz
+    set freq_Ref = 233960.000000000 # MHz
+    #set velo_Wth = 10.000000 # km/s
+    #set freq_Bin = -7.80450396909138 # MHz
+    #set chan_Ref = 101.000000000000 #
+    #set velo_Ref = 0.0000000 # km/s
+    #set velo_Wid = 10.000000 # km/s
+    set velo_Bin = 10.000000 # km/s
+    #set velo_Off = 0.0000000 # km/s
+    set ra_Obj = 150.039
+    set de_Obj = 2.319
+    set raX_Obj = '10:00:09.360'
+    set deX_Obj = '02:19:08.400'
+    set id_Str = {"NAME"}
+    set velo_low = -1010.000000000000000000 # -1010.000000000000000000
+    set velo_high = -1010.000000000000000000 # -1010.000000000000000000
+    #echo set freq_Ref = $(freq_Ref)
+    #echo set velo_Wth = $(velo_Wth)
+    #echo set freq_Ref = 233960.000000000 # MHz
+    #echo set freq_Bin = -7.80450396909138 # MHz
+    #echo set chan_Ref = 101.000000000000 #
+    #echo set velo_Ref = 0.0000000 # km/s
+    #echo set velo_Bin = $(velo_Bin)
+    #echo set velo_Off = 0.0000000 # km/s
+    #echo set ra_Obj = $(ra_Obj)
+    #echo set de_Obj = $(de_Obj)
+    #echo set raX_Obj = '$(raX_Obj)'
+    #echo set deX_Obj = '$(deX_Obj)'
+    #echo set id_Str = 'NAME'
+    #echo set velo_low = $(velo_low)
+    #echo set velo_high = $(velo_high)
+    echo macro read \""pdbi-uvt-go-uvfit-v3.sm"\" goUVFIT_PlotVeloAmpl
+    macro read "pdbi-uvt-go-uvfit-v3.sm" goUVFIT_PlotVeloAmpl
+QUIT
+echo hello
+QUIT
+    # set freq_Cen = 233.96000000000000000000 # GHz
+    set freq_Ref = 233960.000000000 # MHz
+    #set velo_Wth = 10.000000 # km/s
+    #set freq_Bin = -7.80450396909138 # MHz
+    #set chan_Ref = 101.000000000000 #
+    #set velo_Ref = 0.0000000 # km/s
+    #set velo_Wid = 10.000000 # km/s
+    set velo_Bin = 10.000000 # km/s
+    #set velo_Off = 0.0000000 # km/s
+    set ra_Obj = 150.039
+    set de_Obj = 2.319
+    set raX_Obj = '10:00:09.360'
+    set deX_Obj = '02:19:08.400'
+    set id_Str = {"NAME"}
+    set velo_low = -1010.000000000000000000 # -1010.000000000000000000
+    set velo_high = -1010.000000000000000000 # -1010.000000000000000000
+    #echo set freq_Ref = $(freq_Ref)
+    #echo set velo_Wth = $(velo_Wth)
+    #echo set freq_Ref = 233960.000000000 # MHz
+    #echo set freq_Bin = -7.80450396909138 # MHz
+    #echo set chan_Ref = 101.000000000000 #
+    #echo set velo_Ref = 0.0000000 # km/s
+    #echo set velo_Bin = $(velo_Bin)
+    #echo set velo_Off = 0.0000000 # km/s
+    #echo set ra_Obj = $(ra_Obj)
+    #echo set de_Obj = $(de_Obj)
+    #echo set raX_Obj = '$(raX_Obj)'
+    #echo set deX_Obj = '$(deX_Obj)'
+    #echo set id_Str = 'NAME'
+    #echo set velo_low = $(velo_low)
+    #echo set velo_high = $(velo_high)
+    echo macro read \""pdbi-uvt-go-uvfit-v3.sm"\" goUVFIT_PlotVeloAmpl
+    macro read "pdbi-uvt-go-uvfit-v3.sm" goUVFIT_PlotVeloAmpl
+QUIT
+echo hello
+QUIT
+    # set freq_Cen = 233.96000000000000000000 # GHz
+    set freq_Ref = 233960.000000000 # MHz
+    #set velo_Wth = 10.000000 # km/s
+    #set freq_Bin = -7.80450396909138 # MHz
+    #set chan_Ref = 101.000000000000 #
+    #set velo_Ref = 0.0000000 # km/s
+    #set velo_Wid = 10.000000 # km/s
+    set velo_Bin = 10.000000 # km/s
+    #set velo_Off = 0.0000000 # km/s
+    set ra_Obj = 150.039
+    set de_Obj = 2.319
+    set raX_Obj = '10:00:09.360'
+    set deX_Obj = '02:19:08.400'
+    set id_Str = {"NAME"}
+    set velo_low = -1010.000000000000000000 # -1010.000000000000000000
+    set velo_high = -1010.000000000000000000 # -1010.000000000000000000
+    #echo set freq_Ref = $(freq_Ref)
+    #echo set velo_Wth = $(velo_Wth)
+    #echo set freq_Ref = 233960.000000000 # MHz
+    #echo set freq_Bin = -7.80450396909138 # MHz
+    #echo set chan_Ref = 101.000000000000 #
+    #echo set velo_Ref = 0.0000000 # km/s
+    #echo set velo_Bin = $(velo_Bin)
+    #echo set velo_Off = 0.0000000 # km/s
+    #echo set ra_Obj = $(ra_Obj)
+    #echo set de_Obj = $(de_Obj)
+    #echo set raX_Obj = '$(raX_Obj)'
+    #echo set deX_Obj = '$(deX_Obj)'
+    #echo set id_Str = 'NAME'
+    #echo set velo_low = $(velo_low)
+    #echo set velo_high = $(velo_high)
+    echo macro read \""pdbi-uvt-go-uvfit-v3.sm"\" goUVFIT_PlotVeloAmpl
+    macro read "pdbi-uvt-go-uvfit-v3.sm" goUVFIT_PlotVeloAmpl
+QUIT
+echo hello
+QUIT
+    # set freq_Cen = 233.96000000000000000000 # GHz
+    set freq_Ref = 233960.000000000 # MHz
+    #set velo_Wth = 10.000000 # km/s
+    #set freq_Bin = -7.80450396909138 # MHz
+    #set chan_Ref = 101.000000000000 #
+    #set velo_Ref = 0.0000000 # km/s
+    #set velo_Wid = 10.000000 # km/s
+    set velo_Bin = 10.000000 # km/s
+    #set velo_Off = 0.0000000 # km/s
+    set ra_Obj = 150.039
+    set de_Obj = 2.319
+    set raX_Obj = '10:00:09.360'
+    set deX_Obj = '02:19:08.400'
+    set id_Str = {"NAME"}
+    set velo_low = -1010.000000000000000000 # -1010.000000000000000000
+    set velo_high = -1010.000000000000000000 # -1010.000000000000000000
+    #echo set freq_Ref = $(freq_Ref)
+    #echo set velo_Wth = $(velo_Wth)
+    #echo set freq_Ref = 233960.000000000 # MHz
+    #echo set freq_Bin = -7.80450396909138 # MHz
+    #echo set chan_Ref = 101.000000000000 #
+    #echo set velo_Ref = 0.0000000 # km/s
+    #echo set velo_Bin = $(velo_Bin)
+    #echo set velo_Off = 0.0000000 # km/s
+    #echo set ra_Obj = $(ra_Obj)
+    #echo set de_Obj = $(de_Obj)
+    #echo set raX_Obj = '$(raX_Obj)'
+    #echo set deX_Obj = '$(deX_Obj)'
+    #echo set id_Str = 'NAME'
+    #echo set velo_low = $(velo_low)
+    #echo set velo_high = $(velo_high)
+    echo macro read \""pdbi-uvt-go-uvfit-v3.sm"\" goUVFIT_PlotVeloAmpl
+    macro read "pdbi-uvt-go-uvfit-v3.sm" goUVFIT_PlotVeloAmpl
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+    # set freq_Cen = 233.96000000000000000000 # GHz
+    set freq_Ref = 233960.000000000 # MHz
+    #set velo_Wth = 10.000000 # km/s
+    #set freq_Bin = -7.80450396909138 # MHz
+    #set chan_Ref = 101.000000000000 #
+    #set velo_Ref = 0.0000000 # km/s
+    #set velo_Wid = 10.000000 # km/s
+    set velo_Bin = 10.000000 # km/s
+    #set velo_Off = 0.0000000 # km/s
+    set ra_Obj = 150.039
+    set de_Obj = 2.319
+    set raX_Obj = '10:00:09.360'
+    set deX_Obj = '02:19:08.400'
+    set id_Str = {"NAME"}
+    set velo_low = -1010.000000000000000000 # -1010.000000000000000000
+    set velo_high = -1010.000000000000000000 # -1010.000000000000000000
+    #echo set freq_Ref = $(freq_Ref)
+    #echo set velo_Wth = $(velo_Wth)
+    #echo set freq_Ref = 233960.000000000 # MHz
+    #echo set freq_Bin = -7.80450396909138 # MHz
+    #echo set chan_Ref = 101.000000000000 #
+    #echo set velo_Ref = 0.0000000 # km/s
+    #echo set velo_Bin = $(velo_Bin)
+    #echo set velo_Off = 0.0000000 # km/s
+    #echo set ra_Obj = $(ra_Obj)
+    #echo set de_Obj = $(de_Obj)
+    #echo set raX_Obj = '$(raX_Obj)'
+    #echo set deX_Obj = '$(deX_Obj)'
+    #echo set id_Str = 'NAME'
+    #echo set velo_low = $(velo_low)
+    #echo set velo_high = $(velo_high)
+    echo macro read \""pdbi-uvt-go-uvfit-v3.sm"\" goUVFIT_PlotVeloAmpl
+    macro read "pdbi-uvt-go-uvfit-v3.sm" goUVFIT_PlotVeloAmpl
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT

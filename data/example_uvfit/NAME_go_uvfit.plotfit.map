@@ -1,0 +1,5 @@
+! GIDLAS mapping script
+let name NAME_go_uvfit
+go plotfit
+hardcopy 'name'.plotfit.eps /overwrite
+

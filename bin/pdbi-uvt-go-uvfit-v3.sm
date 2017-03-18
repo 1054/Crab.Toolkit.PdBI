@@ -1,0 +1,479 @@
+goUVFIT 02
+    # 
+    # Aim: 
+    #     this sm script will generate a doUVFIT.map script 
+    #     for the GILDAS/mapping to call
+    #         get the phase center RA Dec 
+    #         set the uv_fit parameters 
+    #         then run uv_fit
+    #         output BeamIntSpec
+    #         <TODO> VeloIntMap
+    # 
+    # Usage:
+    #     macro read goUVFIT.sm goUVFIT
+    # 
+    # 
+    # 
+    if($?1==0) { print 'Usage: \n    goUVFIT "UVTABLE"\n' {}
+                 return }
+    # 
+    define uvtable $1
+    # 
+    # Get the Frequency of Phase Center
+    if(!is_file($uvtable".uvt.header.txt")) {
+        !echo "header "$uvtable".uvt" | mapping | sed 's/[^[:print:]]//g' > "tmp_Header.txt"
+    } else {
+        !cp $uvtable".uvt.header.txt" "tmp_Header.txt"
+    }
+    !cat "tmp_Header.txt" | grep -A 1 'Size *Reference Pixel *Value *Increment' | tail -n 1 > tmp_FreqCenter
+    data tmp_FreqCenter read { freq_Ref 3 }
+    !cat "tmp_Header.txt" | grep 'Rest Frequency' > tmp_FreqCenter
+    data tmp_FreqCenter read { freq_Cen 8 }
+    !cat "tmp_Header.txt" | grep 'Resolution in Velocity' > tmp_FreqResolution
+    data tmp_FreqResolution read { velo_Bin 4 freq_Bin 7 }
+    if(velo_Bin<0) { set velo_Bin = -velo_Bin }
+    # 
+    # Get the Channel of Phase Center
+    !cat "tmp_Header.txt" | grep 'UV Data    Channels' > tmp_Channels
+    data tmp_Channels read { chan_Max 4 }
+    set chan_Cen = chan_Max/2.0+1
+    # 
+    # Get the RA Dec of Phase Center
+    !cat "tmp_Header.txt" | grep 'Right Ascension' > tmp_PosCenter
+    data tmp_PosCenter read { ra_Str 3.s de_Str 5.s }
+    !radec2degree_mac $(ra_Str) $(de_Str) > tmp_PosCenter
+    data tmp_PosCenter read { ra_Cen 1 de_Cen 2 }
+    # ra_Cen = 150.2380500000  # 10:00:57.132
+    # de_Cen = 2.336619444444  # +02:20:11.83
+    # 
+    # Get the RA Dec of Object
+    # <TODO> !echo "Right Ascension 10:00:56.9541 Declination 02:20:17.2648" > tmp_PosObject
+    data tmp_PosObject read { ra_Str 3.s de_Str 5.s }
+    !radec2degree_mac $(ra_Str) $(de_Str) > tmp_PosObject
+    data tmp_PosObject read { ra_Obj 1 de_Obj 2 }
+    # ra_Obj = 150.237329166667 #  10:00:56.959
+    # de_Obj = +02:20:16.88
+    # 
+    # 
+    set ra_Off = (ra_Obj - ra_Cen) * 3600.0
+    set de_Off = (de_Obj - de_Cen) * 3600.0
+    # 
+    # 
+    set chan_Width = 0 # 23 channels (23*36 = 828 km/s)
+    # 
+    # 
+    # <TODO> set freq_Obj = 164879.000
+             set chan_Obj = 0
+    # <TODO> set chan_Obj = chan_Cen+(freq_Obj-freq_Cen)/freq_Bin
+    # <TODO> set velo_Obj = (freq_Cen-freq_Obj)/freq_Cen*2.99792458e5
+    # <TODO> echo 
+    # <TODO> echo velo_Obj = $(velo_Obj)
+    # <TODO> set velo_Obj = (chan_Cen-chan_Obj)*velo_Bin
+    # <TODO> echo 
+    # <TODO> echo velo_Obj = $(velo_Obj)
+    # <TODO> echo 
+    # <TODO> echo chan_Obj = $(chan_Obj)
+    # 
+    # 
+    if(chan_Width>0 && chan_Obj>0) {
+        set chan1 = chan_Obj-((chan_Width-1)/2)
+        set chan2 = chan_Obj+((chan_Width-1)/2)
+    } else {
+        set chan1 = 0
+        set chan2 = chan_Max
+    }
+    echo 
+    echo channel1 = $(chan1)
+    echo channel2 = $(chan2)
+    echo 
+    #<20150217><DADDI><DZLIU># set freq1 = (chan1-chan_Cen)*freq_Bin+freq_Cen
+    #<20150217><DADDI><DZLIU># set freq2 = (chan2-chan_Cen)*freq_Bin+freq_Cen
+    set freq1 = (chan1-chan_Ref)*freq_Bin+freq_Ref
+    set freq2 = (chan2-chan_Ref)*freq_Bin+freq_Ref
+    set chanFreq = freq1,freq2,freq_Bin
+    # 
+    # 
+    print  tmp_doUVFIT.init '!\n' {}
+    print +tmp_doUVFIT.init '! Task UV_FIT (new version R. Lucas)\n' {}
+    print +tmp_doUVFIT.init '! 6 parameters needed for all functions\n' {}
+    print +tmp_doUVFIT.init '!\n' {}
+    print +tmp_doUVFIT.init 'TASK\\CHARACTER \"UVtable name\"                        UVTABLE\$    \"$uvtable\"\n' {}
+    print +tmp_doUVFIT.init 'TASK\\INTEGER   \"Channels: first, last (0,0 for all)\" CHANNEL\$[2]  $(chan1) $(chan2)\n' {}
+    print +tmp_doUVFIT.init 'TASK\\REAL      \"UV range (min, max) in meters\"       UV_RANGE\$[2] 0 800\n' {}
+    print +tmp_doUVFIT.init 'TASK\\CHARACTER \"fit table name\"                      RESULT\$     \"$uvtable\"\n' {}
+    print +tmp_doUVFIT.init 'TASK\\CHARACTER \"residuals UVtable\"                   RESIDUALS\$  \"$uvtable\"\n' {}
+    print +tmp_doUVFIT.init 'TASK\\INTEGER   \"Number of functions\"                 NF\$          1\n' {}
+    print +tmp_doUVFIT.init '!\n' {}
+    print +tmp_doUVFIT.init '! valid functions are POINT, C_GAUSS, E_GAUSS, C_DISK, E_DISK, RING,\n' {}
+    print +tmp_doUVFIT.init '! EXP, POWER-2, POWER-3\n' {}
+    print +tmp_doUVFIT.init '!\n' {}
+    print +tmp_doUVFIT.init 'TASK\\CHARACTER \"Function \#1\"              FUNCT01\$    \"POINT\"\n' {}
+    print +tmp_doUVFIT.init 'TASK\\REAL      \"Parameters\"               PARAM01\$[7]  $(ra_Off) $(de_Off) 0 0 0 0 0\n' {}
+    print +tmp_doUVFIT.init 'TASK\\REAL      \"Starting range\"           RANGE01\$[7]  0 0 0 0 0 0 0\n' {}
+    print +tmp_doUVFIT.init 'TASK\\INTEGER   \"numb. of starts\"          START01\$[7]  -1 -1 1 1 1 1 1\n' {}
+    print +tmp_doUVFIT.init 'TASK\\LOGICAL   \"Subtract function\"        SUBSF01\$     NO\n' {}
+    print +tmp_doUVFIT.init '!\n' {}
+    print +tmp_doUVFIT.init '! ---\n' {}
+    print +tmp_doUVFIT.init '! repeat the following six for each function, changing the variable names\n' {}
+    print +tmp_doUVFIT.init '! ( e.g. FUNCT02\$, ...\n' {}
+    print +tmp_doUVFIT.init '!\n' {}
+    #<TODO> more functions
+    print +tmp_doUVFIT.init '!\n' {}
+    print +tmp_doUVFIT.init '! end repeat ---\n' {}
+    print +tmp_doUVFIT.init '!\n' {}
+    print +tmp_doUVFIT.init 'TASK\\GO\n' {}
+    # 
+    # 
+    print  tmp_doUVFIT.map 'let name $uvtable\n' {}
+    print +tmp_doUVFIT.map 'let type lmv\n' {}
+    print +tmp_doUVFIT.map 'let size 25\n' {} # print +tmp_doUVFIT.map 'go view\n' {}
+    print +tmp_doUVFIT.map 'run uv_fit tmp_doUVFIT.init /NOWINDOW\n' {}
+    # 
+    # run the mapping
+    !echo '@tmp_doUVFIT.map' | mapping | tee "tmp_doUVFIT.log" > "tmp_doUVFIT.log.log"
+    # 
+    # Get the Result of Velocity
+    !grep 'Velocity=' "tmp_doUVFIT.log" | cut -c 60- | sed -e 's/=//g' > tmp_ObjVelo
+    data tmp_ObjVelo read { velo_plot 2 } # km/s
+    # 
+    # Get the Result of Flux
+    #!grep 'POINT *FLUX *=' "tmp_doUVFIT.log" | sed -e 's/[()=]//g' > tmp_ObjFlux
+    !grep -i ' *FLUX *=' "tmp_doUVFIT.log" | sed -e 's/[()=]//g' > tmp_ObjFlux
+    data tmp_ObjFlux read { ampl_plot 3 ampl_err_plot 4 } # Jy
+    # 
+    # what we need is flux integrated over a freq width, so we need to fit the line
+    # first we can plot the freq v.s. amplitude
+    goUVFIT_PlotVeloAmpl
+
+
+
+
+goUVFIT_PlotVeloAmpl
+    # 
+    # Usage:
+    #     macro read goUVFIT.sm goUVFIT_PlotVeloAmpl
+    # 
+    # check gildas version
+    !mapping -v | sed -e 's/[)(]//g' > tmp_GildasVersion
+    verbose 0
+    data tmp_GildasVersion read temp_version 4.s
+    if(number(substr(temp_version,5,2))>=15){ # new version since 2015
+      data tmp_ObjVelo read { velo 2 } # km/s
+      data tmp_ObjFlux read { ampl 3 ampl_err 4 ampl_unit 5.s } # Jy # <Corrected><20150304><dzliu> # ampl_unit 
+    } else {
+      data tmp_ObjVelo read { velo 2 } # km/s
+      data tmp_ObjFlux read { ampl 3 ampl_err 4 } # Jy # <Corrected><20150304><dzliu> # ampl_unit 
+      set ampl_unit = 'Jy' do ampl_loop=1,dimen(ampl)-1 { set ampl_unit = ampl_unit concat 'Jy' }
+    }
+    verbose 1
+    # 
+    # data tmp_FreqRefer read { freq_Ref 3 }
+    # data tmp_FreqCenter read { freq_Cen 8 }
+    # data tmp_PosObject read { ra_Obj 1 de_Obj 2 }
+    # 
+    # VELOCITY OFFSET
+    if(is_vector(velo_Off)) {
+        set velo = velo - velo_Off
+        if(is_vector(velo_low)){set velo_low = velo_low - velo_Off}
+        if(is_vector(velo_high)){set velo_high = velo_high - velo_Off}
+    }
+    # 
+    # CONVERT UNIT
+    set freq = (freq_Ref-velo/2.99792458e5*freq_Ref)/1e3 # [GHz] -- #<20150217><DADDI><DZLIU># show freq axis
+    set ampl = (ampl_unit=='microJy') ? ampl/1e3 : ampl # [mJy] # <Corrected><20150304><dzliu> # ampl_unit 
+    set ampl = (ampl_unit=='milliJy') ? ampl*1e0 : ampl # [mJy] # <Corrected><20150304><dzliu> # ampl_unit 
+    set ampl = (ampl_unit=='Jy')      ? ampl*1e3 : ampl # [mJy] # <Corrected><20150304><dzliu> # ampl_unit 
+    set ampl_err = (ampl_unit=='microJy') ? ampl_err/1e3 : ampl_err # [mJy] # <Corrected><20150304><dzliu> # ampl_unit 
+    set ampl_err = (ampl_unit=='milliJy') ? ampl_err*1e0 : ampl_err # [mJy] # <Corrected><20150304><dzliu> # ampl_unit 
+    set ampl_err = (ampl_unit=='Jy')      ? ampl_err*1e3 : ampl_err # [mJy] # <Corrected><20150304><dzliu> # ampl_unit 
+    # 
+    # 
+    # SET ARRAY FOR CALC
+    set velo_calc = velo
+    set freq_calc = freq
+    set ampl_calc = ampl
+    set ampl_err_calc = ampl_err
+    ##print {velo ampl ampl_err}
+    # 
+    # 
+    # IF CONTINUUM MODE
+    if(dimen(velo)==1) {
+        # 
+        # SET ARRAY FOR PLOT # IF CONTINUUM MODE
+        set velo_plot = $(velo-velo_Bin/2.0) concat $(velo+velo_Bin/2.0)
+        set freq_plot = (freq_Ref-velo_plot/2.99792458e5*freq_Ref)/1e3 # [GHz]
+        set ampl_plot = $(ampl) concat $(ampl)
+        set ampl_err_plot = $(ampl_err) concat $(ampl_err) # amplitude error should always be non-negative
+        # 
+        # CALCULATE YRANGE LIMITS # IF CONTINUUM MODE
+        if(ampl_plot>=0) {
+            if(ampl_err>ampl) {
+                define ampl_plot_MIN 0
+                define ampl_plot_MAX $(3.0*abs(ampl_err_plot)*1.5)
+            } else {
+                define ampl_plot_MIN 0
+                define ampl_plot_MAX $(ampl_plot*1.5)
+            }
+        } else {
+            if(ampl_err>(-ampl)) {
+                define ampl_plot_MIN -$(3.0*abs(ampl_err_plot)*1.5)
+                define ampl_plot_MAX 0
+            } else {
+                define ampl_plot_MIN $(ampl_plot*1.5)
+                define ampl_plot_MAX 0
+            }
+        }
+    } else {
+        # 
+        # SET ARRAY FOR PLOT
+        set velo_plot = velo
+        set freq_plot = freq
+        set ampl_plot = ampl
+        set ampl_err_plot = ampl_err
+        # 
+        # CALCULATE YRANGE LIMITS
+        vecminmax ampl ampl_MIN ampl_MAX
+        stats ampl ampl_MEAN ampl_SIGMA ampl_KURT
+        set ampl_temp = ampl if(abs(ampl-$ampl_MEAN)<5.0*$ampl_SIGMA) # do 5-sigma clip
+        vecminmax ampl_temp ampl_plot_MIN ampl_plot_MAX
+        #vecminmax ampl_plot ampl_plot_MIN ampl_plot_MAX
+        #vecminmax ampl_err_plot ampl_err_plot_MIN ampl_err_plot_MAX
+        #stats ampl_err_plot ampl_err_plot_MEAN ampl_err_plot_SIGMA ampl_err_plot_KURT
+        #stats_med ampl_plot ampl_plot_MEDIAN ampl_plot_SIQR
+        #stats_med ampl_err_plot ampl_err_plot_MEDIAN ampl_err_plot_SIQR
+        #echo DATA MIN MAX $ampl_plot_MIN $ampl_plot_MAX MEAN MEDIAN 
+        #echo ERRO MIN MAX $ampl_err_plot_MIN $ampl_err_plot_MAX MEAN MEDIAN $ampl_err_plot_MEAN $ampl_err_plot_MEDIAN
+        #if($ampl_plot_MAX>0 && $ampl_err_plot_MEDIAN>$ampl_plot_MAX) {
+        #    define ampl_plot_MAX $(3.0*$ampl_err_plot_MEDIAN)
+        #}
+        #if($ampl_plot_MIN<0 && $ampl_err_plot_MEDIAN<$ampl_plot_MIN) {
+        #    define ampl_plot_MIN $(3.0*$ampl_err_plot_MEDIAN)
+        #}
+        define ampl_plot_DIS $($ampl_plot_MAX-1.00*($ampl_plot_MIN))
+        define ampl_plot_MIN $($ampl_plot_MIN-0.15*($ampl_plot_DIS))
+        define ampl_plot_MAX $($ampl_plot_MAX+0.20*($ampl_plot_DIS))
+        #echo PLOT MIN MAX $ampl_plot_MIN $ampl_plot_MAX
+    }
+    # 
+    # 
+    # device x11 
+    # limits velo_plot ampl_plot
+    device postencap "tmp_doUVFIT.eps"
+    define TeX_strings 1
+    # 
+    # limits
+    erase 
+    location 4200 31000 5500 24000
+    limits velo_plot $ampl_plot_MIN $ampl_plot_MAX # -7.5 13.5 # ampl_plot # -0.008 0.011
+    format "%.1f" "%.1f"
+    # ticksize 25 250 0 0
+    expand 0.95 lweight 3.0 box 1 2 4 0
+    expand 1.25
+    define label_offset 1.5 xlabel Velocity [km/s]
+    define label_offset 2.0 ylabel Intensity [mJy]
+    define label_offset 1
+    relocate ( 17000 $($gy2+1500) ) 
+                             putlabel 8 Frequency [GHz]
+    relocate ( 22200 $($gy2-1100) ) 
+    expand 1.01 lweight 2.5  puts UV\_FIT OBJECT INFO
+                          #  puts I.D.=$(sprintf('%s',id_Str))
+                             puts R.A.=$(sprintf('%0.7f',ra_Obj))
+                             puts DEC.=$(sprintf('%0.7f',de_Obj))
+                             puts R.A.=$(sprintf('%s',raX_Obj))
+                             puts DEC.=$(sprintf('%s',deX_Obj))
+    expand 1.25 lweight 3.0 
+    #points velo_plot ampl_plot
+    
+    ##if(dimen(ampl_plot)>=3) { 
+    ##    smooth ampl_plot ampl_smooth_plot 3
+    ##    smooth ampl_calc ampl_smooth_calc 3
+    ##} else {
+    ##    set ampl_smooth_plot = ampl_plot
+    ##    set ampl_smooth_calc = ampl_calc
+    ##}
+    
+    xtcolours
+    add_ctype gray 170 170 170
+    
+    
+    # Plot the spectrum
+    ctype gray ltype 0 histogram velo_plot ampl_plot
+    ctype default ltype 0
+    #error_y velo_plot ampl_plot ampl_err_plot
+    
+    
+    # plot spectrum and smoothed spectrum
+    if(dimen(velo_plot)>=1 && dimen(velo_plot)<=16) {
+        ctype default ltype 0 histogram velo_plot ampl_plot
+    }
+    if(dimen(velo_plot)>16 && dimen(velo_plot)<=64) {
+        # smooth
+        smooth ampl_plot ampl_smooth_plot 3
+        ctype blue ltype 0 histogram velo_plot ampl_smooth_plot
+        #set ampl_plot = ampl_smooth_plot
+        #set ampl_smooth_calc = ampl_smooth_plot
+        # further smooth
+        smooth ampl_smooth_plot ampl_smooth10_plot 5
+        ctype magenta ltype 0 histogram velo_plot ampl_smooth10_plot
+        set ampl_plot = ampl_smooth10_plot
+        set ampl_smooth_calc = ampl_smooth10_plot
+    }
+    if(dimen(velo_plot)>64) {
+        # smooth
+        smooth ampl_plot ampl_smooth_plot 3
+        ctype blue ltype 0 histogram velo_plot ampl_smooth_plot
+        #set ampl_plot = ampl_smooth_plot
+        #set ampl_smooth_calc = ampl_smooth_plot
+        # further smooth
+        smooth ampl_smooth_plot ampl_smooth15_plot 15
+        ctype magenta ltype 0 histogram velo_plot ampl_smooth15_plot
+        set ampl_plot = ampl_smooth15_plot
+        set ampl_smooth_calc = ampl_smooth15_plot
+    }
+    ctype default ltype 0
+    
+    
+    # draw Y=0 dashed line
+    ctype default ltype 2 rel $fx1 0 draw $fx2 0
+    ctype default ltype 0
+    
+    
+    # draw 3-sigma dashed line
+    if(dimen(velo)>1){
+        set ampl_err_mean = mean(ampl_err_calc)
+        ctype gray lweight 2.5
+        ltype 1 # dot dashed line is 3-sigma or 3-rms # IF CONTINUUM MODE
+                  connect velo_plot (3.0*ampl_err_plot)
+                  connect velo_plot (-3.0*ampl_err_plot)
+        ltype 0
+        ctype default
+    } else {
+        set ampl_err_mean = ampl_err_calc
+        ctype gray
+        ltype 1 # dot dashed line is 3-sigma or 3-rms
+                  rel $fx1 $(+3.0*ampl_err_mean) draw $fx2 $(+3.0*ampl_err_mean)
+                  rel $fx1 $(-3.0*ampl_err_mean) draw $fx2 $(-3.0*ampl_err_mean)
+        ltype 0
+        ctype default
+    }
+    
+    
+    # print info
+    expand 0.85 lweight 2.5 
+    relocate ( 5000 $($gy2-1100) ) 
+                  # puts PdBI BEAM INT. SPEC.
+                  # puts NOISE=$(sprintf('%0.3f',sqrt(sum(ampl_err_calc**2))*velo_Bin/1e3)) Jy km/s (default)
+                    puts UV\_FIT OBJECT SPECTRUM
+                    puts UVTAB=$(sprintf('%s',id_Str)).uvt
+                    puts WIDTH=$(sprintf('%0.3f',abs(velo_Bin))) km/s (single channel)
+                    puts NOISE=$(sprintf('%0.3f',ampl_err_mean)) mJy (single channel)
+                    puts FLUX=$(sprintf('%0.3f',sum(ampl_calc)*abs(velo_Bin)/1e3)) Jy km/s (full width)
+    if(is_vector(ampl_smooth_calc)) {
+        ctype blue  puts FLUX=$(sprintf('%0.3f',sum(ampl_smooth_calc)*abs(velo_Bin)/1e3)) Jy km/s (smoothed)
+    }
+    ctype default
+    expand 1.25 lweight 3.0 
+    
+    #echo 
+    #echo fitFlux = $(sprintf('%0.7f',ampl_calc))  [mJy]
+    #echo fitFErr = $(sprintf('%0.7f',ampl_err_calc))  [mJy]
+    #echo smdFlux = $(sprintf('%0.7f',ampl_smooth_calc))  [mJy]  (smoothed)
+    if(is_vector(ampl_calc)) {
+        #echo sumFlux = $(sum(ampl_calc)*abs(velo_Bin)/1e3)  [Jy km/s]  (over full bandwidth $(abs(velo_Bin)*dimen(ampl_calc)) km/s)
+        if(is_vector(ampl_smooth_calc)) {
+            #echo sumFlux = $(sum(ampl_smooth_calc)*abs(velo_Bin)/1e3)  [Jy km/s]  (over full bandwidth $(abs(velo_Bin)*dimen(ampl_calc)) km/s)  (smoothed)
+            print "tmp_doUVFIT.dat" '%15.5f%15.5f%15.5f%15.5f%18.5f\n' {freq_calc velo_calc ampl_calc ampl_err_calc ampl_smooth_calc}
+        } else {
+            print "tmp_doUVFIT.dat" '%15.5f%15.5f%15.5f%15.5f\n' {freq_calc velo_calc ampl_calc ampl_err_calc}
+        }
+    } else {
+        print 'Error! Failed to determine spectrum amplitude data! This should not happen! Abort!\n' {}
+        return
+    }
+    # 
+    #echo 
+    # print                   '%15.5f%15.5f%15.5f%15.5f\n' {freq_calc velo_calc ampl_calc ampl_err_calc}
+    # print "tmp_doUVFIT.dat" '%15.5f%15.5f%15.5f%15.5f%18.5f\n' {freq_calc velo_calc ampl_calc ampl_err_calc ampl_smooth_calc}
+    # echo 
+    # !cat tmp_doUVFIT.log | grep -A 300 "r.m.s.=" | grep "=" | sed -e 's/r.m.s./POINT    r.m.s.      /g' 
+    # !cat tmp_doUVFIT.log | grep -A 300 "r.m.s.=" | grep "=" | sed -e 's/r.m.s./POINT    r.m.s.      /g' > tmp_doUVFIT.txt
+    # echo 
+    
+    
+    # <TODO> 
+    # Now what I want to do is to check whether there has any 5-sigma detection in this spectrum
+    if(is_vector(velo_low) && is_vector(velo_high)) {
+        if(velo_high!=velo_low) {
+            if(velo_low>velo_high) {
+                set velo_tmp = velo_high
+                set velo_high = velo_low
+                set velo_low = velo_tmp
+            }
+            ##print {velo_plot velo_low velo_high}
+            set in_line_window = ((velo_plot-velo_low)>=-0.5*abs(velo_Bin) && (velo_plot-velo_high)<=0.5*abs(velo_Bin))
+            if(sum(in_line_window)>0) {
+                set shade_x = velo_plot             if(in_line_window)
+                set shade_y = ampl_plot             if(in_line_window)
+                set velo_calc_1 = velo_calc         if(in_line_window)
+                set ampl_calc_1 = ampl_calc         if(in_line_window)
+                set ampl_err_calc_1 = ampl_err_calc if(in_line_window)
+                if(is_vector(ampl_smooth_calc)) {
+                    set text_plot = {"(smoothed,window)"}
+                } else {
+                    set text_plot = {"(window)"}
+                }
+                expand 0.85 lweight 2.5 
+                ctype blue     puts WIDTH=$(sprintf('%0.3f',abs(velo_Bin)*dimen(ampl_calc_1))) km/s $(text_plot)
+                ctype blue     puts FLUX=$(sprintf('%0.3f',$(sum(ampl_calc_1)*abs(velo_Bin)/1e3))) Jy km/s $(text_plot)
+                ctype blue     puts ERROR=$(sprintf('%0.3f',$(sqrt(sum(ampl_err_calc_1**2))*abs(velo_Bin)/1e3))) Jy km/s $(text_plot)
+                ctype blue     puts S/N=$(sprintf('%0.3f',$(sum(ampl_calc_1)/sqrt(sum(ampl_err_calc_1**2))))) $(text_plot)
+                ctype default
+                expand 1.25 lweight 3.0 
+                #echo sumFlux = $(sum(ampl_calc_1)*abs(velo_Bin)/1e3)  [Jy km/s]  (over window $(abs(velo_Bin)*dimen(ampl_calc_1)) km/s)
+                #echo comNoise = $(sqrt(sum(ampl_err_calc_1**2))*velo_Bin/1e3)  [Jy km/s]  (over window $(abs(velo_Bin)*dimen(ampl_calc_1)) km/s)
+                #echo signal/noise = $(sum(ampl_calc_1)/sqrt(sum(ampl_err_calc_1**2)))  (over window $(abs(velo_Bin)*dimen(ampl_calc_1)) km/s)
+                #echo sumFluxOverYellowWindow = $(sum(ampl_calc_1)*abs(velo_Bin)/1e3) Jy km/s
+                #echo sumNoiseOverYellowWindow = $(sqrt(sum(ampl_err_calc_1**2))*velo_Bin/1e3) Jy km/s
+                #echo sigma-to-noise-ratio = $(sum(ampl_calc_1)/sqrt(sum(ampl_err_calc_1**2)))
+                #echo 
+                ctype yellow lweight 0.5 angle 45 
+                SHADE HISTOGRAM 50 shade_x shade_y
+                ctype default lweight 3.0 angle 0
+            } else {
+                print 'Warning! No channel has been selected within velocity range $(velo_low) $(velo_high) km/s!\n' {}
+                print {velo_plot velo_low velo_high}
+                echo 
+            }
+        }
+    }
+    
+    
+    # 
+    vecminmax freq_plot freq_Min freq_Max
+    limits $freq_Max $freq_Min $ampl_plot_MIN $ampl_plot_MAX # -7.5 13.5 # ampl_plot # -0.008 0.011
+    # ticksize 0.02 0.2 0 0
+    format "%.3f" "%.1f"
+    expand 0.95 lweight 3.0 box 4 4 1 4
+    
+    device nodevice
+    
+    echo Done!
+    #echo Please check "tmp_doUVFIT.eps"   -- quick look spectrum
+    #echo              "tmp_doUVFIT.log"   -- full log   *** Please make sure everything is fine in this log!
+    ##echo             "tmp_doUVFIT.txt"   -- simple version of the full log
+    #echo              "tmp_doUVFIT.dat"   -- data table *** freq[GHz] velo[km/s] flux[mJy] error[mJy]
+    #echo              "tmp_ObjVelo"
+    #echo              "tmp_ObjFlux"
+    #echo 
+    #echo 
+    #!open "tmp_doUVFIT.eps"
+
+
+
+
+mean 01
+    # 
+    stats $1 _mean_MEAN _mean_SIGMA _mean_KURT
+    set $0 = $_mean_MEAN
+
+

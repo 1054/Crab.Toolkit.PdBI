@@ -1,0 +1,27 @@
+GILDAS Version: 10feb17 (10feb17 06:20 cet) (x86_64-darwin-gfortran-mp-5) executable tree
+W-SIC,  Session is not interactive, SIC EDIT and SIC MEMORY off
+
+ * Welcome to MAPPING   
+
+ * Loaded modules
+    sic (J.Pety, S.Bardeau, S.Guilloteau, E.Reynier)
+    greg (J.Pety, S.Bardeau, S.Guilloteau, E.Reynier)
+    mapping (J.Pety, S.Guilloteau, F.Gueth, N.Rodriguez-Fernandez)
+
+ * In charge:              J.Pety
+   Active developers:      N.Rodriguez-Fernandez, S.Guilloteau, F.Gueth
+   Main past contributors: K.Bouyoucef, R.Lucas
+
+ * MAPPING is an interactive program to image and deconvolve
+   (sub)mm interferometric data
+
+ * Questions? Comments? Bug reports? Mail to: gildas@iram.fr
+
+ * For help, type HELP, INPUT and/or INFO at the MAPPING prompt
+
+I-GIO_RIH,  GDFBIG re-allocation      2
+E-LET,  No such variable FREQ
+I-ERROR,  Occured in Loop  1 (#  1.000    ) at Line    1
+I-ERROR,  Called by ./NAME_go_uvfit.plotfit.map at Line   43
+F-PAUSE,  Session is not interactive
+F-SYSTEM,  Exit code           44 from call to SYSEXI

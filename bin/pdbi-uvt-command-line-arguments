@@ -1,0 +1,275 @@
+#!/bin/bash
+# 
+# Aim:
+#    This code recognizes command line arguments for PdBIUVT scripts
+# 
+# Usage:
+#    
+# Updates:
+#    20170317 copied from casa-command-line-arguments
+# 
+# 
+# 
+
+# 
+# Check GILDAS mapping command
+# 
+PdBIUVT_COMMAND="mapping"
+PdBIUVT_VERSION=""
+if [[ $(type mapping 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo ""
+    echo "Error! GILDAS (mapping) was not found! Please check your \$PATH!"
+    echo ""
+    exit
+else
+    if [[ $(type mapping 2>/dev/null | wc -l) -eq 1 ]]; then
+        PdBIUVT_COMMAND="mapping"
+        PdBIUVT_VERSION=($($PdBIUVT_COMMAND -v | grep "GILDAS Version" | head -n 1 | perl -p -e 's/GILDAS Version: ([^\(\ \)]*) \(([0-9]*)([a-zA-Z]*)([0-9]*) ([^\(\ \)]*) ([^\(\ \)]*)\)(.*)/${2} ${3} ${4} ${5} ${6}/g'))
+    else
+        PdBIUVT_COMMAND="mapping"
+        PdBIUVT_VERSION=($($PdBIUVT_COMMAND -v | grep "GILDAS Version" | head -n 1 | perl -p -e 's/GILDAS Version: ([^\(\ \)]*) \(([0-9]*)([a-zA-Z]*)([0-9]*) ([^\(\ \)]*) ([^\(\ \)]*)\)(.*)/${2} ${3} ${4} ${5} ${6}/g'))
+    fi
+    echo "GILDAS Version ${PdBIUVT_VERSION[@]}"
+fi
+
+# 
+# Prepare necessary functions
+# 
+# Function to readlink
+if [[ $(uname) == *"Darwin"* ]]; then
+    function readlink() {
+        if [[ $# -gt 1 ]]; then if [[ "$1" == "-f" ]]; then shift; fi; fi
+        DIR="$1"; if [[ "$DIR" != *"/"* ]]; then DIR="./$DIR"; fi # 20170228: fixed bug: path without "/"
+        DIR=$(echo "${DIR%/*}") # 20160410: fixed bug: source SETUP just under the Softwares dir
+        if [[ -d "$DIR" ]]; then cd "$DIR" && echo "$(pwd -P)/$(basename ${1})"; 
+        else echo "$(pwd -P)/$(basename ${1})"; fi
+    }
+fi
+# Is_File
+function Is_File() {
+    if [[ $# -ge 1 ]]; then if [[ -f "$1" ]]; then return 0; else seq  -f "*" -s '' $(echo "${#1}+24" | bc); echo; echo "Error! \"$1\" was not found!"; seq  -f "*" -s '' $(echo "${#1}+24" | bc); echo; exit -1; return -1; fi; fi; return -1
+}
+# Is_Float_Number
+function Is_Float_Number() {
+    # http://stackoverflow.com/questions/13790763/bash-regex-to-check-floating-point-numbers-from-user-input
+    if [[ $# -ge 1 ]]; then regExp='^([+-])?([0-9]+\.?|[0-9]*\.[0-9]+)([eE][+-]?[0-9]+)?$'; if [[ "$1" =~ $regExp ]]; then return 0; else seq  -f "*" -s '' $(echo "${#1}+7+2+23" | bc); echo; echo "Error! \"$1\" is not a float number!"; seq  -f "*" -s '' $(echo "${#1}+7+2+23" | bc); echo; exit -1; return -1; fi; fi; return -1
+}
+# checkDirExistence
+checkDirExistence() {
+    if [[ $# -ge 1 ]]; then if [[ ! -d "$1" ]]; then seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; echo "Error! \"$1\" does not exist!"; seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; exit -1; return -1; else return 0; fi; fi
+}
+# checkFileExistence
+checkFileExistence() {
+    if [[ $# -ge 1 ]]; then if [[ ! -f "$1" ]]; then seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; echo "Error! \"$1\" does not exist!"; seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; exit -1; return -1; else return 0; fi; fi
+}
+
+# 
+# Prepare data arrays
+# 
+PdBIUVT_INP_DEBUG=0
+PdBIUVT_INP_GOOD=1
+PdBIUVT_INP_YES=0
+PdBIUVT_INP_NO=0
+PdBIUVT_INP_STEPS=()
+PdBIUVT_INP_UVT=()
+PdBIUVT_INP_LMV=()
+PdBIUVT_INP_OBJ=() # i.e. string type FIELD with two quotes in PdBIUVT, or string type FIELD but is a number in PdBIUVT
+PdBIUVT_INP_FREQ=()
+PdBIUVT_INP_SPW=()
+PdBIUVT_INP_WIDTH=()
+PdBIUVT_INP_STOKES=()
+PdBIUVT_INP_INTENT=()
+PdBIUVT_INP_MISC=()
+PdBIUVT_INP_OUTPUT=()
+PdBIUVT_INP_OVERWRITE=()
+PdBIUVT_INP_UVFIT_ITERATION=() # 
+PdBIUVT_INP_UVFIT_MODELTYPE=() # P, G
+PdBIUVT_INP_UVFIT_SOURCEPAR=() # [flux, xoff, yoff, [majar, minor, PA]]
+PdBIUVT_INP_UVFIT_VARIEDPAR=() # T or F, for the sourcepar list [flux, xoff, yoff, [majar, minor, PA]]
+PdBIUVT_INP_RANX=()
+PdBIUVT_INP_RAND=()
+PdBIUVT_INP_DECX=()
+PdBIUVT_INP_DECD=()
+PdBIUVT_INP_PHASE_CENTER_RANX=()
+PdBIUVT_INP_PHASE_CENTER_RAND=()
+PdBIUVT_INP_PHASE_CENTER_DECX=()
+PdBIUVT_INP_PHASE_CENTER_DECD=()
+PdBIUVT_CMD_TYPE="n/a"
+
+if [[ $PdBIUVT_INP_DEBUG -eq 1 ]]; then
+    echo "Input argument number: $#"
+fi
+
+while [[ "$#" -gt 0 ]]; do
+    # echo $1
+    TempStr=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+    # echo $TempStr
+    case $1 in
+          "-step") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="steps";;
+         "-steps") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="steps";;
+           "-uvt") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="uvt";;
+          "-name") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="uvt";;
+         "-input") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="uvt";;
+           "-lmv") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="lmv";;
+         "-image") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="lmv";;
+           "-obj") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="obj";;
+        "-object") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="obj";;
+        "-target") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="obj";;
+        "-source") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="obj";;
+     "-source-id") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="obj";;
+          "-freq") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="freq";;
+      "-restfreq") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="freq";;
+     "-frequency") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="freq";;
+           "-spw") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="spw";;
+         "-width") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="spw-width";;
+     "-spw-width") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="spw-width";;
+         "-nchan") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="spw-width";;
+  "-polarization") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="stokes";;
+         "-polar") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="stokes";;
+         "-stoke") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="stokes";;
+        "-stokes") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="stokes";;
+        "-intent") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="intent";;
+      "-pointing") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="phase-center-radec";;
+  "-phase-center") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="phase-center-radec";;
+         "-radec") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="radec";;
+           "-pos") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="radec";;
+      "-position") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="radec";;
+          "-iter") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="uvfit-iteration";;
+     "-iteration") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="uvfit-iteration";;
+     "-modeltype") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="uvfit-modeltype";;
+      "-comptype") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="uvfit-modeltype";;
+         "-model") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="uvfit-modeltype";;
+     "-sourcepar") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="uvfit-sourcepar";;
+          "-vary") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="uvfit-varypar";;
+       "-varypar") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="uvfit-varypar";;
+           "-out") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="output";;
+        "-output") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="output";;
+       "-outfile") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="output";;
+       "-outname") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="output";;
+     "-overwrite") PdBIUVT_CMD_TEXT="$1"; shift; PdBIUVT_CMD_TYPE="overwrite";;
+           "-yes") PdBIUVT_CMD_TEXT="$1";        PdBIUVT_CMD_TYPE="yes";;
+            "-no") PdBIUVT_CMD_TEXT="$1";        PdBIUVT_CMD_TYPE="no";;
+    esac
+    # echo "$PdBIUVT_CMD_TYPE"
+    case "$PdBIUVT_CMD_TYPE" in 
+          "steps") if [[ $# -gt 0 ]]; then PdBIUVT_INP_STEPS+=("$1"); fi;;
+            "uvt") if [[ $# -gt 0 ]]; then PdBIUVT_INP_UVT+=("$1"); fi;;
+            "lmv") if [[ $# -gt 0 ]]; then PdBIUVT_INP_LMV+=("$1"); fi;;
+            "obj") if [[ $# -gt 0 ]]; then PdBIUVT_INP_OBJ+=("$1") fi;;
+           "freq") if [[ $# -gt 0 ]]; then PdBIUVT_INP_FREQ+=("$1"); fi;;
+            "spw") if [[ $# -gt 0 ]]; then PdBIUVT_INP_SPW+=("$1"); fi;;
+      "spw-width") if [[ $# -gt 0 ]]; then PdBIUVT_INP_WIDTH+=("$1"); fi;;
+         "stokes") if [[ $# -gt 0 ]]; then PdBIUVT_INP_STOKES+=("$1"); fi;;
+         "intent") if [[ $# -gt 0 ]]; then PdBIUVT_INP_INTENT+=("$1"); fi;;
+"uvfit-iteration") if [[ $# -gt 0 ]]; then PdBIUVT_INP_UVFIT_ITERATION+=("$1"); fi;;
+"uvfit-modeltype") if [[ $# -gt 0 ]]; then PdBIUVT_INP_UVFIT_MODELTYPE+=("$1"); fi;;
+"uvfit-sourcepar") if [[ $# -gt 0 ]]; then PdBIUVT_INP_UVFIT_SOURCEPAR+=("$1"); fi;;
+  "uvfit-varypar") if [[ $# -gt 0 ]]; then PdBIUVT_INP_UVFIT_VARIEDPAR+=("$1"); fi;;
+         "output") if [[ $# -gt 0 ]]; then PdBIUVT_INP_OUTPUT+=("$1"); fi;;
+      "overwrite") if [[ $# -gt 0 ]]; then PdBIUVT_INP_OVERWRITE+=("$1"); fi;;
+            "yes")                         PdBIUVT_INP_YES=1;;
+             "no")                         PdBIUVT_INP_NO=1;;
+    esac
+    
+    if [[ "$PdBIUVT_CMD_TYPE" == "radec" ]];  then 
+        if [[ "$#" -lt 2 ]]; then
+            break
+        fi
+        if [[ "$1" == *":"*":"* ]]; then
+            PdBIUVT_INP_RANX+=("$1")
+            PdBIUVT_INP_TEMP=$(radec2degree "$1" "$2" | cut -d ' ' -f 1)
+            PdBIUVT_INP_RAND+=("$PdBIUVT_INP_TEMP")
+        else
+            PdBIUVT_INP_RAND=+("$1")
+            PdBIUVT_INP_TEMP=$(degree2radec "$1" "$2" | cut -d ' ' -f 1)
+            PdBIUVT_INP_RANX=+("$PdBIUVT_INP_TEMP")
+        fi
+        if [[ "$2" == *":"*":"* ]]; then
+            PdBIUVT_INP_DECX=+("$2")
+            PdBIUVT_INP_TEMP=$(radec2degree "$1" "$2" | cut -d ' ' -f 2)
+            PdBIUVT_INP_DECD=+("$PdBIUVT_INP_TEMP")
+        else
+            PdBIUVT_INP_DECD=+("$2")
+            PdBIUVT_INP_TEMP=$(degree2radec "$1" "$2" | cut -d ' ' -f 2)
+            PdBIUVT_INP_DECX=+("$PdBIUVT_INP_TEMP")
+        fi
+        shift
+        while [[ ${#PdBIUVT_INP_OBJ[@]}             -lt $((${#PdBIUVT_INP_RANX[@]}-1)) ]]; do PdBIUVT_INP_OBJ+=("OBJ_$((${#PdBIUVT_INP_OBJ[@]}+1))"); done
+        while [[ ${#PdBIUVT_INP_UVFIT_ITERATION[@]} -lt $((${#PdBIUVT_INP_RANX[@]}-1)) ]]; do PdBIUVT_INP_UVFIT_ITERATION+=("30"); done
+        while [[ ${#PdBIUVT_INP_UVFIT_MODELTYPE[@]} -lt $((${#PdBIUVT_INP_RANX[@]}-1)) ]]; do PdBIUVT_INP_UVFIT_MODELTYPE+=("P"); done
+        while [[ ${#PdBIUVT_INP_UVFIT_SOURCEPAR[@]} -lt $((${#PdBIUVT_INP_RANX[@]}-1)) ]]; do PdBIUVT_INP_UVFIT_SOURCEPAR+=("0"); done
+        while [[ ${#PdBIUVT_INP_UVFIT_VARIEDPAR[@]} -lt $((${#PdBIUVT_INP_RANX[@]}-1)) ]]; do PdBIUVT_INP_UVFIT_VARIEDPAR+=("0"); done
+    fi
+    
+    if [[ "$PdBIUVT_CMD_TYPE" == "phase-center-radec" ]];  then 
+        if [[ "$#" -lt 2 ]]; then
+            break
+        fi
+        if [[ "$1" == *":"*":"* ]]; then
+            PdBIUVT_INP_PHASE_CENTER_RANX+=("$1")
+            PdBIUVT_INP_PHASE_CENTER_TEMP=$(radec2degree "$1" "$2" | cut -d ' ' -f 1)
+            PdBIUVT_INP_PHASE_CENTER_RAND+=("$PdBIUVT_INP_TEMP")
+        else
+            PdBIUVT_INP_PHASE_CENTER_RAND=+("$1")
+            PdBIUVT_INP_PHASE_CENTER_TEMP=$(degree2radec "$1" "$2" | cut -d ' ' -f 1)
+            PdBIUVT_INP_PHASE_CENTER_RANX=+("$PdBIUVT_INP_TEMP")
+        fi
+        if [[ "$2" == *":"*":"* ]]; then
+            PdBIUVT_INP_PHASE_CENTER_DECX=+("$2")
+            PdBIUVT_INP_PHASE_CENTER_TEMP=$(radec2degree "$1" "$2" | cut -d ' ' -f 2)
+            PdBIUVT_INP_PHASE_CENTER_DECD=+("$PdBIUVT_INP_TEMP")
+        else
+            PdBIUVT_INP_PHASE_CENTER_DECD=+("$2")
+            PdBIUVT_INP_PHASE_CENTER_TEMP=$(degree2radec "$1" "$2" | cut -d ' ' -f 2)
+            PdBIUVT_INP_PHASE_CENTER_DECX=+("$PdBIUVT_INP_TEMP")
+        fi
+        shift
+    fi
+    
+    if [[ "$PdBIUVT_CMD_TYPE" == "n/a" ]];  then 
+        PdBIUVT_INP_MISC+=("$1")
+    fi
+    
+    if [[ $# -gt 0 ]]; then shift; fi
+    
+done
+
+
+
+if [[ $PdBIUVT_INP_DEBUG -eq 1 ]]; then
+    echo "PdBIUVT_INP_UVT              = "$(printf "'%s', " "${PdBIUVT_INP_UVT[@]}"               | sed -e 's/, $//g')
+    echo "PdBIUVT_INP_YES              = "$(printf "'%s', " "${PdBIUVT_INP_YES}"                  | sed -e 's/, $//g')
+    echo "PdBIUVT_INP_NO               = "$(printf "'%s', " "${PdBIUVT_INP_NO}"                   | sed -e 's/, $//g')
+    echo "PdBIUVT_INP_LMV              = "$(printf "'%s', " "${PdBIUVT_INP_LMV[@]}"               | sed -e 's/, $//g')
+    echo "PdBIUVT_INP_OBJ              = "$(printf "'%s', " "${PdBIUVT_INP_OBJ[@]}"               | sed -e 's/, $//g')
+    echo "PdBIUVT_INP_FREQ             = "$(printf "'%s', " "${PdBIUVT_INP_FREQ[@]}"              | sed -e 's/, $//g')
+    echo "PdBIUVT_INP_SPW              = "$(printf "'%s', " "${PdBIUVT_INP_SPW[@]}"               | sed -e 's/, $//g')
+    echo "PdBIUVT_INP_WIDTH            = "$(printf "'%s', " "${PdBIUVT_INP_WIDTH[@]}"             | sed -e 's/, $//g')
+    echo "PdBIUVT_INP_MISC             = "$(printf "'%s', " "${PdBIUVT_INP_MISC[@]}"              | sed -e 's/, $//g')
+    echo "PdBIUVT_INP_OUTPUT           = "$(printf "'%s', " "${PdBIUVT_INP_OUTPUT[@]}"            | sed -e 's/, $//g')
+    echo "PdBIUVT_INP_UVFIT_MODELTYPE  = "$(printf "'%s', " "${PdBIUVT_INP_UVFIT_MODELTYPE[@]}"   | sed -e 's/, $//g')
+    echo "PdBIUVT_INP_UVFIT_SOURCEPAR  = "$(printf "'%s', " "${PdBIUVT_INP_UVFIT_SOURCEPAR[@]}"   | sed -e 's/, $//g')
+    echo "PdBIUVT_INP_UVFIT_VARIEDPAR  = "$(printf "'%s', " "${PdBIUVT_INP_UVFIT_VARIEDPAR[@]}"   | sed -e 's/, $//g')
+    echo "PdBIUVT_INP_RANX             = "$(printf "'%s', " "${PdBIUVT_INP_RANX[@]}"              | sed -e 's/, $//g')
+    echo "PdBIUVT_INP_RAND             = "$(printf "'%s', " "${PdBIUVT_INP_RAND[@]}"              | sed -e 's/, $//g')
+    echo "PdBIUVT_INP_DECX             = "$(printf "'%s', " "${PdBIUVT_INP_DECX[@]}"              | sed -e 's/, $//g')
+    echo "PdBIUVT_INP_DECD             = "$(printf "'%s', " "${PdBIUVT_INP_DECD[@]}"              | sed -e 's/, $//g')
+fi
+
+
+
+# Check Files or Dirs
+
+for (( i=0; i<${#PdBIUVT_INP_UVT[@]}; i++ )); do
+    checkFileExistence "${PdBIUVT_INP_UVT[i]}"
+done
+
+for (( i=0; i<${#PdBIUVT_INP_LMV[@]}; i++ )); do
+    checkFileExistence "${PdBIUVT_INP_LMV[i]}"
+done
+
+
+
+
+
+

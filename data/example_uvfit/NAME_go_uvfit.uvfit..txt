@@ -1,0 +1,2 @@
+#                                                  freq                                                                                                                
+#   arcsec    arcsec    arcsec    arcsec            GHz           mJy           mJy        arcsec        arcsec        arcsec        arcsec        degree        degree

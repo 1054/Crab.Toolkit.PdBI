@@ -1,0 +1,45 @@
+! GIDLAS mapping script
+
+let name NAME_go_uvfit
+define image f 'name'.uvfit read /global
+define integer nlength ilength
+nlength = f%dim[2]-4
+if (mod(nlength,15).eq.0) then
+  ilength = 15 ! Old uvfit format
+else if (mod(nlength,17).eq.0) then
+  ilength = 17 ! New uvfit format
+endif
+define integer i1 i2
+let i1 1
+let i2 f%dim[1]
+define integer iorder kx ky kz kc
+let iorder 3
+define integer nchan
+let nchan f%dim[1]
+define real x[nchan] y[nchan] z[nchan] snr[nchan]
+sic output NAME_go_uvfit.uvfit.obj_3.txt new
+say "#" "freq" "flux" "error" "SNR" /format A1 A14 A19 A19 A10
+say "#" "GHz" "mJy" "mJy" " " /format A1 A14 A19 A19 A10
+for ichan i1 to i2
+    let kx -1 ! freq [MHz], see -- gildas-exe-10feb17/pro/p_plotfit.map
+    let kc 4
+    let x[ichan] -(f[ichan,4]-f%veloff)*f%restfre/299792.458+f%restfre
+    let ky 12 ! flux [Jy], see -- gildas-exe-10feb17/pro/p_plotfit.map
+    let kc ky+(iorder-1)*ilength
+    let y[ichan] f[ichan,kc]
+    let kz 13 ! flux error [Jy]
+    let kc kz+(iorder-1)*ilength
+    let z[ichan] f[ichan,kc]
+    let x[ichan] x[ichan]/1e3 ! to GHz
+    let y[ichan] y[ichan]*1e3 ! to mJy
+    let z[ichan] z[ichan]*1e3 ! to mJy
+    let snr[ichan] y[ichan]/x[ichan]
+    if (snr[ichan].LT.0) let snr[ichan] 0
+    say x[ichan] y[ichan] z[ichan] snr[ichan] /format F15.3 E19.7 E19.7 F10.2
+next
+say ""
+sic output
+
+go plotfit
+hardcopy NAME_go_uvfit.plotfit.obj_3.eps /overwrite
+

@@ -8,7 +8,7 @@ Examples are given below.
 
 
 
-### Deal with ALMA Measurement Sets ###
+## Deal with ALMA Measurement Sets ##
 
 Running the follow command to split all sources in an ALMA measurement set in continuum mode. 
 Use arguments "-width 1" to split the data with original channel width. 
@@ -25,7 +25,7 @@ Then this shell script will call CASA to run split(), cvel(), exportuvfits(), cl
 
 
 
-### Deal with GILDAS UV table ###
+## Deal with GILDAS UV table ##
 
 First split polarization:
 ```
@@ -49,4 +49,21 @@ pdbi-uvt-go-uvfit-v2 -name "ID-6406-1mm" -radec 12:01:56.0 55:55:55.0 -fixpos -p
                                          -out "output_multi_source_uv_fit"
 ```
 The output fitting log file will be "output_multi_source_uv_fit.log". 
+
+
+
+## More examples for uv_fit ##
+
+Fix circular Gaussian size for uv_fit
+
+```
+```
+
+
+
+
+
+
+
+
 
