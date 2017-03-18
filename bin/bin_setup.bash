@@ -17,11 +17,14 @@ Crab_BIN_SETUP_CLEAR_LIST=()
 Crab_BIN_SETUP_CHECK_LIST=()
 Crab_BIN_SETUP_INPUT_PATH=""
 Crab_BIN_SETUP_PRINT_FLAG=0
+Crab_BIN_SETUP_ORDER_FLAG=1 # 1 for prepend, 0 for append
 Crab_BIN_SETUP_VARIABLE="PATH"
 for (( i=1; i<=$#; i++ )); do
     #echo "${!i}"
     if echo "${!i}" | grep -q -i "^-debug"; then Crab_BIN_SETUP_INPUT_FLAG="n/a"; Crab_BIN_SETUP_DEBUG_FLAG=1; continue; fi
     if echo "${!i}" | grep -q -i "^-print"; then Crab_BIN_SETUP_INPUT_FLAG="n/a"; Crab_BIN_SETUP_PRINT_FLAG=1; continue; fi
+    if echo "${!i}" | grep -q -i "^-prepend"; then Crab_BIN_SETUP_INPUT_FLAG="n/a"; Crab_BIN_SETUP_ORDER_FLAG=1; continue; fi
+    if echo "${!i}" | grep -q -i "^-append"; then Crab_BIN_SETUP_INPUT_FLAG="n/a"; Crab_BIN_SETUP_ORDER_FLAG=0; continue; fi
     if echo "${!i}" | grep -q -i "^-check"; then Crab_BIN_SETUP_INPUT_FLAG="check"; continue; fi
     if echo "${!i}" | grep -q -i "^-clear"; then Crab_BIN_SETUP_INPUT_FLAG="clear"; continue; fi
     if echo "${!i}" | grep -q -i "^-path";  then Crab_BIN_SETUP_INPUT_FLAG="path"; continue; fi
@@ -133,9 +136,16 @@ if [[ 1 == 1 ]]; then
 fi
 
 if [[ ":${!Crab_BIN_SETUP_VARIABLE}:" != *":$Crab_BIN_SETUP_PATH:"* ]]; then
-    declare $Crab_BIN_SETUP_VARIABLE="$Crab_BIN_SETUP_PATH:${!Crab_BIN_SETUP_VARIABLE}"
-    if [[ $Crab_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
-        echo "Prepending $Crab_BIN_SETUP_VARIABLE=${!Crab_BIN_SETUP_VARIABLE}"
+    if [[ $Crab_BIN_SETUP_ORDER_FLAG -eq 1 ]]; then
+        declare $Crab_BIN_SETUP_VARIABLE="$Crab_BIN_SETUP_PATH:${!Crab_BIN_SETUP_VARIABLE}"
+        if [[ $Crab_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
+            echo "Prepending $Crab_BIN_SETUP_VARIABLE=${!Crab_BIN_SETUP_VARIABLE}"
+        fi
+    else
+        declare $Crab_BIN_SETUP_VARIABLE="${!Crab_BIN_SETUP_VARIABLE}:$Crab_BIN_SETUP_PATH"
+        if [[ $Crab_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
+            echo "Appending $Crab_BIN_SETUP_VARIABLE=${!Crab_BIN_SETUP_VARIABLE}"
+        fi
     fi
 fi
 
