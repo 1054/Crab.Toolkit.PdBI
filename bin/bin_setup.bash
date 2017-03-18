@@ -62,6 +62,8 @@ fi
 
 export Crab_BIN_SETUP_PATH
 
+
+
 Crab_BIN_SETUP_CLEAR_LIST+=("$Crab_BIN_SETUP_PATH")
 
 #
@@ -98,7 +100,7 @@ if [[ 1 == 1 ]]; then
                 Crab_BIN_SETUP_CLEAR_LIST_FLAG=1; break
             fi
         done
-        if [[ $Crab_BIN_SETUP_CLEAR_LIST_FLAG -eq 0 && "${Crab_BIN_SETUP_PATH_LIST[i]}" != "." ]]; then
+        if [[ $Crab_BIN_SETUP_CLEAR_LIST_FLAG -eq 0 && "${Crab_BIN_SETUP_PATH_LIST[i]}" != "." && ! -z "${Crab_BIN_SETUP_PATH_LIST[i]}" ]]; then
             if [[ ${#Crab_BIN_SETUP_PATH_POOL[@]} -eq 0 ]]; then
                 Crab_BIN_SETUP_PATH_TEXT="${Crab_BIN_SETUP_PATH_LIST[i]}"
                 Crab_BIN_SETUP_PATH_POOL+=("${Crab_BIN_SETUP_PATH_LIST[i]}")
