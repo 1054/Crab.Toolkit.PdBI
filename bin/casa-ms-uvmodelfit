@@ -120,13 +120,13 @@ if [[ $CASA_INP_NO -eq 0 ]]; then
     done
     
     # print data table
-    for (( i=0; i<${#CASA_INP_UVFIT_MODELTYPE[@]}; i++ )); do
-        if [[ $i -lt ${#CASA_INP_UVFIT_ITERATION[@]} ]]; then 
-            ${CASA_INP_UVFIT_ITERATION[i]}
-        else
-            ${CASA_DEFAULT_ITERATION}
-        fi
-    done
+    #<TODO># for (( i=0; i<${#CASA_INP_UVFIT_MODELTYPE[@]}; i++ )); do
+    #<TODO>#     if [[ $i -lt ${#CASA_INP_UVFIT_ITERATION[@]} ]]; then 
+    #<TODO>#         ${CASA_INP_UVFIT_ITERATION[i]}
+    #<TODO>#     else
+    #<TODO>#         ${CASA_DEFAULT_ITERATION}
+    #<TODO>#     fi
+    #<TODO># done
     
 else
     echo "OK, we will not run casa now. Please run the following command by yourself"

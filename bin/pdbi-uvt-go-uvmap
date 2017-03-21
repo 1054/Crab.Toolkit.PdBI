@@ -22,23 +22,17 @@ usage() {
 
 
 #
-# readlink
+# readlink current dir
 # 
-if [[ $(uname) == *"Darwin"* ]]; then
-    function readlink() {
-        if [[ $# -gt 1 ]]; then if [[ "$1" == "-f" ]]; then shift; fi; fi
-        DIR=$(echo "${1%/*}"); (cd "$DIR" && echo "$(pwd -P)/$(basename ${1})")
-    }
-fi
-PdBIUVT_DIR=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
+PdBIUVT_DIR=$(dirname $(perl -MCwd -e 'print Cwd::abs_path shift' "${BASH_SOURCE[0]}"))
 
 
 
 # 
 # Read input parameters by calling "pdbi-uvt-core-arg"
 # 
-if [[ -f "$PdBIUVT_DIR/pdbi-uvt-core-arg" ]]; then
-    source "$PdBIUVT_DIR/pdbi-uvt-core-arg" "$@"
+if [[ -f "$PdBIUVT_DIR/pdbi-uvt-core-arg-v3" ]]; then
+    source "$PdBIUVT_DIR/pdbi-uvt-core-arg-v3" "$@"
 else
     echo ""; echo "Error! Could not find \"$PdBIUVT_DIR/pdbi-uvt-core-arg\"! Please contact software supplier!"; echo ""
     exit
