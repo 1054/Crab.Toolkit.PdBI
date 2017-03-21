@@ -19,7 +19,7 @@ LANG=C
 # 
 if [[ $(bc <<< 1+2 2>/dev/null | wc -l) -eq 0 ]]; then
     echo Error! gnu tool bc not found! Exit!
-    exit 1
+    return 1
 fi
 
 # 
@@ -27,7 +27,7 @@ fi
 # 
 if [[ $(echo "Go" | awk "NR==1" 2>/dev/null | wc -l) -eq 0 ]]; then
     echo Error! gnu tool awk not found! Exit!
-    exit 1
+    return 1
 fi
 
 # 
@@ -35,7 +35,7 @@ fi
 # 
 if [[ $(echo "say hello" | mapping 2>/dev/null | wc -l) -eq 0 ]]; then
     echo "Error! GILDAS mapping not found! Exit!"
-    exit 1
+    return 1
 fi
 
 # 
@@ -43,7 +43,7 @@ fi
 # 
 if [[ $(radec2degree 2>/dev/null | wc -l) -eq 0 ]]; then
     echo "Error! radec2degree not found! It should be included in this software! Please contact dzliu. "
-    exit 1
+    return 1
 fi
 
 # 
@@ -51,7 +51,7 @@ fi
 # 
 if [[ $(degree2radec 2>/dev/null | wc -l) -eq 0 ]]; then
     echo "Error! degree2radec not found! It should be included in this software! Please contact dzliu. "
-    exit 1
+    return 1
 fi
 
 
@@ -237,7 +237,7 @@ while [[ "$#" -gt 0 ]]; do
         fi
         if echo "$1" | grep -q -v -E "^[0-9.+- ]*$"; then
             echo ""; echo "Error! Input -map_size has a wrong format! Please input only number value."; echo ""
-            exit
+            return 2
         fi
         PdBIUVT_MAP_SIZE+=("$1")
     fi
@@ -248,7 +248,7 @@ while [[ "$#" -gt 0 ]]; do
         fi
         if echo "$1" | grep -q -v -E "^[0-9.+- ]*$"; then
             echo ""; echo "Error! Input -map_cell has a wrong format! Please input only number value."; echo ""
-            exit
+            return 2
         fi
         PdBIUVT_MAP_CELL+=("$1")
     fi
@@ -301,13 +301,13 @@ while [[ "$#" -gt 0 ]]; do
             PdBIUVT_FMIN+=("$1")
         else
             echo "Error! Input frequency range value \"$1\" is not a float number! Exit!"
-            exit
+            return 2
         fi
         if echo "$2" | grep -Eq '^[-+]?[0-9]+\.?[0-9]*$'; then
             PdBIUVT_FMAX+=("$2")
         else
             echo "Error! Input frequency range value \"$2\" is not a float number! Exit!"
-            exit
+            return 2
         fi
         shift # shift because we read a pair of values
     fi
@@ -320,13 +320,13 @@ while [[ "$#" -gt 0 ]]; do
             PdBIUVT_UVRANGE_MIN="$1"
         else
             echo "Error! Input UV range value \"$1\" is not a float number! Exit!"
-            exit
+            return 2
         fi
         if echo "$2" | grep -Eq '^[-+]?[0-9]+\.?[0-9]*$'; then
             PdBIUVT_UVRANGE_MAX="$2"
         else
             echo "Error! Input UV range value \"$2\" is not a float number! Exit!"
-            exit
+            return 2
         fi
         shift # shift because we read a pair of values
         PdBIUVT_RPAR="none" # set to none because for telescope pointing we only read one pair of values
@@ -338,7 +338,7 @@ while [[ "$#" -gt 0 ]]; do
         fi
         if echo "$1" | grep -q -v -E "^[0-9.+-]*$"; then
             echo ""; echo "Error! Input -redshift has a wrong format! Please input only number value of the source redshift."; echo ""
-            exit
+            return 2
         fi
         PdBIUVT_zRED+=("$1")
     fi
@@ -444,7 +444,7 @@ while [[ "$#" -gt 0 ]]; do
         if [[ "$#" -lt 1 ]]; then break; fi
         if echo "$1" | grep -q -v -E '^[0-9 ".+-]*$'; then # objsize allows input a pair of number, for major and minor axis size. 
             echo ""; echo "Error! Input -objsize $1 has a wrong format! Please input only number value of the object size."; echo ""
-            exit
+            return 2
         fi
         PdBIUVT_OBJ_SIZE+=($(echo "$1"))
     fi
@@ -453,7 +453,7 @@ while [[ "$#" -gt 0 ]]; do
         if [[ "$#" -lt 1 ]]; then break; fi
         if echo "$1" | grep -q -v -E "^[0-9.+-]*$"; then
             echo ""; echo "Error! Input -objposangle has a wrong format! Please input only number value of the object pos angle."; echo ""
-            exit
+            return 2
         fi
         PdBIUVT_OBJ_ANGLE+=("$1")
     fi
@@ -463,7 +463,7 @@ while [[ "$#" -gt 0 ]]; do
         if [[ "$#" -lt 1 ]]; then break; fi
         if echo "$1" | grep -q -v -E "^[0-9.+-]*$"; then
             echo ""; echo "Error! Input -linewidth has a wrong format! Please input only number value of the expected observing line width in unit of km/s."; echo ""
-            exit
+            return 2
         fi
         PdBIUVT_VWID+=("$1")
     fi
@@ -471,7 +471,7 @@ while [[ "$#" -gt 0 ]]; do
         if [[ "$#" -lt 1 ]]; then break; fi
         if echo "$1" | grep -q -v -E "^[0-9.+-]*$"; then
             echo ""; echo "Error! Input -lineobsfreq has a wrong format! Please input only number value of the expected line observing frequency in unit of GHz."; echo ""
-            exit
+            return 2
         fi
         PdBIUVT_FCEN+=("$1")
     fi
@@ -479,7 +479,7 @@ while [[ "$#" -gt 0 ]]; do
         if [[ "$#" -lt 1 ]]; then break; fi
         if echo "$1" | grep -q -v -E "^[0-9.+-]*$"; then
             echo ""; echo "Error! Input -linerestfreq has a wrong format! Please input only number value of the expected line observing frequency in unit of GHz."; echo ""
-            exit
+            return 2
         fi
         PdBIUVT_FLAB+=("$1")
     fi
@@ -506,7 +506,7 @@ done
 if [[ x"$PdBIUVT_NAME" == x ]]; then
     echo ""; echo "Error! UV table name was not given! Exit!"; echo ""
     PdBIUVT_GOOD=0
-    exit
+    return 3
 else
     # Remove the suffix of the input uvtable name, and test whether the file exists
     if [[ "$PdBIUVT_NAME" == *".uvt" ]]; then
@@ -534,7 +534,7 @@ else
     if [[ ! -f "$PdBIUVT_NAME.$PdBIUVT_TYPE" ]]; then
         echo ""; echo "Error! \"$PdBIUVT_NAME.$PdBIUVT_TYPE\" was not found! Exit!"; echo ""
         PdBIUVT_GOOD=0
-        exit
+        return 3
     fi
 fi
 
@@ -545,7 +545,7 @@ fi
 # 
 if [[ $PdBIUVT_GOOD -eq 0 ]]; then
     echo ""; echo "Error! Input arguments are incorrect! Please have a check and try again! Exit!"; echo ""
-    exit
+    return 3
 fi
 
 
@@ -556,13 +556,13 @@ fi
 if [[ x"$PdBIUVT_TYPE" == x"uvt" || x"$PdBIUVT_TYPE" == x"UVT" ]]; then
     if [[ ! -f "$PdBIUVT_NAME.$PdBIUVT_TYPE" ]]; then 
         echo ""; echo "Error! \"$PdBIUVT_NAME.$PdBIUVT_TYPE\" was not found!"; echo ""
-        exit
+        return 3
     else
         echo "header $PdBIUVT_NAME.$PdBIUVT_TYPE" | mapping | sed 's/[^[:print:]]//g' > "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt"
     fi
     if [[ ! -f "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" ]]; then
         echo ""; echo "Error! Failed to run \"echo \"header $PdBIUVT_NAME.$PdBIUVT_TYPE\" | mapping\" > \"$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt\"! Please make sure mapping is working!"; echo ""
-        exit
+        return 3
     fi
 fi
 
@@ -659,7 +659,7 @@ if [[ x"$PdBIUVT_TYPE" == x"uvt" || x"$PdBIUVT_TYPE" == x"UVT" ]]; then
     # 
     if [[ x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
         echo ""; echo "Error! Could not find telescope pointing information in the uv table header \"$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt\"! Please input telescope pointing like \"-pointing 12:36:20 62:20:00\"!"; echo ""
-        exit
+        return 4
     fi
     # 
     # if object RA Dec not found, then we fit the telescope pointing center RA Dec
