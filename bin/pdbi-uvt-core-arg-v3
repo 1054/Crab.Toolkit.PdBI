@@ -6,6 +6,9 @@
 # Usage:
 #    source this script in other scripts to get the variables
 # 
+# Updates:
+#     2017-03-21 Use "return" instead of "exit".
+# 
 
 
 
@@ -447,6 +450,7 @@ while [[ "$#" -gt 0 ]]; do
             return 2
         fi
         PdBIUVT_OBJ_SIZE+=($(echo "$1"))
+        PdBIUVT_SIZE+=($(echo "$1")) # for compatible purpose, or for go uvmap
     fi
     # -- obj angle
     if [[ "$PdBIUVT_RPAR" == "OBJ_ANGLE" ]];  then 

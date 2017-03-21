@@ -4,7 +4,10 @@
 #     Convert Channel Frequency Velocity
 # 
 # Usage:
-#    source this script in other scripts to get the variables
+#     source this script in other scripts to get the variables
+# 
+# Updates:
+#     2017-03-21 Use "return" instead of "exit".
 # 
 
 
@@ -27,7 +30,7 @@ else
     echo ""
     echo "Error! Could not find \"$(dirname "${BASH_SOURCE[0]}")/pdbi-uvt-core-arg-v3\"!"
     echo ""
-    exit 1
+    return 1
 fi
 
 
@@ -36,35 +39,35 @@ fi
 # Prepare functions to convert channel, velocity and frequency #
 #
 convert_channel_to_velocity () {
-    if [ -z "$1" ]; then echo "Error! Incorrect parameters for convert_channel_to_velocity!"; exit; fi
-    if [ -z "$PdBIUVT_CHAN_REF" ]; then echo "Error! \$PdBIUVT_CHAN_REF was not defined before running convert_channel_to_velocity!"; exit; fi
-    if [ -z "$PdBIUVT_VELO_BIN" ]; then echo "Error! \$PdBIUVT_VELO_BIN was not defined before running convert_channel_to_velocity!"; exit; fi
-    if [ -z "$PdBIUVT_VELO_REF" ]; then echo "Error! \$PdBIUVT_VELO_REF was not defined before running convert_channel_to_velocity!"; exit; fi
+    if [ -z "$1" ]; then echo "Error! Incorrect parameters for convert_channel_to_velocity!"; return 5; fi
+    if [ -z "$PdBIUVT_CHAN_REF" ]; then echo "Error! \$PdBIUVT_CHAN_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
+    if [ -z "$PdBIUVT_VELO_BIN" ]; then echo "Error! \$PdBIUVT_VELO_BIN was not defined before running convert_channel_to_velocity!"; return 5; fi
+    if [ -z "$PdBIUVT_VELO_REF" ]; then echo "Error! \$PdBIUVT_VELO_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
     echo "($1-($PdBIUVT_CHAN_REF))*($PdBIUVT_VELO_BIN)+($PdBIUVT_VELO_REF)" | bc -l
 }
 convert_channel_to_frequency () {
-    if [ -z "$1" ]; then echo "Error! Incorrect parameters for convert_channel_to_frequency!"; exit; fi
-    if [ -z "$PdBIUVT_CHAN_REF" ]; then echo "Error! \$PdBIUVT_CHAN_REF was not defined before running convert_channel_to_frequency!"; exit; fi
-    if [ -z "$PdBIUVT_FREQ_BIN" ]; then echo "Error! \$PdBIUVT_FREQ_BIN was not defined before running convert_channel_to_frequency!"; exit; fi
-    if [ -z "$PdBIUVT_FREQ_REF" ]; then echo "Error! \$PdBIUVT_FREQ_REF was not defined before running convert_channel_to_frequency!"; exit; fi
+    if [ -z "$1" ]; then echo "Error! Incorrect parameters for convert_channel_to_frequency!"; return 5; fi
+    if [ -z "$PdBIUVT_CHAN_REF" ]; then echo "Error! \$PdBIUVT_CHAN_REF was not defined before running convert_channel_to_frequency!"; return 5; fi
+    if [ -z "$PdBIUVT_FREQ_BIN" ]; then echo "Error! \$PdBIUVT_FREQ_BIN was not defined before running convert_channel_to_frequency!"; return 5; fi
+    if [ -z "$PdBIUVT_FREQ_REF" ]; then echo "Error! \$PdBIUVT_FREQ_REF was not defined before running convert_channel_to_frequency!"; return 5; fi
     echo "($1-($PdBIUVT_CHAN_REF))*($PdBIUVT_FREQ_BIN)+($PdBIUVT_FREQ_REF)" | bc -l
 }
 convert_velocity_to_channel () {
-    if [ -z "$1" ]; then echo "Error! Incorrect parameters for convert_velocity_to_channel!"; exit; fi
-    if [ -z "$PdBIUVT_CHAN_REF" ]; then echo "Error! \$PdBIUVT_CHAN_REF was not defined before running convert_channel_to_velocity!"; exit; fi
-    if [ -z "$PdBIUVT_VELO_BIN" ]; then echo "Error! \$PdBIUVT_VELO_BIN was not defined before running convert_channel_to_velocity!"; exit; fi
-    if [ -z "$PdBIUVT_VELO_REF" ]; then echo "Error! \$PdBIUVT_VELO_REF was not defined before running convert_channel_to_velocity!"; exit; fi
+    if [ -z "$1" ]; then echo "Error! Incorrect parameters for convert_velocity_to_channel!"; return 5; fi
+    if [ -z "$PdBIUVT_CHAN_REF" ]; then echo "Error! \$PdBIUVT_CHAN_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
+    if [ -z "$PdBIUVT_VELO_BIN" ]; then echo "Error! \$PdBIUVT_VELO_BIN was not defined before running convert_channel_to_velocity!"; return 5; fi
+    if [ -z "$PdBIUVT_VELO_REF" ]; then echo "Error! \$PdBIUVT_VELO_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
     echo "($1-($PdBIUVT_VELO_REF))/($PdBIUVT_VELO_BIN)+($PdBIUVT_CHAN_REF)" | bc -l
 }
 convert_frequency_to_channel () {
-    if [ -z "$1" ]; then echo "Error! Incorrect parameters for convert_velocity_to_channel!"; exit; fi
-    if [ -z "$PdBIUVT_CHAN_REF" ]; then echo "Error! \$PdBIUVT_CHAN_REF was not defined before running convert_channel_to_velocity!"; exit; fi
-    if [ -z "$PdBIUVT_FREQ_BIN" ]; then echo "Error! \$PdBIUVT_FREQ_BIN was not defined before running convert_channel_to_velocity!"; exit; fi
-    if [ -z "$PdBIUVT_FREQ_REF" ]; then echo "Error! \$PdBIUVT_FREQ_REF was not defined before running convert_channel_to_velocity!"; exit; fi
+    if [ -z "$1" ]; then echo "Error! Incorrect parameters for convert_velocity_to_channel!"; return 5; fi
+    if [ -z "$PdBIUVT_CHAN_REF" ]; then echo "Error! \$PdBIUVT_CHAN_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
+    if [ -z "$PdBIUVT_FREQ_BIN" ]; then echo "Error! \$PdBIUVT_FREQ_BIN was not defined before running convert_channel_to_velocity!"; return 5; fi
+    if [ -z "$PdBIUVT_FREQ_REF" ]; then echo "Error! \$PdBIUVT_FREQ_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
     echo "($1-($PdBIUVT_FREQ_REF))/($PdBIUVT_FREQ_BIN)+($PdBIUVT_CHAN_REF)" | bc -l
 }
 abs() { 
-    if [ -z "$1" ]; then echo "Error! Incorrect parameters for abs!"; exit; fi
+    if [ -z "$1" ]; then echo "Error! Incorrect parameters for abs!"; return 5; fi
     if [[ "$1" == "-"* ]]; then echo "$1" | sed -e 's/^[-]//g'; else echo "$1"; fi
 }
 ##<checkpoint>
