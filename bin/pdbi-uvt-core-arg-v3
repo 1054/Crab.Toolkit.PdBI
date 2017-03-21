@@ -150,7 +150,7 @@ while [[ "$#" -gt 0 ]]; do
             "-output") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_SAVE="$1";;
               "-save") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_SAVE="$1";;
 
-         "-overwrite") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="none"; PdBIUVT_OVERWRITE="YES";;
+         "-overwrite") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OVERWRITE="YES";; # argument with no value, no shift;
 
           "-map_size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
           "-map-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
