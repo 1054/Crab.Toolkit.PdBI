@@ -55,9 +55,9 @@ Input_file="$1"
 # Check input file extension
 # 
 if [[ x"$Input_file" == x*.uvfit ]]; then
-    Result_file=$(basename $Result_file) # | sed -e 's/\.uvfit$//g'
+    Result_file=$(basename "$Input_file") # | sed -e 's/\.uvfit$//g'
 else
-    Result_file=$(basename $Result_file)".uvfit"
+    Result_file=$(basename "$Input_file")".uvfit"
 fi
 # 
 # Copy input file to current directory and make sure the file extension is ".uvfit"
