@@ -24,7 +24,7 @@ usage() {
 #
 # readlink current dir
 # 
-PdBIUVT_DIR=$(dirname $(perl -MCwd -e 'print Cwd::abs_path shift' "${BASH_SOURCE[0]}"))
+PdBIUVT_DIR=$(perl -MCwd -e 'print Cwd::abs_path shift' $(dirname "${BASH_SOURCE[0]}"))
 
 
 
