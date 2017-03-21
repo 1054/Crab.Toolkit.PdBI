@@ -43,7 +43,7 @@ if [[ ! -f "$1" ]]; then
     echo "Error! Input file \"$1\" was not found!"
     exit 1
 fi
-Result_file="$1"
+Input_file="$1"
 
 
 
@@ -51,6 +51,20 @@ Result_file="$1"
 
 
 
+# 
+# Check input file extension
+# 
+if [[ x"$Input_file" == x*.uvfit ]]; then
+    Result_file=$(basename $Result_file) # | sed -e 's/\.uvfit$//g'
+else
+    Result_file=$(basename $Result_file)".uvfit"
+fi
+# 
+# Copy input file to current directory and make sure the file extension is ".uvfit"
+# 
+if [[ ! -f "$Result_file" ]]; then
+    cp "$Input_file" "$Result_file"
+fi
 PdBIUVT_SAVE=$(basename $Result_file | sed -e 's/\.uvfit$//g')
 
 
