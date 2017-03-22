@@ -1,0 +1,226 @@
+#!/bin/bash
+# 
+# Input the casa-ms-uvmodelfit output log file, 
+# Output formatted data table: Source, reduced_chi2, flux, ferr, xoff, xerr, ...
+# 
+# Last update:
+#    2017-02-22 created. 
+# 
+
+
+
+# Function to print usage
+function usage() {
+    echo "Usage: "
+    echo "    casa-ms-uvmodelfit-print-results aaa_uvmodelfit.cl"
+    echo ""
+}
+
+
+
+# 
+# Check CASA
+# 
+if [[ $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
+    if [[ $(type casapy 2>/dev/null | wc -l) -eq 0 ]]; then
+        echo "Error! CASA (casa nor casapy) was not found!"
+        exit 1
+    else
+        CASAMS_CMD="casapy"
+    fi
+else
+    CASAMS_CMD="casa"
+fi
+
+
+
+# 
+# Read input parameters
+# 
+if [[ $# -eq 0 ]]; then
+    usage
+    exit
+fi
+
+
+
+# 
+# Check input parameters
+# 
+Input_cl=()
+while [[ $# -gt 0 ]]; do
+    # 
+    if [[ ! -d "$1" ]]; then 
+        echo "Error! Input uvmodelfit component list \"$1\" was not found! (should be a directory with the extension of *.cl)"
+        exit 1
+    fi
+    Input_cl+=("$1")
+    shift
+done
+
+
+# 
+# Prepare casa script to read result
+# -- see CASA class cl manual -- https://casa.nrao.edu/docs/CasaRef/componentlist-Tool.html
+# 
+CASAMS_EXE=""
+while [[ -z "$CASAMS_EXE" || -f "$CASAMS_EXE" ]]; do
+    # makes sure no existing file with the same datetime mark
+    CASAMS_UTC=$(date +%Y%m%d.%Hh%Mm%Ss.%Z)
+    CASAMS_EXE="run_casa_ms_uvmodelfit_print_results.$CASAMS_UTC.py"
+    CASAMS_LOG="run_casa_ms_uvmodelfit_print_results.$CASAMS_UTC.log"
+    CASAMS_OUT="run_casa_ms_uvmodelfit_print_results.$CASAMS_UTC.out" # this file contains the list of all output txt files
+done
+
+touch $CASAMS_EXE
+touch $CASAMS_LOG
+touch $CASAMS_OUT
+
+echo "#!/usr/bin/env python" > "$CASAMS_EXE"
+echo "" >> "$CASAMS_EXE"
+echo "import os, sys" >> "$CASAMS_EXE"
+echo "" >> "$CASAMS_EXE"
+
+for (( i=0; i<${#Input_cl[@]}; i++ )); do
+    
+    echo "# Processing ${Input_cl[i]}"
+    
+    Output_txt="${Input_cl[i]}.result.obj_1.txt" #<TODO><20170321><dzliu># CASA uvmodelfit can only process 1 object
+    echo "$Output_txt" >> "$CASAMS_OUT" # append to the file that contains the list of all output txt files
+    
+    echo "cl.open('${Input_cl[i]}', nomodify=True)" >> "$CASAMS_EXE"
+    echo "f = cl.getcomponent(0)" >> "$CASAMS_EXE"
+    echo "f_x = -99" >> "$CASAMS_EXE"
+    echo "f_x_err = -99" >> "$CASAMS_EXE"
+    echo "f_y = -99" >> "$CASAMS_EXE"
+    echo "f_y_err = -99" >> "$CASAMS_EXE"
+    echo "f_flux = -99" >> "$CASAMS_EXE"
+    echo "f_error = -99" >> "$CASAMS_EXE"
+    echo "f_major = -99" >> "$CASAMS_EXE"
+    echo "f_major_err = -99" >> "$CASAMS_EXE"
+    echo "f_minor = -99" >> "$CASAMS_EXE"
+    echo "f_minor_err = -99" >> "$CASAMS_EXE"
+    echo "f_PA = -99" >> "$CASAMS_EXE"
+    echo "f_PA_err = -99" >> "$CASAMS_EXE"
+    echo "f_freq = -99" >> "$CASAMS_EXE"
+    echo "if 'shape' in f:" >> "$CASAMS_EXE"
+    echo "    if 'direction' in f['shape']:" >> "$CASAMS_EXE"
+    echo "        if 'm0' in f['shape']['direction']:" >> "$CASAMS_EXE"
+    echo "            f_x = f['shape']['direction']['m0']['value']" >> "$CASAMS_EXE"
+    echo "            #<TODO># if f['shape']['direction']['m0']['unit'] == 'rad':" >> "$CASAMS_EXE"
+    echo "            #<TODO>#     f_x = f_x / 3.1415926 * 180.0 * 3600.0 # convert rad to arcsec #<TODO># the unit rad should be wrong, x y should already have arcsec unit" >> "$CASAMS_EXE"
+    echo "        if 'm1' in f['shape']['direction']:" >> "$CASAMS_EXE"
+    echo "            f_y = f['shape']['direction']['m1']['value']" >> "$CASAMS_EXE"
+    echo "            #<TODO># if f['shape']['direction']['m1']['unit'] == 'rad':" >> "$CASAMS_EXE"
+    echo "            #<TODO>#     f_y = f_y / 3.1415926 * 180.0 * 3600.0 # convert rad to arcsec #<TODO># the unit rad should be wrong, x y should already have arcsec unit" >> "$CASAMS_EXE"
+    echo "        if 'error' in f['shape']['direction']:" >> "$CASAMS_EXE"
+    echo "            if 'longitude' in f['shape']['direction']['error']:" >> "$CASAMS_EXE"
+    echo "                f_x_err = f['shape']['direction']['error']['longitude']['value']" >> "$CASAMS_EXE"
+    echo "                #<TODO># if f['shape']['direction']['error']['longitude']['unit'] == 'rad':" >> "$CASAMS_EXE"
+    echo "                #<TODO>#     f_x_err = f_x_err / 3.1415926 * 180.0 * 3600.0 # convert rad to arcsec #<TODO># the unit rad should be wrong, x y should already have arcsec unit" >> "$CASAMS_EXE"
+    echo "            if 'latitude' in f['shape']['direction']['error']:" >> "$CASAMS_EXE"
+    echo "                f_y_err = f['shape']['direction']['error']['latitude']['value']" >> "$CASAMS_EXE"
+    echo "                #<TODO># if f['shape']['direction']['error']['latitude']['unit'] == 'rad':" >> "$CASAMS_EXE"
+    echo "                #<TODO>#     f_y_err = f_y_err / 3.1415926 * 180.0 * 3600.0 # convert rad to arcsec #<TODO># the unit rad should be wrong, x y should already have arcsec unit" >> "$CASAMS_EXE"
+    echo "if 'flux' in f:" >> "$CASAMS_EXE"
+    echo "    f_flux = f['flux']['value']" >> "$CASAMS_EXE"
+    echo "    f_error = f['flux']['error']" >> "$CASAMS_EXE"
+    echo "    if len(f_flux) > 1:" >> "$CASAMS_EXE"
+    echo "        f_flux = f_flux[0]" >> "$CASAMS_EXE"
+    echo "    if len(f_error) > 1:" >> "$CASAMS_EXE"
+    echo "        f_error = f_error[0]" >> "$CASAMS_EXE"
+    echo "    if f['flux']['unit'] == 'Jy':" >> "$CASAMS_EXE"
+    echo "        f_flux = f_flux * 1e3 # convert Jy to mJy" >> "$CASAMS_EXE"
+    echo "        f_error = f_error * 1e3 # convert Jy to mJy" >> "$CASAMS_EXE"
+    echo "if 'majoraxis' in f['shape']:" >> "$CASAMS_EXE"
+    echo "    f_major = f['shape']['majoraxis']['value']" >> "$CASAMS_EXE"
+    echo "    if f['shape']['majoraxis']['unit'] == 'arcmin':" >> "$CASAMS_EXE"
+    echo "        f_major = f_major * 60.0 # convert arcmin to arcsec" >> "$CASAMS_EXE"
+    echo "    if f['shape']['majoraxis']['unit'] == 'rad':" >> "$CASAMS_EXE"
+    echo "        f_major = f_major / 3.1415926 * 180.0 * 3600.0 # convert rad to arcsec" >> "$CASAMS_EXE"
+    echo "if 'majoraxiserror' in f['shape']:"           >> "$CASAMS_EXE"
+    echo "    f_major_err = f['shape']['majoraxiserror']['value']" >> "$CASAMS_EXE"
+    echo "    if f['shape']['majoraxiserror']['unit'] == 'arcmin':" >> "$CASAMS_EXE"
+    echo "        f_major_err = f_major_err * 60.0 # convert arcmin to arcsec" >> "$CASAMS_EXE"
+    echo "    if f['shape']['majoraxiserror']['unit'] == 'rad':" >> "$CASAMS_EXE"
+    echo "        f_major_err = f_major_err / 3.1415926 * 180.0 * 3600.0 # convert rad to arcsec" >> "$CASAMS_EXE"
+    echo "if 'minoraxis' in f['shape']:"                >> "$CASAMS_EXE"
+    echo "    f_minor = f['shape']['minoraxis']['value']" >> "$CASAMS_EXE"
+    echo "    if f['shape']['minoraxis']['unit'] == 'arcmin':" >> "$CASAMS_EXE"
+    echo "        f_minor = f_minor * 60.0 # convert arcmin to arcsec" >> "$CASAMS_EXE"
+    echo "    if f['shape']['minoraxis']['unit'] == 'rad':" >> "$CASAMS_EXE"
+    echo "        f_minor = f_minor / 3.1415926 * 180.0 * 3600.0 # convert rad to arcsec" >> "$CASAMS_EXE"
+    echo "if 'minoraxiserror' in f['shape']:"           >> "$CASAMS_EXE"
+    echo "    f_minor_err = f['shape']['minoraxiserror']['value']" >> "$CASAMS_EXE"
+    echo "    if f['shape']['minoraxiserror']['unit'] == 'arcmin':" >> "$CASAMS_EXE"
+    echo "        f_minor_err = f_minor_err * 60.0 # convert arcmin to arcsec" >> "$CASAMS_EXE"
+    echo "    if f['shape']['minoraxiserror']['unit'] == 'rad':" >> "$CASAMS_EXE"
+    echo "        f_minor_err = f_minor_err / 3.1415926 * 180.0 * 3600.0 # convert rad to arcsec" >> "$CASAMS_EXE"
+    echo "if 'positionangle' in f['shape']:"                >> "$CASAMS_EXE"
+    echo "    f_PA = f['shape']['positionangle']['value']" >> "$CASAMS_EXE"
+    echo "if 'positionangleerror' in f['shape']:"           >> "$CASAMS_EXE"
+    echo "    f_PA_err = f['shape']['positionangleerror']['value']" >> "$CASAMS_EXE"
+    echo "cl.close(log=False)" >> "$CASAMS_EXE"
+    echo "" >> "$CASAMS_EXE"
+    echo "with open('${Output_txt}', 'w') as fp:" >> "$CASAMS_EXE"
+    echo "    fp.write('# %10s%12s%12s%12s%12s%15s%15s%12s%12s%12s%12s%12s%12s\n'%(\\" >> "$CASAMS_EXE"
+    echo "          'x', 'x_err', \\" >> "$CASAMS_EXE"
+    echo "          'y', 'y_err', \\" >> "$CASAMS_EXE"
+    echo "          'freq', \\" >> "$CASAMS_EXE"
+    echo "          'flux', 'flux_err', \\" >> "$CASAMS_EXE"
+    echo "          'major', 'major_err', \\" >> "$CASAMS_EXE"
+    echo "          'minor', 'minor_err', \\" >> "$CASAMS_EXE"
+    echo "          'PA', 'PA_err', \\" >> "$CASAMS_EXE"
+    echo "         ))" >> "$CASAMS_EXE"
+    echo "    " >> "$CASAMS_EXE"
+    echo "    fp.write('# %10s%12s%12s%12s%12s%15s%15s%12s%12s%12s%12s%12s%12s\n'%(\\" >> "$CASAMS_EXE"
+    echo "          ' ', ' ', \\" >> "$CASAMS_EXE"
+    echo "          ' ', ' ', \\" >> "$CASAMS_EXE"
+    echo "          'GHz', \\" >> "$CASAMS_EXE"
+    echo "          'mJy', 'mJy', \\" >> "$CASAMS_EXE"
+    echo "          'arcsec', 'arcsec', \\" >> "$CASAMS_EXE"
+    echo "          'arcsec', 'arcsec', \\" >> "$CASAMS_EXE"
+    echo "          'degree', 'degree', \\" >> "$CASAMS_EXE"
+    echo "         ))" >> "$CASAMS_EXE"
+    echo "    " >> "$CASAMS_EXE"
+    echo "    fp.write('%12.3f%12.3f%12.3f%12.3f%12.3f%15.5g%15.5g%12.3f%12.3f%12.3f%12.3f%12.3f%12.3f\n'%(\\" >> "$CASAMS_EXE"
+    echo "          f_x, f_x_err, \\" >> "$CASAMS_EXE"
+    echo "          f_y, f_y_err, \\" >> "$CASAMS_EXE"
+    echo "          f_freq, \\" >> "$CASAMS_EXE"
+    echo "          f_flux, f_error, \\" >> "$CASAMS_EXE"
+    echo "          f_major, f_major_err, \\" >> "$CASAMS_EXE"
+    echo "          f_minor, f_minor_err, \\" >> "$CASAMS_EXE"
+    echo "          f_PA, f_PA_err, \\" >> "$CASAMS_EXE"
+    echo "         ))" >> "$CASAMS_EXE"
+    echo "    fp.write('\n')" >> "$CASAMS_EXE"
+    echo "    fp.close()" >> "$CASAMS_EXE"
+    #echo "" >> "$CASAMS_EXE"
+    #echo "print('# --> \"${Output_txt}\"')" >> "$CASAMS_EXE"
+    #echo "" >> "$CASAMS_EXE"
+    #echo "os.system('cat \"${Output_txt}\"')" >> "$CASAMS_EXE"
+    echo "" >> "$CASAMS_EXE"
+    echo "" >> "$CASAMS_EXE"
+    
+done
+
+echo "" >> "$CASAMS_EXE"
+echo "" >> "$CASAMS_EXE"
+
+#cat "$CASAMS_EXE"
+
+echo "# Running CASA:"
+echo "# $CASAMS_CMD --nogui --nologfile --nologger -c \"$CASAMS_EXE\""
+$CASAMS_CMD --nogui --nologfile --nologger -c "$CASAMS_EXE"
+
+
+# Check output file list
+Old_IFS=$IFS
+IFS=$'\n' read -d '' -r -a Output_Files < "$CASAMS_OUT"
+IFS="$Old_IFS"
+
+for Output_File in "${Output_Files[@]}"; do echo "# --> $Output_File"; done
+
+
+
+
+

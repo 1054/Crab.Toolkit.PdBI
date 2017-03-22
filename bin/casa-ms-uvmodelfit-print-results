@@ -1,112 +1,12 @@
 #!/bin/bash
 # 
-# Input the casa-ms-uvmodelfit output log file, 
-# Output formatted data table: Source, reduced_chi2, flux, ferr, xoff, xerr, ...
 # 
-# Last update:
-#    2017-02-22 created. 
 # 
 
-
-
-# Function to print usage
-function usage() {
-    echo "Usage: "
-    echo "    casa-ms-uvmodelfit-print-results aaa_uvmodelfit.log"
-    echo ""
-}
-
-
-
-# 
-# Read input parameters
-# 
-if [[ $# -eq 0 ]]; then
-    usage
-    exit
+if [[ $(type casa-ms-uvmodelfit-print-results-v2 2>/dev/null | wc -l) -eq 0 ]]; then
+    source $(dirname ${BASH_SOURCE[0]})"/../SETUP.bash"
 fi
 
-
-
-# 
-# Check input parameters
-# 
-if [[ ! -f "$1" ]]; then 
-    echo "Error! Input file \"$1\" was not found!"
-    exit 1
-fi
-Result_file="$1"
-
-
-
-# 
-# Read the input uvmodelfit log file
-# 
-Do_iteration=$(cat "$Result_file" | grep "iter=" | tail -n 1 | perl -p -e 's/.*iter=([0-9]*):.*/\1/g')
-# echo "## Do_iteration = $Do_iteration"
-Result_spar=$(cat "$Result_file" | grep "sourcepar *=" | tail -n 1 | perl -p -e 's/sourcepar[^ ]* *=[^ ]* *[[](.*)[]] *.*/\1/g')
-# echo "## Result_spar = $Result_spar"
-Result_spar=($(echo "$Result_spar" | sed -e 's/,/ /g'))
-# echo "## Result_spar = ${Result_spar[@]}"
-Result_npar=${#Result_spar[@]}
-# echo "## Result_npar = $Result_npar"
-Result_source=$(cat "$Result_file" | grep "field *=" | tail -n 1 | perl -p -e "s/field[^ ]* *=[^ ]* *['](.*)['] *.*/\1/g" | perl -p -e 's/[^a-zA-Z0-9.+-][^ ]*//g')
-if [[ x"$Result_source" == x ]]; then
-Result_source="N/A" # $(cat "$Result_file" | grep "vis *=" | tail -n 1 | perl -p -e "s/vis[^ ]* *=[^ ]* *['](.*)['] *.*/\1/g")
-fi
-#echo "## Result_source = $Result_source"
-Source_Name=$(echo "$Result_source")
-
-Has_Printed_Head=0
-
-Result_text=$(cat "$Result_file" | grep "=" | grep -A$Result_npar "iter=$Do_iteration:")
-Result_chi2=$(echo "$Result_text" | grep "reduced chi2=" | perl -p -e 's/.*reduced chi2=([0-9.+-eE]*):.*/\1/g') # reduced chi2
-Result_flux=$(echo "$Result_text" | grep "I = " | perl -p -e 's%I = ([0-9.+-eE]*) \+/- ([0-9.+-eE]*)(.*)%\1%g')
-Result_ferr=$(echo "$Result_text" | grep "I = " | perl -p -e 's%I = ([0-9.+-eE]*) \+/- ([0-9.+-eE]*)(.*)%\2%g')
-Result_xoff=$(echo "$Result_text" | grep "x = " | perl -p -e 's%x = ([0-9.+-eE]*) \+/- ([0-9.+-eE]*)(.*)%\1%g')
-Result_xerr=$(echo "$Result_text" | grep "x = " | perl -p -e 's%x = ([0-9.+-eE]*) \+/- ([0-9.+-eE]*)(.*)%\2%g')
-Result_yoff=$(echo "$Result_text" | grep "y = " | perl -p -e 's%y = ([0-9.+-eE]*) \+/- ([0-9.+-eE]*)(.*)%\1%g')
-Result_yerr=$(echo "$Result_text" | grep "y = " | perl -p -e 's%y = ([0-9.+-eE]*) \+/- ([0-9.+-eE]*)(.*)%\2%g')
-if [[ $Result_npar -eq 6 ]]; then
-    Result_maj=$(echo "$Result_text" | grep "a = " | perl -p -e 's%a = ([0-9.+-eE]*) \+/- ([0-9.+-eE]*)(.*)%\1%g')
-    Result_majerr=$(echo "$Result_text" | grep "a = " | perl -p -e 's%a = ([0-9.+-eE]*) \+/- ([0-9.+-eE]*)(.*)%\2%g')
-    Result_rba=$(echo "$Result_text" | grep "r = " | perl -p -e 's%r = ([0-9.+-eE]*) \+/- ([0-9.+-eE]*)(.*)%\1%g')
-    Result_rbaerr=$(echo "$Result_text" | grep "r = " | perl -p -e 's%r = ([0-9.+-eE]*) \+/- ([0-9.+-eE]*)(.*)%\2%g')
-    Result_ang=$(echo "$Result_text" | grep "p = " | perl -p -e 's%p = ([0-9.+-eE]*) \+/- ([0-9.+-eE]*)(.*)%\1%g')
-    Result_angerr=$(echo "$Result_text" | grep "p = " | perl -p -e 's%p = ([0-9.+-eE]*) \+/- ([0-9.+-eE]*)(.*)%\2%g')
-    Result_min=$(awk "BEGIN {print ($Result_maj)*($Result_rba)}")
-    Result_minerr=$(awk "BEGIN {print ($Result_majerr)*($Result_rba)}")
-fi
-# convert flux unit
-Result_flux=$(awk "BEGIN {print ($Result_flux)*1e3}") # make flux mJy
-Result_ferr=$(awk "BEGIN {print ($Result_ferr)*1e3}") # make flux mJy
-# fix flux error problem
-if grep -q -i "If data weights are arbitrarily scaled" "$Result_file"; then
-    Result_ferr=$(awk "BEGIN {print ($Result_ferr)*sqrt($Result_chi2)}")
-fi 
-# compute SNR
-Result_fsnr=$(awk "BEGIN {print ($Result_flux)/($Result_ferr)}") # 
-# print results
-if [[ $Has_Printed_Head == 0 ]]; then
-    printf "# %16s %12s %12s %12s %12s %12s %12s %12s" "Source_Name" "reduced_chi2" "flux" "ferr" "xoff" "xerr" "yoff" "yerr"
-    if [[ $Result_npar -eq 3 ]]; then printf " %12s" "SNR"; fi
-    if [[ $Result_npar -eq 6 ]]; then printf " %12s %12s %12s %12s %12s %12s" "major" "major_err" "rminmaj" "rminmaj_err" "posangle" "posangle_err"; fi
-    printf "\n"
-    # 
-    printf "# %16s %12s %12s %12s %12s %12s %12s %12s"  " "  " "  "mJy"  "mJy" "arcsec" "arcsec" "arcsec" "arcsec"
-    if [[ $Result_npar -eq 3 ]]; then printf " %12s" "SNR"; fi
-    if [[ $Result_npar -eq 6 ]]; then printf " %12s %12s %12s %12s %12s %12s"  "arcsec"  "arcsec"  " "  " "  "degree"  "degree"; fi
-    printf "\n"
-    # 
-    Has_Printed_Head=1
-fi
-if [[ $i -ge 0 ]]; then
-    printf "%18s %12g %12g %12g %12g %12g %12g %12g" "$Source_Name" "$Result_chi2" "$Result_flux" "$Result_ferr" "$Result_xoff" "$Result_xerr" "$Result_yoff" "$Result_yerr"
-    if [[ $Result_npar -eq 3 ]]; then printf " %12g" "$Result_fsnr"; fi
-    if [[ $Result_npar -eq 6 ]]; then printf " %12g %12g %12g %12g %12g %12g" "$Result_maj" "$Result_majerr" "$Result_rba" "$Result_rbaerr" "$Result_ang" "$Result_angerr"; fi
-    printf "\n"
-fi
-
-# echo "## Done!"
+casa-ms-uvmodelfit-print-results-v2 "$@"
 
 
