@@ -13,7 +13,7 @@ killtree() {
 }
 
 
-ps af
+ps f -u ${USER} -o pid,user,lstart,etime,cmd
 
 
 if [[ $# -gt 0 ]]; then
@@ -30,4 +30,6 @@ fi
 
 sleep 1.5
 
-ps af
+ps f -u ${USER} -o pid,user,lstart,etime,cmd
+
+
