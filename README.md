@@ -34,21 +34,21 @@ pdbi-uvt-go-splitpolar -name MY_UV_table.uvt -out MY_UV_table_output.uvt
 
 Then run uv_fit at the phase center:
 ```
-pdbi-uvt-go-uvfit-v2 -name "ID-6406-1mm" -fixpos -point -out "ID-6406-1mm.uvt.uvfit.P.FixedPos"
-pdbi-uvt-go-uvfit-v2 -name "ID-6406-1mm" -varypos -point -out "ID-6406-1mm.uvt.uvfit.P.VariedPos"
-pdbi-uvt-go-uvfit-v2 -name "ID-6406-1mm" -varypos -cgauss -out "ID-6406-1mm.uvt.uvfit.C.VariedPos"
-pdbi-uvt-go-uvfit-v2 -name "ID-6406-1mm" -varypos -egauss -out "ID-6406-1mm.uvt.uvfit.G.VariedPos"
+pdbi-uvt-go-uvfit-v3 -name "ID-6406-1mm" -fixpos -point -out "ID-6406-1mm.uvt.uvfit.P.FixedPos"
+pdbi-uvt-go-uvfit-v3 -name "ID-6406-1mm" -varypos -point -out "ID-6406-1mm.uvt.uvfit.P.VariedPos"
+pdbi-uvt-go-uvfit-v3 -name "ID-6406-1mm" -varypos -cgauss -out "ID-6406-1mm.uvt.uvfit.C.VariedPos"
+pdbi-uvt-go-uvfit-v3 -name "ID-6406-1mm" -varypos -egauss -out "ID-6406-1mm.uvt.uvfit.G.VariedPos"
 ```
-The output fitting log file will be "ID-6406-1mm.uvt.uvfit.P.VariedPos.log". 
+The output fitting log file will be "ID-6406-1mm.uvt.uvfit.P.VariedPos.log", and the output data table will be "ID-6406-1mm.uvt.uvfit.P.VariedPos.uvfit.obj_1.txt". 
 
 Or run uv_fit for multiple source by giving the "-radec" argument list:
 ```
-pdbi-uvt-go-uvfit-v2 -name "ID-6406-1mm" -radec 12:01:56.0 55:55:55.0 -fixpos -point \
+pdbi-uvt-go-uvfit-v3 -name "ID-6406-1mm" -radec 12:01:56.0 55:55:55.0 -fixpos -point \
                                          -radec 12:02:56.0 55:55:55.0 -fixpos -egauss \
                                          -radec 12:03:56.0 55:55:55.0 -fixpos -egauss \
-                                         -out "output_multi_source_uv_fit"
+                                         -out "Output_filename"
 ```
-The output fitting log file will be "output_multi_source_uv_fit.log". 
+The output fitting log file will be "Output_filename.log", and the output data table will be "Output_filename.uvfit.obj_1.txt".   
 
 
 
@@ -57,7 +57,19 @@ The output fitting log file will be "output_multi_source_uv_fit.log".
 Fix circular Gaussian size for uv_fit
 
 ```
+pdbi-uvt-go-uvfit-v3 -name "ID-6406-1mm" \
+                                         -radec 12:02:56.0 55:55:55.0 -fixpos -size 1.0 -fixsize -cgauss \
+                                         -radec 12:03:56.0 55:55:55.0 -fixpos -size 1.0 0.75 -fixsize -angle 0 -fixangle -egauss \
+                                         -out "Output_filename"
 ```
+The output fitting log file will be "Output_filename.log", and the output data table will be "Output_filename.uvfit.obj_1.txt" and "Output_filename.uvfit.obj_2.txt". 
+We also output spectrum figures as "Output_filename.plotfit.obj_1.eps". 
+
+
+
+
+
+
 
 
 
