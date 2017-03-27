@@ -1,4 +1,4 @@
-GILDAS Version: 10feb17 (10feb17 06:20 cet) (x86_64-darwin-gfortran-mp-5) executable tree
+GILDAS Version: feb17c (24feb17 17:45 cet) (x86_64-darwin-gfortran-mp-5) executable tree
 W-SIC,  Session is not interactive, SIC EDIT and SIC MEMORY off
 
  * Welcome to MAPPING   

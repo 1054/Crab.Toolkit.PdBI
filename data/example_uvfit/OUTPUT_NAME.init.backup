@@ -1,0 +1,28 @@
+! 
+! Task UV_FIT (new version R. Lucas)
+! 6 parameters needed for all functions
+!
+TASK\CHARACTER "UV Table: "                     UVTABLE$       "NAME"
+TASK\INTEGER   "Channels: "                     CHANNEL$[2]     1 200
+TASK\REAL      "UV Range: "                     UV_RANGE$[2]    0 36000
+TASK\CHARACTER "Result Fits Table: "            RESULT$        "OUTPUT_NAME.uvfit"
+TASK\CHARACTER "Residual UV Table: "            RESIDUALS$     ""
+TASK\INTEGER   "Number of Functions"            NF$             1
+! 
+! Functions 
+! (POINT, C_GAUSS, E_GAUSS, C_DISK, 
+!  E_DISK, RING, EXP, POWER-2, POWER-3)
+! 
+! --- begin repeat ---
+! 
+! --- 01
+! 
+TASK\CHARACTER "Function"            FUNCT01$       E_GAUSS
+TASK\REAL      "Parameters"          PARAM01$[7]    -13.024 9.500 1.0 1.5 0.75 90 0
+TASK\REAL      "Starting range"      RANGE01$[7]    0 0 0 0 0 0 0
+TASK\INTEGER   "number of starts"    START01$[7]    -1 -1 0 -1 -1 -1 0
+TASK\LOGICAL   "Subtract function"   SUBSF01$       NO
+! 
+! --- end repeat ---
+! 
+TASK\GO

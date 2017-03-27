@@ -1,0 +1,2232 @@
+I-GDF_STBL,  Setting  2 starting blocks
+ UV_FIT Fortran-90 version 
+I-GIO_RIH,  GDFBIG re-allocation      3
+W-GDF_UV_DOPPLER,  Header version: Image V2.0 System V2.2 Current V2.2 Goal V2.2
+I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
+
+ I-UV_FIT,         1320  data points for channel           1
+ I-UV_FIT, Starting minimization on channel           1    Velocity=   -1000.00000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3605 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -9.34187 (  6.53453)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel           2
+ I-UV_FIT, Starting minimization on channel           2    Velocity=   -990.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3741 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -7.24819 (  6.77984)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel           3
+ I-UV_FIT, Starting minimization on channel           3    Velocity=   -980.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3580 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -2.71300 (  6.48801)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel           4
+ I-UV_FIT, Starting minimization on channel           4    Velocity=   -970.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3584 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     9.82127 (  6.49563)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel           5
+ I-UV_FIT, Starting minimization on channel           5    Velocity=   -960.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3596 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.67962 (  6.51734)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel           6
+ I-UV_FIT, Starting minimization on channel           6    Velocity=   -950.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3524 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     2.58530 (  6.38769)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel           7
+ I-UV_FIT, Starting minimization on channel           7    Velocity=   -940.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3532 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =  -187.94911 (6401.8705)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel           8
+ I-UV_FIT, Starting minimization on channel           8    Velocity=   -930.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3571 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    11.58066 (  6.47233)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel           9
+ I-UV_FIT, Starting minimization on channel           9    Velocity=   -920.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3542 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     4.24089 (  6.41916)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          10
+ I-UV_FIT, Starting minimization on channel          10    Velocity=   -910.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3518 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =  -488.21403 (6375.7910)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          11
+ I-UV_FIT, Starting minimization on channel          11    Velocity=   -900.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3535 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     2.13949 (  6.40572)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          12
+ I-UV_FIT, Starting minimization on channel          12    Velocity=   -890.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3637 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     8.60957 (  6.59132)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          13
+ I-UV_FIT, Starting minimization on channel          13    Velocity=   -880.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3504 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   -15.74174 (  6.34965)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          14
+ I-UV_FIT, Starting minimization on channel          14    Velocity=   -870.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3519 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =  -375.50447 (6378.0190)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          15
+ I-UV_FIT, Starting minimization on channel          15    Velocity=   -860.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3556 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -5.08850 (  6.44407)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          16
+ I-UV_FIT, Starting minimization on channel          16    Velocity=   -850.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3479 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   -16.68175 (  6.30529)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          17
+ I-UV_FIT, Starting minimization on channel          17    Velocity=   -840.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3649 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   671.87657 (6612.1434)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          18
+ I-UV_FIT, Starting minimization on channel          18    Velocity=   -830.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3544 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.65373 (  6.42145)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          19
+ I-UV_FIT, Starting minimization on channel          19    Velocity=   -820.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3505 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   -13.48772 (  6.35228)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          20
+ I-UV_FIT, Starting minimization on channel          20    Velocity=   -810.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3527 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     5.39148 (  6.39182)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          21
+ I-UV_FIT, Starting minimization on channel          21    Velocity=   -800.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3585 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     8.46103 (  6.49582)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          22
+ I-UV_FIT, Starting minimization on channel          22    Velocity=   -790.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3457 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     6.28192 (  6.26469)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          23
+ I-UV_FIT, Starting minimization on channel          23    Velocity=   -780.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3563 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -2.27013 (  6.45600)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          24
+ I-UV_FIT, Starting minimization on channel          24    Velocity=   -770.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3605 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     2.51421 (  6.53240)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          25
+ I-UV_FIT, Starting minimization on channel          25    Velocity=   -760.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3442 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -1.03079 (  6.23723)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          26
+ I-UV_FIT, Starting minimization on channel          26    Velocity=   -750.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3489 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     9.66126 (  6.32254)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          27
+ I-UV_FIT, Starting minimization on channel          27    Velocity=   -740.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3600 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    10.41237 (  6.52244)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          28
+ I-UV_FIT, Starting minimization on channel          28    Velocity=   -730.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3519 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.73536 (  6.37624)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          29
+ I-UV_FIT, Starting minimization on channel          29    Velocity=   -720.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3460 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   377.93323 (6269.2991)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          30
+ I-UV_FIT, Starting minimization on channel          30    Velocity=   -710.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3431 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     2.95164 (  6.21662)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          31
+ I-UV_FIT, Starting minimization on channel          31    Velocity=   -700.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3482 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    13.61316 (6308.7345)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          32
+ I-UV_FIT, Starting minimization on channel          32    Velocity=   -690.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3399 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    10.51020 (  6.15835)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          33
+ I-UV_FIT, Starting minimization on channel          33    Velocity=   -680.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3458 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   822.31812 (6265.5204)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          34
+ I-UV_FIT, Starting minimization on channel          34    Velocity=   -670.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3398 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   211.85775 (6157.1976)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          35
+ I-UV_FIT, Starting minimization on channel          35    Velocity=   -660.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3472 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   -14.05055 (  6.29006)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          36
+ I-UV_FIT, Starting minimization on channel          36    Velocity=   -650.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3399 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -2.44614 (  6.15777)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          37
+ I-UV_FIT, Starting minimization on channel          37    Velocity=   -640.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3425 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -3.90895 (  6.20479)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          38
+ I-UV_FIT, Starting minimization on channel          38    Velocity=   -630.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3416 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =  -870.41942 (6189.4068)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          39
+ I-UV_FIT, Starting minimization on channel          39    Velocity=   -620.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3425 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =  -466.84905 (6204.9076)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          40
+ I-UV_FIT, Starting minimization on channel          40    Velocity=   -610.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3540 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.54014 (  6.41303)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          41
+ I-UV_FIT, Starting minimization on channel          41    Velocity=   -600.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3509 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   981.37373 (6356.5303)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          42
+ I-UV_FIT, Starting minimization on channel          42    Velocity=   -590.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3429 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     1.71708 (  6.21219)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          43
+ I-UV_FIT, Starting minimization on channel          43    Velocity=   -580.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3501 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     5.23771 (  6.34191)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          44
+ I-UV_FIT, Starting minimization on channel          44    Velocity=   -570.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3456 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   -12.01933 (  6.26090)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          45
+ I-UV_FIT, Starting minimization on channel          45    Velocity=   -560.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3468 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     2.28751 (  6.28303)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          46
+ I-UV_FIT, Starting minimization on channel          46    Velocity=   -550.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3499 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   -15.55250 (  6.33766)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          47
+ I-UV_FIT, Starting minimization on channel          47    Velocity=   -540.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3521 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.39046 (  6.37766)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          48
+ I-UV_FIT, Starting minimization on channel          48    Velocity=   -530.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3510 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     1.61664 (  6.35836)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          49
+ I-UV_FIT, Starting minimization on channel          49    Velocity=   -520.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3492 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =  -261.00539 (6326.1649)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          50
+ I-UV_FIT, Starting minimization on channel          50    Velocity=   -510.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3571 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =  -780.97776 (6468.9992)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          51
+ I-UV_FIT, Starting minimization on channel          51    Velocity=   -500.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3510 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    13.49483 (  6.35777)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          52
+ I-UV_FIT, Starting minimization on channel          52    Velocity=   -490.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3492 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   -10.19469 (  6.32437)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          53
+ I-UV_FIT, Starting minimization on channel          53    Velocity=   -480.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3448 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -3.95217 (  6.24519)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          54
+ I-UV_FIT, Starting minimization on channel          54    Velocity=   -470.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3504 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -5.09790 (  6.34697)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          55
+ I-UV_FIT, Starting minimization on channel          55    Velocity=   -460.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3473 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -1.44757 (  6.29132)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          56
+ I-UV_FIT, Starting minimization on channel          56    Velocity=   -450.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3580 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -3.86861 (  6.48498)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          57
+ I-UV_FIT, Starting minimization on channel          57    Velocity=   -440.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3482 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     4.62018 (  6.30704)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          58
+ I-UV_FIT, Starting minimization on channel          58    Velocity=   -430.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3440 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   -15.16467 (  6.22964)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          59
+ I-UV_FIT, Starting minimization on channel          59    Velocity=   -420.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3465 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   586.35978 (6274.8801)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          60
+ I-UV_FIT, Starting minimization on channel          60    Velocity=   -410.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3510 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -9.84789 (  6.35699)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          61
+ I-UV_FIT, Starting minimization on channel          61    Velocity=   -400.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3426 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     1.97357 (  6.20513)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          62
+ I-UV_FIT, Starting minimization on channel          62    Velocity=   -390.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3450 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -6.88264 (  6.24763)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          63
+ I-UV_FIT, Starting minimization on channel          63    Velocity=   -380.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3404 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -3.35063 (  6.16531)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          64
+ I-UV_FIT, Starting minimization on channel          64    Velocity=   -370.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3382 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -1.79682 (  6.12521)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          65
+ I-UV_FIT, Starting minimization on channel          65    Velocity=   -360.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3457 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     8.47381 (  6.25995)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          66
+ I-UV_FIT, Starting minimization on channel          66    Velocity=   -350.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3364 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    12.54703 (  6.09179)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          67
+ I-UV_FIT, Starting minimization on channel          67    Velocity=   -340.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3380 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -2.75810 (  6.12031)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          68
+ I-UV_FIT, Starting minimization on channel          68    Velocity=   -330.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3330 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     5.95121 (  6.02986)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          69
+ I-UV_FIT, Starting minimization on channel          69    Velocity=   -320.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3294 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -7.35123 (  5.96484)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          70
+ I-UV_FIT, Starting minimization on channel          70    Velocity=   -310.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3354 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    11.72758 (  6.07330)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          71
+ I-UV_FIT, Starting minimization on channel          71    Velocity=   -300.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3325 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     8.37831 (  6.02096)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          72
+ I-UV_FIT, Starting minimization on channel          72    Velocity=   -290.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3381 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   422.95942 (6121.8030)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          73
+ I-UV_FIT, Starting minimization on channel          73    Velocity=   -280.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3314 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     2.70772 (  6.00124)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          74
+ I-UV_FIT, Starting minimization on channel          74    Velocity=   -270.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3311 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -1.18235 (  5.99482)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          75
+ I-UV_FIT, Starting minimization on channel          75    Velocity=   -260.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3257 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =  -528.58181 (5898.0523)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          76
+ I-UV_FIT, Starting minimization on channel          76    Velocity=   -250.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3303 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -2.94628 (  5.98104)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          77
+ I-UV_FIT, Starting minimization on channel          77    Velocity=   -240.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3338 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   -10.87904 (  6.04412)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          78
+ I-UV_FIT, Starting minimization on channel          78    Velocity=   -230.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3333 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -8.52988 (  6.03526)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          79
+ I-UV_FIT, Starting minimization on channel          79    Velocity=   -220.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3349 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -1.54190 (  6.06323)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          80
+ I-UV_FIT, Starting minimization on channel          80    Velocity=   -210.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3252 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     1.25054 (  5.88759)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          81
+ I-UV_FIT, Starting minimization on channel          81    Velocity=   -200.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3292 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     2.71872 (  5.96027)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          82
+ I-UV_FIT, Starting minimization on channel          82    Velocity=   -190.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3232 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     4.56622 (  5.85140)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          83
+ I-UV_FIT, Starting minimization on channel          83    Velocity=   -180.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3215 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.11961 (  5.82054)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          84
+ I-UV_FIT, Starting minimization on channel          84    Velocity=   -170.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3318 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -5.85554 (  6.00736)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          85
+ I-UV_FIT, Starting minimization on channel          85    Velocity=   -160.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3312 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -3.87513 (  5.99697)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          86
+ I-UV_FIT, Starting minimization on channel          86    Velocity=   -150.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3309 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -1.02660 (  5.99178)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          87
+ I-UV_FIT, Starting minimization on channel          87    Velocity=   -140.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3338 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -3.51858 (  6.04344)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          88
+ I-UV_FIT, Starting minimization on channel          88    Velocity=   -130.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3320 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     4.32818 (  6.01058)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          89
+ I-UV_FIT, Starting minimization on channel          89    Velocity=   -120.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3351 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.76390 (  6.06684)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          90
+ I-UV_FIT, Starting minimization on channel          90    Velocity=   -110.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3295 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   921.81965 (5965.8049)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          91
+ I-UV_FIT, Starting minimization on channel          91    Velocity=   -100.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3270 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.18912 (  5.91940)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          92
+ I-UV_FIT, Starting minimization on channel          92    Velocity=   -90.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3212 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -3.17309 (  5.81553)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          93
+ I-UV_FIT, Starting minimization on channel          93    Velocity=   -80.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3324 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.39497 (  6.01750)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          94
+ I-UV_FIT, Starting minimization on channel          94    Velocity=   -70.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3375 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =  -362.02403 (6109.7639)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          95
+ I-UV_FIT, Starting minimization on channel          95    Velocity=   -60.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3388 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     1.39919 (  6.13355)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          96
+ I-UV_FIT, Starting minimization on channel          96    Velocity=   -50.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3439 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -3.52077 (  6.22527)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          97
+ I-UV_FIT, Starting minimization on channel          97    Velocity=   -40.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3460 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -7.23829 (  6.26430)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          98
+ I-UV_FIT, Starting minimization on channel          98    Velocity=   -30.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3458 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     7.44467 (  6.25940)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel          99
+ I-UV_FIT, Starting minimization on channel          99    Velocity=   -20.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3527 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -7.05942 (  6.38408)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         100
+ I-UV_FIT, Starting minimization on channel         100    Velocity=   -10.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3442 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   -14.23540 (  6.23072)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         101
+ I-UV_FIT, Starting minimization on channel         101    Velocity=    0.00000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3604 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   -11.55219 (  6.52323)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         102
+ I-UV_FIT, Starting minimization on channel         102    Velocity=    10.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3511 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     5.24866 (  6.35624)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         103
+ I-UV_FIT, Starting minimization on channel         103    Velocity=    20.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3427 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     7.59048 (  6.20407)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         104
+ I-UV_FIT, Starting minimization on channel         104    Velocity=    30.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3524 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -1.38592 (  6.37823)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         105
+ I-UV_FIT, Starting minimization on channel         105    Velocity=    40.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3890 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     8.76643 (  7.04105)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         106
+ I-UV_FIT, Starting minimization on channel         106    Velocity=    50.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3526 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.13005 (  6.38212)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         107
+ I-UV_FIT, Starting minimization on channel         107    Velocity=    60.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3532 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     6.01988 (  6.39216)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         108
+ I-UV_FIT, Starting minimization on channel         108    Velocity=    70.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3434 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -6.76161 (  6.21488)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         109
+ I-UV_FIT, Starting minimization on channel         109    Velocity=    80.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3470 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.85205 (  6.28123)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         110
+ I-UV_FIT, Starting minimization on channel         110    Velocity=    90.0000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3385 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     7.70305 (  6.12675)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         111
+ I-UV_FIT, Starting minimization on channel         111    Velocity=    100.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3483 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     4.16750 (  6.30370)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         112
+ I-UV_FIT, Starting minimization on channel         112    Velocity=    110.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3474 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    15.10030 (  6.28747)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         113
+ I-UV_FIT, Starting minimization on channel         113    Velocity=    120.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3413 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     7.71719 (  6.17715)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         114
+ I-UV_FIT, Starting minimization on channel         114    Velocity=    130.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3389 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -2.76851 (  6.13417)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         115
+ I-UV_FIT, Starting minimization on channel         115    Velocity=    140.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3386 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -3.60455 (  6.12818)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         116
+ I-UV_FIT, Starting minimization on channel         116    Velocity=    150.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3410 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -6.91080 (  6.17175)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         117
+ I-UV_FIT, Starting minimization on channel         117    Velocity=    160.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3360 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -9.22896 (  6.08022)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         118
+ I-UV_FIT, Starting minimization on channel         118    Velocity=    170.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3335 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   234.82332 (6036.2010)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         119
+ I-UV_FIT, Starting minimization on channel         119    Velocity=    180.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3297 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -5.47913 (  5.96711)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         120
+ I-UV_FIT, Starting minimization on channel         120    Velocity=    190.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3409 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -1.76508 (  6.16919)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         121
+ I-UV_FIT, Starting minimization on channel         121    Velocity=    200.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3318 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -3.68924 (  6.00448)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         122
+ I-UV_FIT, Starting minimization on channel         122    Velocity=    210.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3341 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -5.80346 (  6.04623)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         123
+ I-UV_FIT, Starting minimization on channel         123    Velocity=    220.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3340 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =  -460.19868 (6045.0600)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         124
+ I-UV_FIT, Starting minimization on channel         124    Velocity=    230.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3282 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -2.88206 (  5.93906)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         125
+ I-UV_FIT, Starting minimization on channel         125    Velocity=    240.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3336 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.98725 (  6.03658)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         126
+ I-UV_FIT, Starting minimization on channel         126    Velocity=    250.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3388 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   280.83493 (6130.4054)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         127
+ I-UV_FIT, Starting minimization on channel         127    Velocity=    260.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3300 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     2.52561 (  5.97171)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         128
+ I-UV_FIT, Starting minimization on channel         128    Velocity=    270.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3305 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -2.97372 (  5.98025)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         129
+ I-UV_FIT, Starting minimization on channel         129    Velocity=    280.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3405 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -3.82903 (  6.16180)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         130
+ I-UV_FIT, Starting minimization on channel         130    Velocity=    290.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3358 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -5.48934 (  6.07608)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         131
+ I-UV_FIT, Starting minimization on channel         131    Velocity=    300.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3321 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -6.24927 (  6.00941)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         132
+ I-UV_FIT, Starting minimization on channel         132    Velocity=    310.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3279 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -4.64524 (  5.93300)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         133
+ I-UV_FIT, Starting minimization on channel         133    Velocity=    320.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3332 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -4.29270 (  6.02856)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         134
+ I-UV_FIT, Starting minimization on channel         134    Velocity=    330.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3263 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =  -733.91751 (5904.0712)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         135
+ I-UV_FIT, Starting minimization on channel         135    Velocity=    340.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3314 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =  -708.47514 (5996.7785)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         136
+ I-UV_FIT, Starting minimization on channel         136    Velocity=    350.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3341 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     6.89733 (  6.04433)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         137
+ I-UV_FIT, Starting minimization on channel         137    Velocity=    360.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3186 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.27793 (  5.76425)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         138
+ I-UV_FIT, Starting minimization on channel         138    Velocity=    370.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3208 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     2.01118 (  5.80474)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         139
+ I-UV_FIT, Starting minimization on channel         139    Velocity=    380.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3330 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -2.35102 (  6.02401)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         140
+ I-UV_FIT, Starting minimization on channel         140    Velocity=    390.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3235 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -1.98404 (  5.85343)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         141
+ I-UV_FIT, Starting minimization on channel         141    Velocity=    400.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3154 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -7.20376 (  5.70572)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         142
+ I-UV_FIT, Starting minimization on channel         142    Velocity=    410.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3213 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -4.72293 (  5.81341)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         143
+ I-UV_FIT, Starting minimization on channel         143    Velocity=    420.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3261 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     9.29157 (  5.90052)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         144
+ I-UV_FIT, Starting minimization on channel         144    Velocity=    430.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3236 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -7.81880 (  5.85449)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         145
+ I-UV_FIT, Starting minimization on channel         145    Velocity=    440.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3226 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -7.27362 (  5.83684)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         146
+ I-UV_FIT, Starting minimization on channel         146    Velocity=    450.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3261 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -6.21457 (  5.89883)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         147
+ I-UV_FIT, Starting minimization on channel         147    Velocity=    460.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3137 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -4.32196 (  5.67445)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         148
+ I-UV_FIT, Starting minimization on channel         148    Velocity=    470.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3268 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -7.10009 (  5.91265)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         149
+ I-UV_FIT, Starting minimization on channel         149    Velocity=    480.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3218 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -5.75669 (  5.82190)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         150
+ I-UV_FIT, Starting minimization on channel         150    Velocity=    490.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3203 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     2.13112 (  5.79347)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         151
+ I-UV_FIT, Starting minimization on channel         151    Velocity=    500.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3238 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.60784 (  5.85745)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         152
+ I-UV_FIT, Starting minimization on channel         152    Velocity=    510.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3272 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     1.42737 (  5.91863)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         153
+ I-UV_FIT, Starting minimization on channel         153    Velocity=    520.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3100 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     1.58890 (  5.60817)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         154
+ I-UV_FIT, Starting minimization on channel         154    Velocity=    530.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3247 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   -11.67980 (  5.87435)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         155
+ I-UV_FIT, Starting minimization on channel         155    Velocity=    540.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3299 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =  -954.50709 (5967.4143)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         156
+ I-UV_FIT, Starting minimization on channel         156    Velocity=    550.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3233 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.97056 (  5.84768)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         157
+ I-UV_FIT, Starting minimization on channel         157    Velocity=    560.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3245 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    12.56830 (  5.86985)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         158
+ I-UV_FIT, Starting minimization on channel         158    Velocity=    570.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3321 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     6.90839 (  6.00742)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         159
+ I-UV_FIT, Starting minimization on channel         159    Velocity=    580.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3391 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -9.23893 (  6.13450)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         160
+ I-UV_FIT, Starting minimization on channel         160    Velocity=    590.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3322 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     8.40706 (  6.00923)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         161
+ I-UV_FIT, Starting minimization on channel         161    Velocity=    600.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3357 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     1.80239 (  6.07252)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         162
+ I-UV_FIT, Starting minimization on channel         162    Velocity=    610.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3272 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -7.68542 (  5.91793)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         163
+ I-UV_FIT, Starting minimization on channel         163    Velocity=    620.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3329 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -8.27001 (  6.02197)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         164
+ I-UV_FIT, Starting minimization on channel         164    Velocity=    630.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3331 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    19.22442 (  6.02468)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         165
+ I-UV_FIT, Starting minimization on channel         165    Velocity=    640.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3264 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    10.31527 (  5.90407)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         166
+ I-UV_FIT, Starting minimization on channel         166    Velocity=    650.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3235 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     2.54308 (  5.85043)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         167
+ I-UV_FIT, Starting minimization on channel         167    Velocity=    660.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3312 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     8.40083 (  5.99014)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         168
+ I-UV_FIT, Starting minimization on channel         168    Velocity=    670.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3357 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -3.24539 (  6.07061)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         169
+ I-UV_FIT, Starting minimization on channel         169    Velocity=    680.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3305 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    10.05583 (  5.97696)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         170
+ I-UV_FIT, Starting minimization on channel         170    Velocity=    690.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3306 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -3.06806 (  5.97980)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         171
+ I-UV_FIT, Starting minimization on channel         171    Velocity=    700.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3218 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     6.46871 (  5.82031)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         172
+ I-UV_FIT, Starting minimization on channel         172    Velocity=    710.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3218 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.32846 (  5.81998)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         173
+ I-UV_FIT, Starting minimization on channel         173    Velocity=    720.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3339 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     6.55916 (  6.03923)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         174
+ I-UV_FIT, Starting minimization on channel         174    Velocity=    730.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3234 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     1.11708 (  5.84899)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         175
+ I-UV_FIT, Starting minimization on channel         175    Velocity=    740.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3306 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -5.87325 (  5.97921)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         176
+ I-UV_FIT, Starting minimization on channel         176    Velocity=    750.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3369 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -1.82504 (  6.09236)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         177
+ I-UV_FIT, Starting minimization on channel         177    Velocity=    760.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3363 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   -10.95198 (  6.08160)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         178
+ I-UV_FIT, Starting minimization on channel         178    Velocity=    770.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3288 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.50569 (  5.94641)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         179
+ I-UV_FIT, Starting minimization on channel         179    Velocity=    780.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3272 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     6.08405 (  5.91725)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         180
+ I-UV_FIT, Starting minimization on channel         180    Velocity=    790.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3348 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     6.63709 (  6.05471)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         181
+ I-UV_FIT, Starting minimization on channel         181    Velocity=    800.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3346 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     2.24110 (  6.05033)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         182
+ I-UV_FIT, Starting minimization on channel         182    Velocity=    810.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3407 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =  -129.07488 (6161.4010)  microJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         183
+ I-UV_FIT, Starting minimization on channel         183    Velocity=    820.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3369 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     9.72615 (  6.09189)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         184
+ I-UV_FIT, Starting minimization on channel         184    Velocity=    830.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3308 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     1.80354 (  5.98154)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         185
+ I-UV_FIT, Starting minimization on channel         185    Velocity=    840.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3375 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -5.34981 (  6.10239)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         186
+ I-UV_FIT, Starting minimization on channel         186    Velocity=    850.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3393 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     2.86824 (  6.13534)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         187
+ I-UV_FIT, Starting minimization on channel         187    Velocity=    860.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3343 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -4.37165 (  6.04472)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         188
+ I-UV_FIT, Starting minimization on channel         188    Velocity=    870.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3411 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -3.28260 (  6.16734)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         189
+ I-UV_FIT, Starting minimization on channel         189    Velocity=    880.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3443 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -3.93611 (  6.22557)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         190
+ I-UV_FIT, Starting minimization on channel         190    Velocity=    890.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3414 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -3.96794 (  6.17264)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         191
+ I-UV_FIT, Starting minimization on channel         191    Velocity=    900.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3362 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     3.21672 (  6.07848)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         192
+ I-UV_FIT, Starting minimization on channel         192    Velocity=    910.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3479 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =   -12.01459 (  6.29028)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         193
+ I-UV_FIT, Starting minimization on channel         193    Velocity=    920.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3487 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     1.34301 (  6.30460)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         194
+ I-UV_FIT, Starting minimization on channel         194    Velocity=    930.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3490 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     2.29502 (  6.30984)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         195
+ I-UV_FIT, Starting minimization on channel         195    Velocity=    940.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3511 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     5.80165 (  6.34776)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         196
+ I-UV_FIT, Starting minimization on channel         196    Velocity=    950.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3524 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -2.97664 (  6.37103)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         197
+ I-UV_FIT, Starting minimization on channel         197    Velocity=    960.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3491 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -4.40422 (  6.31050)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         198
+ I-UV_FIT, Starting minimization on channel         198    Velocity=    970.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3494 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     4.75865 (  6.31632)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         199
+ I-UV_FIT, Starting minimization on channel         199    Velocity=    980.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3475 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =     5.26866 (  6.28315)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+
+ I-UV_FIT,         1320  data points for channel         200
+ I-UV_FIT, Starting minimization on channel         200    Velocity=    990.000000    
+ I-UV_FIT, Starting from   1.0000    
+ r.m.s.=     0.3534 Jy.
+ E_GAUSS  R.A.        =   -13.02400 (  fixed  )  10:00:07.8620
+ E_GAUSS  Dec.        =     9.50000 (  fixed  )  02:19:11.9960
+ E_GAUSS  Flux        =    -8.77219 (  6.38892)  milliJy 
+ E_GAUSS  Major       =     1.50000 (  fixed  )
+ E_GAUSS  Minor       =     0.75000 (  fixed  )
+ E_GAUSS  Pos.Ang.    =   -90.00000 (  fixed  )
+S-UV_FIT,  Successful completion
+STOP  
+GILDAS Version: feb17c (24feb17 17:45 cet) (x86_64-darwin-gfortran-mp-5) executable tree
+W-SIC,  Session is not interactive, SIC EDIT and SIC MEMORY off
+
+ * Welcome to MAPPING   
+
+ * Loaded modules
+    sic (J.Pety, S.Bardeau, S.Guilloteau, E.Reynier)
+    greg (J.Pety, S.Bardeau, S.Guilloteau, E.Reynier)
+    mapping (J.Pety, S.Guilloteau, F.Gueth, N.Rodriguez-Fernandez)
+
+ * In charge:              J.Pety
+   Active developers:      N.Rodriguez-Fernandez, S.Guilloteau, F.Gueth
+   Main past contributors: K.Bouyoucef, R.Lucas
+
+ * MAPPING is an interactive program to image and deconvolve
+   (sub)mm interferometric data
+
+ * Questions? Comments? Bug reports? Mail to: gildas@iram.fr
+
+ * For help, type HELP, INPUT and/or INFO at the MAPPING prompt
+
+I-RUN,  Task uv_fit running, logfile is
+I-RUN,  /Users/dzliu/.gag/logs/uv_fit.gildas
+I-RUN,  Elapsed .4, User .3, System .0
+I-RUN,  Task uv_fit completed successfully

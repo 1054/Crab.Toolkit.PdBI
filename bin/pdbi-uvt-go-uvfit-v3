@@ -405,64 +405,63 @@ for (( i=0; i<$PdBIUVT_OBJ_NUMB; i++ )); do
     
     # 
     # skip anyway <TODO>
-    if [[ 1 == 1 ]]; then 
-        continue
-    fi
-    
-    # 
-    # Get the Result of Velocity
-    PdBIUVT_VELO_OBJT=$(grep 'Velocity=' "$PdBIUVT_TEMP_LOGT" | cut -c 60- | sed -e 's/=//g' | tr -s ' ' | cut -d ' ' -f 2)
-    PdBIUVT_TEMP_OBJJ=$(bc <<< "($i+1)")
-    
-    # 
-    # Get the Result of Flux
-    ##PdBIUVT_TEMP_OBJM=$(bc <<< "${#PdBIUVT_RAND_OBJT[@]}*3") # r.m.s. and N*3 following lines
-    ##PdBIUVT_TEMP_TEXT=$(grep -A $PdBIUVT_TEMP_OBJM ' r.m.s. *=' "$PdBIUVT_TEMP_LOGT")
-    ##PdBIUVT_TEMP_OBJJ=$(bc <<< "($i+1)")
-    #PdBIUVT_TEMP_OBJI=$(bc <<< "($i+1)*3+1") # 1+3p, 1+6p, 1+9p is flux # <TODO> NOT ALWAYS # GILDAS mapping -- column x '7+1' /table cont351+362GHz_uv_fit.column
-    #PdBIUVT_TEMP_OBJM=$(bc <<< "${#PdBIUVT_RAND_OBJT[@]}*3+1+1") 
-    #PdBIUVT_TEMP_OBJI="$i"
-    #PdBIUVT_TEMP_OBJM="${#PdBIUVT_RAND_OBJT[@]}" 
-    # echo awk "NR%$PdBIUVT_TEMP_OBJM==$PdBIUVT_TEMP_OBJI"
-    # PdBIUVT_FMOD_OBJT=$(grep -v 'STOP' "$PdBIUVT_TEMP_LOGT" | grep -A $PdBIUVT_TEMP_OBJM ' r.m.s. *=' | awk "NR%$PdBIUVT_TEMP_OBJM==$PdBIUVT_TEMP_OBJI" | sed -E 's/ *(.*) *FLUX *=(.*) [(](.*)[)]/\1/g')
-    # PdBIUVT_FLUX_OBJT=$(grep -v 'STOP' "$PdBIUVT_TEMP_LOGT" | grep -A $PdBIUVT_TEMP_OBJM ' r.m.s. *=' | awk "NR%$PdBIUVT_TEMP_OBJM==$PdBIUVT_TEMP_OBJI" | sed -E 's/ *(.*) *FLUX *=(.*) [(](.*)[)]/\2/g')
-    # PdBIUVT_FERR_OBJT=$(grep -v 'STOP' "$PdBIUVT_TEMP_LOGT" | grep -A $PdBIUVT_TEMP_OBJM ' r.m.s. *=' | awk "NR%$PdBIUVT_TEMP_OBJM==$PdBIUVT_TEMP_OBJI" | sed -E 's/ *(.*) *FLUX *=(.*) [(](.*)[)]/\3/g')
-                    ##  grep -v 'STOP' "$PdBIUVT_TEMP_LOGT" | grep -A $PdBIUVT_TEMP_OBJM ' r.m.s. *=' | awk "NR%$PdBIUVT_TEMP_OBJM==$PdBIUVT_TEMP_OBJI" | perl -p -e 's/ *(.*) *=(.*) [(](.*)[)]/\1 \2 \3/g' > tmp_ObjFlux.$PdBIUVT_TEMP_OBJJ
-                      # grep -v 'STOP' "$PdBIUVT_TEMP_LOGT" | grep -B  2                 ' r.m.s. *=' | awk "NR%4==1"                                   | perl -p -e 's/.*Velocity *= *(.*)/Velocity   \1/g' > tmp_ObjVelo.$PdBIUVT_TEMP_OBJJ
-                # echo "grep -v 'STOP' \"$PdBIUVT_TEMP_LOGT\" | grep -i ' FLUX *='                                        | awk \"(NR-1)%${#PdBIUVT_RAND_OBJT[@]}==$i\" | perl -p -e 's/ *(.*) *=(.*) [(](.*)[)]/\1 \2 \3/g' > tmp_ObjFlux.$PdBIUVT_TEMP_OBJJ"
-                        grep -v 'STOP'  "$PdBIUVT_TEMP_LOGT"  | grep -i ' FLUX *='                                        | awk  "(NR-1)%${#PdBIUVT_RAND_OBJT[@]}==$i"  | perl -p -e 's/ *(.*) *=(.*) [(](.*)[)]/\1 \2 \3/g' > tmp_ObjFlux.$PdBIUVT_TEMP_OBJJ
-                # echo "grep -v 'STOP' \"$PdBIUVT_TEMP_LOGT\" | grep -i 'Starting minimization on channel.*Velocity.*=.*' | perl -p -e 's/.*Velocity *= *(.*)/Velocity   \1/g' > tmp_ObjVelo.$PdBIUVT_TEMP_OBJJ"
-                        grep -v 'STOP'  "$PdBIUVT_TEMP_LOGT"  | grep -i 'Starting minimization on channel.*Velocity.*=.*' | perl -p -e 's/.*Velocity *= *(.*)/Velocity   \1/g' > tmp_ObjVelo.$PdBIUVT_TEMP_OBJJ
-    # 
-    # echo PdBIUVT_FMOD_OBJT=$PdBIUVT_FMOD_OBJT
-    # echo PdBIUVT_FLUX_OBJT=$PdBIUVT_FLUX_OBJT
-    # echo PdBIUVT_FERR_OBJT=$PdBIUVT_FERR_OBJT
-    # echo PdBIUVT_FUNT_OBJT=$PdBIUVT_FUNT_OBJT
-    # exit
-    
-    # 
-    # prepare plot
-    rm "tmp_ObjFlux" 2>/dev/null
-    rm "tmp_ObjVelo" 2>/dev/null
-    cp "tmp_ObjFlux.$PdBIUVT_TEMP_OBJJ" "tmp_ObjFlux"
-    cp "tmp_ObjVelo.$PdBIUVT_TEMP_OBJJ" "tmp_ObjVelo"
-    if [[ x"$PdBIUVT_SAVE" != x"tmp_doUVFIT" ]]; then
-        rm "tmp_doUVFIT.log" 2>/dev/null
-        cp "$PdBIUVT_TEMP_LOGT" "tmp_doUVFIT.log"
-    fi
-    
-    
-    # 
-    # prepare supermongo label text
-    PdBIUVT_NAME_TEX=$(echo $PdBIUVT_NAME | sed -e 's/_/\\_/g')
-    
-    # 
-    # copy supermongo script
-    cp "$(dirname $0)/pdbi-uvt-go-uvfit-v3.sm" .
-    
-    # 
-    # do plot
-    # 
+    if [[ 1 == 0 ]]; then 
+            
+        
+        # 
+        # Get the Result of Velocity
+        PdBIUVT_VELO_OBJT=$(grep 'Velocity=' "$PdBIUVT_TEMP_LOGT" | cut -c 60- | sed -e 's/=//g' | tr -s ' ' | cut -d ' ' -f 2)
+        PdBIUVT_TEMP_OBJJ=$(bc <<< "($i+1)")
+        
+        # 
+        # Get the Result of Flux
+        ##PdBIUVT_TEMP_OBJM=$(bc <<< "${#PdBIUVT_RAND_OBJT[@]}*3") # r.m.s. and N*3 following lines
+        ##PdBIUVT_TEMP_TEXT=$(grep -A $PdBIUVT_TEMP_OBJM ' r.m.s. *=' "$PdBIUVT_TEMP_LOGT")
+        ##PdBIUVT_TEMP_OBJJ=$(bc <<< "($i+1)")
+        #PdBIUVT_TEMP_OBJI=$(bc <<< "($i+1)*3+1") # 1+3p, 1+6p, 1+9p is flux # <TODO> NOT ALWAYS # GILDAS mapping -- column x '7+1' /table cont351+362GHz_uv_fit.column
+        #PdBIUVT_TEMP_OBJM=$(bc <<< "${#PdBIUVT_RAND_OBJT[@]}*3+1+1") 
+        #PdBIUVT_TEMP_OBJI="$i"
+        #PdBIUVT_TEMP_OBJM="${#PdBIUVT_RAND_OBJT[@]}" 
+        # echo awk "NR%$PdBIUVT_TEMP_OBJM==$PdBIUVT_TEMP_OBJI"
+        # PdBIUVT_FMOD_OBJT=$(grep -v 'STOP' "$PdBIUVT_TEMP_LOGT" | grep -A $PdBIUVT_TEMP_OBJM ' r.m.s. *=' | awk "NR%$PdBIUVT_TEMP_OBJM==$PdBIUVT_TEMP_OBJI" | sed -E 's/ *(.*) *FLUX *=(.*) [(](.*)[)]/\1/g')
+        # PdBIUVT_FLUX_OBJT=$(grep -v 'STOP' "$PdBIUVT_TEMP_LOGT" | grep -A $PdBIUVT_TEMP_OBJM ' r.m.s. *=' | awk "NR%$PdBIUVT_TEMP_OBJM==$PdBIUVT_TEMP_OBJI" | sed -E 's/ *(.*) *FLUX *=(.*) [(](.*)[)]/\2/g')
+        # PdBIUVT_FERR_OBJT=$(grep -v 'STOP' "$PdBIUVT_TEMP_LOGT" | grep -A $PdBIUVT_TEMP_OBJM ' r.m.s. *=' | awk "NR%$PdBIUVT_TEMP_OBJM==$PdBIUVT_TEMP_OBJI" | sed -E 's/ *(.*) *FLUX *=(.*) [(](.*)[)]/\3/g')
+                        ##  grep -v 'STOP' "$PdBIUVT_TEMP_LOGT" | grep -A $PdBIUVT_TEMP_OBJM ' r.m.s. *=' | awk "NR%$PdBIUVT_TEMP_OBJM==$PdBIUVT_TEMP_OBJI" | perl -p -e 's/ *(.*) *=(.*) [(](.*)[)]/\1 \2 \3/g' > tmp_ObjFlux.$PdBIUVT_TEMP_OBJJ
+                          # grep -v 'STOP' "$PdBIUVT_TEMP_LOGT" | grep -B  2                 ' r.m.s. *=' | awk "NR%4==1"                                   | perl -p -e 's/.*Velocity *= *(.*)/Velocity   \1/g' > tmp_ObjVelo.$PdBIUVT_TEMP_OBJJ
+                    # echo "grep -v 'STOP' \"$PdBIUVT_TEMP_LOGT\" | grep -i ' FLUX *='                                        | awk \"(NR-1)%${#PdBIUVT_RAND_OBJT[@]}==$i\" | perl -p -e 's/ *(.*) *=(.*) [(](.*)[)]/\1 \2 \3/g' > tmp_ObjFlux.$PdBIUVT_TEMP_OBJJ"
+                            grep -v 'STOP'  "$PdBIUVT_TEMP_LOGT"  | grep -i ' FLUX *='                                        | awk  "(NR-1)%${#PdBIUVT_RAND_OBJT[@]}==$i"  | perl -p -e 's/ *(.*) *=(.*) [(](.*)[)]/\1 \2 \3/g' > tmp_ObjFlux.$PdBIUVT_TEMP_OBJJ
+                    # echo "grep -v 'STOP' \"$PdBIUVT_TEMP_LOGT\" | grep -i 'Starting minimization on channel.*Velocity.*=.*' | perl -p -e 's/.*Velocity *= *(.*)/Velocity   \1/g' > tmp_ObjVelo.$PdBIUVT_TEMP_OBJJ"
+                            grep -v 'STOP'  "$PdBIUVT_TEMP_LOGT"  | grep -i 'Starting minimization on channel.*Velocity.*=.*' | perl -p -e 's/.*Velocity *= *(.*)/Velocity   \1/g' > tmp_ObjVelo.$PdBIUVT_TEMP_OBJJ
+        # 
+        # echo PdBIUVT_FMOD_OBJT=$PdBIUVT_FMOD_OBJT
+        # echo PdBIUVT_FLUX_OBJT=$PdBIUVT_FLUX_OBJT
+        # echo PdBIUVT_FERR_OBJT=$PdBIUVT_FERR_OBJT
+        # echo PdBIUVT_FUNT_OBJT=$PdBIUVT_FUNT_OBJT
+        # exit
+        
+        # 
+        # prepare plot
+        rm "tmp_ObjFlux" 2>/dev/null
+        rm "tmp_ObjVelo" 2>/dev/null
+        cp "tmp_ObjFlux.$PdBIUVT_TEMP_OBJJ" "tmp_ObjFlux"
+        cp "tmp_ObjVelo.$PdBIUVT_TEMP_OBJJ" "tmp_ObjVelo"
+        if [[ x"$PdBIUVT_SAVE" != x"tmp_doUVFIT" ]]; then
+            rm "tmp_doUVFIT.log" 2>/dev/null
+            cp "$PdBIUVT_TEMP_LOGT" "tmp_doUVFIT.log"
+        fi
+        
+        
+        # 
+        # prepare supermongo label text
+        PdBIUVT_NAME_TEX=$(echo $PdBIUVT_NAME | sed -e 's/_/\\_/g')
+        
+        # 
+        # copy supermongo script
+        cp "$(dirname $0)/pdbi-uvt-go-uvfit-v3.sm" .
+        
+        # 
+        # do plot
+        # 
 sm << EOF
     # set freq_Cen = $PdBIUVT_LINE_FREQ # GHz
     set freq_Ref = $PdBIUVT_FREQ_REF # MHz
@@ -500,29 +499,46 @@ sm << EOF
     macro read "pdbi-uvt-go-uvfit-v3.sm" goUVFIT_PlotVeloAmpl
     
 EOF
-    
-    
-    # copy "tmp_doUVFIT" to "tmp_doUVFIT.$OBJI"
-    if [[ "$PdBIUVT_OBJ_NUMB" -gt 1 ]]; then
-        echo "Output to $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.log!   # The GIDLAS mapping running log file."
-        echo "Output to $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.dat!   # The result data table of frequency [GHz], velocity [km/s], flux and error [mJy]."
-        echo "Output to $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.eps!   # The result spectrum of flux versus frequency."
-        cp tmp_doUVFIT.eps $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.eps
-        cp tmp_doUVFIT.log $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.log
-        cp tmp_doUVFIT.dat $PdBIUVT_SAVE.$PdBIUVT_TEMP_OBJJ.dat
-    else
-        if [[ x"$PdBIUVT_SAVE" != x"tmp_doUVFIT" ]]; then
-            echo "Output to $PdBIUVT_SAVE.log!   # The GIDLAS mapping running log file."
-            echo "Output to $PdBIUVT_SAVE.dat!   # The result data table of frequency [GHz], velocity [km/s], flux and error [mJy]."
-            echo "Output to $PdBIUVT_SAVE.eps!   # The result spectrum of flux versus frequency."
-            cp tmp_doUVFIT.eps $PdBIUVT_SAVE.eps
-            cp tmp_doUVFIT.log $PdBIUVT_SAVE.log
-            cp tmp_doUVFIT.dat $PdBIUVT_SAVE.dat
-        fi
+    # 
     fi
-    echo "--"
-    # open tmp_doUVFIT.eps
+    
+    
+    
+    
     
 done
+
+
+
+
+    
+# 
+# print final output message
+echo ""
+echo "**********************"
+echo "* Final output files *"
+echo "**********************"
+
+echo "Output to \"$PdBIUVT_SAVE.log\"!   # The overall GIDLAS mapping uv_fit log file containing everything."
+#echo "Output to \"$PdBIUVT_SAVE.dat\"!   # The result data table of frequency [GHz], velocity [km/s], flux and error [mJy]."
+#echo "Output to \"$PdBIUVT_SAVE.eps\"!   # The result spectrum of flux versus frequency."
+echo "--"
+
+for (( i=0; i<$PdBIUVT_OBJ_NUMB; i++ )); do
+    
+    echo "Output to \"$PdBIUVT_SAVE.uvfit.${PdBIUVT_OBJ_NAME[i]}.txt\"!     # ${PdBIUVT_OBJ_NAME[i]} result data table of frequency [GHz], velocity [km/s], flux and error [mJy]."
+    echo "Output to \"$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.eps\"!   # ${PdBIUVT_OBJ_NAME[i]} result spectrum of flux versus frequency."
+    echo "--"
+    
+done
+
+
+
+
+
+
+
+
+
 
 

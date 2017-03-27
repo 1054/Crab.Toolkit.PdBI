@@ -1,3 +1,0 @@
-let SIC%TEE .TRUE.
-let name NAME
-run uv_fit NAME_go_uvfit.init /NOWINDOW

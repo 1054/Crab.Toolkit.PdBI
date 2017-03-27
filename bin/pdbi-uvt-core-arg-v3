@@ -684,12 +684,14 @@ if [[ x"$PdBIUVT_TYPE" == x"uvt" || x"$PdBIUVT_TYPE" == x"UVT" ]]; then
     for (( i=0; i<$PdBIUVT_OBJ_NUMB; i++ )); do
         # convert between offset and radec
         if [[ -z "${PdBIUVT_OBJ_POS[2*i+0]}" || -z "${PdBIUVT_OBJ_POS[2*i+1]}" ]]; then
-            PdBIUVT_OBJ_POS_X=$(printf "%0.5f\n" $(echo "-(${PdBIUVT_RAND_OBJT[i]}-($PdBIUVT_RAND_CENT))*3600.0*c($PdBIUVT_DECD_CENT/180*4*a(1))" | bc -l | tail -n 1 | sed 's/^\./0./' | sed 's/^[-]\./-0./')) # RA offset, note that the direction is -1!
+            # if input is RA Dec but not offset
+            PdBIUVT_OBJ_POS_X=$(printf "%0.5f\n" $(echo "(${PdBIUVT_RAND_OBJT[i]}-($PdBIUVT_RAND_CENT))*3600.0*c($PdBIUVT_DECD_CENT/180*4*a(1))" | bc -l | tail -n 1 | sed 's/^\./0./' | sed 's/^[-]\./-0./')) # RA offset, note that the direction is +1!
             PdBIUVT_OBJ_POS_Y=$(printf "%0.5f\n" $(echo "(${PdBIUVT_DECD_OBJT[i]}-($PdBIUVT_DECD_CENT))*3600.0" | bc -l | tail -n 1 | sed 's/^\./0./' | sed 's/^[-]\./-0./')) # DEC offset
             PdBIUVT_OBJ_POS[2*i+0]="$PdBIUVT_OBJ_POS_X"
             PdBIUVT_OBJ_POS[2*i+1]="$PdBIUVT_OBJ_POS_Y"
         else
-            PdBIUVT_OBJ_POS_X=$(awk "BEGIN {pi=atan2(0,-1); printf \"%0.7f\n\", ($PdBIUVT_RAND_CENT)-(${PdBIUVT_OBJ_POS[2*i+0]}/cos($PdBIUVT_DECD_CENT/180.0*pi))/3600.0;}") # RA offset, note that the direction is -1!
+            # if input is offset instead of RA Dec. Note that +X means +left (increase in RA), +Y means +up (increase in Dec). 
+            PdBIUVT_OBJ_POS_X=$(awk "BEGIN {pi=atan2(0,-1); printf \"%0.7f\n\", ($PdBIUVT_RAND_CENT)+(${PdBIUVT_OBJ_POS[2*i+0]}/cos($PdBIUVT_DECD_CENT/180.0*pi))/3600.0;}") # RA offset, note that the direction is +1!
             PdBIUVT_OBJ_POS_Y=$(awk "BEGIN {pi=atan2(0,-1); printf \"%0.7f\n\", ($PdBIUVT_DECD_CENT)+(${PdBIUVT_OBJ_POS[2*i+1]})/3600.0;}")
             # -- note: in awk, we can use "pi=atan2(0,-1)" to retrieve the value of pi. -- https://www.gnu.org/software/gawk/manual/html_node/Numeric-Functions.html
             PdBIUVT_RAND_OBJT[i]="$PdBIUVT_OBJ_POS_X"

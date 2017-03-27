@@ -1,4 +1,4 @@
-GILDAS Version: 10feb17 (10feb17 06:20 cet) (x86_64-darwin-gfortran-mp-5) executable tree
+GILDAS Version: feb17c (24feb17 17:45 cet) (x86_64-darwin-gfortran-mp-5) executable tree
 W-SIC,  Session is not interactive, SIC EDIT and SIC MEMORY off
 
  * Welcome to MAPPING   
@@ -20,8 +20,8 @@ W-SIC,  Session is not interactive, SIC EDIT and SIC MEMORY off
  * For help, type HELP, INPUT and/or INFO at the MAPPING prompt
 
 I-GIO_RIH,  GDFBIG re-allocation      2
-E-LET,  No such variable FREQ
-I-ERROR,  Occured in Loop  1 (#  1.000    ) at Line    1
-I-ERROR,  Called by ./NAME_go_uvfit.plotfit.map at Line   43
-F-PAUSE,  Session is not interactive
-F-SYSTEM,  Exit code           44 from call to SYSEXI
+W-CLEAR,  CLEAR ALPHA is obsolete
+ILENGTH         =           17               ! Integer LOCAL  3   
+W-LIMITS,  No range in Y
+W-LIMITS,  No range in Y
+I-HARDCOPY,  OUTPUT_NAME.plotfit.obj_1.eps created
