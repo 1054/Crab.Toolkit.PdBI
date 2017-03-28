@@ -7,7 +7,7 @@ TASK\INTEGER   "Channels: "                     CHANNEL$[2]     1 200
 TASK\REAL      "UV Range: "                     UV_RANGE$[2]    0 36000
 TASK\CHARACTER "Result Fits Table: "            RESULT$        "OUTPUT_NAME.uvfit"
 TASK\CHARACTER "Residual UV Table: "            RESIDUALS$     ""
-TASK\INTEGER   "Number of Functions"            NF$             1
+TASK\INTEGER   "Number of Functions"            NF$             2
 ! 
 ! Functions 
 ! (POINT, C_GAUSS, E_GAUSS, C_DISK, 
@@ -17,11 +17,19 @@ TASK\INTEGER   "Number of Functions"            NF$             1
 ! 
 ! --- 01
 ! 
-TASK\CHARACTER "Function"            FUNCT01$       E_GAUSS
-TASK\REAL      "Parameters"          PARAM01$[7]    -13.024 9.500 1.0 1.5 0.75 90 0
+TASK\CHARACTER "Function"            FUNCT01$       C_GAUSS
+TASK\REAL      "Parameters"          PARAM01$[7]    9.427 5.900 1.0 1.0 0.0 0.0 0
 TASK\REAL      "Starting range"      RANGE01$[7]    0 0 0 0 0 0 0
-TASK\INTEGER   "number of starts"    START01$[7]    -1 -1 0 -1 -1 -1 0
+TASK\INTEGER   "number of starts"    START01$[7]    -1 -1 0 -1 -1 0 0
 TASK\LOGICAL   "Subtract function"   SUBSF01$       NO
+! 
+! --- 02
+! 
+TASK\CHARACTER "Function"            FUNCT02$       C_GAUSS
+TASK\REAL      "Parameters"          PARAM02$[7]    5.830 2.300 1.0 1.0 0.0 0.0 0
+TASK\REAL      "Starting range"      RANGE02$[7]    0 0 0 0 0 0 0
+TASK\INTEGER   "number of starts"    START02$[7]    -1 -1 0 -1 -1 0 0
+TASK\LOGICAL   "Subtract function"   SUBSF02$       NO
 ! 
 ! --- end repeat ---
 ! 

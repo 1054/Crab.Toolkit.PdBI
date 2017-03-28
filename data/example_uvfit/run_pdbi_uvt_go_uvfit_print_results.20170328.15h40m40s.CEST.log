@@ -19,9 +19,5 @@ W-SIC,  Session is not interactive, SIC EDIT and SIC MEMORY off
 
  * For help, type HELP, INPUT and/or INFO at the MAPPING prompt
 
-W-CLEAR,  CLEAR ALPHA is obsolete
 I-GIO_RIH,  GDFBIG re-allocation      2
-ILENGTH         =           17               ! Integer LOCAL  3   
-W-LIMITS,  No range in Y
-W-LIMITS,  No range in Y
-I-HARDCOPY,  OUTPUT_NAME.plotfit.obj_1.eps created
+nchan = 200

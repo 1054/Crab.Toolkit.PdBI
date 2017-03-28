@@ -1,0 +1,18 @@
+
+# an example
+
+# 
+
+bash
+
+source ../../SETUP.bash
+
+pdbi-uvt-go-uvfit-v4 -name "NAME" \
+                     -radec 150.039 2.319 -fixpos -size 1.0 -fixsize -cgauss \
+                     -out "OUTPUT_NAME"
+
+pdbi-uvt-go-uvfit-v4 -name "NAME" \
+                     -radec 150.039 2.319 -fixpos -size 1.0 -fixsize -cgauss \
+                     -radec 150.038 2.318 -fixpos -size 1.0 -fixsize -cgauss \
+                     -out "OUTPUT_NAME"
+
