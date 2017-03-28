@@ -1,5 +1,5 @@
 #          x       x_err           y       y_err        freq           flux       flux_err       major   major_err       minor   minor_err          PA      PA_err             RA            Dec    velocity
-#     arcsec      arcsec      arcsec      arcsec         GHz            mJy            mJy      arcsec      arcsec      arcsec      arcsec      degree      degree         degree      degree        km/s
+#     arcsec      arcsec      arcsec      arcsec         GHz            mJy            mJy      arcsec      arcsec      arcsec      arcsec      degree      degree         degree         degree        km/s
        5.830       0.000       2.300       0.000     234.740   -1.87669E-01    5.94326E+00       1.000       0.000       0.000       0.000       0.000       0.000    150.0379944      2.3179989   -1000.000
        5.830       0.000       2.300       0.000     234.733    1.43711E+00    6.16442E+00       1.000       0.000       0.000       0.000       0.000       0.000    150.0379944      2.3179989    -990.000
        5.830       0.000       2.300       0.000     234.725    9.65014E+00    5.89710E+00       1.000       0.000       0.000       0.000       0.000       0.000    150.0379944      2.3179989    -980.000

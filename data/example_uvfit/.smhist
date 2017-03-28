@@ -1,4 +1,3 @@
-    set velo_low = -1010.000000000000000000 # -1010.000000000000000000
     set velo_high = -1010.000000000000000000 # -1010.000000000000000000
     #echo set freq_Ref = $(freq_Ref)
     #echo set velo_Wth = $(velo_Wth)
@@ -201,6 +200,8 @@ QUIT
     #echo set velo_high = $(velo_high)
     echo macro read \""pdbi-uvt-go-uvfit-v3.sm"\" goUVFIT_PlotVeloAmpl
     macro read "pdbi-uvt-go-uvfit-v3.sm" goUVFIT_PlotVeloAmpl
+QUIT
+echo hello
 QUIT
 echo hello
 QUIT
