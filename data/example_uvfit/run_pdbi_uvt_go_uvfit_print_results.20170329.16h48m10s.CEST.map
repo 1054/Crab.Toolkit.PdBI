@@ -39,7 +39,7 @@ IF (.NOT.EXIST(rf_ra)) define real rf_ra
 IF (.NOT.EXIST(rf_dec)) define real rf_dec
 IF (.NOT.EXIST(rf_velo)) define real rf_velo
 for iobj 1 to nobj
-  sic output "run_pdbi_uvt_go_uvfit_print_results.20170329.16h48m25s.CEST.out" append
+  sic output "run_pdbi_uvt_go_uvfit_print_results.20170329.16h48m10s.CEST.out" append
   say "OUTPUT_NAME.result.obj_"'iobj'".txt"
   sic output
   sic output "OUTPUT_NAME.result.obj_"'iobj'".txt" new

@@ -74,13 +74,13 @@ fi
 
 
 # 
-# SOURCE pdbi-uvt-core-cvf-v3
+# SOURCE pdbi-uvt-core-cvf-v4
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v3" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v3" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v4" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v4" "$@"
 else
     echo ""
-    echo "Error! Could not find \"$(dirname "${BASH_SOURCE[0]}")/pdbi-uvt-core-cvf-v3\"!"
+    echo "Error! Could not find \"$(dirname "${BASH_SOURCE[0]}")/pdbi-uvt-core-cvf-v4\"!"
     echo ""
     exit 1
 fi

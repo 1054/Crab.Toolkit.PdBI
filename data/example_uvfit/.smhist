@@ -1,17 +1,3 @@
-    #echo set velo_Bin = $(velo_Bin)
-    #echo set velo_Off = 0.0000000 # km/s
-    #echo set ra_Obj = $(ra_Obj)
-    #echo set de_Obj = $(de_Obj)
-    #echo set raX_Obj = '$(raX_Obj)'
-    #echo set deX_Obj = '$(deX_Obj)'
-    #echo set id_Str = 'NAME'
-    #echo set velo_low = $(velo_low)
-    #echo set velo_high = $(velo_high)
-    echo macro read \""pdbi-uvt-go-uvfit-v3.sm"\" goUVFIT_PlotVeloAmpl
-    macro read "pdbi-uvt-go-uvfit-v3.sm" goUVFIT_PlotVeloAmpl
-QUIT
-echo hello
-QUIT
     # set freq_Cen = 233.96000000000000000000 # GHz
     set freq_Ref = 233960.000000000 # MHz
     #set velo_Wth = 10.000000 # km/s
@@ -266,3 +252,31 @@ load rfile.sm
 rfile "OUTPUT_NAME.result.obj_1.txt"
 print {x}
 quit
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
+echo hello
+QUIT
