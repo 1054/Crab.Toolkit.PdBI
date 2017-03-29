@@ -8,2600 +8,2600 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting minimization on channel           1    Velocity=   -1000.00000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3605 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     6.29658 (  5.94089)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     5.81318 (  5.94152)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -7.55610 (  5.94089)  milliJy 
+ C_GAUSS  Flux        =    -7.56494 (  5.94152)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel           2
  I-UV_FIT, Starting minimization on channel           2    Velocity=   -990.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3740 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     9.56010 (  6.16338)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     9.84821 (  6.16367)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   351.77764 (6163.3838)  microJy 
+ C_GAUSS  Flux        =   381.21921 (6163.6721)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel           3
  I-UV_FIT, Starting minimization on channel           3    Velocity=   -980.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3580 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =  -476.31836 (5899.6667)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   222.62172 (5900.1138)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =  -958.16774 (5899.6667)  microJy 
+ C_GAUSS  Flux        =  -929.75342 (5900.1138)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel           4
  I-UV_FIT, Starting minimization on channel           4    Velocity=   -970.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3583 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -6.45447 (  5.90464)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -4.79348 (  5.90569)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -9.95201 (  5.90464)  milliJy 
+ C_GAUSS  Flux        =    -9.89422 (  5.90569)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel           5
  I-UV_FIT, Starting minimization on channel           5    Velocity=   -960.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3595 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   710.46987 (5925.3655)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     1.72945 (  5.92573)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.07886 (  5.92537)  milliJy 
+ C_GAUSS  Flux        =     6.12285 (  5.92573)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel           6
  I-UV_FIT, Starting minimization on channel           6    Velocity=   -950.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3524 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     4.21416 (  5.80790)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.88774 (  5.80864)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =  -381.30626 (5807.8965)  microJy 
+ C_GAUSS  Flux        =  -429.12002 (5808.6422)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel           7
  I-UV_FIT, Starting minimization on channel           7    Velocity=   -940.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3530 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     3.48129 (  5.81721)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.11448 (  5.81790)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -10.37191 (  5.81721)  milliJy 
+ C_GAUSS  Flux        =   -10.42274 (  5.81790)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel           8
  I-UV_FIT, Starting minimization on channel           8    Velocity=   -930.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3572 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -6.88364 (  5.88577)  milliJy 
+ r.m.s.=     0.3571 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -7.10016 (  5.88612)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.67736 (  5.88577)  milliJy 
+ C_GAUSS  Flux        =     6.65556 (  5.88612)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel           9
  I-UV_FIT, Starting minimization on channel           9    Velocity=   -920.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3540 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     6.30696 (  5.83437)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     6.13970 (  5.83488)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.62477 (  5.83437)  milliJy 
+ C_GAUSS  Flux        =     7.62946 (  5.83488)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          10
  I-UV_FIT, Starting minimization on channel          10    Velocity=   -910.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3516 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -4.34868 (  5.79460)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -5.20955 (  5.79478)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     8.20816 (  5.79460)  milliJy 
+ C_GAUSS  Flux        =     8.16401 (  5.79478)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          11
  I-UV_FIT, Starting minimization on channel          11    Velocity=   -900.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3533 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -7.65736 (  5.82278)  milliJy 
+ r.m.s.=     0.3534 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -6.68950 (  5.82367)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.64175 (  5.82278)  milliJy 
+ C_GAUSS  Flux        =    -2.61550 (  5.82367)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          12
  I-UV_FIT, Starting minimization on channel          12    Velocity=   -890.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3638 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     5.74737 (  5.99437)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     4.98328 (  5.99509)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.33803 (  5.99437)  milliJy 
+ C_GAUSS  Flux        =     1.31679 (  5.99509)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          13
  I-UV_FIT, Starting minimization on channel          13    Velocity=   -880.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3506 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     9.95677 (  5.77719)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    10.07183 (  5.77756)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.66348 (  5.77719)  milliJy 
+ C_GAUSS  Flux        =     1.68698 (  5.77756)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          14
  I-UV_FIT, Starting minimization on channel          14    Velocity=   -870.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3517 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -7.27768 (  5.79600)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -8.68537 (  5.79572)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -7.78742 (  5.79600)  milliJy 
+ C_GAUSS  Flux        =    -7.86006 (  5.79572)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          15
  I-UV_FIT, Starting minimization on channel          15    Velocity=   -860.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3556 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -2.82091 (  5.85982)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -3.60332 (  5.86011)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     2.65792 (  5.85982)  milliJy 
+ C_GAUSS  Flux        =     2.61983 (  5.86011)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          16
  I-UV_FIT, Starting minimization on channel          16    Velocity=   -850.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3483 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     3.02335 (  5.73959)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.13647 (  5.74019)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.03525 (  5.73959)  milliJy 
+ C_GAUSS  Flux        =     6.00384 (  5.74019)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          17
  I-UV_FIT, Starting minimization on channel          17    Velocity=   -840.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3648 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -4.71989 (  6.01110)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -5.71187 (  6.01124)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.51269 (  6.01110)  milliJy 
+ C_GAUSS  Flux        =     4.46220 (  6.01124)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          18
  I-UV_FIT, Starting minimization on channel          18    Velocity=   -830.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3541 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    11.94638 (  5.83474)  milliJy 
+ r.m.s.=     0.3542 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    10.67455 (  5.83613)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.04247 (  5.83474)  milliJy 
+ C_GAUSS  Flux        =    -1.07297 (  5.83613)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          19
  I-UV_FIT, Starting minimization on channel          19    Velocity=   -820.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3508 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   718.07645 (5780.6784)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =  -642.32116 (5781.1339)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.62614 (  5.78068)  milliJy 
+ C_GAUSS  Flux        =    -3.68172 (  5.78113)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          20
  I-UV_FIT, Starting minimization on channel          20    Velocity=   -810.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3527 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     5.06098 (  5.81189)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     4.36623 (  5.81256)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.40073 (  5.81189)  milliJy 
+ C_GAUSS  Flux        =    -2.42012 (  5.81256)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          21
  I-UV_FIT, Starting minimization on channel          21    Velocity=   -800.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3583 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -4.30594 (  5.90390)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -3.26101 (  5.90462)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    11.17806 (  5.90390)  milliJy 
+ C_GAUSS  Flux        =    11.21353 (  5.90462)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          22
  I-UV_FIT, Starting minimization on channel          22    Velocity=   -790.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3458 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.17995 (  5.69740)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.17678 (  5.69785)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.58221 (  5.69740)  milliJy 
+ C_GAUSS  Flux        =    -1.57814 (  5.69785)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          23
  I-UV_FIT, Starting minimization on channel          23    Velocity=   -780.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3563 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   551.23949 (5870.6526)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   249.23578 (5871.1246)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =  -656.90730 (5870.6526)  microJy 
+ C_GAUSS  Flux        =  -668.48159 (5871.1246)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          24
  I-UV_FIT, Starting minimization on channel          24    Velocity=   -770.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3601 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     6.71001 (  5.93284)  milliJy 
+ r.m.s.=     0.3600 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     8.36971 (  5.93251)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    13.86338 (  5.93284)  milliJy 
+ C_GAUSS  Flux        =    13.94582 (  5.93251)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          25
  I-UV_FIT, Starting minimization on channel          25    Velocity=   -760.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3441 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     1.76463 (  5.67035)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.69509 (  5.67066)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.06319 (  5.67035)  milliJy 
+ C_GAUSS  Flux        =     6.10555 (  5.67066)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          26
  I-UV_FIT, Starting minimization on channel          26    Velocity=   -750.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3489 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.67897 (  5.74923)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.74055 (  5.74968)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     8.41498 (  5.74923)  milliJy 
+ C_GAUSS  Flux        =     8.42277 (  5.74968)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          27
  I-UV_FIT, Starting minimization on channel          27    Velocity=   -740.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3601 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   574.58998 (5932.3374)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   207.39479 (5932.8206)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -6.81631 (  5.93234)  milliJy 
+ C_GAUSS  Flux        =    -6.83055 (  5.93282)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          28
  I-UV_FIT, Starting minimization on channel          28    Velocity=   -730.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3517 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     7.90741 (  5.79535)  milliJy 
+ r.m.s.=     0.3518 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     6.24653 (  5.79659)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -5.28486 (  5.79535)  milliJy 
+ C_GAUSS  Flux        =    -5.33887 (  5.79659)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          29
  I-UV_FIT, Starting minimization on channel          29    Velocity=   -720.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3457 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     7.04243 (  5.69487)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     7.11836 (  5.69529)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    11.64310 (  5.69487)  milliJy 
+ C_GAUSS  Flux        =    11.66010 (  5.69529)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          30
  I-UV_FIT, Starting minimization on channel          30    Velocity=   -710.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3430 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -1.43052 (  5.65091)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =  -759.39848 (5651.4108)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.99880 (  5.65091)  milliJy 
+ C_GAUSS  Flux        =     8.02406 (  5.65141)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          31
  I-UV_FIT, Starting minimization on channel          31    Velocity=   -700.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3482 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -1.02950 (  5.73663)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   145.30076 (5737.1266)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   770.87643 (5736.6291)  microJy 
+ C_GAUSS  Flux        =   817.98405 (5737.1266)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          32
  I-UV_FIT, Starting minimization on channel          32    Velocity=   -690.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3401 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.29816 (  5.60283)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.75843 (  5.60320)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.03269 (  5.60283)  milliJy 
+ C_GAUSS  Flux        =     1.05649 (  5.60320)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          33
  I-UV_FIT, Starting minimization on channel          33    Velocity=   -680.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3458 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.49465 (  5.69677)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.38776 (  5.69725)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.74328 (  5.69677)  milliJy 
+ C_GAUSS  Flux        =     3.74376 (  5.69725)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          34
  I-UV_FIT, Starting minimization on channel          34    Velocity=   -670.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3398 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     3.81872 (  5.59737)  milliJy 
+ r.m.s.=     0.3397 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     5.55545 (  5.59727)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -5.40812 (  5.59737)  milliJy 
+ C_GAUSS  Flux        =    -5.32789 (  5.59727)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          35
  I-UV_FIT, Starting minimization on channel          35    Velocity=   -660.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3470 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -8.20260 (  5.71655)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -8.34602 (  5.71694)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    13.51276 (  5.71655)  milliJy 
+ C_GAUSS  Flux        =    13.49040 (  5.71694)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          36
  I-UV_FIT, Starting minimization on channel          36    Velocity=   -650.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3398 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -2.44644 (  5.59870)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -3.78429 (  5.59888)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -4.67265 (  5.59870)  milliJy 
+ C_GAUSS  Flux        =    -4.73349 (  5.59888)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          37
  I-UV_FIT, Starting minimization on channel          37    Velocity=   -640.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3424 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     5.10539 (  5.64018)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     4.43317 (  5.64086)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.04064 (  5.64018)  milliJy 
+ C_GAUSS  Flux        =     7.02278 (  5.64086)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          38
  I-UV_FIT, Starting minimization on channel          38    Velocity=   -630.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3416 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     3.26081 (  5.62715)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     4.52775 (  5.62728)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -4.53483 (  5.62715)  milliJy 
+ C_GAUSS  Flux        =    -4.47531 (  5.62728)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          39
  I-UV_FIT, Starting minimization on channel          39    Velocity=   -620.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3424 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     5.65761 (  5.64099)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     5.70073 (  5.64144)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.57999 (  5.64099)  milliJy 
+ C_GAUSS  Flux        =    -2.56679 (  5.64144)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          40
  I-UV_FIT, Starting minimization on channel          40    Velocity=   -610.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3540 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     1.62367 (  5.83183)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.81277 (  5.83214)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   538.24699 (5831.8325)  microJy 
+ C_GAUSS  Flux        =   591.23482 (5832.1427)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          41
  I-UV_FIT, Starting minimization on channel          41    Velocity=   -600.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3508 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     6.07844 (  5.77902)  milliJy 
+ r.m.s.=     0.3509 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     3.63033 (  5.78028)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   691.07535 (5779.0237)  microJy 
+ C_GAUSS  Flux        =   601.06327 (5780.2817)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          42
  I-UV_FIT, Starting minimization on channel          42    Velocity=   -590.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3427 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     9.12707 (  5.64457)  milliJy 
+ r.m.s.=     0.3426 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    10.54281 (  5.64410)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.45240 (  5.64457)  milliJy 
+ C_GAUSS  Flux        =     7.53011 (  5.64410)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          43
  I-UV_FIT, Starting minimization on channel          43    Velocity=   -580.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3501 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     5.61263 (  5.76658)  milliJy 
+ r.m.s.=     0.3500 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     6.86533 (  5.76655)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.13158 (  5.76658)  milliJy 
+ C_GAUSS  Flux        =    -1.06780 (  5.76655)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          44
  I-UV_FIT, Starting minimization on channel          44    Velocity=   -570.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3457 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     4.05617 (  5.69474)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     4.32665 (  5.69514)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -7.50477 (  5.69474)  milliJy 
+ C_GAUSS  Flux        =    -7.48519 (  5.69514)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          45
  I-UV_FIT, Starting minimization on channel          45    Velocity=   -560.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3468 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     4.01556 (  5.71238)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.59597 (  5.71317)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.55157 (  5.71238)  milliJy 
+ C_GAUSS  Flux        =     4.50047 (  5.71317)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          46
  I-UV_FIT, Starting minimization on channel          46    Velocity=   -550.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3501 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   671.43642 (5766.3492)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   239.45624 (5766.8453)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -9.97676 (  5.76635)  milliJy 
+ C_GAUSS  Flux        =    -9.99343 (  5.76685)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          47
  I-UV_FIT, Starting minimization on channel          47    Velocity=   -540.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3512 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -8.64414 (  5.78482)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -8.52183 (  5.78537)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    19.19739 (  5.78482)  milliJy 
+ C_GAUSS  Flux        =    19.18472 (  5.78537)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          48
  I-UV_FIT, Starting minimization on channel          48    Velocity=   -530.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3509 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -4.59321 (  5.77995)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -4.03487 (  5.78060)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.23761 (  5.77995)  milliJy 
+ C_GAUSS  Flux        =     6.25146 (  5.78060)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          49
  I-UV_FIT, Starting minimization on channel          49    Velocity=   -520.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3492 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -1.03700 (  5.75221)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =  -137.47258 (5752.7320)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.49353 (  5.75221)  milliJy 
+ C_GAUSS  Flux        =     3.52896 (  5.75273)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          50
  I-UV_FIT, Starting minimization on channel          50    Velocity=   -510.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3565 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -7.50014 (  5.87272)  milliJy 
+ r.m.s.=     0.3566 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -6.85316 (  5.87351)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    15.47427 (  5.87272)  milliJy 
+ C_GAUSS  Flux        =    15.48575 (  5.87351)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          51
  I-UV_FIT, Starting minimization on channel          51    Velocity=   -500.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3512 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     6.57049 (  5.78443)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     7.09917 (  5.78469)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.61858 (  5.78443)  milliJy 
+ C_GAUSS  Flux        =    -3.58284 (  5.78469)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          52
  I-UV_FIT, Starting minimization on channel          52    Velocity=   -490.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3492 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -5.48255 (  5.75215)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -5.54445 (  5.75262)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -4.93704 (  5.75215)  milliJy 
+ C_GAUSS  Flux        =    -4.95105 (  5.75262)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          53
  I-UV_FIT, Starting minimization on channel          53    Velocity=   -480.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3447 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -7.72928 (  5.67746)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -6.83801 (  5.67838)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   440.77008 (5677.4647)  microJy 
+ C_GAUSS  Flux        =   461.84437 (5678.3822)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          54
  I-UV_FIT, Starting minimization on channel          54    Velocity=   -470.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3504 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   678.40192 (5772.1772)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   795.06911 (5772.6645)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.97868 (  5.77218)  milliJy 
+ C_GAUSS  Flux        =     1.98497 (  5.77266)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          55
  I-UV_FIT, Starting minimization on channel          55    Velocity=   -460.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3473 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   998.53639 (5719.8283)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     1.57616 (  5.72027)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -6.00078 (  5.71983)  milliJy 
+ C_GAUSS  Flux        =    -5.97456 (  5.72027)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          56
  I-UV_FIT, Starting minimization on channel          56    Velocity=   -450.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3580 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -5.93933 (  5.89628)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -5.96565 (  5.89678)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.06800 (  5.89628)  milliJy 
+ C_GAUSS  Flux        =    -2.08160 (  5.89678)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          57
  I-UV_FIT, Starting minimization on channel          57    Velocity=   -440.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3483 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   525.56994 (5735.7780)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   142.96569 (5736.2797)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.84148 (  5.73578)  milliJy 
+ C_GAUSS  Flux        =    -1.85634 (  5.73628)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          58
  I-UV_FIT, Starting minimization on channel          58    Velocity=   -430.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3442 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -5.89428 (  5.66959)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -7.05593 (  5.66958)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.81246 (  5.66959)  milliJy 
+ C_GAUSS  Flux        =     3.75150 (  5.66958)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          59
  I-UV_FIT, Starting minimization on channel          59    Velocity=   -420.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3464 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -3.80795 (  5.70554)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -4.60755 (  5.70581)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.68323 (  5.70554)  milliJy 
+ C_GAUSS  Flux        =    -1.72468 (  5.70581)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          60
  I-UV_FIT, Starting minimization on channel          60    Velocity=   -410.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3511 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     6.89841 (  5.78180)  milliJy 
+ r.m.s.=     0.3510 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     8.35115 (  5.78158)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.19854 (  5.78180)  milliJy 
+ C_GAUSS  Flux        =     1.27383 (  5.78158)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          61
  I-UV_FIT, Starting minimization on channel          61    Velocity=   -400.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3422 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    14.09448 (  5.63503)  milliJy 
+ r.m.s.=     0.3421 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    14.40772 (  5.63522)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -5.11234 (  5.63503)  milliJy 
+ C_GAUSS  Flux        =    -5.06924 (  5.63522)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          62
  I-UV_FIT, Starting minimization on channel          62    Velocity=   -390.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3449 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     5.30841 (  5.68048)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     3.66854 (  5.68147)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -5.81544 (  5.68048)  milliJy 
+ C_GAUSS  Flux        =    -5.87254 (  5.68147)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          63
  I-UV_FIT, Starting minimization on channel          63    Velocity=   -380.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3404 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -5.10493 (  5.60548)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -5.17162 (  5.60595)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.75576 (  5.60548)  milliJy 
+ C_GAUSS  Flux        =    -3.76947 (  5.60595)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          64
  I-UV_FIT, Starting minimization on channel          64    Velocity=   -370.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3375 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    17.96243 (  5.55861)  milliJy 
+ r.m.s.=     0.3376 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    17.41643 (  5.55976)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.15866 (  5.55861)  milliJy 
+ C_GAUSS  Flux        =    -3.14289 (  5.55976)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          65
  I-UV_FIT, Starting minimization on channel          65    Velocity=   -360.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3456 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     7.86056 (  5.69191)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     9.16273 (  5.69167)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.41433 (  5.69191)  milliJy 
+ C_GAUSS  Flux        =     4.48557 (  5.69167)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          66
  I-UV_FIT, Starting minimization on channel          66    Velocity=   -350.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3365 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -3.71632 (  5.54223)  milliJy 
+ r.m.s.=     0.3366 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -2.47097 (  5.54298)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.22675 (  5.54223)  milliJy 
+ C_GAUSS  Flux        =     6.27069 (  5.54298)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          67
  I-UV_FIT, Starting minimization on channel          67    Velocity=   -340.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3379 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     5.52144 (  5.56438)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     5.05613 (  5.56504)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.56575 (  5.56438)  milliJy 
+ C_GAUSS  Flux        =     3.55828 (  5.56504)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          68
  I-UV_FIT, Starting minimization on channel          68    Velocity=   -330.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3329 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =  -636.59529 (5481.8933)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =  -272.25727 (5482.3880)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     8.36368 (  5.48189)  milliJy 
+ C_GAUSS  Flux        =     8.37749 (  5.48239)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          69
  I-UV_FIT, Starting minimization on channel          69    Velocity=   -320.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3294 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   410.51657 (5424.9654)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   238.73154 (5425.4486)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.82163 (  5.42497)  milliJy 
+ C_GAUSS  Flux        =     4.81536 (  5.42545)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          70
  I-UV_FIT, Starting minimization on channel          70    Velocity=   -310.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3356 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -4.61778 (  5.52600)  milliJy 
+ r.m.s.=     0.3355 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -5.97758 (  5.52599)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   719.55359 (5525.9961)  microJy 
+ C_GAUSS  Flux        =   652.79464 (5525.9915)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          71
  I-UV_FIT, Starting minimization on channel          71    Velocity=   -300.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3325 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -6.65020 (  5.47572)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -7.31383 (  5.47588)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =  -978.55829 (5475.7182)  microJy 
+ C_GAUSS  Flux        =    -1.02074 (  5.47588)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          72
  I-UV_FIT, Starting minimization on channel          72    Velocity=   -290.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3378 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     7.85424 (  5.56309)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     7.20494 (  5.56392)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -6.92373 (  5.56309)  milliJy 
+ C_GAUSS  Flux        =    -6.93363 (  5.56392)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          73
  I-UV_FIT, Starting minimization on channel          73    Velocity=   -280.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3314 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   863.65161 (5456.8194)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     1.25732 (  5.45728)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.54537 (  5.45682)  milliJy 
+ C_GAUSS  Flux        =     4.56367 (  5.45728)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          74
  I-UV_FIT, Starting minimization on channel          74    Velocity=   -270.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3309 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -5.45879 (  5.44911)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -4.88468 (  5.44980)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -6.58326 (  5.44911)  milliJy 
+ C_GAUSS  Flux        =    -6.57132 (  5.44980)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          75
  I-UV_FIT, Starting minimization on channel          75    Velocity=   -260.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3256 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -2.88269 (  5.36162)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -3.13603 (  5.36205)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.63140 (  5.36162)  milliJy 
+ C_GAUSS  Flux        =     6.61449 (  5.36205)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          76
  I-UV_FIT, Starting minimization on channel          76    Velocity=   -250.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3300 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -7.02073 (  5.43465)  milliJy 
+ r.m.s.=     0.3301 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -5.50998 (  5.43580)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -9.34178 (  5.43465)  milliJy 
+ C_GAUSS  Flux        =    -9.29431 (  5.43580)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          77
  I-UV_FIT, Starting minimization on channel          77    Velocity=   -240.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3340 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -1.70295 (  5.49931)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -3.00797 (  5.49959)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.14499 (  5.49931)  milliJy 
+ C_GAUSS  Flux        =    -3.20314 (  5.49959)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          78
  I-UV_FIT, Starting minimization on channel          78    Velocity=   -230.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3331 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     1.51383 (  5.48541)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.51719 (  5.48576)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -11.84725 (  5.48541)  milliJy 
+ C_GAUSS  Flux        =   -11.80208 (  5.48576)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          79
  I-UV_FIT, Starting minimization on channel          79    Velocity=   -220.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3347 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -7.71763 (  5.51161)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -8.94040 (  5.51141)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.48520 (  5.51161)  milliJy 
+ C_GAUSS  Flux        =    -2.55331 (  5.51141)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          80
  I-UV_FIT, Starting minimization on channel          80    Velocity=   -210.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3251 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     1.54961 (  5.35369)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.92511 (  5.35396)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.88348 (  5.35369)  milliJy 
+ C_GAUSS  Flux        =    -2.82272 (  5.35396)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          81
  I-UV_FIT, Starting minimization on channel          81    Velocity=   -200.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3292 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     3.91469 (  5.41979)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     4.00996 (  5.42026)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =  -558.76533 (5419.7945)  microJy 
+ C_GAUSS  Flux        =  -546.05585 (5420.2596)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          82
  I-UV_FIT, Starting minimization on channel          82    Velocity=   -190.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3230 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -2.96145 (  5.31907)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -4.52657 (  5.31914)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     8.02166 (  5.31907)  milliJy 
+ C_GAUSS  Flux        =     7.94984 (  5.31914)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          83
  I-UV_FIT, Starting minimization on channel          83    Velocity=   -180.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3214 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -6.70812 (  5.29174)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -7.48157 (  5.29182)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   518.44076 (5291.7351)  microJy 
+ C_GAUSS  Flux        =   471.17885 (5291.8242)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          84
  I-UV_FIT, Starting minimization on channel          84    Velocity=   -170.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3316 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -9.06096 (  5.45905)  milliJy 
+ r.m.s.=     0.3315 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   -10.44496 (  5.45861)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.34711 (  5.45905)  milliJy 
+ C_GAUSS  Flux        =     7.26910 (  5.45861)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          85
  I-UV_FIT, Starting minimization on channel          85    Velocity=   -160.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3312 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -1.51567 (  5.45389)  milliJy 
+ r.m.s.=     0.3313 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =  -582.94515 (5454.4538)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   260.71551 (5453.8870)  microJy 
+ C_GAUSS  Flux        =   296.14440 (5454.4538)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          86
  I-UV_FIT, Starting minimization on channel          86    Velocity=   -150.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3308 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -8.16870 (  5.44653)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -7.04538 (  5.44762)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -30.39053 (5446.5256)  microJy 
+ C_GAUSS  Flux        =    -2.05874 (5447.6198)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          87
  I-UV_FIT, Starting minimization on channel          87    Velocity=   -140.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3338 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.24877 (  5.49592)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   456.30067 (5496.5932)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.23199 (  5.49592)  milliJy 
+ C_GAUSS  Flux        =    -1.30153 (  5.49659)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          88
  I-UV_FIT, Starting minimization on channel          88    Velocity=   -130.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3317 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     4.96674 (  5.46151)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     4.47099 (  5.46217)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -10.67461 (  5.46151)  milliJy 
+ C_GAUSS  Flux        =   -10.68398 (  5.46217)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          89
  I-UV_FIT, Starting minimization on channel          89    Velocity=   -120.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3350 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   224.13855 (5515.8366)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =  -490.74420 (5516.3386)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -6.93911 (  5.51584)  milliJy 
+ C_GAUSS  Flux        =    -6.96836 (  5.51634)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          90
  I-UV_FIT, Starting minimization on channel          90    Velocity=   -110.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3295 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.50649 (  5.42442)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     1.64876 (  5.42504)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.27886 (  5.42442)  milliJy 
+ C_GAUSS  Flux        =     4.24887 (  5.42504)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          91
  I-UV_FIT, Starting minimization on channel          91    Velocity=   -100.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3266 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    12.54555 (  5.37770)  milliJy 
+ r.m.s.=     0.3267 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    11.78778 (  5.37884)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.09672 (  5.37770)  milliJy 
+ C_GAUSS  Flux        =    -1.09962 (  5.37884)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          92
  I-UV_FIT, Starting minimization on channel          92    Velocity=   -90.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3212 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     1.55390 (  5.28747)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   562.04384 (5288.0367)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -5.99777 (  5.28747)  milliJy 
+ C_GAUSS  Flux        =    -6.03549 (  5.28804)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          93
  I-UV_FIT, Starting minimization on channel          93    Velocity=   -80.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3323 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     3.36140 (  5.47006)  milliJy 
+ r.m.s.=     0.3322 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     4.90280 (  5.47013)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -7.70695 (  5.47006)  milliJy 
+ C_GAUSS  Flux        =    -7.63510 (  5.47013)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          94
  I-UV_FIT, Starting minimization on channel          94    Velocity=   -70.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3370 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    10.63974 (  5.54745)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    10.25557 (  5.54824)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -11.50168 (  5.54745)  milliJy 
+ C_GAUSS  Flux        =   -11.49321 (  5.54824)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          95
  I-UV_FIT, Starting minimization on channel          95    Velocity=   -60.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3387 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -5.13783 (  5.57637)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -5.66769 (  5.57670)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -4.35350 (  5.57637)  milliJy 
+ C_GAUSS  Flux        =    -4.38738 (  5.57670)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          96
  I-UV_FIT, Starting minimization on channel          96    Velocity=   -50.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3439 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -2.46823 (  5.66065)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =  -710.17281 (5661.3703)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.47248 (  5.66065)  milliJy 
+ C_GAUSS  Flux        =     4.53992 (  5.66137)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          97
  I-UV_FIT, Starting minimization on channel          97    Velocity=   -40.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3460 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -1.13916 (  5.69567)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    31.51656 (5696.2491)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     8.51849 (  5.69567)  milliJy 
+ C_GAUSS  Flux        =     8.56455 (  5.69625)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          98
  I-UV_FIT, Starting minimization on channel          98    Velocity=   -30.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3458 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.66571 (  5.69337)  milliJy 
+ r.m.s.=     0.3459 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.13272 (  5.69399)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     2.50955 (  5.69337)  milliJy 
+ C_GAUSS  Flux        =     2.49357 (  5.69399)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          99
  I-UV_FIT, Starting minimization on channel          99    Velocity=   -20.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3527 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   937.63169 (5806.0734)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -1.05490 (  5.80661)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -5.21518 (  5.80607)  milliJy 
+ C_GAUSS  Flux        =    -5.29587 (  5.80661)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         100
  I-UV_FIT, Starting minimization on channel         100    Velocity=   -10.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3445 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   672.01586 (5671.3023)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -1.06912 (  5.67181)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.79200 (  5.67130)  milliJy 
+ C_GAUSS  Flux        =    -3.86283 (  5.67181)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         101
  I-UV_FIT, Starting minimization on channel         101    Velocity=    0.00000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3605 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     6.66797 (  5.93394)  milliJy 
+ r.m.s.=     0.3604 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     7.86863 (  5.93394)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.18740 (  5.93394)  milliJy 
+ C_GAUSS  Flux        =    -3.12192 (  5.93394)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         102
  I-UV_FIT, Starting minimization on channel         102    Velocity=    10.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3509 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -6.93745 (  5.77599)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -6.23580 (  5.77684)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    10.11703 (  5.77599)  milliJy 
+ C_GAUSS  Flux        =    10.12998 (  5.77684)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         103
  I-UV_FIT, Starting minimization on channel         103    Velocity=    20.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3427 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -5.90240 (  5.64122)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -4.83774 (  5.64214)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     5.71765 (  5.64122)  milliJy 
+ C_GAUSS  Flux        =     5.74808 (  5.64214)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         104
  I-UV_FIT, Starting minimization on channel         104    Velocity=    30.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3523 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     6.03889 (  5.79912)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     6.29373 (  5.79957)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     2.09242 (  5.79912)  milliJy 
+ C_GAUSS  Flux        =     2.11719 (  5.79957)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         105
  I-UV_FIT, Starting minimization on channel         105    Velocity=    40.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3891 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -4.34280 (  6.40440)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -3.21106 (  6.40527)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.35602 (  6.40440)  milliJy 
+ C_GAUSS  Flux        =     1.39283 (  6.40527)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         106
  I-UV_FIT, Starting minimization on channel         106    Velocity=    50.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3526 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -4.39335 (  5.80339)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -4.97847 (  5.80376)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.47583 (  5.80339)  milliJy 
+ C_GAUSS  Flux        =    -2.51050 (  5.80376)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         107
  I-UV_FIT, Starting minimization on channel         107    Velocity=    60.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3532 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -3.81298 (  5.81334)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -3.83294 (  5.81389)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     2.43170 (  5.81334)  milliJy 
+ C_GAUSS  Flux        =     2.42186 (  5.81389)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         108
  I-UV_FIT, Starting minimization on channel         108    Velocity=    70.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3433 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     7.52058 (  5.65087)  milliJy 
+ r.m.s.=     0.3432 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     9.24323 (  5.65044)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.51637 (  5.65087)  milliJy 
+ C_GAUSS  Flux        =     3.60574 (  5.65044)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         109
  I-UV_FIT, Starting minimization on channel         109    Velocity=    80.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3471 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =  -738.62618 (5712.4780)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =  -184.88217 (5713.0429)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.77529 (  5.71248)  milliJy 
+ C_GAUSS  Flux        =     1.79654 (  5.71304)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         110
  I-UV_FIT, Starting minimization on channel         110    Velocity=    90.0000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3386 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.15787 (  5.57277)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     3.14206 (  5.57313)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.72287 (  5.57277)  milliJy 
+ C_GAUSS  Flux        =     3.76888 (  5.57313)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         111
  I-UV_FIT, Starting minimization on channel         111    Velocity=    100.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3481 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -8.06407 (  5.72881)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -6.77810 (  5.73000)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.74565 (  5.72881)  milliJy 
+ C_GAUSS  Flux        =     7.77985 (  5.73000)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         112
  I-UV_FIT, Starting minimization on channel         112    Velocity=    110.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3475 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    11.49897 (  5.71927)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    10.78491 (  5.72035)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.28013 (  5.71927)  milliJy 
+ C_GAUSS  Flux        =     4.27792 (  5.72035)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         113
  I-UV_FIT, Starting minimization on channel         113    Velocity=    120.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3414 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     3.48850 (  5.61847)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.26125 (  5.61925)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.34194 (  5.61847)  milliJy 
+ C_GAUSS  Flux        =     3.29932 (  5.61925)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         114
  I-UV_FIT, Starting minimization on channel         114    Velocity=    130.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3389 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.30123 (  5.57822)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.03199 (  5.57880)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.09919 (  5.57822)  milliJy 
+ C_GAUSS  Flux        =     3.09352 (  5.57880)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         115
  I-UV_FIT, Starting minimization on channel         115    Velocity=    140.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3386 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -2.21453 (  5.57241)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -2.46551 (  5.57291)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.87118 (  5.57241)  milliJy 
+ C_GAUSS  Flux        =     4.85544 (  5.57291)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         116
  I-UV_FIT, Starting minimization on channel         116    Velocity=    150.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3411 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -3.03202 (  5.61353)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =  -877.34755 (5614.3613)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.33164 (  5.61353)  milliJy 
+ C_GAUSS  Flux        =    -2.24950 (  5.61436)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         117
  I-UV_FIT, Starting minimization on channel         117    Velocity=    160.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3361 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -3.28610 (  5.53125)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -1.65833 (  5.53207)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.73617 (  5.53125)  milliJy 
+ C_GAUSS  Flux        =    -2.67654 (  5.53207)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         118
  I-UV_FIT, Starting minimization on channel         118    Velocity=    170.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3332 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.63584 (  5.48388)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     1.78352 (  5.48455)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -12.27340 (  5.48388)  milliJy 
+ C_GAUSS  Flux        =   -12.30240 (  5.48455)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         119
  I-UV_FIT, Starting minimization on channel         119    Velocity=    180.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3294 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   -10.14356 (  5.42128)  milliJy 
+ r.m.s.=     0.3293 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   -11.68979 (  5.42063)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -8.98259 (  5.42128)  milliJy 
+ C_GAUSS  Flux        =    -9.07131 (  5.42063)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         120
  I-UV_FIT, Starting minimization on channel         120    Velocity=    190.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3408 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =  -841.62105 (5608.5472)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =  -634.83502 (5609.1066)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -7.50420 (  5.60855)  milliJy 
+ C_GAUSS  Flux        =    -7.49766 (  5.60911)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         121
  I-UV_FIT, Starting minimization on channel         121    Velocity=    200.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3318 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.15852 (  5.46043)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   143.15722 (5461.1265)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.25683 (  5.46043)  milliJy 
+ C_GAUSS  Flux        =    -3.33519 (  5.46113)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         122
  I-UV_FIT, Starting minimization on channel         122    Velocity=    210.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3341 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -1.59009 (  5.49878)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -3.14661 (  5.49906)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.29784 (  5.49878)  milliJy 
+ C_GAUSS  Flux        =     4.22940 (  5.49906)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         123
  I-UV_FIT, Starting minimization on channel         123    Velocity=    220.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3339 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.25453 (  5.49528)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   909.70373 (5495.9645)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -7.63863 (  5.49528)  milliJy 
+ C_GAUSS  Flux        =    -7.68891 (  5.49596)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         124
  I-UV_FIT, Starting minimization on channel         124    Velocity=    230.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3281 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     6.39978 (  5.39929)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     6.62772 (  5.39972)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.47311 (  5.39929)  milliJy 
+ C_GAUSS  Flux        =     4.49821 (  5.39972)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         125
  I-UV_FIT, Starting minimization on channel         125    Velocity=    240.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3334 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     9.82025 (  5.48682)  milliJy 
+ r.m.s.=     0.3335 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     8.04997 (  5.48845)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     2.20644 (  5.48682)  milliJy 
+ C_GAUSS  Flux        =     2.15710 (  5.48845)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         126
  I-UV_FIT, Starting minimization on channel         126    Velocity=    250.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3387 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -4.00366 (  5.57421)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -4.81988 (  5.57451)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.55074 (  5.57421)  milliJy 
+ C_GAUSS  Flux        =    -3.59441 (  5.57451)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         127
  I-UV_FIT, Starting minimization on channel         127    Velocity=    260.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3298 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -8.27535 (  5.42798)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -8.12112 (  5.42860)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.96294 (  5.42798)  milliJy 
+ C_GAUSS  Flux        =     3.94897 (  5.42860)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         128
  I-UV_FIT, Starting minimization on channel         128    Velocity=    270.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3300 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -6.20151 (  5.43116)  milliJy 
+ r.m.s.=     0.3301 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -4.31548 (  5.43240)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -13.72574 (  5.43116)  milliJy 
+ C_GAUSS  Flux        =   -13.66284 (  5.43240)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         129
  I-UV_FIT, Starting minimization on channel         129    Velocity=    280.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3405 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.05133 (  5.60398)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     1.52539 (  5.60460)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   527.77866 (5603.9759)  microJy 
+ C_GAUSS  Flux        =   511.04618 (5604.5971)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         130
  I-UV_FIT, Starting minimization on channel         130    Velocity=    290.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3358 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   594.52095 (5525.0777)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =  -277.23791 (5525.6378)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.69686 (  5.52508)  milliJy 
+ C_GAUSS  Flux        =     6.66220 (  5.52564)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         131
  I-UV_FIT, Starting minimization on channel         131    Velocity=    300.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3321 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -2.09018 (  5.46533)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -1.23194 (  5.46597)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.64646 (  5.46533)  milliJy 
+ C_GAUSS  Flux        =     4.67684 (  5.46597)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         132
  I-UV_FIT, Starting minimization on channel         132    Velocity=    310.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3279 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -4.85115 (  5.39544)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -4.17206 (  5.39620)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   442.52041 (5395.4410)  microJy 
+ C_GAUSS  Flux        =   458.60505 (5396.1960)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         133
  I-UV_FIT, Starting minimization on channel         133    Velocity=    320.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3331 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.71746 (  5.48087)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.43864 (  5.48147)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.65094 (  5.48087)  milliJy 
+ C_GAUSS  Flux        =     7.64616 (  5.48147)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         134
  I-UV_FIT, Starting minimization on channel         134    Velocity=    330.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3263 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -1.91763 (  5.36924)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =  -411.27921 (5369.9042)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   142.41312 (5369.2415)  microJy 
+ C_GAUSS  Flux        =   200.02773 (5369.9042)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         135
  I-UV_FIT, Starting minimization on channel         135    Velocity=    340.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3313 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   890.14198 (5451.1525)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   756.63786 (5451.7082)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -8.45459 (  5.45115)  milliJy 
+ C_GAUSS  Flux        =    -8.45790 (  5.45171)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         136
  I-UV_FIT, Starting minimization on channel         136    Velocity=    350.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3335 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -8.18726 (  5.48809)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -8.55076 (  5.48843)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    14.77669 (  5.48809)  milliJy 
+ C_GAUSS  Flux        =    14.74114 (  5.48843)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         137
  I-UV_FIT, Starting minimization on channel         137    Velocity=    360.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3186 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -2.37942 (  5.24233)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =  -592.12113 (5243.0544)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =  -371.93293 (5242.3335)  microJy 
+ C_GAUSS  Flux        =  -303.89396 (5243.0544)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         138
  I-UV_FIT, Starting minimization on channel         138    Velocity=    370.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3206 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -4.25585 (  5.27541)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -5.67813 (  5.27543)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -9.46601 (  5.27541)  milliJy 
+ C_GAUSS  Flux        =    -9.53559 (  5.27543)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         139
  I-UV_FIT, Starting minimization on channel         139    Velocity=    380.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3329 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    78.86581 (5478.0749)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =  -879.27366 (5478.6029)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.98401 (  5.47807)  milliJy 
+ C_GAUSS  Flux        =    -4.02348 (  5.47860)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         140
  I-UV_FIT, Starting minimization on channel         140    Velocity=    390.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3235 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     3.34566 (  5.32299)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     3.34459 (  5.32353)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.42121 (  5.32299)  milliJy 
+ C_GAUSS  Flux        =     1.42960 (  5.32353)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         141
  I-UV_FIT, Starting minimization on channel         141    Velocity=    400.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3154 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     1.91228 (  5.18991)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     1.87391 (  5.19045)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.75042 (  5.18991)  milliJy 
+ C_GAUSS  Flux        =    -3.74717 (  5.19045)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         142
  I-UV_FIT, Starting minimization on channel         142    Velocity=    410.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3213 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -6.98777 (  5.28577)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -6.73214 (  5.28643)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.36229 (  5.28577)  milliJy 
+ C_GAUSS  Flux        =     1.35517 (  5.28643)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         143
  I-UV_FIT, Starting minimization on channel         143    Velocity=    420.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3260 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     5.18048 (  5.36446)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     4.79190 (  5.36515)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -9.45112 (  5.36446)  milliJy 
+ C_GAUSS  Flux        =    -9.45406 (  5.36515)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         144
  I-UV_FIT, Starting minimization on channel         144    Velocity=    430.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3235 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   814.12976 (5322.5849)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     1.43314 (  5.32308)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -9.90614 (  5.32258)  milliJy 
+ C_GAUSS  Flux        =    -9.87846 (  5.32308)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         145
  I-UV_FIT, Starting minimization on channel         145    Velocity=    440.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3225 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     9.68228 (  5.30629)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     9.95144 (  5.30664)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.99936 (  5.30629)  milliJy 
+ C_GAUSS  Flux        =    -1.96357 (  5.30664)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         146
  I-UV_FIT, Starting minimization on channel         146    Velocity=    450.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3261 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   400.10955 (5365.7398)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     1.58812 (  5.36621)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.18233 (  5.36574)  milliJy 
+ C_GAUSS  Flux        =     1.23249 (  5.36621)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         147
  I-UV_FIT, Starting minimization on channel         147    Velocity=    460.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3136 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     5.76431 (  5.15994)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     5.94817 (  5.16039)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   870.34473 (5159.9407)  microJy 
+ C_GAUSS  Flux        =   892.68124 (5160.3913)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         148
  I-UV_FIT, Starting minimization on channel         148    Velocity=    470.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3266 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -4.88023 (  5.37343)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -5.52494 (  5.37375)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -11.40889 (  5.37343)  milliJy 
+ C_GAUSS  Flux        =   -11.44805 (  5.37375)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         149
  I-UV_FIT, Starting minimization on channel         149    Velocity=    480.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3217 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -1.60067 (  5.29256)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -1.11958 (  5.29315)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -9.27899 (  5.29256)  milliJy 
+ C_GAUSS  Flux        =    -9.26321 (  5.29315)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         150
  I-UV_FIT, Starting minimization on channel         150    Velocity=    490.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3203 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.05029 (  5.26879)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     1.10645 (  5.26945)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.33866 (  5.26879)  milliJy 
+ C_GAUSS  Flux        =     1.30491 (  5.26945)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         151
  I-UV_FIT, Starting minimization on channel         151    Velocity=    500.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3235 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   -11.09771 (  5.32249)  milliJy 
+ r.m.s.=     0.3236 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -9.93637 (  5.32391)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.57783 (  5.32249)  milliJy 
+ C_GAUSS  Flux        =     3.59726 (  5.32391)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         152
  I-UV_FIT, Starting minimization on channel         152    Velocity=    510.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3271 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     7.10895 (  5.38094)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     7.17076 (  5.38146)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =  -916.32085 (5380.9353)  microJy 
+ C_GAUSS  Flux        =  -895.42911 (5381.4612)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         153
  I-UV_FIT, Starting minimization on channel         153    Velocity=    520.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3100 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   757.84332 (5100.2473)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.24947 (  5.10061)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.12798 (  5.10025)  milliJy 
+ C_GAUSS  Flux        =    -2.06438 (  5.10061)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         154
  I-UV_FIT, Starting minimization on channel         154    Velocity=    530.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3248 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     9.52176 (  5.34308)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     9.40570 (  5.34371)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     2.47483 (  5.34308)  milliJy 
+ C_GAUSS  Flux        =     2.49469 (  5.34371)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         155
  I-UV_FIT, Starting minimization on channel         155    Velocity=    540.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3298 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.42286 (  5.42561)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.27147 (  5.42620)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -6.02104 (  5.42561)  milliJy 
+ C_GAUSS  Flux        =    -6.02101 (  5.42620)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         156
  I-UV_FIT, Starting minimization on channel         156    Velocity=    550.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3232 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     5.43187 (  5.31719)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     5.67095 (  5.31765)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.68087 (  5.31719)  milliJy 
+ C_GAUSS  Flux        =     3.70486 (  5.31765)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         157
  I-UV_FIT, Starting minimization on channel         157    Velocity=    560.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3243 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =  -384.94677 (5334.5922)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   759.23197 (5335.1333)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    15.36912 (  5.33459)  milliJy 
+ C_GAUSS  Flux        =    15.41538 (  5.33513)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         158
  I-UV_FIT, Starting minimization on channel         158    Velocity=    570.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3321 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     5.61720 (  5.46373)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     6.48539 (  5.46394)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.27616 (  5.46373)  milliJy 
+ C_GAUSS  Flux        =     1.32666 (  5.46394)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         159
  I-UV_FIT, Starting minimization on channel         159    Velocity=    580.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3386 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -6.09398 (  5.56943)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -5.65104 (  5.57019)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -18.02556 (  5.56943)  milliJy 
+ C_GAUSS  Flux        =   -18.02319 (  5.57019)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         160
  I-UV_FIT, Starting minimization on channel         160    Velocity=    590.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3323 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -5.46211 (  5.46578)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -4.96003 (  5.46653)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.04714 (  5.46578)  milliJy 
+ C_GAUSS  Flux        =     3.05357 (  5.46653)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         161
  I-UV_FIT, Starting minimization on channel         161    Velocity=    600.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3357 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     4.32057 (  5.52152)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.57251 (  5.52251)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.53380 (  5.52152)  milliJy 
+ C_GAUSS  Flux        =     4.47297 (  5.52251)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         162
  I-UV_FIT, Starting minimization on channel         162    Velocity=    610.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3273 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =  -139.87066 (5383.5924)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -1.16275 (  5.38411)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.70600 (  5.38359)  milliJy 
+ C_GAUSS  Flux        =    -2.74859 (  5.38411)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         163
  I-UV_FIT, Starting minimization on channel         163    Velocity=    620.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3331 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -1.37994 (  5.47860)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -2.29967 (  5.47906)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.23895 (  5.47860)  milliJy 
+ C_GAUSS  Flux        =    -1.28053 (  5.47906)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         164
  I-UV_FIT, Starting minimization on channel         164    Velocity=    630.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3337 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -5.85621 (  5.48835)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -5.25195 (  5.48916)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.93674 (  5.48835)  milliJy 
+ C_GAUSS  Flux        =    -2.92724 (  5.48916)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         165
  I-UV_FIT, Starting minimization on channel         165    Velocity=    640.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3265 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     6.91095 (  5.37048)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     6.98265 (  5.37101)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.46502 (  5.37048)  milliJy 
+ C_GAUSS  Flux        =    -3.44382 (  5.37101)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         166
  I-UV_FIT, Starting minimization on channel         166    Velocity=    650.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3235 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     3.42010 (  5.32039)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     1.95269 (  5.32124)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     2.16050 (  5.32039)  milliJy 
+ C_GAUSS  Flux        =     2.10901 (  5.32124)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         167
  I-UV_FIT, Starting minimization on channel         167    Velocity=    660.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3312 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   101.73126 (5448.1578)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     1.12456 (  5.44869)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.01217 (  5.44816)  milliJy 
+ C_GAUSS  Flux        =     7.05462 (  5.44869)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         168
  I-UV_FIT, Starting minimization on channel         168    Velocity=    670.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3356 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     3.69153 (  5.51958)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.88346 (  5.52034)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.25930 (  5.51958)  milliJy 
+ C_GAUSS  Flux        =     6.23578 (  5.52034)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         169
  I-UV_FIT, Starting minimization on channel         169    Velocity=    680.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3302 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     9.45003 (  5.43180)  milliJy 
+ r.m.s.=     0.3303 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     7.41919 (  5.43358)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    10.87625 (  5.43180)  milliJy 
+ C_GAUSS  Flux        =    10.81764 (  5.43358)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         170
  I-UV_FIT, Starting minimization on channel         170    Velocity=    690.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3306 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.42089 (  5.43734)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     1.68659 (  5.43802)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     5.90208 (  5.43734)  milliJy 
+ C_GAUSS  Flux        =     5.87826 (  5.43802)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         171
  I-UV_FIT, Starting minimization on channel         171    Velocity=    700.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3217 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     6.42161 (  5.29188)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     6.24899 (  5.29252)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.22903 (  5.29188)  milliJy 
+ C_GAUSS  Flux        =     6.23904 (  5.29252)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         172
  I-UV_FIT, Starting minimization on channel         172    Velocity=    710.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3216 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   931.98933 (5289.6118)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     1.45026 (  5.29013)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -10.24511 (  5.28961)  milliJy 
+ C_GAUSS  Flux        =   -10.22126 (  5.29013)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         173
  I-UV_FIT, Starting minimization on channel         173    Velocity=    720.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3340 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -4.49582 (  5.49293)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -4.19688 (  5.49361)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.03494 (  5.49293)  milliJy 
+ C_GAUSS  Flux        =    -2.03465 (  5.49361)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         174
  I-UV_FIT, Starting minimization on channel         174    Velocity=    730.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3234 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -2.54232 (  5.31924)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -3.56080 (  5.31958)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.56343 (  5.31924)  milliJy 
+ C_GAUSS  Flux        =    -1.61221 (  5.31958)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         175
  I-UV_FIT, Starting minimization on channel         175    Velocity=    740.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3307 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     4.08426 (  5.43832)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.36110 (  5.43929)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.17176 (  5.43832)  milliJy 
+ C_GAUSS  Flux        =     1.11174 (  5.43929)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         176
  I-UV_FIT, Starting minimization on channel         176    Velocity=    750.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3369 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -2.65429 (  5.54022)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -2.78129 (  5.54079)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.67293 (  5.54022)  milliJy 
+ C_GAUSS  Flux        =     3.66056 (  5.54079)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         177
  I-UV_FIT, Starting minimization on channel         177    Velocity=    760.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3363 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     8.40181 (  5.53109)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     8.58286 (  5.53158)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     5.64097 (  5.53109)  milliJy 
+ C_GAUSS  Flux        =     5.67107 (  5.53158)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         178
  I-UV_FIT, Starting minimization on channel         178    Velocity=    770.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3288 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   368.32613 (5407.5927)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =  -425.60190 (5408.1736)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     5.05500 (  5.40759)  milliJy 
+ C_GAUSS  Flux        =     5.02330 (  5.40817)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         179
  I-UV_FIT, Starting minimization on channel         179    Velocity=    780.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3273 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     3.41529 (  5.38225)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     3.03877 (  5.38291)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =  -924.34356 (5382.2480)  microJy 
+ C_GAUSS  Flux        =  -930.60795 (5382.9143)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         180
  I-UV_FIT, Starting minimization on channel         180    Velocity=    790.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3346 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     8.78335 (  5.50329)  milliJy 
+ r.m.s.=     0.3347 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     7.74718 (  5.50448)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.85629 (  5.50329)  milliJy 
+ C_GAUSS  Flux        =     7.83743 (  5.50448)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         181
  I-UV_FIT, Starting minimization on channel         181    Velocity=    800.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3346 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     1.02273 (  5.50267)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     1.25106 (  5.50325)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.63867 (  5.50267)  milliJy 
+ C_GAUSS  Flux        =    -1.62649 (  5.50325)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         182
  I-UV_FIT, Starting minimization on channel         182    Velocity=    810.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3401 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   -17.09086 (  5.59379)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   -18.18038 (  5.59310)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =  -178.83290 (5593.7912)  microJy 
+ C_GAUSS  Flux        =  -270.13200 (5593.0973)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         183
  I-UV_FIT, Starting minimization on channel         183    Velocity=    820.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3370 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -1.02041 (  5.54251)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -1.87540 (  5.54303)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.15703 (  5.54251)  milliJy 
+ C_GAUSS  Flux        =     4.11907 (  5.54303)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         184
  I-UV_FIT, Starting minimization on channel         184    Velocity=    830.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3306 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    10.72964 (  5.43612)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    10.65325 (  5.43677)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.12443 (  5.43612)  milliJy 
+ C_GAUSS  Flux        =    -1.09831 (  5.43677)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         185
  I-UV_FIT, Starting minimization on channel         185    Velocity=    840.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3374 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     6.40977 (  5.54937)  milliJy 
+ r.m.s.=     0.3375 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     5.80751 (  5.55023)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.63767 (  5.54937)  milliJy 
+ C_GAUSS  Flux        =     1.63041 (  5.55023)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         186
  I-UV_FIT, Starting minimization on channel         186    Velocity=    850.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3393 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -3.93033 (  5.57958)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -5.02335 (  5.57985)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.18634 (  5.57958)  milliJy 
+ C_GAUSS  Flux        =    -2.24205 (  5.57985)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         187
  I-UV_FIT, Starting minimization on channel         187    Velocity=    860.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3340 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -4.93402 (  5.49295)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -4.47903 (  5.49370)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -11.40556 (  5.49295)  milliJy 
+ C_GAUSS  Flux        =   -11.40038 (  5.49370)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         188
  I-UV_FIT, Starting minimization on channel         188    Velocity=    870.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3407 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     1.92694 (  5.60324)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     1.17026 (  5.60394)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -13.30743 (  5.60324)  milliJy 
+ C_GAUSS  Flux        =   -13.33325 (  5.60394)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         189
  I-UV_FIT, Starting minimization on channel         189    Velocity=    880.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3443 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     2.63540 (  5.66195)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     2.82491 (  5.66253)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.09510 (  5.66195)  milliJy 
+ C_GAUSS  Flux        =    -3.08006 (  5.66253)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         190
  I-UV_FIT, Starting minimization on channel         190    Velocity=    890.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3412 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -9.08675 (  5.61105)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -9.40443 (  5.61147)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -4.42910 (  5.61105)  milliJy 
+ C_GAUSS  Flux        =    -4.46719 (  5.61147)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         191
  I-UV_FIT, Starting minimization on channel         191    Velocity=    900.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3360 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     9.79235 (  5.52530)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     9.68981 (  5.52597)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.42982 (  5.52530)  milliJy 
+ C_GAUSS  Flux        =     1.45263 (  5.52597)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         192
  I-UV_FIT, Starting minimization on channel         192    Velocity=    910.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3478 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   713.63462 (5719.4573)  microJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -1.13792 (  5.72006)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -12.78208 (  5.71946)  milliJy 
+ C_GAUSS  Flux        =   -12.85619 (  5.72006)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         193
  I-UV_FIT, Starting minimization on channel         193    Velocity=    920.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3486 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -7.39062 (  5.73222)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -8.59582 (  5.73222)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   421.63448 (5732.2209)  microJy 
+ C_GAUSS  Flux        =   351.65945 (5732.2153)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         194
  I-UV_FIT, Starting minimization on channel         194    Velocity=    930.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3490 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     3.99672 (  5.73829)  milliJy 
+ r.m.s.=     0.3489 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     5.49665 (  5.73845)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.55655 (  5.73829)  milliJy 
+ C_GAUSS  Flux        =    -1.48385 (  5.73845)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         195
  I-UV_FIT, Starting minimization on channel         195    Velocity=    940.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3511 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -5.11702 (  5.77319)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -3.23884 (  5.77434)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.21598 (  5.77319)  milliJy 
+ C_GAUSS  Flux        =    -2.15305 (  5.77434)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         196
  I-UV_FIT, Starting minimization on channel         196    Velocity=    950.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3522 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -6.80596 (  5.79166)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    -7.54562 (  5.79195)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -7.01266 (  5.79166)  milliJy 
+ C_GAUSS  Flux        =    -7.06196 (  5.79195)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         197
  I-UV_FIT, Starting minimization on channel         197    Velocity=    960.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3490 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     3.32686 (  5.73917)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =     4.79867 (  5.73941)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.26167 (  5.73917)  milliJy 
+ C_GAUSS  Flux        =    -3.19197 (  5.73941)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         198
  I-UV_FIT, Starting minimization on channel         198    Velocity=    970.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3494 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =    -1.69538 (  5.74511)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =  -963.64392 (5745.8095)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.71668 (  5.74511)  milliJy 
+ C_GAUSS  Flux        =     1.74199 (  5.74581)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         199
  I-UV_FIT, Starting minimization on channel         199    Velocity=    980.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3474 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =   -10.09353 (  5.71169)  milliJy 
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =   -10.18578 (  5.71226)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     2.19651 (  5.71169)  milliJy 
+ C_GAUSS  Flux        =     2.16451 (  5.71226)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         200
  I-UV_FIT, Starting minimization on channel         200    Velocity=    990.000000    
  I-UV_FIT, Starting from   1.0000      1.0000    
- r.m.s.=     0.3534 Jy.
- C_GAUSS  R.A.        =     9.42700 (  fixed  )  10:00:09.3600
- C_GAUSS  Dec.        =     5.64800 (  fixed  )  02:19:08.1440
- C_GAUSS  Flux        =     9.27635 (  5.80999)  milliJy 
+ r.m.s.=     0.3533 Jy.
+ C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
+ C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
+ C_GAUSS  Flux        =    10.73080 (  5.80969)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   245.68888 (5809.9937)  microJy 
+ C_GAUSS  Flux        =   331.35019 (5809.6909)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 S-UV_FIT,  Successful completion
 STOP  

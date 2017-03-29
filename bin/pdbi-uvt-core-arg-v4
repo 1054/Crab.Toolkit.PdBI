@@ -457,8 +457,8 @@ while [[ "$#" -gt 0 ]]; do
             #<DEBUG>#echo ${PdBIUVT_OBJ_POS[2*(PdBIUVT_OBJ_NUMB-1)+0]}
             #<DEBUG>#echo "****"
         elif [[ ! -z "${PdBIUVT_RAND_OBJT[PdBIUVT_OBJ_NUMB-1]}" && ! -z "${PdBIUVT_DECD_OBJT[PdBIUVT_OBJ_NUMB-1]}" ]]; then
-            PdBIUVT_RAND_OBJT[PdBIUVT_OBJ_NUMB-1]=$(awk "BEGIN {print (${PdBIUVT_RAND_OBJT[PdBIUVT_OBJ_NUMB-1]})+(($1)/3600.0);}")
-            PdBIUVT_DECD_OBJT[PdBIUVT_OBJ_NUMB-1]=$(awk "BEGIN {print (${PdBIUVT_DECD_OBJT[PdBIUVT_OBJ_NUMB-1]})+(($2)/3600.0);}")
+            PdBIUVT_RAND_OBJT[PdBIUVT_OBJ_NUMB-1]=$(awk "BEGIN {pi=atan2(0,-1); printf \"%0.10f\n\", (${PdBIUVT_RAND_OBJT[PdBIUVT_OBJ_NUMB-1]})+(($1)/3600.0)/cos(${PdBIUVT_DECD_OBJT[PdBIUVT_OBJ_NUMB-1]}/180*pi);}")
+            PdBIUVT_DECD_OBJT[PdBIUVT_OBJ_NUMB-1]=$(awk "BEGIN {pi=atan2(0,-1); printf \"%0.10f\n\", (${PdBIUVT_DECD_OBJT[PdBIUVT_OBJ_NUMB-1]})+(($2)/3600.0);}")
             PdBIUVT_TEMP=($(degree2radec "${PdBIUVT_RAND_OBJT[PdBIUVT_OBJ_NUMB-1]}" "${PdBIUVT_DECD_OBJT[PdBIUVT_OBJ_NUMB-1]}" | cut -d ' ' -f 1,2))
             #<DEBUG>#echo "****"
             #<DEBUG>#echo ${PdBIUVT_TEMP[@]}

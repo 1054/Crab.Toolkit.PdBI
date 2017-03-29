@@ -354,6 +354,20 @@ for (( i=0; i<$PdBIUVT_OBJ_NUMB; i++ )); do
         if [[ "${PdBIUVT_OBJ_NAME[i]}" != "obj_$((i+1))" ]]; then
             cp "$PdBIUVT_SAVE.result.obj_$((i+1)).txt" "$PdBIUVT_SAVE.result.${PdBIUVT_OBJ_NAME[i]}.txt"
         fi
+        
+        # read in the result table, compare the input position and the fitted position
+        PdBIUVT_PosX=$(printf "%0.3f" "${PdBIUVT_OBJ_POS[2*i+0]}")
+        PdBIUVT_PosY=$(printf "%0.3f" "${PdBIUVT_OBJ_POS[2*i+1]}")
+        PdBIUVT_OutX=($(cat "$PdBIUVT_SAVE.result.${PdBIUVT_OBJ_NAME[i]}.txt" | sed -e 's/^ *//g' | tr -s ' ' | grep -v "^#" | cut -d ' ' -f 1))
+        PdBIUVT_OutY=($(cat "$PdBIUVT_SAVE.result.${PdBIUVT_OBJ_NAME[i]}.txt" | sed -e 's/^ *//g' | tr -s ' ' | grep -v "^#" | cut -d ' ' -f 3))
+        printf "# %13s %15s %15s %15s %15s %15s %15s\n" "x_input" "y_input" "x_output" "y_output" "x_diff" "y_diff" > "$PdBIUVT_SAVE.coord.${PdBIUVT_OBJ_NAME[i]}.txt"
+        printf "# %13s %15s %15s %15s %15s %15s %15s\n" "arcsec" "arcsec" "arcsec" "arcsec" "arcsec" "arcsec" >> "$PdBIUVT_SAVE.coord.${PdBIUVT_OBJ_NAME[i]}.txt"
+        for (( j=0; j<${#PdBIUVT_OutX[@]}; j++ )); do
+            printf "%15.3f %15.3f %15.3f %15.3f %15.3f %15.3f\n" "$PdBIUVT_PosX" "$PdBIUVT_PosY" "${PdBIUVT_OutX[j]}" "${PdBIUVT_OutY[j]}" \
+                                                                 $(awk "BEGIN {print (${PdBIUVT_OutX[j]})-($PdBIUVT_PosX);}") \
+                                                                 $(awk "BEGIN {print (${PdBIUVT_OutY[j]})-($PdBIUVT_PosY);}") \
+                                                                 >> "$PdBIUVT_SAVE.coord.${PdBIUVT_OBJ_NAME[i]}.txt"
+        done
     fi
     
     # run "$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
@@ -387,7 +401,8 @@ echo "--"
 
 for (( i=0; i<$PdBIUVT_OBJ_NUMB; i++ )); do
     
-    echo "Output to \"$PdBIUVT_SAVE.uvfit.${PdBIUVT_OBJ_NAME[i]}.txt\"!     # ${PdBIUVT_OBJ_NAME[i]} result data table of frequency [GHz], velocity [km/s], flux and error [mJy]."
+    echo "Output to \"$PdBIUVT_SAVE.coord.${PdBIUVT_OBJ_NAME[i]}.txt\"!     # ${PdBIUVT_OBJ_NAME[i]} result data table of coordinates."
+    echo "Output to \"$PdBIUVT_SAVE.result.${PdBIUVT_OBJ_NAME[i]}.txt\"!    # ${PdBIUVT_OBJ_NAME[i]} result data table of frequency [GHz], velocity [km/s], flux and error [mJy]."
     echo "Output to \"$PdBIUVT_SAVE.plotfit.${PdBIUVT_OBJ_NAME[i]}.eps\"!   # ${PdBIUVT_OBJ_NAME[i]} result spectrum of flux versus frequency."
     echo "--"
     
