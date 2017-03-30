@@ -70,7 +70,7 @@ for (( PdBIUVT_ITER = 0; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ ))
         PdBIUVT_SAVE=(${PdBIUVT_SAVE[@]} ${PdBIUVT_NAME[$PdBIUVT_ITER]}-Shifted)
     fi
     if [[ "${PdBIUVT_SAVE[$PdBIUVT_ITER]}" == *".uvt" ]]; then
-        PdBIUVT_SAVE[$PdBIUVT_ITER]=$(echo ${PdBIUVT_SAVE[$PdBIUVT_ITER]} | sed -E 's/[.]uvt$//g')
+        PdBIUVT_SAVE[$PdBIUVT_ITER]=$(echo ${PdBIUVT_SAVE[$PdBIUVT_ITER]} | sed -e 's/\.uvt$//g')
     fi
     # TODO will overwrite, give warning?
 done
@@ -97,10 +97,13 @@ for (( PdBIUVT_ITER = 0; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ ))
     # "let map_ra ${PdBIUVT_MAP_RA}"
     # "let map_dec ${PdBIUVT_MAP_DEC}"
     # 
-    PdBIUVT_TEMP_INIT="${PdBIUVT_SAVE[$PdBIUVT_ITER]}.init"
-    PdBIUVT_TEMP_EXEC="${PdBIUVT_SAVE[$PdBIUVT_ITER]}.map"
-    PdBIUVT_TEMP_LOGT="${PdBIUVT_SAVE[$PdBIUVT_ITER]}.log"
-    \cp "${PdBIUVT_NAME[$PdBIUVT_ITER]}.uvt" "${PdBIUVT_SAVE[$PdBIUVT_ITER]}.uvt"
+    #PdBIUVT_TEMP_INIT="${PdBIUVT_SAVE[$PdBIUVT_ITER]}.init"
+    #PdBIUVT_TEMP_EXEC="${PdBIUVT_SAVE[$PdBIUVT_ITER]}.map"
+    #PdBIUVT_TEMP_LOGT="${PdBIUVT_SAVE[$PdBIUVT_ITER]}.log"
+    PdBIUVT_TEMP_INIT="${PdBIUVT_NAME[$PdBIUVT_ITER]}.uvt.uv_shift.init"
+    PdBIUVT_TEMP_EXEC="${PdBIUVT_NAME[$PdBIUVT_ITER]}.uvt.uv_shift.map"
+    PdBIUVT_TEMP_LOGT="${PdBIUVT_NAME[$PdBIUVT_ITER]}.uvt.uv_shift.log"
+    cp "${PdBIUVT_NAME[$PdBIUVT_ITER]}.uvt" "${PdBIUVT_SAVE[$PdBIUVT_ITER]}.uvt"
     echo  '! '                                                                                                             > $PdBIUVT_TEMP_INIT
     echo  '! Task UV_SHIFT'                                                                                               >> $PdBIUVT_TEMP_INIT
     echo  '! 6 parameters needed for all functions'                                                                       >> $PdBIUVT_TEMP_INIT
