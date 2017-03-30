@@ -77,12 +77,14 @@ if [[ ${#CASA_INP_VIS[@]} -eq 0 ]]; then usage; exit; fi
 # 
 # Prepare the output global script
 # 
-echo "#!/bin/bash"                                                               >  "run_casa_ms_split_all.bash"
-echo ""                                                                          >> "run_casa_ms_split_all.bash"
-echo "sources $(readlink -f $(dirname $(dirname ${BASH_SOURCE[0]}))/SETUP.bash)" >> "run_casa_ms_split_all.bash"
-echo "#!/bin/bash"                                                               >  "run_casa_ms_split_all_step1.bash"
-echo ""                                                                          >> "run_casa_ms_split_all_step1.bash"
-echo "sources $(readlink -f $(dirname $(dirname ${BASH_SOURCE[0]}))/SETUP.bash)" >> "run_casa_ms_split_all_step1.bash"
+echo "#!/bin/bash"                                                                                              >  "run_casa_ms_split_all.bash"
+echo ""                                                                                                         >> "run_casa_ms_split_all.bash"
+#echo "source $(readlink -f $(dirname $(dirname ${BASH_SOURCE[0]}))/SETUP.bash)"                                >> "run_casa_ms_split_all.bash"
+echo "source $(perl -MCwd -e 'print Cwd::abs_path shift' $(dirname $(dirname ${BASH_SOURCE[0]}))/SETUP.bash)"   >> "run_casa_ms_split_all.bash"
+echo "#!/bin/bash"                                                                                              >  "run_casa_ms_split_all_step1.bash"
+echo ""                                                                                                         >> "run_casa_ms_split_all_step1.bash"
+#echo "source $(readlink -f $(dirname $(dirname ${BASH_SOURCE[0]}))/SETUP.bash)"                                >> "run_casa_ms_split_all_step1.bash"
+echo "source $(perl -MCwd -e 'print Cwd::abs_path shift' $(dirname $(dirname ${BASH_SOURCE[0]}))/SETUP.bash)"   >> "run_casa_ms_split_all_step1.bash"
 
 
 
@@ -538,7 +540,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo ""                                                              >> "$CASAMS_Script3"
                     echo "# We also try to exportuvfits each mosaic pointing"            >> "$CASAMS_Script3"
                     echo "tb.open(vis+os.sep+'FIELD')"                                   >> "$CASAMS_Script3"
-                    echo "mosaic_list = tb.getcol('PHASE_DIR')"                          >> "$CASAMS_Script3"
+                    echo "mosaic_list = tb.getcol('NAME')"                               >> "$CASAMS_Script3" #<NOTE><20170330># Can not use 'PHASE_DIR'
                     echo "mosaic_numb = len(mosaic_list)"                                >> "$CASAMS_Script3"
                     echo "tb.close()"                                                    >> "$CASAMS_Script3"
                     echo "if mosaic_numb>1:"                                             >> "$CASAMS_Script3"
@@ -561,7 +563,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "    "                                                                   >> "$CASAMS_Script3"
                     echo "    # We also try to exportuvfits each mosaic pointing"                 >> "$CASAMS_Script3"
                     echo "    tb.open(vis+os.sep+'FIELD')"                                        >> "$CASAMS_Script3"
-                    echo "    mosaic_list = tb.getcol('PHASE_DIR')"                               >> "$CASAMS_Script3"
+                    echo "    mosaic_list = tb.getcol('NAME')"                                    >> "$CASAMS_Script3" #<NOTE><20170330># Can not use 'PHASE_DIR'
                     echo "    mosaic_numb = len(mosaic_list)"                                     >> "$CASAMS_Script3"
                     echo "    tb.close()"                                                         >> "$CASAMS_Script3"
                     echo "    if mosaic_numb>1:"                                                  >> "$CASAMS_Script3"
