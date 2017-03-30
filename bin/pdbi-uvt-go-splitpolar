@@ -7,6 +7,7 @@
 #    2016-06-28 rewritting & beautifing
 #    2016-07-10 <TODO> what if multi-stokes?
 #    2017-02-19 rewritten, beautified, used "pdbi-uvt-core-arg"
+#    2017-03-30 using "pdbi-uvt-core-arg-v4"
 # 
 # 
 
@@ -33,10 +34,10 @@ PdBIUVT_DIR=$(dirname $(perl -MCwd -e 'print Cwd::abs_path shift' "${BASH_SOURCE
 # 
 # Read input parameters by calling "pdbi-uvt-core-arg"
 # 
-if [[ -f "$PdBIUVT_DIR/pdbi-uvt-core-arg" ]]; then
-    source "$PdBIUVT_DIR/pdbi-uvt-core-arg" "$@"
+if [[ -f "$PdBIUVT_DIR/pdbi-uvt-core-arg-v4" ]]; then
+    source "$PdBIUVT_DIR/pdbi-uvt-core-arg-v4" "$@"
 else
-    echo ""; echo "Error! Could not find \"$PdBIUVT_DIR/pdbi-uvt-core-arg\"! Please contact software supplier!"; echo ""
+    echo ""; echo "Error! Could not find \"$PdBIUVT_DIR/pdbi-uvt-core-arg-v4\"! Please contact software supplier!"; echo ""
     exit
 fi
 
