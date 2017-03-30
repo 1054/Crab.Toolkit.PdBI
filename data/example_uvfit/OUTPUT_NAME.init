@@ -18,7 +18,7 @@ TASK\INTEGER   "Number of Functions"            NF$             2
 ! --- 01
 ! 
 TASK\CHARACTER "Function"            FUNCT01$       C_GAUSS
-TASK\REAL      "Parameters"          PARAM01$[7]    9.577 5.650 1.0 1.0 0.0 0.0 0
+TASK\REAL      "Parameters"          PARAM01$[7]    9.577 5.654 1.0 1.0 0.0 0.0 0
 TASK\REAL      "Starting range"      RANGE01$[7]    0 0 0 0 0 0 0
 TASK\INTEGER   "number of starts"    START01$[7]    -1 -1 0 -1 -1 0 0
 TASK\LOGICAL   "Subtract function"   SUBSF01$       NO

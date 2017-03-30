@@ -9,12 +9,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3605 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     5.81318 (  5.94152)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     5.81070 (  5.94151)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -7.56494 (  5.94152)  milliJy 
+ C_GAUSS  Flux        =    -7.56514 (  5.94151)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel           2
@@ -22,12 +22,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3740 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     9.84821 (  6.16367)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     9.82796 (  6.16368)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   381.21921 (6163.6721)  microJy 
+ C_GAUSS  Flux        =   380.21839 (6163.6803)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel           3
@@ -35,12 +35,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3580 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   222.62172 (5900.1138)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   223.61070 (5900.1100)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =  -929.75342 (5900.1138)  microJy 
+ C_GAUSS  Flux        =  -929.71544 (5900.1100)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel           4
@@ -48,12 +48,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3583 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -4.79348 (  5.90569)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -4.79403 (  5.90568)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -9.89422 (  5.90569)  milliJy 
+ C_GAUSS  Flux        =    -9.89417 (  5.90568)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel           5
@@ -61,12 +61,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3595 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     1.72945 (  5.92573)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     1.72204 (  5.92573)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.12285 (  5.92573)  milliJy 
+ C_GAUSS  Flux        =     6.12251 (  5.92573)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel           6
@@ -74,12 +74,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3524 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.88774 (  5.80864)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.88322 (  5.80864)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =  -429.12002 (5808.6422)  microJy 
+ C_GAUSS  Flux        =  -429.35291 (5808.6394)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel           7
@@ -87,12 +87,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3530 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.11448 (  5.81790)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.10217 (  5.81790)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -10.42274 (  5.81790)  milliJy 
+ C_GAUSS  Flux        =   -10.42329 (  5.81790)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel           8
@@ -100,12 +100,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3571 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -7.10016 (  5.88612)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -7.08239 (  5.88613)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.65556 (  5.88612)  milliJy 
+ C_GAUSS  Flux        =     6.65641 (  5.88613)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel           9
@@ -113,12 +113,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3540 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     6.13970 (  5.83488)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     6.13445 (  5.83488)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.62946 (  5.83488)  milliJy 
+ C_GAUSS  Flux        =     7.62915 (  5.83488)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          10
@@ -126,12 +126,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3516 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -5.20955 (  5.79478)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -5.19034 (  5.79478)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     8.16401 (  5.79478)  milliJy 
+ C_GAUSS  Flux        =     8.16489 (  5.79478)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          11
@@ -139,12 +139,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3534 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -6.68950 (  5.82367)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -6.69597 (  5.82367)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.61550 (  5.82367)  milliJy 
+ C_GAUSS  Flux        =    -2.61568 (  5.82367)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          12
@@ -152,12 +152,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3638 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     4.98328 (  5.99509)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     4.98635 (  5.99508)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.31679 (  5.99509)  milliJy 
+ C_GAUSS  Flux        =     1.31685 (  5.99508)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          13
@@ -165,12 +165,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3506 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    10.07183 (  5.77756)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    10.10559 (  5.77753)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.68698 (  5.77756)  milliJy 
+ C_GAUSS  Flux        =     1.68825 (  5.77753)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          14
@@ -178,12 +178,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3517 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -8.68537 (  5.79572)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -8.67073 (  5.79572)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -7.86006 (  5.79572)  milliJy 
+ C_GAUSS  Flux        =    -7.85932 (  5.79572)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          15
@@ -191,12 +191,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3556 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -3.60332 (  5.86011)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -3.58574 (  5.86011)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     2.61983 (  5.86011)  milliJy 
+ C_GAUSS  Flux        =     2.62062 (  5.86011)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          16
@@ -204,12 +204,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3483 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.13647 (  5.74019)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.10877 (  5.74019)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.00384 (  5.74019)  milliJy 
+ C_GAUSS  Flux        =     6.00265 (  5.74019)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          17
@@ -217,12 +217,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3648 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -5.71187 (  6.01124)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -5.72978 (  6.01123)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.46220 (  6.01124)  milliJy 
+ C_GAUSS  Flux        =     4.46153 (  6.01123)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          18
@@ -230,12 +230,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3542 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    10.67455 (  5.83613)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    10.66039 (  5.83614)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.07297 (  5.83613)  milliJy 
+ C_GAUSS  Flux        =    -1.07371 (  5.83614)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          19
@@ -243,12 +243,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3508 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =  -642.32116 (5781.1339)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =  -617.42001 (5781.1316)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.68172 (  5.78113)  milliJy 
+ C_GAUSS  Flux        =    -3.68067 (  5.78113)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          20
@@ -256,12 +256,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3527 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     4.36623 (  5.81256)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     4.38787 (  5.81255)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.42012 (  5.81256)  milliJy 
+ C_GAUSS  Flux        =    -2.41928 (  5.81255)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          21
@@ -269,12 +269,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3583 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -3.26101 (  5.90462)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -3.26882 (  5.90462)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    11.21353 (  5.90462)  milliJy 
+ C_GAUSS  Flux        =    11.21325 (  5.90462)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          22
@@ -282,12 +282,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3458 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.17678 (  5.69785)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.20002 (  5.69785)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.57814 (  5.69785)  milliJy 
+ C_GAUSS  Flux        =    -1.57720 (  5.69785)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          23
@@ -295,12 +295,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3563 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   249.23578 (5871.1246)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   272.96644 (5871.1209)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =  -668.48159 (5871.1246)  microJy 
+ C_GAUSS  Flux        =  -667.49219 (5871.1209)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          24
@@ -308,12 +308,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3600 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     8.36971 (  5.93251)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     8.38084 (  5.93250)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    13.94582 (  5.93251)  milliJy 
+ C_GAUSS  Flux        =    13.94617 (  5.93250)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          25
@@ -321,12 +321,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3441 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.69509 (  5.67066)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.67778 (  5.67066)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.10555 (  5.67066)  milliJy 
+ C_GAUSS  Flux        =     6.10479 (  5.67066)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          26
@@ -334,12 +334,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3489 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.74055 (  5.74968)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.71839 (  5.74968)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     8.42277 (  5.74968)  milliJy 
+ C_GAUSS  Flux        =     8.42181 (  5.74968)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          27
@@ -347,12 +347,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3601 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   207.39479 (5932.8206)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   181.99158 (5932.8176)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -6.83055 (  5.93282)  milliJy 
+ C_GAUSS  Flux        =    -6.83162 (  5.93282)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          28
@@ -360,12 +360,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3518 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     6.24653 (  5.79659)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     6.24781 (  5.79658)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -5.33887 (  5.79659)  milliJy 
+ C_GAUSS  Flux        =    -5.33890 (  5.79658)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          29
@@ -373,12 +373,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3457 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     7.11836 (  5.69529)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     7.10557 (  5.69529)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    11.66010 (  5.69529)  milliJy 
+ C_GAUSS  Flux        =    11.65947 (  5.69529)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          30
@@ -386,12 +386,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3430 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =  -759.39848 (5651.4108)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =  -795.32213 (5651.4058)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     8.02406 (  5.65141)  milliJy 
+ C_GAUSS  Flux        =     8.02257 (  5.65141)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          31
@@ -399,12 +399,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3482 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   145.30076 (5737.1266)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   140.58870 (5737.1235)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   817.98405 (5737.1266)  microJy 
+ C_GAUSS  Flux        =   817.78516 (5737.1235)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          32
@@ -412,12 +412,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3401 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.75843 (  5.60320)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.75315 (  5.60320)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.05649 (  5.60320)  milliJy 
+ C_GAUSS  Flux        =     1.05624 (  5.60320)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          33
@@ -425,12 +425,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3458 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.38776 (  5.69725)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.38773 (  5.69725)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.74376 (  5.69725)  milliJy 
+ C_GAUSS  Flux        =     3.74373 (  5.69725)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          34
@@ -438,12 +438,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3397 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     5.55545 (  5.59727)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     5.54468 (  5.59727)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -5.32789 (  5.59727)  milliJy 
+ C_GAUSS  Flux        =    -5.32841 (  5.59727)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          35
@@ -451,12 +451,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3470 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -8.34602 (  5.71694)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -8.34545 (  5.71693)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    13.49040 (  5.71694)  milliJy 
+ C_GAUSS  Flux        =    13.49053 (  5.71693)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          36
@@ -464,12 +464,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3398 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -3.78429 (  5.59888)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -3.77062 (  5.59888)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -4.73349 (  5.59888)  milliJy 
+ C_GAUSS  Flux        =    -4.73287 (  5.59888)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          37
@@ -477,12 +477,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3424 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     4.43317 (  5.64086)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     4.43553 (  5.64085)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.02278 (  5.64086)  milliJy 
+ C_GAUSS  Flux        =     7.02282 (  5.64085)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          38
@@ -490,12 +490,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3416 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     4.52775 (  5.62728)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     4.55132 (  5.62727)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -4.47531 (  5.62728)  milliJy 
+ C_GAUSS  Flux        =    -4.47438 (  5.62727)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          39
@@ -503,12 +503,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3424 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     5.70073 (  5.64144)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     5.67604 (  5.64145)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.56679 (  5.64144)  milliJy 
+ C_GAUSS  Flux        =    -2.56789 (  5.64145)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          40
@@ -516,12 +516,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3540 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.81277 (  5.83214)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.82257 (  5.83214)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   591.23482 (5832.1427)  microJy 
+ C_GAUSS  Flux        =   591.61107 (5832.1379)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          41
@@ -529,12 +529,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3509 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     3.63033 (  5.78028)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     3.65693 (  5.78027)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   601.06327 (5780.2817)  microJy 
+ C_GAUSS  Flux        =   602.13187 (5780.2725)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          42
@@ -542,12 +542,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3426 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    10.54281 (  5.64410)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    10.53968 (  5.64410)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.53011 (  5.64410)  milliJy 
+ C_GAUSS  Flux        =     7.52986 (  5.64410)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          43
@@ -555,12 +555,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3500 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     6.86533 (  5.76655)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     6.85217 (  5.76655)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.06780 (  5.76655)  milliJy 
+ C_GAUSS  Flux        =    -1.06843 (  5.76655)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          44
@@ -568,12 +568,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3457 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     4.32665 (  5.69514)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     4.31697 (  5.69514)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -7.48519 (  5.69514)  milliJy 
+ C_GAUSS  Flux        =    -7.48564 (  5.69514)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          45
@@ -581,12 +581,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3468 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.59597 (  5.71317)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.58770 (  5.71316)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.50047 (  5.71317)  milliJy 
+ C_GAUSS  Flux        =     4.50010 (  5.71316)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          46
@@ -594,12 +594,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3501 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   239.45624 (5766.8453)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   284.28053 (5766.8418)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -9.99343 (  5.76685)  milliJy 
+ C_GAUSS  Flux        =    -9.99156 (  5.76684)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          47
@@ -607,12 +607,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3512 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -8.52183 (  5.78537)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -8.53740 (  5.78536)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    19.18472 (  5.78537)  milliJy 
+ C_GAUSS  Flux        =    19.18416 (  5.78536)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          48
@@ -620,12 +620,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3509 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -4.03487 (  5.78060)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -4.05420 (  5.78059)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.25146 (  5.78060)  milliJy 
+ C_GAUSS  Flux        =     6.25070 (  5.78059)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          49
@@ -633,12 +633,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3492 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =  -137.47258 (5752.7320)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =  -130.36336 (5752.7294)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.52896 (  5.75273)  milliJy 
+ C_GAUSS  Flux        =     3.52926 (  5.75273)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          50
@@ -646,12 +646,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3566 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -6.85316 (  5.87351)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -6.86699 (  5.87351)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    15.48575 (  5.87351)  milliJy 
+ C_GAUSS  Flux        =    15.48524 (  5.87351)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          51
@@ -659,12 +659,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3512 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     7.09917 (  5.78469)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     7.09293 (  5.78469)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.58284 (  5.78469)  milliJy 
+ C_GAUSS  Flux        =    -3.58318 (  5.78469)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          52
@@ -672,12 +672,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3492 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -5.54445 (  5.75262)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -5.52672 (  5.75262)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -4.95105 (  5.75262)  milliJy 
+ C_GAUSS  Flux        =    -4.95025 (  5.75262)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          53
@@ -685,12 +685,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3447 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -6.83801 (  5.67838)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -6.85045 (  5.67837)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   461.84437 (5678.3822)  microJy 
+ C_GAUSS  Flux        =   461.39804 (5678.3740)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          54
@@ -698,12 +698,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3504 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   795.06911 (5772.6645)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   811.17270 (5772.6611)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.98497 (  5.77266)  milliJy 
+ C_GAUSS  Flux        =     1.98563 (  5.77266)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          55
@@ -711,12 +711,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3473 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     1.57616 (  5.72027)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     1.56201 (  5.72027)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -5.97456 (  5.72027)  milliJy 
+ C_GAUSS  Flux        =    -5.97517 (  5.72027)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          56
@@ -724,12 +724,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3580 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -5.96565 (  5.89678)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -5.96649 (  5.89678)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.08160 (  5.89678)  milliJy 
+ C_GAUSS  Flux        =    -2.08157 (  5.89678)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          57
@@ -737,12 +737,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3483 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   142.96569 (5736.2797)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   137.00367 (5736.2773)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.85634 (  5.73628)  milliJy 
+ C_GAUSS  Flux        =    -1.85659 (  5.73628)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          58
@@ -750,12 +750,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3442 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -7.05593 (  5.66958)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -7.08199 (  5.66956)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.75150 (  5.66958)  milliJy 
+ C_GAUSS  Flux        =     3.75048 (  5.66956)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          59
@@ -763,12 +763,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3464 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -4.60755 (  5.70581)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -4.58111 (  5.70581)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.72468 (  5.70581)  milliJy 
+ C_GAUSS  Flux        =    -1.72353 (  5.70581)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          60
@@ -776,12 +776,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3510 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     8.35115 (  5.78158)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     8.33388 (  5.78159)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.27383 (  5.78158)  milliJy 
+ C_GAUSS  Flux        =     1.27303 (  5.78159)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          61
@@ -789,12 +789,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3421 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    14.40772 (  5.63522)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    14.37555 (  5.63524)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -5.06924 (  5.63522)  milliJy 
+ C_GAUSS  Flux        =    -5.07073 (  5.63524)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          62
@@ -802,12 +802,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3449 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     3.66854 (  5.68147)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     3.66835 (  5.68147)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -5.87254 (  5.68147)  milliJy 
+ C_GAUSS  Flux        =    -5.87258 (  5.68147)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          63
@@ -815,12 +815,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3404 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -5.17162 (  5.60595)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -5.17637 (  5.60595)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.76947 (  5.60595)  milliJy 
+ C_GAUSS  Flux        =    -3.76961 (  5.60595)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          64
@@ -828,12 +828,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3376 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    17.41643 (  5.55976)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    17.43743 (  5.55973)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.14289 (  5.55976)  milliJy 
+ C_GAUSS  Flux        =    -3.14219 (  5.55973)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          65
@@ -841,12 +841,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3456 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     9.16273 (  5.69167)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     9.18133 (  5.69165)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.48557 (  5.69167)  milliJy 
+ C_GAUSS  Flux        =     4.48626 (  5.69165)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          66
@@ -854,12 +854,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3366 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -2.47097 (  5.54298)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -2.48891 (  5.54297)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.27069 (  5.54298)  milliJy 
+ C_GAUSS  Flux        =     6.26996 (  5.54297)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          67
@@ -867,12 +867,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3379 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     5.05613 (  5.56504)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     5.06980 (  5.56503)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.55828 (  5.56504)  milliJy 
+ C_GAUSS  Flux        =     3.55880 (  5.56503)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          68
@@ -880,12 +880,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3329 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =  -272.25727 (5482.3880)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =  -257.48401 (5482.3862)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     8.37749 (  5.48239)  milliJy 
+ C_GAUSS  Flux        =     8.37811 (  5.48239)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          69
@@ -893,12 +893,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3294 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   238.73154 (5425.4486)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   233.50887 (5425.4466)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.81536 (  5.42545)  milliJy 
+ C_GAUSS  Flux        =     4.81514 (  5.42545)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          70
@@ -906,12 +906,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3355 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -5.97758 (  5.52599)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -5.99772 (  5.52598)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   652.79464 (5525.9915)  microJy 
+ C_GAUSS  Flux        =   652.00979 (5525.9811)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          71
@@ -919,12 +919,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3325 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -7.31383 (  5.47588)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -7.29754 (  5.47589)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.02074 (  5.47588)  milliJy 
+ C_GAUSS  Flux        =    -1.02000 (  5.47589)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          72
@@ -932,12 +932,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3378 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     7.20494 (  5.56392)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     7.22514 (  5.56391)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -6.93363 (  5.56392)  milliJy 
+ C_GAUSS  Flux        =    -6.93285 (  5.56391)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          73
@@ -945,12 +945,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3314 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     1.25732 (  5.45728)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     1.26852 (  5.45727)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.56367 (  5.45728)  milliJy 
+ C_GAUSS  Flux        =     4.56413 (  5.45727)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          74
@@ -958,12 +958,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3309 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -4.88468 (  5.44980)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -4.87657 (  5.44980)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -6.57132 (  5.44980)  milliJy 
+ C_GAUSS  Flux        =    -6.57094 (  5.44980)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          75
@@ -971,12 +971,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3256 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -3.13603 (  5.36205)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -3.13296 (  5.36205)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.61449 (  5.36205)  milliJy 
+ C_GAUSS  Flux        =     6.61464 (  5.36205)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          76
@@ -984,12 +984,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3301 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -5.50998 (  5.43580)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -5.54273 (  5.43579)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -9.29431 (  5.43580)  milliJy 
+ C_GAUSS  Flux        =    -9.29563 (  5.43579)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          77
@@ -997,12 +997,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3340 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -3.00797 (  5.49959)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -3.03951 (  5.49958)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.20314 (  5.49959)  milliJy 
+ C_GAUSS  Flux        =    -3.20443 (  5.49958)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          78
@@ -1010,12 +1010,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3331 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.51719 (  5.48576)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.50654 (  5.48576)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -11.80208 (  5.48576)  milliJy 
+ C_GAUSS  Flux        =   -11.80255 (  5.48576)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          79
@@ -1023,12 +1023,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3347 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -8.94040 (  5.51141)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -8.94496 (  5.51140)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.55331 (  5.51141)  milliJy 
+ C_GAUSS  Flux        =    -2.55342 (  5.51140)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          80
@@ -1036,12 +1036,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3251 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.92511 (  5.35396)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.92334 (  5.35396)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.82272 (  5.35396)  milliJy 
+ C_GAUSS  Flux        =    -2.82282 (  5.35396)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          81
@@ -1049,12 +1049,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3292 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     4.00996 (  5.42026)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     4.00823 (  5.42026)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =  -546.05585 (5420.2596)  microJy 
+ C_GAUSS  Flux        =  -546.16051 (5420.2583)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          82
@@ -1062,12 +1062,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3230 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -4.52657 (  5.31914)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -4.51031 (  5.31914)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.94984 (  5.31914)  milliJy 
+ C_GAUSS  Flux        =     7.95055 (  5.31914)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          83
@@ -1075,12 +1075,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3214 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -7.48157 (  5.29182)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -7.47392 (  5.29183)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   471.17885 (5291.8242)  microJy 
+ C_GAUSS  Flux        =   471.55644 (5291.8265)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          84
@@ -1088,12 +1088,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3315 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   -10.44496 (  5.45861)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   -10.43854 (  5.45861)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.26910 (  5.45861)  milliJy 
+ C_GAUSS  Flux        =     7.26945 (  5.45861)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          85
@@ -1101,12 +1101,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3313 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =  -582.94515 (5454.4538)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =  -584.81575 (5454.4519)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   296.14440 (5454.4538)  microJy 
+ C_GAUSS  Flux        =   296.07101 (5454.4519)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          86
@@ -1114,12 +1114,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3308 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -7.04538 (  5.44762)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -7.04546 (  5.44762)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.05874 (5447.6198)  microJy 
+ C_GAUSS  Flux        =    -2.00829 (5447.6180)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          87
@@ -1127,12 +1127,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3338 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   456.30067 (5496.5932)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   452.55048 (5496.5916)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.30153 (  5.49659)  milliJy 
+ C_GAUSS  Flux        =    -1.30169 (  5.49659)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          88
@@ -1140,12 +1140,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3317 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     4.47099 (  5.46217)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     4.46156 (  5.46217)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -10.68398 (  5.46217)  milliJy 
+ C_GAUSS  Flux        =   -10.68441 (  5.46217)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          89
@@ -1153,12 +1153,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3350 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =  -490.74420 (5516.3386)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =  -479.14141 (5516.3373)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -6.96836 (  5.51634)  milliJy 
+ C_GAUSS  Flux        =    -6.96788 (  5.51634)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          90
@@ -1166,12 +1166,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3295 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     1.64876 (  5.42504)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     1.63236 (  5.42505)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.24887 (  5.42504)  milliJy 
+ C_GAUSS  Flux        =     4.24817 (  5.42505)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          91
@@ -1179,12 +1179,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3267 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    11.78778 (  5.37884)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    11.80823 (  5.37883)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.09962 (  5.37884)  milliJy 
+ C_GAUSS  Flux        =    -1.09885 (  5.37883)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          92
@@ -1192,12 +1192,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3212 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   562.04384 (5288.0367)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   574.03421 (5288.0347)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -6.03549 (  5.28804)  milliJy 
+ C_GAUSS  Flux        =    -6.03500 (  5.28803)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          93
@@ -1205,12 +1205,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3322 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     4.90280 (  5.47013)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     4.90748 (  5.47013)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -7.63510 (  5.47013)  milliJy 
+ C_GAUSS  Flux        =    -7.63494 (  5.47013)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          94
@@ -1218,12 +1218,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3370 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    10.25557 (  5.54824)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    10.25391 (  5.54824)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -11.49321 (  5.54824)  milliJy 
+ C_GAUSS  Flux        =   -11.49335 (  5.54824)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          95
@@ -1231,12 +1231,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3387 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -5.66769 (  5.57670)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -5.66780 (  5.57670)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -4.38738 (  5.57670)  milliJy 
+ C_GAUSS  Flux        =    -4.38735 (  5.57670)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          96
@@ -1244,12 +1244,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3439 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =  -710.17281 (5661.3703)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =  -728.04989 (5661.3679)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.53992 (  5.66137)  milliJy 
+ C_GAUSS  Flux        =     4.53918 (  5.66137)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          97
@@ -1257,12 +1257,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3460 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    31.51656 (5696.2491)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    16.74764 (5696.2475)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     8.56455 (  5.69625)  milliJy 
+ C_GAUSS  Flux        =     8.56394 (  5.69625)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          98
@@ -1270,12 +1270,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3459 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.13272 (  5.69399)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.14495 (  5.69398)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     2.49357 (  5.69399)  milliJy 
+ C_GAUSS  Flux        =     2.49406 (  5.69398)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel          99
@@ -1283,12 +1283,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3527 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -1.05490 (  5.80661)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -1.02196 (  5.80661)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -5.29587 (  5.80661)  milliJy 
+ C_GAUSS  Flux        =    -5.29449 (  5.80661)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         100
@@ -1296,12 +1296,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3445 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -1.06912 (  5.67181)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -1.02426 (  5.67182)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.86283 (  5.67181)  milliJy 
+ C_GAUSS  Flux        =    -3.86096 (  5.67182)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         101
@@ -1309,12 +1309,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3604 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     7.86863 (  5.93394)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     7.84714 (  5.93395)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.12192 (  5.93394)  milliJy 
+ C_GAUSS  Flux        =    -3.12286 (  5.93395)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         102
@@ -1322,12 +1322,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3509 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -6.23580 (  5.77684)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -6.24711 (  5.77683)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    10.12998 (  5.77684)  milliJy 
+ C_GAUSS  Flux        =    10.12955 (  5.77683)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         103
@@ -1335,12 +1335,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3427 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -4.83774 (  5.64214)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -4.85883 (  5.64213)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     5.74808 (  5.64214)  milliJy 
+ C_GAUSS  Flux        =     5.74723 (  5.64213)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         104
@@ -1348,12 +1348,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3523 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     6.29373 (  5.79957)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     6.27570 (  5.79958)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     2.11719 (  5.79957)  milliJy 
+ C_GAUSS  Flux        =     2.11641 (  5.79958)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         105
@@ -1361,12 +1361,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3891 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -3.21106 (  6.40527)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -3.21215 (  6.40527)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.39283 (  6.40527)  milliJy 
+ C_GAUSS  Flux        =     1.39281 (  6.40527)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         106
@@ -1374,12 +1374,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3526 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -4.97847 (  5.80376)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -4.99470 (  5.80376)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.51050 (  5.80376)  milliJy 
+ C_GAUSS  Flux        =    -2.51115 (  5.80376)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         107
@@ -1387,12 +1387,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3532 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -3.83294 (  5.81389)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -3.84529 (  5.81389)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     2.42186 (  5.81389)  milliJy 
+ C_GAUSS  Flux        =     2.42137 (  5.81389)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         108
@@ -1400,12 +1400,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3432 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     9.24323 (  5.65044)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     9.21094 (  5.65046)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.60574 (  5.65044)  milliJy 
+ C_GAUSS  Flux        =     3.60435 (  5.65046)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         109
@@ -1413,12 +1413,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3471 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =  -184.88217 (5713.0429)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =  -189.90483 (5713.0415)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.79654 (  5.71304)  milliJy 
+ C_GAUSS  Flux        =     1.79633 (  5.71304)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         110
@@ -1426,12 +1426,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3386 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     3.14206 (  5.57313)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     3.12955 (  5.57313)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.76888 (  5.57313)  milliJy 
+ C_GAUSS  Flux        =     3.76834 (  5.57313)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         111
@@ -1439,12 +1439,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3481 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -6.77810 (  5.73000)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -6.76966 (  5.73000)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.77985 (  5.73000)  milliJy 
+ C_GAUSS  Flux        =     7.78024 (  5.73000)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         112
@@ -1452,12 +1452,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3475 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    10.78491 (  5.72035)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    10.78710 (  5.72034)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.27792 (  5.72035)  milliJy 
+ C_GAUSS  Flux        =     4.27796 (  5.72034)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         113
@@ -1465,12 +1465,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3414 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.26125 (  5.61925)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.28208 (  5.61925)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.29932 (  5.61925)  milliJy 
+ C_GAUSS  Flux        =     3.30018 (  5.61925)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         114
@@ -1478,12 +1478,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3389 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.03199 (  5.57880)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.06230 (  5.57879)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.09352 (  5.57880)  milliJy 
+ C_GAUSS  Flux        =     3.09477 (  5.57879)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         115
@@ -1491,12 +1491,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3386 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -2.46551 (  5.57291)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -2.46452 (  5.57291)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.85544 (  5.57291)  milliJy 
+ C_GAUSS  Flux        =     4.85550 (  5.57291)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         116
@@ -1504,12 +1504,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3411 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =  -877.34755 (5614.3613)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =  -880.02848 (5614.3601)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.24950 (  5.61436)  milliJy 
+ C_GAUSS  Flux        =    -2.24960 (  5.61436)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         117
@@ -1517,12 +1517,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3361 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -1.65833 (  5.53207)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -1.67989 (  5.53207)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.67654 (  5.53207)  milliJy 
+ C_GAUSS  Flux        =    -2.67742 (  5.53207)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         118
@@ -1530,12 +1530,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3332 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     1.78352 (  5.48455)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     1.79648 (  5.48454)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -12.30240 (  5.48455)  milliJy 
+ C_GAUSS  Flux        =   -12.30188 (  5.48454)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         119
@@ -1543,12 +1543,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3293 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   -11.68979 (  5.42063)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   -11.67887 (  5.42064)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -9.07131 (  5.42063)  milliJy 
+ C_GAUSS  Flux        =    -9.07081 (  5.42064)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         120
@@ -1556,12 +1556,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3408 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =  -634.83502 (5609.1066)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =  -624.30859 (5609.1060)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -7.49766 (  5.60911)  milliJy 
+ C_GAUSS  Flux        =    -7.49722 (  5.60911)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         121
@@ -1569,12 +1569,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3318 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   143.15722 (5461.1265)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   161.76437 (5461.1253)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.33519 (  5.46113)  milliJy 
+ C_GAUSS  Flux        =    -3.33442 (  5.46113)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         122
@@ -1582,12 +1582,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3341 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -3.14661 (  5.49906)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -3.13945 (  5.49906)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.22940 (  5.49906)  milliJy 
+ C_GAUSS  Flux        =     4.22971 (  5.49906)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         123
@@ -1595,12 +1595,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3339 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   909.70373 (5495.9645)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   920.32794 (5495.9629)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -7.68891 (  5.49596)  milliJy 
+ C_GAUSS  Flux        =    -7.68847 (  5.49596)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         124
@@ -1608,12 +1608,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3281 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     6.62772 (  5.39972)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     6.63327 (  5.39972)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.49821 (  5.39972)  milliJy 
+ C_GAUSS  Flux        =     4.49842 (  5.39972)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         125
@@ -1621,12 +1621,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3335 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     8.04997 (  5.48845)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     8.07647 (  5.48844)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     2.15710 (  5.48845)  milliJy 
+ C_GAUSS  Flux        =     2.15817 (  5.48844)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         126
@@ -1634,12 +1634,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3387 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -4.81988 (  5.57451)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -4.80972 (  5.57452)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.59441 (  5.57451)  milliJy 
+ C_GAUSS  Flux        =    -3.59397 (  5.57452)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         127
@@ -1647,12 +1647,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3298 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -8.12112 (  5.42860)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -8.12795 (  5.42860)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.94897 (  5.42860)  milliJy 
+ C_GAUSS  Flux        =     3.94872 (  5.42860)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         128
@@ -1660,12 +1660,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3301 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -4.31548 (  5.43240)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -4.32546 (  5.43239)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -13.66284 (  5.43240)  milliJy 
+ C_GAUSS  Flux        =   -13.66324 (  5.43239)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         129
@@ -1673,12 +1673,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3405 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     1.52539 (  5.60460)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     1.51334 (  5.60460)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   511.04618 (5604.5971)  microJy 
+ C_GAUSS  Flux        =   510.54157 (5604.5975)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         130
@@ -1686,12 +1686,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3358 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =  -277.23791 (5525.6378)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =  -281.42386 (5525.6369)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.66220 (  5.52564)  milliJy 
+ C_GAUSS  Flux        =     6.66203 (  5.52564)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         131
@@ -1699,12 +1699,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3321 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -1.23194 (  5.46597)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -1.22451 (  5.46597)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.67684 (  5.46597)  milliJy 
+ C_GAUSS  Flux        =     4.67715 (  5.46597)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         132
@@ -1712,12 +1712,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3279 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -4.17206 (  5.39620)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -4.18719 (  5.39619)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   458.60505 (5396.1960)  microJy 
+ C_GAUSS  Flux        =   457.99187 (5396.1908)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         133
@@ -1725,12 +1725,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3331 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.43864 (  5.48147)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.42524 (  5.48147)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.64616 (  5.48147)  milliJy 
+ C_GAUSS  Flux        =     7.64559 (  5.48147)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         134
@@ -1738,12 +1738,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3263 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =  -411.27921 (5369.9042)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =  -415.70242 (5369.9034)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   200.02773 (5369.9042)  microJy 
+ C_GAUSS  Flux        =   199.84580 (5369.9034)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         135
@@ -1751,12 +1751,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3313 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   756.63786 (5451.7082)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   738.69330 (5451.7084)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -8.45790 (  5.45171)  milliJy 
+ C_GAUSS  Flux        =    -8.45864 (  5.45171)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         136
@@ -1764,12 +1764,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3335 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -8.55076 (  5.48843)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -8.52490 (  5.48845)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    14.74114 (  5.48843)  milliJy 
+ C_GAUSS  Flux        =    14.74224 (  5.48845)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         137
@@ -1777,12 +1777,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3186 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =  -592.12113 (5243.0544)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =  -604.70900 (5243.0532)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =  -303.89396 (5243.0544)  microJy 
+ C_GAUSS  Flux        =  -304.41350 (5243.0532)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         138
@@ -1790,12 +1790,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3206 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -5.67813 (  5.27543)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -5.64289 (  5.27544)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -9.53559 (  5.27543)  milliJy 
+ C_GAUSS  Flux        =    -9.53411 (  5.27544)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         139
@@ -1803,12 +1803,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3329 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =  -879.27366 (5478.6029)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =  -850.35816 (5478.6041)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -4.02348 (  5.47860)  milliJy 
+ C_GAUSS  Flux        =    -4.02228 (  5.47860)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         140
@@ -1816,12 +1816,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3235 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     3.34459 (  5.32353)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     3.36143 (  5.32353)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.42960 (  5.32353)  milliJy 
+ C_GAUSS  Flux        =     1.43029 (  5.32353)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         141
@@ -1829,12 +1829,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3154 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     1.87391 (  5.19045)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     1.85047 (  5.19045)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.74717 (  5.19045)  milliJy 
+ C_GAUSS  Flux        =    -3.74815 (  5.19045)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         142
@@ -1842,12 +1842,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3213 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -6.73214 (  5.28643)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -6.74031 (  5.28643)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.35517 (  5.28643)  milliJy 
+ C_GAUSS  Flux        =     1.35485 (  5.28643)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         143
@@ -1855,12 +1855,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3260 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     4.79190 (  5.36515)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     4.78303 (  5.36515)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -9.45406 (  5.36515)  milliJy 
+ C_GAUSS  Flux        =    -9.45444 (  5.36515)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         144
@@ -1868,12 +1868,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3235 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     1.43314 (  5.32308)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     1.43353 (  5.32308)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -9.87846 (  5.32308)  milliJy 
+ C_GAUSS  Flux        =    -9.87845 (  5.32308)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         145
@@ -1881,12 +1881,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3225 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     9.95144 (  5.30664)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     9.94204 (  5.30665)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.96357 (  5.30664)  milliJy 
+ C_GAUSS  Flux        =    -1.96398 (  5.30665)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         146
@@ -1894,12 +1894,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3261 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     1.58812 (  5.36621)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     1.58043 (  5.36621)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.23249 (  5.36621)  milliJy 
+ C_GAUSS  Flux        =     1.23217 (  5.36621)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         147
@@ -1907,12 +1907,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3136 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     5.94817 (  5.16039)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     5.93420 (  5.16040)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   892.68124 (5160.3913)  microJy 
+ C_GAUSS  Flux        =   892.09254 (5160.3970)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         148
@@ -1920,12 +1920,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3266 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -5.52494 (  5.37375)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -5.51742 (  5.37375)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -11.44805 (  5.37375)  milliJy 
+ C_GAUSS  Flux        =   -11.44773 (  5.37375)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         149
@@ -1933,12 +1933,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3217 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -1.11958 (  5.29315)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -1.12481 (  5.29315)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -9.26321 (  5.29315)  milliJy 
+ C_GAUSS  Flux        =    -9.26343 (  5.29315)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         150
@@ -1946,12 +1946,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3203 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     1.10645 (  5.26945)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     1.10106 (  5.26945)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.30491 (  5.26945)  milliJy 
+ C_GAUSS  Flux        =     1.30468 (  5.26945)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         151
@@ -1959,12 +1959,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3236 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -9.93637 (  5.32391)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -9.95708 (  5.32390)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.59726 (  5.32391)  milliJy 
+ C_GAUSS  Flux        =     3.59642 (  5.32390)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         152
@@ -1972,12 +1972,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3271 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     7.17076 (  5.38146)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     7.16233 (  5.38147)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =  -895.42911 (5381.4612)  microJy 
+ C_GAUSS  Flux        =  -895.78713 (5381.4652)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         153
@@ -1985,12 +1985,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3100 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.24947 (  5.10061)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.23667 (  5.10061)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.06438 (  5.10061)  milliJy 
+ C_GAUSS  Flux        =    -2.06492 (  5.10061)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         154
@@ -1998,12 +1998,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3248 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     9.40570 (  5.34371)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     9.39659 (  5.34372)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     2.49469 (  5.34371)  milliJy 
+ C_GAUSS  Flux        =     2.49430 (  5.34372)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         155
@@ -2011,12 +2011,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3298 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.27147 (  5.42620)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.27687 (  5.42619)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -6.02101 (  5.42620)  milliJy 
+ C_GAUSS  Flux        =    -6.02079 (  5.42619)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         156
@@ -2024,12 +2024,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3232 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     5.67095 (  5.31765)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     5.65172 (  5.31766)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.70486 (  5.31765)  milliJy 
+ C_GAUSS  Flux        =     3.70406 (  5.31766)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         157
@@ -2037,12 +2037,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3243 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   759.23197 (5335.1333)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   760.82704 (5335.1330)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    15.41538 (  5.33513)  milliJy 
+ C_GAUSS  Flux        =    15.41544 (  5.33513)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         158
@@ -2050,12 +2050,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3321 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     6.48539 (  5.46394)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     6.48646 (  5.46394)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.32666 (  5.46394)  milliJy 
+ C_GAUSS  Flux        =     1.32670 (  5.46394)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         159
@@ -2063,12 +2063,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3386 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -5.65104 (  5.57019)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -5.65264 (  5.57019)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -18.02319 (  5.57019)  milliJy 
+ C_GAUSS  Flux        =   -18.02326 (  5.57019)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         160
@@ -2076,12 +2076,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3323 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -4.96003 (  5.46653)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -4.96855 (  5.46653)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.05357 (  5.46653)  milliJy 
+ C_GAUSS  Flux        =     3.05322 (  5.46653)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         161
@@ -2089,12 +2089,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3357 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.57251 (  5.52251)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.58128 (  5.52251)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.47297 (  5.52251)  milliJy 
+ C_GAUSS  Flux        =     4.47333 (  5.52251)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         162
@@ -2102,12 +2102,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3273 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -1.16275 (  5.38411)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -1.16682 (  5.38411)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.74859 (  5.38411)  milliJy 
+ C_GAUSS  Flux        =    -2.74875 (  5.38411)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         163
@@ -2115,12 +2115,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3331 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -2.29967 (  5.47906)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -2.29649 (  5.47906)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.28053 (  5.47906)  milliJy 
+ C_GAUSS  Flux        =    -1.28040 (  5.47906)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         164
@@ -2128,12 +2128,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3337 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -5.25195 (  5.48916)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -5.23616 (  5.48917)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.92724 (  5.48916)  milliJy 
+ C_GAUSS  Flux        =    -2.92659 (  5.48917)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         165
@@ -2141,12 +2141,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3265 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     6.98265 (  5.37101)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     6.95316 (  5.37102)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.44382 (  5.37101)  milliJy 
+ C_GAUSS  Flux        =    -3.44503 (  5.37102)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         166
@@ -2154,12 +2154,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3235 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     1.95269 (  5.32124)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     1.94516 (  5.32124)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     2.10901 (  5.32124)  milliJy 
+ C_GAUSS  Flux        =     2.10870 (  5.32124)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         167
@@ -2167,12 +2167,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3312 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     1.12456 (  5.44869)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     1.14261 (  5.44869)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.05462 (  5.44869)  milliJy 
+ C_GAUSS  Flux        =     7.05537 (  5.44869)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         168
@@ -2180,12 +2180,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3356 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.88346 (  5.52034)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.88136 (  5.52034)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.23578 (  5.52034)  milliJy 
+ C_GAUSS  Flux        =     6.23569 (  5.52034)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         169
@@ -2193,12 +2193,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3303 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     7.41919 (  5.43358)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     7.46073 (  5.43355)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    10.81764 (  5.43358)  milliJy 
+ C_GAUSS  Flux        =    10.81935 (  5.43355)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         170
@@ -2206,12 +2206,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3306 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     1.68659 (  5.43802)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     1.70019 (  5.43802)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     5.87826 (  5.43802)  milliJy 
+ C_GAUSS  Flux        =     5.87882 (  5.43802)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         171
@@ -2219,12 +2219,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3217 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     6.24899 (  5.29252)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     6.25763 (  5.29252)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     6.23904 (  5.29252)  milliJy 
+ C_GAUSS  Flux        =     6.23940 (  5.29252)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         172
@@ -2232,12 +2232,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3216 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     1.45026 (  5.29013)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     1.45001 (  5.29013)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -10.22126 (  5.29013)  milliJy 
+ C_GAUSS  Flux        =   -10.22127 (  5.29013)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         173
@@ -2245,12 +2245,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3340 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -4.19688 (  5.49361)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -4.20290 (  5.49361)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.03465 (  5.49361)  milliJy 
+ C_GAUSS  Flux        =    -2.03490 (  5.49361)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         174
@@ -2258,12 +2258,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3234 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -3.56080 (  5.31958)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -3.55826 (  5.31958)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.61221 (  5.31958)  milliJy 
+ C_GAUSS  Flux        =    -1.61211 (  5.31958)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         175
@@ -2271,12 +2271,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3307 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.36110 (  5.43929)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.37683 (  5.43929)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.11174 (  5.43929)  milliJy 
+ C_GAUSS  Flux        =     1.11239 (  5.43929)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         176
@@ -2284,12 +2284,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3369 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -2.78129 (  5.54079)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -2.77923 (  5.54079)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     3.66056 (  5.54079)  milliJy 
+ C_GAUSS  Flux        =     3.66064 (  5.54079)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         177
@@ -2297,12 +2297,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3363 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     8.58286 (  5.53158)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     8.57305 (  5.53159)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     5.67107 (  5.53158)  milliJy 
+ C_GAUSS  Flux        =     5.67068 (  5.53159)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         178
@@ -2310,12 +2310,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3288 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =  -425.60190 (5408.1736)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =  -423.52760 (5408.1739)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     5.02330 (  5.40817)  milliJy 
+ C_GAUSS  Flux        =     5.02339 (  5.40817)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         179
@@ -2323,12 +2323,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3273 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     3.03877 (  5.38291)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     3.02094 (  5.38292)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =  -930.60795 (5382.9143)  microJy 
+ C_GAUSS  Flux        =  -931.33839 (5382.9183)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         180
@@ -2336,12 +2336,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3347 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     7.74718 (  5.50448)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     7.73960 (  5.50448)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     7.83743 (  5.50448)  milliJy 
+ C_GAUSS  Flux        =     7.83713 (  5.50448)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         181
@@ -2349,12 +2349,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3346 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     1.25106 (  5.50325)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     1.23900 (  5.50325)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.62649 (  5.50325)  milliJy 
+ C_GAUSS  Flux        =    -1.62699 (  5.50325)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         182
@@ -2362,12 +2362,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3401 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   -18.18038 (  5.59310)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   -18.17886 (  5.59310)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =  -270.13200 (5593.0973)  microJy 
+ C_GAUSS  Flux        =  -270.09583 (5593.0995)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         183
@@ -2375,12 +2375,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3370 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -1.87540 (  5.54303)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -1.88662 (  5.54303)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     4.11907 (  5.54303)  milliJy 
+ C_GAUSS  Flux        =     4.11860 (  5.54303)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         184
@@ -2388,12 +2388,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3306 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    10.65325 (  5.43677)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    10.65606 (  5.43677)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.09831 (  5.43677)  milliJy 
+ C_GAUSS  Flux        =    -1.09818 (  5.43677)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         185
@@ -2401,12 +2401,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3375 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     5.80751 (  5.55023)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     5.82095 (  5.55023)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.63041 (  5.55023)  milliJy 
+ C_GAUSS  Flux        =     1.63098 (  5.55023)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         186
@@ -2414,12 +2414,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3393 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -5.02335 (  5.57985)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -4.99841 (  5.57986)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.24205 (  5.57985)  milliJy 
+ C_GAUSS  Flux        =    -2.24104 (  5.57986)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         187
@@ -2427,12 +2427,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3340 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -4.47903 (  5.49370)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -4.48694 (  5.49370)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -11.40038 (  5.49370)  milliJy 
+ C_GAUSS  Flux        =   -11.40071 (  5.49370)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         188
@@ -2440,12 +2440,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3407 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     1.17026 (  5.60394)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     1.16280 (  5.60394)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -13.33325 (  5.60394)  milliJy 
+ C_GAUSS  Flux        =   -13.33356 (  5.60394)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         189
@@ -2453,12 +2453,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3443 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     2.82491 (  5.66253)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     2.82495 (  5.66254)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.08006 (  5.66253)  milliJy 
+ C_GAUSS  Flux        =    -3.08005 (  5.66254)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         190
@@ -2466,12 +2466,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3412 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -9.40443 (  5.61147)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -9.41204 (  5.61146)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -4.46719 (  5.61147)  milliJy 
+ C_GAUSS  Flux        =    -4.46752 (  5.61146)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         191
@@ -2479,12 +2479,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3360 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     9.68981 (  5.52597)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     9.67943 (  5.52598)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.45263 (  5.52597)  milliJy 
+ C_GAUSS  Flux        =     1.45223 (  5.52598)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         192
@@ -2492,12 +2492,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3478 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -1.13792 (  5.72006)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -1.11489 (  5.72006)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   -12.85619 (  5.72006)  milliJy 
+ C_GAUSS  Flux        =   -12.85524 (  5.72006)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         193
@@ -2505,12 +2505,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3486 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -8.59582 (  5.73222)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -8.58798 (  5.73222)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   351.65945 (5732.2153)  microJy 
+ C_GAUSS  Flux        =   351.96032 (5732.2203)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         194
@@ -2518,12 +2518,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3489 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     5.49665 (  5.73845)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     5.48534 (  5.73845)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -1.48385 (  5.73845)  milliJy 
+ C_GAUSS  Flux        =    -1.48430 (  5.73845)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         195
@@ -2531,12 +2531,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3511 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -3.23884 (  5.77434)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -3.24698 (  5.77434)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -2.15305 (  5.77434)  milliJy 
+ C_GAUSS  Flux        =    -2.15339 (  5.77434)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         196
@@ -2544,12 +2544,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3522 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    -7.54562 (  5.79195)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    -7.53375 (  5.79196)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -7.06196 (  5.79195)  milliJy 
+ C_GAUSS  Flux        =    -7.06150 (  5.79196)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         197
@@ -2557,12 +2557,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3490 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =     4.79867 (  5.73941)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =     4.78749 (  5.73942)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =    -3.19197 (  5.73941)  milliJy 
+ C_GAUSS  Flux        =    -3.19241 (  5.73942)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         198
@@ -2570,12 +2570,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3494 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =  -963.64392 (5745.8095)  microJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =  -977.76697 (5745.8093)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     1.74199 (  5.74581)  milliJy 
+ C_GAUSS  Flux        =     1.74140 (  5.74581)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         199
@@ -2583,12 +2583,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3474 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =   -10.18578 (  5.71226)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =   -10.18618 (  5.71226)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =     2.16451 (  5.71226)  milliJy 
+ C_GAUSS  Flux        =     2.16446 (  5.71226)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 
  I-UV_FIT,         1320  data points for channel         200
@@ -2596,12 +2596,12 @@ I-UV_FIT,  Creating fit table OUTPUT_NAME.uvfit
  I-UV_FIT, Starting from   1.0000      1.0000    
  r.m.s.=     0.3533 Jy.
  C_GAUSS  R.A.        =     9.57700 (  fixed  )  10:00:09.3700
- C_GAUSS  Dec.        =     5.65000 (  fixed  )  02:19:08.1460
- C_GAUSS  Flux        =    10.73080 (  5.80969)  milliJy 
+ C_GAUSS  Dec.        =     5.65400 (  fixed  )  02:19:08.1500
+ C_GAUSS  Flux        =    10.70286 (  5.80971)  milliJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
  C_GAUSS  R.A.        =    -1.85000 (  fixed  )  10:00:08.6076
  C_GAUSS  Dec.        =    -2.25000 (  fixed  )  02:19:00.2460
- C_GAUSS  Flux        =   331.35019 (5809.6909)  microJy 
+ C_GAUSS  Flux        =   330.23718 (5809.7112)  microJy 
  C_GAUSS  F.W.H.P.    =     1.00000 (  fixed  )
 S-UV_FIT,  Successful completion
 STOP  

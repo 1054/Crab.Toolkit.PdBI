@@ -593,7 +593,7 @@ if [[ x"$PdBIUVT_TYPE" == x"uvt" || x"$PdBIUVT_TYPE" == x"UVT" ]]; then
         echo ""; echo "Error! \"$PdBIUVT_NAME.$PdBIUVT_TYPE\" was not found!"; echo ""
         return 3
     else
-        echo "header $PdBIUVT_NAME.$PdBIUVT_TYPE" | mapping | sed 's/[^[:print:]]//g' > "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt"
+        echo "header $PdBIUVT_NAME.$PdBIUVT_TYPE" | mapping -nw -nl | sed 's/[^[:print:]]//g' > "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt"
     fi
     if [[ ! -f "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" ]]; then
         echo ""; echo "Error! Failed to run \"echo \"header $PdBIUVT_NAME.$PdBIUVT_TYPE\" | mapping\" > \"$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt\"! Please make sure mapping is working!"; echo ""
@@ -655,26 +655,56 @@ fi
 # 
 if [[ x"$PdBIUVT_TYPE" == x"uvt" || x"$PdBIUVT_TYPE" == x"UVT" ]]; then
     # 
-    # read the pointing center of telescope i.e. center RA Dec of FoV , from 'Right Ascension.*Declination'
+    # read the pointing center of telescope i.e. center RA Dec of FoV , from uv table using gildas/mapping
     # 
     if [[ x"$PdBIUVT_RANX_CENT" == x"" || x"$PdBIUVT_DECX_CENT" == x"" || x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
-        PdBIUVT_RANX_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Right Ascension.*Declination' | perl -p -e 's/.*Right Ascension[ ]*(.*)[ ]*Declination[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep -v "00:00:00.000")
-        PdBIUVT_DECX_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Right Ascension.*Declination' | perl -p -e 's/.*Right Ascension[ ]*(.*)[ ]*Declination[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep -v "00:00:00.00")
+        echo "! "                                                                     >  "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.map"
+        echo "! GILDAS mapping script"                                                >> "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.map"
+        echo "! "                                                                     >> "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.map"
+        echo "define header hdr \"$PdBIUVT_NAME.$PdBIUVT_TYPE\" read"                 >> "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.map"
+        echo "if ((hdr%a0.NE.0).AND.(hdr%d0.NE.0)) then "                             >> "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.map"
+        echo "    sic output \"$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.txt\""            >> "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.map"
+        echo "    say 'hdr%a0/pi*180' \" \" 'hdr%d0/pi*180' /format F0.12 A1 F0.12"   >> "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.map"
+        echo "    sic output"                                                         >> "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.map"
+        echo "else if ((hdr%ra.NE.0).AND.(hdr%dec.NE.0)) then "                       >> "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.map"
+        echo "    sic output \"$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.txt\""            >> "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.map"
+        echo "    say 'hdr%ra/pi*180' \" \" 'hdr%dec/pi*180' /format F0.12 A1 F0.12"  >> "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.map"
+        echo "    sic output"                                                         >> "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.map"
+        echo "endif"                                                                  >> "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.map"
+        echo "delete /var hdr"                                                        >> "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.map"
+        echo ""                                                                       >> "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.map"
+        echo "@$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.map" | mapping -nw -nl > "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.log"
+        if [[ -f "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.txt" ]]; then
+            PdBIUVT_TEMP_TEXT=($(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.txt" | sed -e 's/^ *//g' | grep -v "^#" | head -n 1))
+            PdBIUVT_RAND_CENT=${PdBIUVT_TEMP_TEXT[0]}
+            PdBIUVT_DECD_CENT=${PdBIUVT_TEMP_TEXT[1]}
+        else
+            echo "Error! Failed to run GILDAS/MAPPING and get pointing information from the input uv table \"$PdBIUVT_NAME.$PdBIUVT_TYPE\"!"
+            echo "Please have a check on \"$PdBIUVT_NAME.$PdBIUVT_TYPE.pointing.map\"!"
+            exit 1
+        fi
     fi
-    # 
-    # read the pointing center of telescope i.e. center RA Dec of FoV , from 'Axis 0 *A0.*Axis 0 *D0' if nothing in 'Right Ascension.*Declination'
-    # 
-    if [[ x"$PdBIUVT_RANX_CENT" == x"" || x"$PdBIUVT_DECX_CENT" == x"" || x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
-        PdBIUVT_RANX_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep ":" |  grep -v "00:00:00.000")
-        PdBIUVT_DECX_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep ":" | grep -v "00:00:00.00")
-    fi
-    # 
-    # read the pointing center of telescope if failed to get them, then try degree format
-    # 
-    if [[ x"$PdBIUVT_RANX_CENT" == x"" || x"$PdBIUVT_DECX_CENT" == x"" || x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
-        PdBIUVT_RAND_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep -v ":")
-        PdBIUVT_DECD_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep -v ":")
-    fi
+    ## 
+    ## read the pointing center of telescope i.e. center RA Dec of FoV , from 'Right Ascension.*Declination'
+    ## 
+    #if [[ x"$PdBIUVT_RANX_CENT" == x"" || x"$PdBIUVT_DECX_CENT" == x"" || x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
+    #    PdBIUVT_RANX_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Right Ascension.*Declination' | perl -p -e 's/.*Right Ascension[ ]*(.*)[ ]*Declination[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep -v "00:00:00.000")
+    #    PdBIUVT_DECX_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Right Ascension.*Declination' | perl -p -e 's/.*Right Ascension[ ]*(.*)[ ]*Declination[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep -v "00:00:00.00")
+    #fi
+    ## 
+    ## read the pointing center of telescope i.e. center RA Dec of FoV , from 'Axis 0 *A0.*Axis 0 *D0' if nothing in 'Right Ascension.*Declination'
+    ## 
+    #if [[ x"$PdBIUVT_RANX_CENT" == x"" || x"$PdBIUVT_DECX_CENT" == x"" || x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
+    #    PdBIUVT_RANX_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep ":" |  grep -v "00:00:00.000")
+    #    PdBIUVT_DECX_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep ":" | grep -v "00:00:00.00")
+    #fi
+    ## 
+    ## read the pointing center of telescope if failed to get them, then try degree format
+    ## 
+    #if [[ x"$PdBIUVT_RANX_CENT" == x"" || x"$PdBIUVT_DECX_CENT" == x"" || x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
+    #    PdBIUVT_RAND_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep -v ":")
+    #    PdBIUVT_DECD_CENT=$(cat "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep -v ":")
+    #fi
     # 
     # convert RANX DECX to degree or the opposite
     # 
