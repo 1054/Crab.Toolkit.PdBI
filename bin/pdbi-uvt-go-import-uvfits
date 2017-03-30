@@ -82,6 +82,16 @@ if [[ x"$PdBIUVT_SAVE" == x || x"$PdBIUVT_SAVE" == x"tmp_pdbi_uvt" ]]; then
 fi
 
 # 
+# Remove suffix
+# 
+if [[ x"$PdBIUVT_SAVE" == x*".uvt" ]]; then
+    PdBIUVT_SAVE=$(echo "$PdBIUVT_SAVE" | sed -e 's/\.uvt$//g')
+fi
+if [[ x"$PdBIUVT_SAVE" == x*".UVT" ]]; then
+    PdBIUVT_SAVE=$(echo "$PdBIUVT_SAVE" | sed -e 's/\.UVT$//g')
+fi
+
+# 
 # Backup existing output file
 # 
 if [[ -f "$PdBIUVT_SAVE.uvt" ]]; then
