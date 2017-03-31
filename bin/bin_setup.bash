@@ -99,7 +99,7 @@ if [[ 1 == 1 ]]; then
     # remove empty item
     i=0
     while [[ $i -lt ${#CRAB_BIN_SETUP_PATH_LIST[@]} && ${#CRAB_BIN_SETUP_PATH_LIST[@]} -gt 0 ]]; do
-        echo "Debug: Checking CRAB_BIN_SETUP_PATH_LIST[$i]: \"${CRAB_BIN_SETUP_PATH_LIST[i]}\""
+        #echo "Debug: Checking CRAB_BIN_SETUP_PATH_LIST[$i]: \"${CRAB_BIN_SETUP_PATH_LIST[i]}\""
         if [[ -z "${CRAB_BIN_SETUP_PATH_LIST[i]}" ]]; then
             CRAB_BIN_SETUP_PATH_LIST=(${CRAB_BIN_SETUP_PATH_LIST[@]:0:$i} ${CRAB_BIN_SETUP_PATH_LIST[@]:$(($i+1))})
         else
@@ -139,11 +139,13 @@ if [[ 1 == 1 ]]; then
                 CRAB_BIN_SETUP_PATH_POOL+=("${CRAB_BIN_SETUP_PATH_LIST[i]}")
             fi
         fi
-        #echo "$CRAB_BIN_SETUP_PATH_TEXT"
+        #echo "$CRAB_BIN_SETUP_PATH_TEXT" # paths not to be cleared
     done
     # finally append current directory as the last system path item
     if [[ x"$CRAB_BIN_SETUP_PATH_TEXT" != x ]]; then
         declare $CRAB_BIN_SETUP_VARIABLE="$CRAB_BIN_SETUP_PATH_TEXT:."
+    else
+        declare $CRAB_BIN_SETUP_VARIABLE=""
     fi
     # print sorted/dup-removed/cleared PATH
     if [[ $CRAB_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
