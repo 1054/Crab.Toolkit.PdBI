@@ -96,6 +96,15 @@ if [[ 1 == 1 ]]; then
     Old_IFS=$IFS
     IFS=$":" CRAB_BIN_SETUP_PATH_LIST=(${!CRAB_BIN_SETUP_VARIABLE})
     IFS=$Old_IFS
+    # remove empty item
+    i=0
+    while [[ $i -lt ${#CRAB_BIN_SETUP_PATH_LIST[@]} ]]; do
+        if [[ -z "${CRAB_BIN_SETUP_PATH_LIST[i]}" ]]; then
+            unset CRAB_BIN_SETUP_PATH_LIST[i]
+        else
+            i=$((i+1))
+        fi
+    done
     if [[ $CRAB_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
         echo -n "Checking $CRAB_BIN_SETUP_VARIABLE="
         echo "${CRAB_BIN_SETUP_PATH_LIST[@]}" "(${#CRAB_BIN_SETUP_PATH_LIST[@]})"
