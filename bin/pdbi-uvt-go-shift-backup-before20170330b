@@ -1,0 +1,210 @@
+#!/bin/bash
+# 
+# Input RA Dec
+# Output uv_shift-ed uvtable
+# pdbi-uvt-go-shift -name split_GN11_spw38.uvt -radec 12:36:27.552 62:12:17.81
+# 
+#    2017-03-30 using "pdbi-uvt-core-arg-v4"
+# 
+# 
+
+
+
+# 
+# Uage
+# 
+usage() {
+    echo "Usage: "
+    echo "  pdbi-uvt-go-shift -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -radec NNN:NN:NN.NN NN:NN:NN.N -out UV_TABLE_NEW"
+    echo ""
+}
+
+
+
+#
+# readlink
+# 
+PdBIUVT_DIR=$(dirname $(perl -MCwd -e 'print Cwd::abs_path shift' "${BASH_SOURCE[0]}"))
+
+
+
+# 
+# Read input parameters by calling "pdbi-uvt-core-arg"
+# 
+if [[ -f "$PdBIUVT_DIR/pdbi-uvt-core-arg-v4" ]]; then
+    source "$PdBIUVT_DIR/pdbi-uvt-core-arg-v4" "$@"
+else
+    echo ""; echo "Error! Could not find \"$PdBIUVT_DIR/pdbi-uvt-core-arg-v4\"! Please contact software supplier!"; echo ""
+    exit
+fi
+
+
+
+# 
+# Check input parameters -- uvt file name, ra dec
+# 
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 || ${#PdBIUVT_RANX_OBJT[@]} -eq 0 || ${#PdBIUVT_DECX_OBJT[@]} -eq 0 ]]; then
+    usage; exit
+fi
+
+
+
+
+
+
+
+
+
+
+
+# 
+# Set default output file as
+# "${PdBIUVT_SAVE}-Shifted.uvt"
+# 
+for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
+    if [[ ${#PdBIUVT_SAVE[@]} -le $i ]]; then
+        PdBIUVT_SAVE+=("${PdBIUVT_NAME[i]}-Shifted")
+    fi
+    if [[ x"${PdBIUVT_SAVE[i]}" == x || x"${PdBIUVT_SAVE[i]}" == x"tmp_pdbi_uvt" ]]; then 
+        PdBIUVT_SAVE[i]="${PdBIUVT_NAME[i]}-Shifted"
+        echo ""; echo "Warning! Output name was not given for the input uvtable \"${PdBIUVT_NAME[i]}\", setting to \"${PdBIUVT_SAVE[i]}.uvt\""; echo ""
+    fi
+    # 
+    # Remove suffix
+    # 
+    if [[ x"${PdBIUVT_SAVE[i]}" == x*".uvt" ]]; then
+        PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.uvt$//g')
+    fi
+    if [[ x"${PdBIUVT_SAVE[i]}" == x*".UVT" ]]; then
+        PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.UVT$//g')
+    fi
+    # 
+    # Backup existing output file
+    # 
+    if [[ -f "${PdBIUVT_SAVE[i]}.uvt" ]]; then
+        echo "Warning! Found existing \"${PdBIUVT_SAVE[i]}.uvt\"! Backup as \"${PdBIUVT_SAVE[i]}.uvt.backup\"!"
+        mv "${PdBIUVT_SAVE[i]}.uvt" "${PdBIUVT_SAVE[i]}.uvt.backup"
+    fi
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 
+# Print input uvtable list
+# 
+echo PdBIUVT_NAME=${PdBIUVT_NAME[*]}
+echo PdBIUVT_SAVE=${PdBIUVT_SAVE[*]}
+# 
+# Revise input parameters
+# 
+for (( PdBIUVT_ITER = 0; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ )); do
+    # -- remove the suffix of the input uvtable name, and test whether the file exists
+    if [[ "${PdBIUVT_NAME[$PdBIUVT_ITER]}" == *".uvt" ]]; then
+        PdBIUVT_NAME[$PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[$PdBIUVT_ITER]}" | sed -e 's/[.]uvt$//g')
+    fi
+    if [[ ! -f "${PdBIUVT_NAME[$PdBIUVT_ITER]}.uvt" ]]; then
+        echo "Error! \"${PdBIUVT_NAME[$PdBIUVT_ITER]}.uvt\" was not found! Exit!"
+        exit
+    fi
+done
+## -- convert RA DEC format
+#if [[ "$PdBIUVT_MAP_RA" != *":"*":"* ]]; then
+#    echo "Error! Please give RA Dec in sexagesimal format!"
+#    exit 1
+#fi
+#if [[ "$PdBIUVT_MAP_DEC" != *":"*":"* ]]; then
+#    echo "Error! Please give RA Dec in sexagesimal format!"
+#    exit 1
+#fi
+
+
+
+
+
+
+
+
+
+
+# 
+# loop each uv table to run uv_shift
+# 
+for (( PdBIUVT_ITER = 0; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ )); do
+    # 
+    # check input radec
+    # 
+    if [[ ${#PdBIUVT_RANX_OBJT[@]} -le $PdBIUVT_ITER ]]; then
+        PdBIUVT_MAP_RA="${PdBIUVT_RANX_OBJT[${#PdBIUVT_RANX_OBJT[@]}-1]}"
+        PdBIUVT_MAP_DEC="${PdBIUVT_DECX_OBJT[${#PdBIUVT_DECX_OBJT[@]}-1]}"
+    else
+        PdBIUVT_MAP_RA="${PdBIUVT_RANX_OBJT[$PdBIUVT_ITER]}"
+        PdBIUVT_MAP_DEC="${PdBIUVT_DECX_OBJT[$PdBIUVT_ITER]}"
+    fi
+    if [[ ${#PdBIUVT_OBJ_ANGLE[@]} -gt 0 ]]; then
+        if [[ ${#PdBIUVT_OBJ_ANGLE[@]} -le $PdBIUVT_ITER ]]; then
+            PdBIUVT_MAP_ANGLE="${PdBIUVT_OBJ_ANGLE[${#PdBIUVT_OBJ_ANGLE[@]}-1]}"
+        else
+            PdBIUVT_MAP_ANGLE="${PdBIUVT_OBJ_ANGLE[$PdBIUVT_ITER]}"
+        fi
+    else
+        PdBIUVT_MAP_ANGLE="0"
+    fi
+    # 
+    # prepare gildas/mapping init and script and run
+    # 
+    # "let name ${PdBIUVT_NAME[$PdBIUVT_ITER]}"
+    # "let map_ra ${PdBIUVT_MAP_RA}"
+    # "let map_dec ${PdBIUVT_MAP_DEC}"
+    # 
+    #PdBIUVT_TEMP_INIT="${PdBIUVT_SAVE[$PdBIUVT_ITER]}.init"
+    #PdBIUVT_TEMP_EXEC="${PdBIUVT_SAVE[$PdBIUVT_ITER]}.map"
+    #PdBIUVT_TEMP_LOGT="${PdBIUVT_SAVE[$PdBIUVT_ITER]}.log"
+    PdBIUVT_TEMP_INIT="${PdBIUVT_SAVE[$PdBIUVT_ITER]}.uvt.uv_shift.init"
+    PdBIUVT_TEMP_EXEC="${PdBIUVT_SAVE[$PdBIUVT_ITER]}.uvt.uv_shift.script"
+    PdBIUVT_TEMP_LOGT="${PdBIUVT_SAVE[$PdBIUVT_ITER]}.uvt.uv_shift.log"
+    # 
+    # copy uv table because uv_shift operates on uv table and do not write new uv table
+    cp "${PdBIUVT_NAME[$PdBIUVT_ITER]}.uvt" "${PdBIUVT_SAVE[$PdBIUVT_ITER]}.uvt"
+    # 
+    echo  '! '                                                                                                             > $PdBIUVT_TEMP_INIT
+    echo  '! Task UV_SHIFT'                                                                                               >> $PdBIUVT_TEMP_INIT
+    echo  '! 6 parameters needed for all functions'                                                                       >> $PdBIUVT_TEMP_INIT
+    echo  '!'                                                                                                             >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "UV table 1"                             UVTABLE$      "'${PdBIUVT_SAVE[$PdBIUVT_ITER]}.uvt'"'  >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\LOGICAL   "Offset mode YES or Absolute mode NO"   RELATIVE$       ' NO                                    >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\REAL      "Offset mode offset by radians"           OFFSET$[2]    ' 0 0                                   >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "Absolute mode RA center"              RA_CENTER$      "'$PdBIUVT_MAP_RA'"'                     >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "Absolute mode DEC center"            DEC_CENTER$      "'$PdBIUVT_MAP_DEC'"'                    >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\REAL      "Angle"                                    ANGLE$       '$PdBIUVT_MAP_ANGLE                     >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\LOGICAL   "Accuracy"                               PRECISE$       ' YES                                   >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\GO'                                                                                                       >> $PdBIUVT_TEMP_INIT
+    echo  "run uv_shift $PdBIUVT_TEMP_INIT /NOWINDOW"  >> $PdBIUVT_TEMP_EXEC
+    echo  "@$PdBIUVT_TEMP_EXEC  |  mapping  > ""$PdBIUVT_TEMP_LOGT"
+    echo  "@$PdBIUVT_TEMP_EXEC" |  mapping  >  "$PdBIUVT_TEMP_LOGT"
+    
+    echo "Successufully saved to ${PdBIUVT_SAVE[$PdBIUVT_ITER]}.uvt"
+    
+done
+
+
+
+
+
+
+
+
+
+
+
+

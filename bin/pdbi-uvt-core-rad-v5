@@ -1,0 +1,281 @@
+#!/bin/bash
+# 
+# Aim:
+#     Compute coordinates
+# 
+# Usage:
+#     source this script in other scripts to get the variables
+# 
+# Updates:
+#     2017-03-30 Split this code from "pdbi-uvt-core-arg-v5" as a standalone code
+# 
+
+
+
+# 
+# LANG
+# 
+LANG=C
+
+
+
+# 
+# CHECK GILDAS mapping
+# 
+if [[ $(echo "say hello" | mapping 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! GILDAS mapping not found! Exit!"
+    return 1
+fi
+
+# 
+# CHECK radec2degree
+# 
+if [[ $(radec2degree 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! radec2degree not found! It should be included in this software! Please contact dzliu. "
+    return 1
+fi
+
+# 
+# CHECK degree2radec
+# 
+if [[ $(degree2radec 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! degree2radec not found! It should be included in this software! Please contact dzliu. "
+    return 1
+fi
+
+
+
+# 
+# Check Variables
+# 
+if [[ $# -ge 1 ]]; then
+    PdBIUVT_RAD_NAME="$1"
+else
+    return
+fi
+if [[ x"$PdBIUVT_RAD_NAME" == x*".uvt" ]]; then
+    PdBIUVT_RAD_NAME=$(echo "$PdBIUVT_RAD_NAME" | sed -e 's/\.uvt$//g')
+    PdBIUVT_RAD_TYPE="uvt"
+elif [[ x"$PdBIUVT_RAD_NAME" == x*".UVT" ]]; then
+    PdBIUVT_RAD_NAME=$(echo "$PdBIUVT_RAD_NAME" | sed -e 's/\.UVT$//g')
+    PdBIUVT_RAD_TYPE="UVT"
+else
+    PdBIUVT_RAD_TYPE="uvt"
+fi
+if [[ ! -f "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}" ]]; then
+    echo "Error! The input uv table \"${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}\" was not found!"
+    exit 3
+fi
+
+
+
+# 
+# If input is uvt type
+# 
+if [[ x"${PdBIUVT_RAD_TYPE}" == x"uvt" || x"${PdBIUVT_RAD_TYPE}" == x"UVT" ]]; then
+    # 
+    # Get Pointing information from input uvt header
+    # 
+    # read the pointing center of telescope i.e. center RA Dec of FoV , from uv table using gildas/mapping
+    # 
+    if [[ x"$PdBIUVT_RANX_CENT" == x"" || x"$PdBIUVT_DECX_CENT" == x"" || x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
+        echo "! "                                                                                 >  "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.map"
+        echo "! GILDAS mapping script"                                                            >> "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.map"
+        echo "! "                                                                                 >> "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.map"
+        echo "define header hdr \"${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}\" read"                 >> "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.map"
+        echo "if ((hdr%a0.NE.0).AND.(hdr%d0.NE.0)) then "                                         >> "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.map"
+        echo "    sic output \"${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.txt\""            >> "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.map"
+        echo "    say 'hdr%a0/pi*180' \" \" 'hdr%d0/pi*180' /format F0.12 A1 F0.12"               >> "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.map"
+        echo "    sic output"                                                                     >> "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.map"
+        echo "else if ((hdr%ra.NE.0).AND.(hdr%dec.NE.0)) then "                                   >> "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.map"
+        echo "    sic output \"${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.txt\""            >> "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.map"
+        echo "    say 'hdr%ra/pi*180' \" \" 'hdr%dec/pi*180' /format F0.12 A1 F0.12"              >> "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.map"
+        echo "    sic output"                                                                     >> "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.map"
+        echo "endif"                                                                              >> "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.map"
+        echo "delete /var hdr"                                                                    >> "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.map"
+        echo ""                                                                                   >> "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.map"
+        echo "@${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.map" | mapping -nw -nl > "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.log"
+        if [[ -f "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.txt" ]]; then
+            PdBIUVT_TEMP_TEXT=($(cat "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.txt" | sed -e 's/^ *//g' | grep -v "^#" | head -n 1))
+            PdBIUVT_RAND_CENT=${PdBIUVT_TEMP_TEXT[0]}
+            PdBIUVT_DECD_CENT=${PdBIUVT_TEMP_TEXT[1]}
+            if [[ -f "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.log" ]]; then
+                rm "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.log"
+            fi
+        else
+            echo "Error! Failed to run GILDAS/MAPPING and get pointing information from the input uv table \"${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}\"!"
+            echo "Please have a check on \"${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.pointing.map\"!"
+            exit 1
+        fi
+    fi
+    ## 
+    ## read the pointing center of telescope i.e. center RA Dec of FoV , from 'Right Ascension.*Declination'
+    ## 
+    #if [[ x"$PdBIUVT_RANX_CENT" == x"" || x"$PdBIUVT_DECX_CENT" == x"" || x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
+    #    PdBIUVT_RANX_CENT=$(cat "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.header.txt" | grep 'Right Ascension.*Declination' | perl -p -e 's/.*Right Ascension[ ]*(.*)[ ]*Declination[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep -v "00:00:00.000")
+    #    PdBIUVT_DECX_CENT=$(cat "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.header.txt" | grep 'Right Ascension.*Declination' | perl -p -e 's/.*Right Ascension[ ]*(.*)[ ]*Declination[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep -v "00:00:00.00")
+    #fi
+    ## 
+    ## read the pointing center of telescope i.e. center RA Dec of FoV , from 'Axis 0 *A0.*Axis 0 *D0' if nothing in 'Right Ascension.*Declination'
+    ## 
+    #if [[ x"$PdBIUVT_RANX_CENT" == x"" || x"$PdBIUVT_DECX_CENT" == x"" || x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
+    #    PdBIUVT_RANX_CENT=$(cat "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.header.txt" | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep ":" |  grep -v "00:00:00.000")
+    #    PdBIUVT_DECX_CENT=$(cat "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.header.txt" | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep ":" | grep -v "00:00:00.00")
+    #fi
+    ## 
+    ## read the pointing center of telescope if failed to get them, then try degree format
+    ## 
+    #if [[ x"$PdBIUVT_RANX_CENT" == x"" || x"$PdBIUVT_DECX_CENT" == x"" || x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
+    #    PdBIUVT_RAND_CENT=$(cat "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.header.txt" | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\1/g' | sed -e 's/ //g' | grep -v ":")
+    #    PdBIUVT_DECD_CENT=$(cat "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}.header.txt" | grep 'Axis 0 *A0.*Axis 0 *D0' | perl -p -e 's/.*Axis 0[ ]*A0[ ]*(.*)[ ]*Axis 0[ ]*D0[ ]*(.*)[ ]*$/\2/g' | sed -e 's/ //g' | grep -v ":")
+    #fi
+    # 
+    # convert RANX DECX to degree or the opposite
+    # 
+    if [[ x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
+        if [[ x"$PdBIUVT_RANX_CENT" != x"" && x"$PdBIUVT_DECX_CENT" != x"" ]]; then
+            PdBIUVT_RAND_CENT=$(radec2degree "$PdBIUVT_RANX_CENT" "$PdBIUVT_DECX_CENT" 2>/dev/null | cut -d ' ' -f 1)
+            PdBIUVT_DECD_CENT=$(radec2degree "$PdBIUVT_RANX_CENT" "$PdBIUVT_DECX_CENT" 2>/dev/null | cut -d ' ' -f 2)
+        fi
+    else
+        if [[ x"$PdBIUVT_RANX_CENT" == x"" || x"$PdBIUVT_DECX_CENT" == x"" ]]; then
+            PdBIUVT_RANX_CENT=$(degree2radec "$PdBIUVT_RAND_CENT" "$PdBIUVT_DECD_CENT" 2>/dev/null | cut -d ' ' -f 1)
+            PdBIUVT_DECX_CENT=$(degree2radec "$PdBIUVT_RAND_CENT" "$PdBIUVT_DECD_CENT" 2>/dev/null | cut -d ' ' -f 2)
+        fi
+    fi
+    # 
+    # check Telescope pointing RA Dec
+    # 
+    if [[ x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
+        echo ""; echo "Error! Could not find telescope pointing information in the uv table file! Please input telescope pointing like \"-pointing 12:36:20 62:20:00\"!"; echo ""
+        return 4
+    fi
+    # 
+    # if object RA Dec not found, then we fit the telescope pointing center RA Dec
+    # 
+    if [[ $PdBIUVT_OBJ_NUMB -eq 0 ]]; then
+        #echo ""; echo "Warning! Object RA Dec was not given! We will use telescope pointing RA Dec for fitting! (will continue in 2.5 seconds)"; echo ""; sleep 2.5
+        #echo ""; echo "Warning! Object RA Dec was not given! We will use telescope pointing RA Dec when needed (e.g. for uv_fit)!"; echo ""; sleep 2.5
+        PdBIUVT_RAND_OBJT=("$PdBIUVT_RAND_CENT")
+        PdBIUVT_DECD_OBJT=("$PdBIUVT_DECD_CENT")
+        PdBIUVT_RANX_OBJT=("$PdBIUVT_RANX_CENT")
+        PdBIUVT_DECX_OBJT=("$PdBIUVT_DECX_CENT")
+        PdBIUVT_OBJ_POS=("" "")
+        PdBIUVT_OBJ_NUMB=1
+    fi
+    # 
+    # calculate OBJ_POS as the distance from telescope pointing center
+    # 
+    for (( i=0; i<$PdBIUVT_OBJ_NUMB; i++ )); do
+        # convert between offset and radec
+        if [[ -z "${PdBIUVT_OBJ_POS[2*i+0]}" || -z "${PdBIUVT_OBJ_POS[2*i+1]}" ]]; then
+            # if input is RA Dec but not offset
+            PdBIUVT_OBJ_POS_X=$(printf "%0.5f\n" $(echo "(${PdBIUVT_RAND_OBJT[i]}-($PdBIUVT_RAND_CENT))*3600.0*c($PdBIUVT_DECD_CENT/180*4*a(1))" | bc -l | tail -n 1 | sed 's/^\./0./' | sed 's/^[-]\./-0./')) # RA offset, note that the direction is +1!
+            PdBIUVT_OBJ_POS_Y=$(printf "%0.5f\n" $(echo "(${PdBIUVT_DECD_OBJT[i]}-($PdBIUVT_DECD_CENT))*3600.0" | bc -l | tail -n 1 | sed 's/^\./0./' | sed 's/^[-]\./-0./')) # DEC offset
+            PdBIUVT_OBJ_POS[2*i+0]="$PdBIUVT_OBJ_POS_X"
+            PdBIUVT_OBJ_POS[2*i+1]="$PdBIUVT_OBJ_POS_Y"
+        else
+            # if input is offset instead of RA Dec. Note that +X means +left (increase in RA), +Y means +up (increase in Dec). 
+            PdBIUVT_OBJ_POS_X=$(awk "BEGIN {pi=atan2(0,-1); printf \"%0.7f\n\", ($PdBIUVT_RAND_CENT)+(${PdBIUVT_OBJ_POS[2*i+0]}/cos($PdBIUVT_DECD_CENT/180.0*pi))/3600.0;}") # RA offset, note that the direction is +1!
+            PdBIUVT_OBJ_POS_Y=$(awk "BEGIN {pi=atan2(0,-1); printf \"%0.7f\n\", ($PdBIUVT_DECD_CENT)+(${PdBIUVT_OBJ_POS[2*i+1]})/3600.0;}")
+            # -- note: in awk, we can use "pi=atan2(0,-1)" to retrieve the value of pi. -- https://www.gnu.org/software/gawk/manual/html_node/Numeric-Functions.html
+            PdBIUVT_RAND_OBJT[i]="$PdBIUVT_OBJ_POS_X"
+            PdBIUVT_DECD_OBJT[i]="$PdBIUVT_OBJ_POS_Y"
+            PdBIUVT_RANX_OBJT[i]=$(degree2radec "$PdBIUVT_OBJ_POS_X" "$PdBIUVT_OBJ_POS_Y" 2>/dev/null | cut -d ' ' -f 1)
+            PdBIUVT_DECX_OBJT[i]=$(degree2radec "$PdBIUVT_OBJ_POS_X" "$PdBIUVT_OBJ_POS_Y" 2>/dev/null | cut -d ' ' -f 2)
+        fi
+        
+        # filling in default values for previous objects (again, same as the above code)
+        while [[ ${#PdBIUVT_OBJ_NAME[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_NAME+=("obj_$((${#PdBIUVT_OBJ_NAME[@]}+1))")
+        done
+        while [[ ${#PdBIUVT_OBJ_FUNC[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_FUNC+=("POINT")
+        done
+        while [[ ${#PdBIUVT_OBJ_SIZE[@]} -lt $((2*$PdBIUVT_OBJ_NUMB)) ]]; do 
+            PdBIUVT_OBJ_SIZE+=("0.0")
+        done
+        while [[ ${#PdBIUVT_OBJ_ANGLE[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_ANGLE+=("0.0")
+        done
+        while [[ ${#PdBIUVT_OBJ_VARY_POS[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_VARY_POS+=(0)
+        done
+        while [[ ${#PdBIUVT_OBJ_VARY_SIZE[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_VARY_SIZE+=(1) # in default we vary size
+        done
+        while [[ ${#PdBIUVT_OBJ_VARY_ANGLE[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_VARY_ANGLE+=(1) # in default we vary angle
+        done
+        
+        # make sure 
+        if echo "${PdBIUVT_OBJ_FUNC[i]}" | grep -q -i "POINT"; then
+            PdBIUVT_OBJ_SIZE[2*i+0]="0.0"; PdBIUVT_OBJ_SIZE[2*i+1]="0.0"; PdBIUVT_OBJ_VARY_SIZE[i]=1
+            PdBIUVT_OBJ_ANGLE[2*i+0]="0.0"; PdBIUVT_OBJ_VARY_ANGLE[i]=1
+        elif echo "${PdBIUVT_OBJ_FUNC[i]}" | grep -q -i "C_GAUSS"; then
+            # set minor axis FWHM size to 0, and set angle to 0
+            PdBIUVT_OBJ_SIZE[2*i+1]="0.0"
+            PdBIUVT_OBJ_ANGLE[2*i+0]="0.0"; PdBIUVT_OBJ_VARY_ANGLE[i]=1
+            # check major axis FWHM size, if non-positive then set it to fit.
+            if [[ $(awk "BEGIN {if(${PdBIUVT_OBJ_SIZE[2*i+0]}>0) print 1; else print 0;}") -eq 0 ]]; then
+                PdBIUVT_OBJ_SIZE[2*i+0]="1.0"; PdBIUVT_OBJ_VARY_SIZE[i]=1
+            fi
+        elif echo "${PdBIUVT_OBJ_FUNC[i]}" | grep -q -i "E_GAUSS"; then
+            # check major and minor axis FWHM size, if non-positive then set it to fit.
+            if [[ $(awk "BEGIN {if(${PdBIUVT_OBJ_SIZE[2*i+0]}>0) print 1; else print 0;}") -eq 0 ]]; then
+                PdBIUVT_OBJ_SIZE[2*i+0]="1.0"; PdBIUVT_OBJ_SIZE[2*i+1]="1.0"; PdBIUVT_OBJ_VARY_SIZE[i]=1; PdBIUVT_OBJ_VARY_ANGLE[i]=1
+            elif [[ $(awk "BEGIN {if(${PdBIUVT_OBJ_SIZE[2*i+1]}>0) print 1; else print 0;}") -eq 0 ]]; then
+                PdBIUVT_OBJ_SIZE[2*i+1]="1.0"; PdBIUVT_OBJ_VARY_SIZE[i]=1; PdBIUVT_OBJ_VARY_ANGLE[i]=1
+            fi
+        fi
+        
+    done
+    # 
+    # Print UV table phase center info
+    # 
+    echo ""
+    echo "******************************"
+    echo "* UV table phase center info *"
+    echo "******************************"
+    echo "Phase Center = $PdBIUVT_RANX_CENT $PdBIUVT_DECX_CENT"
+    # 
+    # Print user input object parameters
+    #     
+    echo ""
+    echo "********************************"
+    echo "* User input object parameters *"
+    echo "********************************"
+    for (( i=0; i<$PdBIUVT_OBJ_NUMB; i++ )); do
+        PdBIUVT_OBJ_VARY_POS_STR=""
+        PdBIUVT_OBJ_VARY_SIZE_STR=""
+        PdBIUVT_OBJ_VARY_ANGLE_STR=""
+        if [[ "${PdBIUVT_OBJ_VARY_POS[i]}" == "0" ]]; then PdBIUVT_OBJ_VARY_POS_STR=" (fixed)"; fi
+        if [[ "${PdBIUVT_OBJ_VARY_SIZE[i]}" == "0" ]]; then PdBIUVT_OBJ_VARY_SIZE_STR=" (fixed)"; fi
+        if [[ "${PdBIUVT_OBJ_VARY_ANGLE[i]}" == "0" ]]; then PdBIUVT_OBJ_VARY_ANGLE_STR=" (fixed)"; fi
+        # 
+        #printf "Object %30s Function %10s RA Dec %11.7f %11.7f %-7s Size %4.2f %4.2f %-7s PA %10s %-7s\n" \
+        #      "${PdBIUVT_OBJ_NAME[i]}" "${PdBIUVT_OBJ_FUNC[i]}" \
+        #      "${PdBIUVT_OBJ_POS[2*i+0]}" "${PdBIUVT_OBJ_POS[2*i+1]}" "$PdBIUVT_OBJ_VARY_POS_STR" \
+        #      "${PdBIUVT_OBJ_SIZE[2*i+0]}" "${PdBIUVT_OBJ_SIZE[2*i+1]}" "$PdBIUVT_OBJ_VARY_SIZE_STR" \
+        #      "${PdBIUVT_OBJ_ANGLE[i]}" "$PdBIUVT_OBJ_VARY_ANGLE_STR"
+        printf "Object \"%s\" function %s offset %0.5f %0.5f%s size %0.3f %0.3f%s PA %0.1f%s\n" \
+              "${PdBIUVT_OBJ_NAME[i]}" "${PdBIUVT_OBJ_FUNC[i]}" \
+              "${PdBIUVT_OBJ_POS[2*i+0]}" "${PdBIUVT_OBJ_POS[2*i+1]}" "$PdBIUVT_OBJ_VARY_POS_STR" \
+              "${PdBIUVT_OBJ_SIZE[2*i+0]}" "${PdBIUVT_OBJ_SIZE[2*i+1]}" "$PdBIUVT_OBJ_VARY_SIZE_STR" \
+              "${PdBIUVT_OBJ_ANGLE[i]}" "$PdBIUVT_OBJ_VARY_ANGLE_STR"
+    done
+    
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+

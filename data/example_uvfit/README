@@ -7,23 +7,26 @@ bash
 
 source ../../SETUP.bash
 
-pdbi-uvt-go-uvfit-v4 -name "NAME" \
-                     -radec 150.039 2.319 -fixpos -size 1.0 -fixsize -cgauss \
-                     -out "OUTPUT_NAME"
 
-pdbi-uvt-go-uvfit-v4 -name "NAME" \
-                     -radec 150.039 2.319 -fixpos -size 1.0 -fixsize -cgauss \
-                     -radec 150.038 2.318 -fixpos -size 1.0 -fixsize -cgauss \
-                     -out "OUTPUT_NAME"
-
-pdbi-uvt-go-uvfit-v4 -name "NAME" \
-                     -offset  3.0  3.0 -fixpos -size 1.0 -fixsize -cgauss \
-                     -offset -2.0 -2.0 -fixpos -size 1.0 -fixsize -cgauss \
-                     -out "OUTPUT_NAME"
 
 pdbi-uvt-go-uvfit-v4 -name "NAME" \
                      -radec 150.039 2.319 -fixpos -size 1.0 -fixsize -cgauss -add-offset 0.15 -0.25 \
                      -offset -2.0 -2.0 -fixpos -size 1.0 -fixsize -cgauss -add-offset 0.15 -0.25 \
                      -out "OUTPUT_NAME"
+
+
+
+pdbi-uvt-go-uvfit-v5 -name "NAME" \
+                     -radec 150.039 2.319 -fixpos -size 1.0 -fixsize -cgauss -add-offset 0.15 -0.25 \
+                     -offset -2.0 -2.0 -fixpos -size 1.0 -fixsize -cgauss -add-offset 0.15 -0.25 \
+                     -out "OUTPUT_NAME"
+
+
+
+pdbi-uvt-go-shift-v5 -name "NAME" "NAME_1" "NAME_2" -radec 150.039 2.319
+
+
+
+pdbi-uvt-go-import-uvfits -name TEST.fits
 
 

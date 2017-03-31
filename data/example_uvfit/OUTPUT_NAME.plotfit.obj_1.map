@@ -1,6 +1,0 @@
-! GIDLAS mapping script
-let name OUTPUT_NAME
-let UVFIT%ORDER 1
-go plotfit
-hardcopy 'name'.plotfit.obj_1.eps /overwrite
-

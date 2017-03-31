@@ -3,196 +3,220 @@
 # Input RA Dec
 # Output spec & uv_average
 # 
-PdBIUVT_NAME=()
-PdBIUVT_SAVE=""
-PdBIUVT_KEEP_FILES=0
-PdBIUVT_WEIGHT=() #<added><20170329>#
-PdBIUVT_FACTOR=() #<added><20170329># 
-PdBIUVT_CONTINUUM_MODE=0 #<added><20170329># 
-# LANG
-LANG=C
-
+# Last update:
+#    2017-03-30 using "pdbi-uvt-core-arg-v5"
+# 
+# 
 
 
 
 # 
-# Read input parameters
+# Uage
 # 
-PdBIUVT_GOOD=0; if [[ "$#" -gt 0 ]]; then PdBIUVT_GOOD=1; fi
-PdBIUVT_RPAR=""
-while [[ "$#" -gt 0 ]]; do
-    #echo $1 "$#"
-    case $1 in
-          "-save") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR=""; PdBIUVT_SAVE="$1";;
-           "-out") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR=""; PdBIUVT_SAVE="$1";;
-     "-keepfiles") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR=""; PdBIUVT_KEEP_FILES=1;;
-          "-name") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="name";;
-        "-weight") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="weight";;
-     "-weighting") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="weight";;
-        "-factor") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="factor";;
-       "-scaling") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="factor";;
-     "-continuum") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR=""; PdBIUVT_CONTINUUM_MODE=1;;
-    esac
-    if [[ "$PdBIUVT_RPAR" == "name" ]];  then 
-        PdBIUVT_NAME=("${PdBIUVT_NAME[@]}" "$1")
-    fi
-    if [[ "$PdBIUVT_RPAR" == "weight" ]];  then 
-        PdBIUVT_WEIGHT+=("$1")
-    fi
-    if [[ "$PdBIUVT_RPAR" == "factor" ]];  then 
-        PdBIUVT_FACTOR+=("$1")
-    fi
-    shift
-done
+usage() {
+    echo "Usage: "
+    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-keep-files]"
+    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-keep-files] [-weight 0.5 0.5 1.0 1.0]"
+    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-keep-files] [-factor 0.5 0.5 1.0 1.0]"
+    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-keep-files] [-continuum-mode]"
+    echo ""
+}
+
+
+
+# 
+# SOURCE pdbi-uvt-core-arg
+# 
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" "$@"
+else
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5\"!"
+    echo ""
+    exit 1
+fi
+
+
+
+# 
+# Check input parameters -- uvt file name
+# 
+if [[ ${#PdBIUVT_NAME[@]} -le 1 ]]; then
+    usage; exit
+fi
+
+
+
 # 
 # Make sure weighting array has the same dimension as the name array
 # 
-while [[ ${#PdBIUVT_WEIGHT[@]} -lt ${#PdBIUVT_NAME[@]} ]]; do
-    PdBIUVT_WEIGHT+=("1.0")
+while [[ ${#PdBIUVT_UVMERGE_WEIGHT[@]} -lt ${#PdBIUVT_NAME[@]} ]]; do
+    PdBIUVT_UVMERGE_WEIGHT+=("1.0")
 done
-while [[ ${#PdBIUVT_FACTOR[@]} -lt ${#PdBIUVT_NAME[@]} ]]; do
-    PdBIUVT_FACTOR+=("1.0")
+while [[ ${#PdBIUVT_UVMERGE_FACTOR[@]} -lt ${#PdBIUVT_NAME[@]} ]]; do
+    PdBIUVT_UVMERGE_FACTOR+=("1.0")
 done
-# 
-# Check input parameters -- if not passed then print usage and exit
-# 
-if [[ $PdBIUVT_GOOD -eq 0 ]]; then
-    echo "Usage: "
-    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-keepfiles]"
-    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-keepfiles] [-weight 0.5 0.5 1.0 1.0]"
-    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-keepfiles] [-factor 0.5 0.5 1.0 1.0]"
-    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-keepfiles] [-continuum]"
-    exit
-fi
+
+
+
 # 
 # Print input uvtable list
 # 
 echo PdBIUVT_NAME=${PdBIUVT_NAME[*]}
-echo PdBIUVT_SAVE=${PdBIUVT_SAVE}
-echo PdBIUVT_WEIGHT=${PdBIUVT_WEIGHT[*]}
-echo PdBIUVT_FACTOR=${PdBIUVT_FACTOR[*]}
+echo PdBIUVT_SAVE=${PdBIUVT_SAVE[0]}
+echo PdBIUVT_UVMERGE_WEIGHT=${PdBIUVT_UVMERGE_WEIGHT[*]}
+echo PdBIUVT_UVMERGE_FACTOR=${PdBIUVT_UVMERGE_FACTOR[*]}
+
+
+
 # 
-# Revise input parameters
+# Set default output file name
 # 
-# -- remove the suffix of the input uvtable name, and test whether the file exists
-for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do
-    PdBIUVT_NAME[i]=$(echo ${PdBIUVT_NAME[i]} | sed -E 's/[.]uvt$//g')
-    # check file existence
-    if [[ ! -f "${PdBIUVT_NAME[i]}.uvt" ]]; then
-        echo "Error! \"${PdBIUVT_NAME[i]}.uvt\" was not found! Exit!"
-        exit
+if [[ ${#PdBIUVT_SAVE[@]} -eq 0 ]]; then
+    PdBIUVT_SAVE+=("${PdBIUVT_NAME[0]}-Merged")
+    echo ""; echo "Warning! Output name was not given, setting to \"${PdBIUVT_SAVE[0]}.uvt\""; echo ""
+fi
+if [[ x"${PdBIUVT_SAVE[0]}" == x || x"${PdBIUVT_SAVE[0]}" == x"tmp_pdbi_uvt" ]]; then 
+    PdBIUVT_SAVE[0]="${PdBIUVT_NAME[0]}-Merged"
+    echo ""; echo "Warning! Output name was not given, setting to \"${PdBIUVT_SAVE[0]}.uvt\""; echo ""
+fi
+# 
+# Remove suffix
+# 
+if [[ x"${PdBIUVT_SAVE[0]}" == x*".uvt" ]]; then
+    PdBIUVT_SAVE[0]=$(echo "${PdBIUVT_SAVE[0]}" | sed -e 's/\.uvt$//g')
+fi
+if [[ x"${PdBIUVT_SAVE[0]}" == x*".UVT" ]]; then
+    PdBIUVT_SAVE[0]=$(echo "${PdBIUVT_SAVE[0]}" | sed -e 's/\.UVT$//g')
+fi
+# 
+# Backup existing output file
+# 
+if [[ -f "${PdBIUVT_SAVE[0]}.uvt" ]]; then
+    echo "Warning! Found existing \"${PdBIUVT_SAVE[0]}.uvt\"! Backup as \"${PdBIUVT_SAVE[0]}.uvt.backup\"!"
+    mv "${PdBIUVT_SAVE[0]}.uvt" "${PdBIUVT_SAVE[0]}.uvt.backup"
+fi
+
+
+
+# 
+# Loop each two pairs of the input uv tables, i starts from 1.
+# 
+for (( i=1; i<${#PdBIUVT_NAME[@]}; i++ )); do
+    # 
+    # if type is uvtable
+    # 
+    if [[ 1 == 1 ]]; then
+        # 
+        # loop each 2 uv table to merge
+        # 
+        # prepare gildas/mapping init and script and run
+        # 
+        if [[ $i -eq 1 ]]; then 
+        PdBIUVT_TEMP_TAB1="${PdBIUVT_NAME[i-1]}.${PdBIUVT_TYPE[i]}"
+        else
+        PdBIUVT_TEMP_TAB1="${PdBIUVT_SAVE[0]}."$((i-1))".uvt"
+        fi
+        PdBIUVT_TEMP_TAB2="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}"
+        PdBIUVT_TEMP_TAB3="${PdBIUVT_SAVE[0]}.$i.uvt"
+        # 
+        #PdBIUVT_TEMP_WEIGHT="0.0" # note that the weight is only applied to TAB1 for each uv_merge run.
+        #for (( j=0; j<$i; j++ )); do
+        #    PdBIUVT_TEMP_WEIGHT=$(awk "BEGIN {print ($PdBIUVT_TEMP_WEIGHT)+(${PdBIUVT_UVMERGE_WEIGHT[j]});}")
+        #done
+        #PdBIUVT_TEMP_WEIGHT=$(awk "BEGIN {print ($PdBIUVT_TEMP_WEIGHT)/(${PdBIUVT_UVMERGE_WEIGHT[i]});}")
+        PdBIUVT_TEMP_WEIGHT=$(awk "BEGIN {print (${PdBIUVT_UVMERGE_WEIGHT[i-1]})/(${PdBIUVT_UVMERGE_WEIGHT[i]});}")
+        # 
+        #PdBIUVT_TEMP_FACTOR="${PdBIUVT_UVMERGE_FACTOR[i-1]}" # note that the factor is only applied to TAB1 for each uv_merge run.
+        #for (( j=$i; j<${#PdBIUVT_UVMERGE_FACTOR[@]}; j++ )); do
+        #    PdBIUVT_TEMP_FACTOR=$(awk "BEGIN {print ($PdBIUVT_TEMP_FACTOR)/(${PdBIUVT_UVMERGE_FACTOR[j]});}")
+        #done
+        PdBIUVT_TEMP_FACTOR=$(awk "BEGIN {print (${PdBIUVT_UVMERGE_FACTOR[i-1]})/(${PdBIUVT_UVMERGE_FACTOR[i]});}")
+        # 
+        #                    (w1/w2)*(a1/a2) * f1 + 1 * f2
+        # (w2/w3)*(a2/a3) * ((w1/w2)*(a1/a2) * f1 + 1 * f2) + 1 * f3
+        #=(w2/w3)*(a2/a3) *  (w1/w2)*(a1/a2) * f1
+        # 
+        # 
+        PdBIUVT_TEMP_INIT="${PdBIUVT_SAVE[0]}.$i.init"
+        PdBIUVT_TEMP_EXEC="${PdBIUVT_SAVE[0]}.$i.map"
+        PdBIUVT_TEMP_LOGT="${PdBIUVT_SAVE[0]}.$i.log"
+        echo  '! '                                                                                            >  $PdBIUVT_TEMP_INIT
+        echo  '! Task UV_MERGE'                                                                               >> $PdBIUVT_TEMP_INIT
+        echo  '!'                                                                                             >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\CHARACTER "UV table 1"                  TABLE_IN$      "'$PdBIUVT_TEMP_TAB1'"'            >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\REAL      "Weighting 1"                   WEIGHT$       ' $PdBIUVT_TEMP_WEIGHT            >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\REAL      "Multipling 1"                  FACTOR$       ' $PdBIUVT_TEMP_FACTOR            >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\CHARACTER "UV table 2"                 TABLE_REF$      "'$PdBIUVT_TEMP_TAB2'"'            >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\CHARACTER "UV table out"               TABLE_OUT$      "'$PdBIUVT_TEMP_TAB3'"'            >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\INTEGER   "Continuum Mode"                  MODE$       ' $PdBIUVT_UVMERGE_CONT_MODE      >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\GO'                                                                                       >> $PdBIUVT_TEMP_INIT
+        echo  "run uv_merge $PdBIUVT_TEMP_INIT /NOWINDOW" > $PdBIUVT_TEMP_EXEC
+        # or apply the last "-factor" if it is not 1.0
+        if [[ $i -eq $((${#PdBIUVT_NAME[@]}-1)) ]]; then 
+            if [[ $(awk "BEGIN {if((${PdBIUVT_UVMERGE_FACTOR[i]}-1.0)**2 > 1e-5) print 1; else print 0; }") -eq 1 ]]; then
+                PdBIUVT_TEMP_INIT="${PdBIUVT_SAVE[0]}.$i.apply.final.factor.init"
+                echo  '! '                                                                             >  $PdBIUVT_TEMP_INIT
+                echo  '! Task UV_MULT'                                                                 >> $PdBIUVT_TEMP_INIT
+                echo  '! '                                                                             >> $PdBIUVT_TEMP_INIT
+                echo  'TASK\CHARACTER "UV table"     UV_TABLE$      "'$PdBIUVT_TEMP_TAB3'"'            >> $PdBIUVT_TEMP_INIT
+                echo  'TASK\REAL "Multipling U"         MULTA$      ' 1                                >> $PdBIUVT_TEMP_INIT
+                echo  'TASK\REAL "Multipling V"         MULTB$      ' 1                                >> $PdBIUVT_TEMP_INIT
+                echo  'TASK\REAL "Multipling Intensity" MULTC$      ' ${PdBIUVT_UVMERGE_FACTOR[i]}     >> $PdBIUVT_TEMP_INIT
+                echo  'TASK\GO'                                                                        >> $PdBIUVT_TEMP_INIT
+                echo  "run uv_mult $PdBIUVT_TEMP_INIT /NOWINDOW" >> $PdBIUVT_TEMP_EXEC
+            fi
+        fi
+        echo -n "Merging \"$PdBIUVT_TEMP_TAB1\" and \"$PdBIUVT_TEMP_TAB2\" to \"$PdBIUVT_TEMP_TAB3\" (command: "
+        echo "@$PdBIUVT_TEMP_EXEC | mapping -nw -nl > $PdBIUVT_TEMP_LOGT)"
+        echo "@$PdBIUVT_TEMP_EXEC" | mapping -nw -nl > "$PdBIUVT_TEMP_LOGT"
+        
+        # check output 
+        if [[ ! -f "$PdBIUVT_TEMP_TAB3" ]]; then
+            echo "Error! Failed to merge \"$PdBIUVT_TEMP_TAB1\" and \"$PdBIUVT_TEMP_TAB2\" to \"$PdBIUVT_TEMP_TAB3\"!"
+            echo "Please check \"$PdBIUVT_TEMP_LOGT\"! (Maybe columns do not match?)"
+            exit
+        fi
+        
+        # clean intermediate uvt
+        if [[ $i -ge 2 ]]; then 
+            if [[ $PdBIUVT_UVMERGE_KEEP_FILE -eq 0 ]]; then
+                #echo "rm \"${PdBIUVT_SAVE[0]}.$((i-1)).\"*"
+                #rm "${PdBIUVT_SAVE[0]}.$((i-1))."*
+                echo "Deleted \"${PdBIUVT_SAVE[0]}.$((i-1)).uvt\""
+                rm "${PdBIUVT_SAVE[0]}.$((i-1)).uvt"
+            fi
+        fi
+        
+        if [[ $i -eq $((${#PdBIUVT_NAME[@]}-1)) ]]; then 
+            # copy final uvt
+            echo "Copying \"${PdBIUVT_SAVE[0]}.$i.uvt\" to \"${PdBIUVT_SAVE[0]}.uvt\""
+            cp "${PdBIUVT_SAVE[0]}.$i.uvt" "${PdBIUVT_SAVE[0]}.uvt"
+            # clean final intermediate uvt
+            if [[ $PdBIUVT_UVMERGE_KEEP_FILE -eq 0 ]]; then
+                #echo "rm \"${PdBIUVT_SAVE[0]}.$i.\"*"
+                #rm "${PdBIUVT_SAVE[0]}.$i."*
+                echo "Deleted \"${PdBIUVT_SAVE[0]}.$i.uvt\""
+                rm "${PdBIUVT_SAVE[0]}.$i.uvt"
+            fi
+        fi
+        
     fi
+    
 done
-if [[ "$PdBIUVT_SAVE" == *".uvt" ]]; then
-    PdBIUVT_SAVE=$(echo $PdBIUVT_SAVE | sed -E 's/[.]uvt$//g')
-fi
-# -- set output uvtable name, and check whether it exists
-if [[ x"$PdBIUVT_SAVE" == x"" ]]; then
-    echo "Warning! Output uv table name not defined, we will set it to be ${PdBIUVT_NAME[0]}-Merged.uvt!"
-    PdBIUVT_SAVE="${PdBIUVT_NAME[0]}-Merged"
-fi
-if [[ -f "$PdBIUVT_SAVE.uvt" ]]; then
-    echo "Warning! Found previous \"$PdBIUVT_SAVE.uvt\"! Backup as \"$PdBIUVT_SAVE.uvt.backup\"!"
-    cp "$PdBIUVT_SAVE.uvt" "$PdBIUVT_SAVE.uvt.backup"
-fi
+
+echo "Successufully saved to \"${PdBIUVT_SAVE[0]}.uvt\"!"
 
 
 
-# 
-# loop each 2 uv table to merge
-# 
-for (( PdBIUVT_ITER = 1; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ )); do
-    # 
-    # prepare gildas/mapping init and script and run
-    # 
-    if [[ $PdBIUVT_ITER -eq 1 ]]; then 
-    PdBIUVT_TEMP_TAB1="${PdBIUVT_NAME[$PdBIUVT_ITER-1]}"
-    else
-    PdBIUVT_TEMP_TAB1="$PdBIUVT_SAVE".$(($PdBIUVT_ITER-1))
-    fi
-    PdBIUVT_TEMP_TAB2="${PdBIUVT_NAME[$PdBIUVT_ITER]}"
-    PdBIUVT_TEMP_TAB3="$PdBIUVT_SAVE.$PdBIUVT_ITER"
-    # remove suffix .uvt
-    PdBIUVT_TEMP_TAB1=$(echo $PdBIUVT_TEMP_TAB1 | sed -E 's/[.]uvt$//g')
-    PdBIUVT_TEMP_TAB2=$(echo $PdBIUVT_TEMP_TAB2 | sed -E 's/[.]uvt$//g')
-    PdBIUVT_TEMP_TAB3=$(echo $PdBIUVT_TEMP_TAB3 | sed -E 's/[.]uvt$//g')
-    # 
-    #PdBIUVT_TEMP_WEIGHT="0.0" # note that the weight is only applied to TAB1 for each uv_merge run.
-    #for (( j=0; j<$PdBIUVT_ITER; j++ )); do
-    #    PdBIUVT_TEMP_WEIGHT=$(awk "BEGIN {print ($PdBIUVT_TEMP_WEIGHT)+(${PdBIUVT_WEIGHT[j]});}")
-    #done
-    #PdBIUVT_TEMP_WEIGHT=$(awk "BEGIN {print ($PdBIUVT_TEMP_WEIGHT)/(${PdBIUVT_WEIGHT[PdBIUVT_ITER]});}")
-    PdBIUVT_TEMP_WEIGHT=$(awk "BEGIN {print (${PdBIUVT_WEIGHT[PdBIUVT_ITER-1]})/(${PdBIUVT_WEIGHT[PdBIUVT_ITER]});}")
-    # 
-    #PdBIUVT_TEMP_FACTOR="${PdBIUVT_FACTOR[PdBIUVT_ITER-1]}" # note that the factor is only applied to TAB1 for each uv_merge run.
-    #for (( j=$PdBIUVT_ITER; j<${#PdBIUVT_FACTOR[@]}; j++ )); do
-    #    PdBIUVT_TEMP_FACTOR=$(awk "BEGIN {print ($PdBIUVT_TEMP_FACTOR)/(${PdBIUVT_FACTOR[j]});}")
-    #done
-    PdBIUVT_TEMP_FACTOR=$(awk "BEGIN {print (${PdBIUVT_FACTOR[PdBIUVT_ITER-1]})/(${PdBIUVT_FACTOR[PdBIUVT_ITER]});}")
-    # 
-    #                    (w1/w2)*(a1/a2) * f1 + 1 * f2
-    # (w2/w3)*(a2/a3) * ((w1/w2)*(a1/a2) * f1 + 1 * f2) + 1 * f3
-    #=(w2/w3)*(a2/a3) *  (w1/w2)*(a1/a2) * f1
-    # 
-    # 
-    PdBIUVT_TEMP_INIT="$PdBIUVT_SAVE.$PdBIUVT_ITER.init"
-    PdBIUVT_TEMP_EXEC="$PdBIUVT_SAVE.$PdBIUVT_ITER.map"
-    PdBIUVT_TEMP_LOGT="$PdBIUVT_SAVE.$PdBIUVT_ITER.log"
-    echo  '! '                                                                                             > $PdBIUVT_TEMP_INIT
-    echo  '! Task UV_MERGE'                                                                               >> $PdBIUVT_TEMP_INIT
-    echo  '!'                                                                                             >> $PdBIUVT_TEMP_INIT
-    echo  'TASK\CHARACTER "UV table 1"                  TABLE_IN$      "'$PdBIUVT_TEMP_TAB1.uvt'"'        >> $PdBIUVT_TEMP_INIT
-    echo  'TASK\REAL      "Weighting 1"                   WEIGHT$       ' $PdBIUVT_TEMP_WEIGHT            >> $PdBIUVT_TEMP_INIT
-    echo  'TASK\REAL      "Multipling 1"                  FACTOR$       ' $PdBIUVT_TEMP_FACTOR            >> $PdBIUVT_TEMP_INIT
-    echo  'TASK\CHARACTER "UV table 2"                 TABLE_REF$      "'$PdBIUVT_TEMP_TAB2.uvt'"'        >> $PdBIUVT_TEMP_INIT
-    echo  'TASK\CHARACTER "UV table out"               TABLE_OUT$      "'$PdBIUVT_TEMP_TAB3.uvt'"'        >> $PdBIUVT_TEMP_INIT
-    echo  'TASK\INTEGER   "Continuum Mode"                  MODE$       ' $PdBIUVT_CONTINUUM_MODE         >> $PdBIUVT_TEMP_INIT
-    echo  'TASK\GO'                                                                                       >> $PdBIUVT_TEMP_INIT
-    echo  "run uv_merge $PdBIUVT_TEMP_INIT /NOWINDOW" > $PdBIUVT_TEMP_EXEC
-    # or apply the last "-factor" if it is not 1.0
-    if [[ $PdBIUVT_ITER -eq $((${#PdBIUVT_NAME[@]}-1)) ]]; then 
-        if [[ $(awk "BEGIN {if((${PdBIUVT_FACTOR[PdBIUVT_ITER]}-1.0)**2 > 1e-5) print 1; else print 0; }") -eq 1 ]]; then
-            PdBIUVT_TEMP_INIT="$PdBIUVT_SAVE.$PdBIUVT_ITER.apply.final.factor.init"
-            echo  '! '                                                                              > $PdBIUVT_TEMP_INIT
-            echo  '! Task UV_MULT'                                                                 >> $PdBIUVT_TEMP_INIT
-            echo  '! '                                                                             >> $PdBIUVT_TEMP_INIT
-            echo  'TASK\CHARACTER "UV table"     UV_TABLE$      "'$PdBIUVT_TEMP_TAB3.uvt'"'        >> $PdBIUVT_TEMP_INIT
-            echo  'TASK\REAL "Multipling U"         MULTA$      ' 1                                >> $PdBIUVT_TEMP_INIT
-            echo  'TASK\REAL "Multipling V"         MULTB$      ' 1                                >> $PdBIUVT_TEMP_INIT
-            echo  'TASK\REAL "Multipling Intensity" MULTC$      ' ${PdBIUVT_FACTOR[PdBIUVT_ITER]}  >> $PdBIUVT_TEMP_INIT
-            echo  'TASK\GO'                                                                        >> $PdBIUVT_TEMP_INIT
-            echo  "run uv_mult $PdBIUVT_TEMP_INIT /NOWINDOW" >> $PdBIUVT_TEMP_EXEC
-        fi
-    fi
-    echo  "@$PdBIUVT_TEMP_EXEC  |  mapping  > ""$PdBIUVT_TEMP_LOGT"
-    echo  "@$PdBIUVT_TEMP_EXEC" |  mapping  >  "$PdBIUVT_TEMP_LOGT"
-    
-    # clean intermediate uvt
-    if [[ $PdBIUVT_ITER -ge 2 ]]; then 
-        if [[ $PdBIUVT_KEEP_FILES -eq 0 ]]; then
-            #echo "rm \"$PdBIUVT_SAVE.$(($PdBIUVT_ITER-1)).\"*"
-            #rm "$PdBIUVT_SAVE.$(($PdBIUVT_ITER-1))."*
-            echo "rm \"$PdBIUVT_SAVE.$(($PdBIUVT_ITER-1)).uvt\""
-            rm "$PdBIUVT_SAVE.$(($PdBIUVT_ITER-1)).uvt"
-        fi
-    fi
-    
-    if [[ $PdBIUVT_ITER -eq $((${#PdBIUVT_NAME[@]}-1)) ]]; then 
-        # copy final uvt
-        echo "cp \"$PdBIUVT_SAVE.$PdBIUVT_ITER.uvt\" \"$PdBIUVT_SAVE.uvt\""
-        cp "$PdBIUVT_SAVE.$PdBIUVT_ITER.uvt" "$PdBIUVT_SAVE.uvt"
-        # clean final intermediate uvt
-        if [[ $PdBIUVT_KEEP_FILES -eq 0 ]]; then
-            #echo "rm \"$PdBIUVT_SAVE.$PdBIUVT_ITER.\"*"
-            #rm "$PdBIUVT_SAVE.$PdBIUVT_ITER."*
-            echo "rm \"$PdBIUVT_SAVE.$PdBIUVT_ITER.uvt\""
-            rm "$PdBIUVT_SAVE.$PdBIUVT_ITER.uvt"
-        fi
-    fi
-    
-done
 
-echo "Successufully saved to $PdBIUVT_SAVE.uvt"
+
+
+
+
+
+
+
 
 
 

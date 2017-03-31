@@ -1,125 +1,174 @@
 #!/bin/bash
 # 
 # Input UV table file name
-# Output spec & uv_average
+# Output uv averaged single channel uv data table
+# 
+# Last update:
+#    2017-03-30 using "pdbi-uvt-core-arg-v5"
 # 
 # 
-# Usage
+
+
+
 # 
-PdBIUVT_PrintUsage() {
+# Uage
+# 
+usage() {
     echo "Usage: "
     echo "    pdbi-uvt-go-average -name PdBIUVT_NAME -crange 1 50 55 90 [-out PdBIUVT_NAME-Averaged]"
     echo "    pdbi-uvt-go-average -name PdBIUVT_NAME -linefreq 89.098 -linewidth 450 [-out PdBIUVT_NAME-Averaged]"
     echo "    pdbi-uvt-go-average -name PdBIUVT_NAME -redshift 2.055 -linename \"CO(3-2)\" -linewidth 450 [-out PdBIUVT_NAME-Averaged]"
+    echo ""
 }
-if [[ $# -eq 0 ]]; then
-    PdBIUVT_PrintUsage
-    exit
-fi
+
+
+
 # 
-# LANG
+# SOURCE pdbi-uvt-core-arg
 # 
-LANG=C
-#
-# readlink
-# 
-if [[ $(uname) == *"Darwin"* ]]; then
-    function readlink() {
-        if [[ $# -gt 1 ]]; then if [[ "$1" == "-f" ]]; then shift; fi; fi
-        DIR=$(echo "${1%/*}"); (cd "$DIR" && echo "$(pwd -P)/$(basename ${1})")
-    }
-fi
-PdBIUVT_DIR=$(dirname $(readlink -f "${BASH_SOURCE[0]}"))
-# 
-# Call pdbi-uvt-core-cvf
-# 
-if [[ -f "$PdBIUVT_DIR/pdbi-uvt-core-cvf" ]]; then
-    source "$PdBIUVT_DIR/pdbi-uvt-core-cvf" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" "$@"
 else
-    echo ""; echo "Error! Could not find \"$PdBIUVT_DIR/pdbi-uvt-core-cvf\"!"; echo ""
-    exit
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5\"!"
+    echo ""
+    exit 1
 fi
 
 
 
 # 
+# Check input parameters -- uvt file name
 # 
-# 
-echo ""
-
-
-
-# 
-# Check output file
-# 
-# -- set output uvtable name, and check whether it exists
-if [[ x"$PdBIUVT_SAVE" == x"" || x"$PdBIUVT_SAVE" == x"tmp_pdbi_uvt" ]]; then
-    echo "Warning! Output uv table name not defined, we will set it to be ${PdBIUVT_NAME[0]}-Averaged.uvt!"
-    PdBIUVT_SAVE="${PdBIUVT_NAME[0]}-Averaged"
-fi
-if [[ -f "$PdBIUVT_SAVE.uvt" ]]; then
-    echo "Warning! Found previous \"$PdBIUVT_SAVE.uvt\"! Backup as \"$PdBIUVT_SAVE.uvt.backup\"!"
-    cp "$PdBIUVT_SAVE.uvt" "$PdBIUVT_SAVE.uvt.backup"
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]]; then
+    usage; exit
 fi
 
 
 
 # 
-# Check CRANGE list
+# Loop input uv tables
 # 
-if [[ ${#PdBIUVT_CMIN[@]} -eq 0 || ${#PdBIUVT_CMAX[@]} -eq 0 || ${#PdBIUVT_CMIN[@]} != ${#PdBIUVT_CMAX[@]} ]]; then
-    PdBIUVT_PrintUsage
-    exit
-fi
-
-# 
-# Prepare CRANGE list
-# 
-for (( i=0; i<1; i++ )); do
-    if [[ ${PdBIUVT_CMIN[i]} -gt 0 && ${PdBIUVT_CMAX[i]} -gt 0 ]]; then
-        PdBIUVT_CAGE="${PdBIUVT_CMIN[i]} ${PdBIUVT_CMAX[i]}"
+for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
+    
+    
+    
+    # 
+    # SOURCE pdbi-uvt-core-cvf
+    # 
+    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v5" ]]; then
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v5" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
+    else
+        echo ""
+        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v5\"!"
+        echo ""
+        exit 1
+    fi
+    
+    
+    
+    # 
+    # Check input parameters -- crange
+    # 
+    if [[ ${#PdBIUVT_CMIN[@]} -le 0 || ${#PdBIUVT_CMAX[@]} -le 0 ]]; then
+        echo ""; echo "Error! Could not determine channel range for the input uv table \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"! Please check your input e.g. \"-crange 0 0\"!"; echo ""
+        continue
+    fi
+    
+    
+    
+    # 
+    # Set default output file
+    # 
+    if [[ ${#PdBIUVT_SAVE[@]} -le $tk ]]; then
+        PdBIUVT_SAVE+=($(basename "${PdBIUVT_NAME[tk]}")"-Averaged")
+        echo ""; echo "Warning! Output name was not defined, we will set it as \"${PdBIUVT_SAVE[tk]}\"!"; echo ""
+    fi
+    if [[ x"${PdBIUVT_SAVE[tk]}" == x || x"${PdBIUVT_SAVE[tk]}" == x"tmp_pdbi_uvt" || x"${PdBIUVT_SAVE[tk]}" == x"tmp_pdbi_uvt_run_uv_fit" ]]; then
+        PdBIUVT_SAVE[tk]=$(basename "${PdBIUVT_NAME[tk]}")"-Averaged"
+        echo ""; echo "Warning! Output name was not defined, we will set it as \"${PdBIUVT_SAVE[tk]}\"!"; echo ""
+    fi
+    # 
+    # Remove suffix
+    # 
+    if [[ x"${PdBIUVT_SAVE[tk]}" == x*".uvt" ]]; then
+        PdBIUVT_SAVE[tk]=$(echo "${PdBIUVT_SAVE[tk]}" | sed -e 's/\.uvt$//g')
+    fi
+    if [[ x"${PdBIUVT_SAVE[tk]}" == x*".UVT" ]]; then
+        PdBIUVT_SAVE[tk]=$(echo "${PdBIUVT_SAVE[tk]}" | sed -e 's/\.UVT$//g')
+    fi
+    # 
+    # Backup existing output file
+    # 
+    if [[ -f "${PdBIUVT_SAVE[tk]}.uvt" ]]; then
+        echo "Warning! Found existing \"${PdBIUVT_SAVE[tk]}.uvt\"! Backup as \"${PdBIUVT_SAVE[tk]}.uvt.backup\"!"
+        mv "${PdBIUVT_SAVE[tk]}.uvt" "${PdBIUVT_SAVE[tk]}.uvt.backup"
+    fi
+    
+    
+    
+    # 
+    # Deal with the input uv data file
+    # 
+    # Prepare CRANGE list
+    # 
+    if [[ ${PdBIUVT_CMIN[0]} -gt 0 && ${PdBIUVT_CMAX[0]} -gt 0 ]]; then
+        PdBIUVT_CAGE="${PdBIUVT_CMIN[0]} ${PdBIUVT_CMAX[0]}"
     else
         PdBIUVT_CAGE="$PdBIUVT_CHAN_MIN $PdBIUVT_CHAN_MAX"
     fi
-done
-for (( i=1; i<${#PdBIUVT_CMIN[@]}; i++ )); do
-    if [[ ${PdBIUVT_CMIN[i]} -gt 0 && ${PdBIUVT_CMAX[i]} -gt 0 ]]; then
-        PdBIUVT_CAGE="$PdBIUVT_CAGE ${PdBIUVT_CMIN[i]} ${PdBIUVT_CMAX[i]}"
-        ##echo "CRANGE: $PdBIUVT_CAGE"
+    for (( i=1; i<${#PdBIUVT_CMIN[@]}; i++ )); do
+        if [[ ${PdBIUVT_CMIN[i]} -gt 0 && ${PdBIUVT_CMAX[i]} -gt 0 ]]; then
+            PdBIUVT_CAGE="$PdBIUVT_CAGE ${PdBIUVT_CMIN[i]} ${PdBIUVT_CMAX[i]}"
+        fi
+    done
+    echo ""
+    echo "CRANGE: $PdBIUVT_CAGE"
+    echo ""
+    # 
+    # prepare gildas/mapping init and script and run
+    # 
+    PdBIUVT_TEMP_INIT="${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}.uv_average.init"
+    PdBIUVT_TEMP_EXEC="${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}.uv_average.map"
+    PdBIUVT_TEMP_LOGT="${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}.uv_average.log"
+    echo  '! '                                                                                          >  $PdBIUVT_TEMP_INIT
+    echo  '! Task UV_AVERAGE'                                                                           >> $PdBIUVT_TEMP_INIT
+    echo  '!'                                                                                           >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "Input UV table"    UV_INPUT$  "'"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"'"' >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "Output UV table"  UV_OUTPUT$  "'"${PdBIUVT_SAVE[tk]}.uvt"'"'                 >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\VALUES    "Channel range"       RANGES$   '"$PdBIUVT_CAGE"                              >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "Type of range"        CTYPE$  "'"CHANNEL"'"'                                 >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\GO'                                                                                     >> $PdBIUVT_TEMP_INIT
+    echo  "run uv_average $PdBIUVT_TEMP_INIT /NOWINDOW" > $PdBIUVT_TEMP_EXEC
+    echo  "@$PdBIUVT_TEMP_EXEC | mapping > $PdBIUVT_TEMP_LOGT"
+    echo  "@$PdBIUVT_TEMP_EXEC" | mapping > "$PdBIUVT_TEMP_LOGT"
+    # 
+    if [[ -f "${PdBIUVT_SAVE[tk]}.uvt" ]]; then
+        echo "Successufully saved to \"${PdBIUVT_SAVE[tk]}.uvt\"!"
+        echo "--"
+        if [[ -f "$PdBIUVT_TEMP_LOGT" ]]; then
+            rm "$PdBIUVT_TEMP_LOGT"
+        fi
+    else
+        echo "Error! Failed to run GILDAS MAPPING UV_SUBTRACT and output \"${PdBIUVT_SAVE[tk]}.uvt\"!"
+        echo "Please check \"$PdBIUVT_TEMP_LOGT\"!"
+        exit 1
     fi
+    
+    
 done
-echo ""
-echo "CRANGE: $PdBIUVT_CAGE"
-echo ""
-# 
-# prepare gildas/mapping init and script and run
-# 
-PdBIUVT_TEMP_INIT="tmp_doUVAVERAGE.init"
-PdBIUVT_TEMP_EXEC="tmp_doUVAVERAGE.map"
-PdBIUVT_TEMP_LOGT="tmp_doUVAVERAGE.log"
-echo  '! '                                                                                       > $PdBIUVT_TEMP_INIT
-echo  '! Task UV_AVERAGE'                                                                       >> $PdBIUVT_TEMP_INIT
-echo  '! 6 parameters needed for all functions'                                                 >> $PdBIUVT_TEMP_INIT
-echo  '!'                                                                                       >> $PdBIUVT_TEMP_INIT
-echo  'TASK\CHARACTER "Input UV table"                   UV_INPUT$      "'$PdBIUVT_NAME'.uvt"'  >> $PdBIUVT_TEMP_INIT
-echo  'TASK\CHARACTER "Output UV table"                  UV_OUTPUT$     "'$PdBIUVT_SAVE'.uvt"'  >> $PdBIUVT_TEMP_INIT
-echo  'TASK\VALUES    "Channel range"                    RANGES$         '$PdBIUVT_CAGE         >> $PdBIUVT_TEMP_INIT
-echo  'TASK\CHARACTER "Type of range"                    CTYPE$         "'"CHANNEL"'"'          >> $PdBIUVT_TEMP_INIT
-echo  'TASK\GO'                                                                                 >> $PdBIUVT_TEMP_INIT
-echo  "let name $PdBIUVT_NAME"                        > $PdBIUVT_TEMP_EXEC
-echo  "let type lmv"                                 >> $PdBIUVT_TEMP_EXEC
-#echo  "let size $PdBIUVT_SIZE"                       >> $PdBIUVT_TEMP_EXEC
-echo  "run uv_average $PdBIUVT_TEMP_INIT /NOWINDOW"  >> $PdBIUVT_TEMP_EXEC
-echo  '@tmp_doUVAVERAGE.map  |  mapping  > '"$PdBIUVT_TEMP_LOGT"
-echo  '@tmp_doUVAVERAGE.map' |  mapping  >  "$PdBIUVT_TEMP_LOGT"
-# 
-# 
-echo 
-tail -n 1 "$PdBIUVT_TEMP_LOGT"
-echo "I-RUN,  Output to $PdBIUVT_SAVE.uvt"
-echo 
 
-cp "$PdBIUVT_TEMP_INIT" "$PdBIUVT_SAVE.init"
-cp "$PdBIUVT_TEMP_EXEC" "$PdBIUVT_SAVE.map"
-cp "$PdBIUVT_TEMP_LOGT" "$PdBIUVT_SAVE.log"
+
+
+
+
+
+
+
+
+
+
+
+
+
 

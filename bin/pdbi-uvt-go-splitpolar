@@ -8,6 +8,7 @@
 #    2016-07-10 <TODO> what if multi-stokes?
 #    2017-02-19 rewritten, beautified, used "pdbi-uvt-core-arg"
 #    2017-03-30 using "pdbi-uvt-core-arg-v4"
+#    2017-03-30 using "pdbi-uvt-core-arg-v5"
 # 
 # 
 
@@ -18,27 +19,22 @@
 # 
 usage() {
     echo "Usage: "
-    echo "  pdbi-uvt-go-splitpolar -name PdBIUVT_NAME.uvt -out PdBIUVT_SAVE.uvt"
+    echo "  pdbi-uvt-go-splitpolar -name NAME.uvt -out SAVE.uvt"
     echo ""
 }
 
 
 
-#
-# readlink
 # 
-PdBIUVT_DIR=$(dirname $(perl -MCwd -e 'print Cwd::abs_path shift' "${BASH_SOURCE[0]}"))
-
-
-
+# SOURCE pdbi-uvt-core-arg
 # 
-# Read input parameters by calling "pdbi-uvt-core-arg"
-# 
-if [[ -f "$PdBIUVT_DIR/pdbi-uvt-core-arg-v4" ]]; then
-    source "$PdBIUVT_DIR/pdbi-uvt-core-arg-v4" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" "$@"
 else
-    echo ""; echo "Error! Could not find \"$PdBIUVT_DIR/pdbi-uvt-core-arg-v4\"! Please contact software supplier!"; echo ""
-    exit
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5\"!"
+    echo ""
+    exit 1
 fi
 
 
@@ -46,87 +42,114 @@ fi
 # 
 # Check input parameters -- uvt file name
 # 
-if [[ x"$PdBIUVT_NAME" == x ]]; then
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]]; then
     usage; exit
 fi
 
 
 
-
-
-
-
-
-
-
-
 # 
-# Set default output file as
-# "$PdBIUVT_SAVE.uvt.go.uvmap.eps"
+# Loop input uv tables
 # 
-if [[ x"$PdBIUVT_SAVE" == x || x"$PdBIUVT_SAVE" == x"tmp_pdbi_uvt" ]]; then 
-    PdBIUVT_SAVE="${PdBIUVT_NAME}_SP"
-    echo ""; echo "Warning! Output name was not given, setting to \"$PdBIUVT_SAVE.uvt\""; echo ""
-fi
+for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
+    # 
+    # if type is uvtable
+    # 
+    if [[ ${PdBIUVT_TYPE[i]} == "uvt" || ${PdBIUVT_TYPE[i]} == "UVT" ]]; then
+        # 
+        # Set default output file name
+        # 
+        if [[ ${#PdBIUVT_SAVE[@]} -le $i ]]; then
+            PdBIUVT_SAVE+=("${PdBIUVT_NAME[i]}_SP")
+        fi
+        if [[ x"${PdBIUVT_SAVE[i]}" == x || x"${PdBIUVT_SAVE[i]}" == x"tmp_pdbi_uvt" ]]; then 
+            PdBIUVT_SAVE[i]="${PdBIUVT_NAME[i]}_SP"
+            echo ""; echo "Warning! Output name was not given for the input uvtable \"${PdBIUVT_NAME[i]}\", setting to \"${PdBIUVT_SAVE[i]}.uvt\""; echo ""
+        fi
+        # 
+        # Remove suffix
+        # 
+        if [[ x"${PdBIUVT_SAVE[i]}" == x*".uvt" ]]; then
+            PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.uvt$//g')
+        fi
+        if [[ x"${PdBIUVT_SAVE[i]}" == x*".UVT" ]]; then
+            PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.UVT$//g')
+        fi
+        # 
+        # Backup existing output file
+        # 
+        if [[ -f "${PdBIUVT_SAVE[i]}.uvt" ]]; then
+            echo "Warning! Found existing \"${PdBIUVT_SAVE[i]}.uvt\"! Backup as \"${PdBIUVT_SAVE[i]}.uvt.backup\"!"
+            mv "${PdBIUVT_SAVE[i]}.uvt" "${PdBIUVT_SAVE[i]}.uvt.backup"
+        fi
+        # 
+        # Deal with the input uv table file
+        # Output to mapping script
+        # "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uvt.splitpolar.script"
+        # 
+        PdBIUVT_EXE="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_splitpolar.script"
+        PdBIUVT_LOG="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_splitpolar.log"
+        PdBIUVT_INI="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_splitpolar.init"
+        
+        echo "Checking \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\""
+        
+        if [[ ! -f "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.header.txt" ]]; then
+            echo "header ${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}" | mapping -nw -nl > "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.header.txt"
+        fi
+        
+        if [[ -f "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.header.txt" ]]; then
+            PdBIUVT_Stokes=$(grep "Stokes: " "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.header.txt" | sed -E 's/.*Stokes: *([0-9]*) *.*/\1/g')
+        else
+            echo ""; echo "Error! Failed to run \"header ${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" in GILDAS mapping and output \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.header.txt\"!"; echo ""
+            exit 1
+        fi
+        
+        if [[ $PdBIUVT_Stokes -le 1 ]]; then
+            echo "Warning! The number of stokes in \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" is already one, no need to split and merge!"
+        else
+            echo "Splitting \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" polarizations and merging into a single polarization uv data file"
+            echo "TASK\\FILE      \"\"      INPUT\$ \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\""  >  "$PdBIUVT_INI"
+            echo "TASK\\FILE      \"\"     OUTPUT\$ \"${PdBIUVT_SAVE[i]}.uvt\""                 >> "$PdBIUVT_INI"
+            echo "TASK\\CHARACTER \"\"     STOKES\$ \"NONE\""                                   >> "$PdBIUVT_INI"
+            echo "TASK\\GO"                                                                     >> "$PdBIUVT_INI"
+            echo "run uv_splitpolar $PdBIUVT_INI /NOWINDOW" > "$PdBIUVT_EXE"
+            echo "Running @$PdBIUVT_EXE in GILDAS mapping"
+            echo "@$PdBIUVT_EXE | mapping -nw -nl > $PdBIUVT_LOG"
+            echo "@$PdBIUVT_EXE" | mapping -nw -nl > "$PdBIUVT_LOG"
+            # 
+            # Check final output
+            # 
+            if [[ -f "${PdBIUVT_SAVE[i]}.uvt" ]]; then
+                echo "Successufully saved to \"${PdBIUVT_SAVE[i]}.uvt\"!"
+                echo "--"
+                if [[ -f "$PdBIUVT_LOG" ]]; then
+                    rm "$PdBIUVT_LOG"
+                fi
+            else
+                echo "Error! Failed to run GILDAS MAPPING UV_SPLITPOLAR and output \"${PdBIUVT_SAVE[i]}.uvt\"!"
+                echo "Please check \"$PdBIUVT_LOG\"!"
+                exit 1
+            fi
+        fi
+    
+    else
+        
+        echo ""; echo "Skipping \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" because it is not *.uvt or *.UVT!"; echo ""
+      
+    fi
+    
+done
 
-# 
-# Remove suffix
-# 
-if [[ x"$PdBIUVT_SAVE" == x*".uvt" ]]; then
-    PdBIUVT_SAVE=$(echo "$PdBIUVT_SAVE" | sed -e 's/\.uvt$//g')
-fi
-if [[ x"$PdBIUVT_SAVE" == x*".UVT" ]]; then
-    PdBIUVT_SAVE=$(echo "$PdBIUVT_SAVE" | sed -e 's/\.UVT$//g')
-fi
-
-# 
-# Backup existing output file
-# 
-if [[ -f "$PdBIUVT_SAVE.uvt" ]]; then
-    echo "Warning! Found existing \"$PdBIUVT_SAVE.uvt\"! Backup as \"$PdBIUVT_SAVE.uvt.backup\"!"
-    mv "$PdBIUVT_SAVE.uvt" "$PdBIUVT_SAVE.uvt.backup"
-fi
 
 
 
-# 
-# Deal with the input uvfits file
-# Output to mapping script
-# "$PdBIUVT_NAME.$PdBIUVT_TYPE.uvt.splitpolar.script"
-# 
-PdBIUVT_EXE="$PdBIUVT_NAME.$PdBIUVT_TYPE.splitpolar.script"
-PdBIUVT_LOG="$PdBIUVT_NAME.$PdBIUVT_TYPE.splitpolar.log"
-PdBIUVT_INI="$PdBIUVT_NAME.$PdBIUVT_TYPE.splitpolar.init"
-
-echo "Checking \"$PdBIUVT_NAME.$PdBIUVT_TYPE\""
-
-if [[ ! -f "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" ]]; then
-    echo "header $PdBIUVT_NAME.$PdBIUVT_TYPE" | mapping > "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt"
-fi
-
-if [[ -f "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" ]]; then
-    PdBIUVT_Stokes=$(grep "Stokes: " "$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt" | sed -E 's/.*Stokes: *([0-9]*) *.*/\1/g')
-else
-    echo ""; echo "Error! Could not run \"header $PdBIUVT_NAME.$PdBIUVT_TYPE\" in GILDAS mapping and create \"$PdBIUVT_NAME.$PdBIUVT_TYPE.header.txt\"!"; echo ""; exit
-fi
-
-if [[ $PdBIUVT_Stokes -le 1 ]]; then
-    echo "Warning! The number of stokes in \"$PdBIUVT_NAME.$PdBIUVT_TYPE\" is already one, no need to split and merge!"
-else
-    echo "Splitting \"$PdBIUVT_NAME.$PdBIUVT_TYPE\" polarizations and merging into single data"
-    echo "TASK\\FILE      \"\"      INPUT\$ \"$PdBIUVT_NAME.$PdBIUVT_TYPE\""  >  "$PdBIUVT_INI"
-    echo "TASK\\FILE      \"\"     OUTPUT\$ \"$PdBIUVT_SAVE.uvt\""            >> "$PdBIUVT_INI"
-    echo "TASK\\CHARACTER \"\"     STOKES\$ \"NONE\""                         >> "$PdBIUVT_INI"
-    echo "TASK\\GO"                                                           >> "$PdBIUVT_INI"
-    echo "run uv_splitpolar $PdBIUVT_INI /NOWINDOW"  >  "$PdBIUVT_EXE"
-    echo "Running @$PdBIUVT_EXE in GILDAS mapping"
-    echo "@$PdBIUVT_EXE" | mapping > "$PdBIUVT_LOG"
-    echo "@$PdBIUVT_EXE" | mapping > "$PdBIUVT_LOG"
-    #echo "header $PdBIUVT_SAVE.uvt" | mapping > "$PdBIUVT_SAVE.uvt.header.txt"
-fi
 
 
 
-echo "Done!"
+
+
+
+
+
 
 

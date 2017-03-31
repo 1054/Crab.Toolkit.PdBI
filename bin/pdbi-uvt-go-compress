@@ -3,118 +3,134 @@
 # Input uvtablefile and average channel width
 # Output compressed uvtablefile
 # 
-PdBIUVT_NAME=()
-PdBIUVT_SAVE=()
-PdBIUVT_WCHN=() # the average channel width
-PdBIUVT_SIZE="" # useless here
-# LANG
-LANG=C
-
+# Last update:
+#    2017-03-30 using "pdbi-uvt-core-arg-v5"
+# 
+# 
 
 
 
 # 
-# Read input parameters
+# Uage
 # 
-PdBIUVT_GOOD=0; if [[ "$#" -gt 0 ]]; then PdBIUVT_GOOD=1; fi
-PdBIUVT_RPAR=""
-while [[ "$#" -gt 0 ]]; do
-    #echo $1 "$#"
-    case $1 in
-          "-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR=""; PdBIUVT_SIZE="$1";;
-          "-name") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="name";;
-          "-save") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="save";;
-           "-out") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="save";;
-         "-width") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="chanwidth";;
-    esac
-    if [[ "$PdBIUVT_RPAR" == "name" ]];  then 
-        PdBIUVT_NAME=("${PdBIUVT_NAME[@]}" "$1")
-    fi
-    if [[ "$PdBIUVT_RPAR" == "save" ]];  then 
-        PdBIUVT_SAVE=("${PdBIUVT_SAVE[@]}" "$1")
-    fi
-    if [[ "$PdBIUVT_RPAR" == "chanwidth" ]];  then 
-        PdBIUVT_WCHN=("${PdBIUVT_WCHN[@]}" "$1")
-    fi
-    shift
-done
-# 
-# Check input parameters -- if not passed then print usage and exit
-# 
-if [[ $PdBIUVT_GOOD -eq 0 ]]; then
+usage() {
     echo "Usage: "
-    echo "   pdbi-uvt-go-compress -name UV_TABLE_NAME_1 -width 8 -out UV_TABLE_NEW"
-    exit
-fi
+    echo "  pdbi-uvt-go-compress -name UV_TABLE_NAME_1 -width 8 -out UV_TABLE_NEW"
+    echo ""
+}
+
+
+
 # 
-# Print input uvtable list
+# SOURCE pdbi-uvt-core-arg
 # 
-echo PdBIUVT_NAME=${PdBIUVT_NAME[*]}
-echo PdBIUVT_SAVE=${PdBIUVT_SAVE[*]}
-# 
-# Revise input parameters
-# 
-for (( PdBIUVT_ITER = 0; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ )); do
-    # -- remove the suffix of the input uvtable name, and test whether the file exists
-    if [[ "${PdBIUVT_NAME[$PdBIUVT_ITER]}" == *".uvt" ]]; then
-        PdBIUVT_NAME[$PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[$PdBIUVT_ITER]}" | sed -E 's/[.]uvt$//g')
-    fi
-    if [[ ! -f "${PdBIUVT_NAME[$PdBIUVT_ITER]}.uvt" ]]; then
-        echo "Error! \"${PdBIUVT_NAME[$PdBIUVT_ITER]}.uvt\" was not found! Exit!"
-        exit
-    fi
-    # -- set output uvtable name, and check whether it exists
-    if [[ ${#PdBIUVT_SAVE[@]} -le $PdBIUVT_ITER ]]; then
-        echo "Warning! Output uv table name not defined, we will set the output file as ${PdBIUVT_NAME[$PdBIUVT_ITER]}-Compressed.uvt!"
-        PdBIUVT_SAVE=(${PdBIUVT_SAVE[@]} ${PdBIUVT_NAME[$PdBIUVT_ITER]}-Compressed)
-    fi
-    if [[ "${PdBIUVT_SAVE[$PdBIUVT_ITER]}" == *".uvt" ]]; then
-        PdBIUVT_SAVE[$PdBIUVT_ITER]=$(echo ${PdBIUVT_SAVE[$PdBIUVT_ITER]} | sed -E 's/[.]uvt$//g')
-    fi
-    # TODO will overwrite, give warning?
-done
-# -- check output uvt name
-if [[ ${#PdBIUVT_SAVE[@]} -eq 0 ]]; then
-    echo "Error! Output uv table name not defined!"
-    exit 1
-fi
-if [[ ${#PdBIUVT_SAVE[@]} -ne ${#PdBIUVT_NAME[@]} ]]; then
-    echo "Error! Output uv table number does not match the input uv table number!"
-    exit 1
-fi
-if [[ ${#PdBIUVT_WCHN[@]} -ne ${#PdBIUVT_NAME[@]} ]]; then
-    echo "Error! The input channel width number does not match the input uv table number!"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" "$@"
+else
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5\"!"
+    echo ""
     exit 1
 fi
 
 
 
 # 
-# loop input uv tables to compress each of them
+# Check input parameters -- uvt file name, ra dec
 # 
-for (( PdBIUVT_ITER = 0; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ )); do
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 || ${#PdBIUVT_UVCOMPRESS_NC[@]} -eq 0 ]]; then
+    usage; exit
+fi
+
+
+
+# 
+# Loop input uv tables
+# 
+for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
     # 
-    # prepare gildas/mapping init and script and run
+    # if type is uvtable
     # 
-    # 
-    PdBIUVT_TEMP_INIT="${PdBIUVT_SAVE[$PdBIUVT_ITER]}.init"
-    PdBIUVT_TEMP_EXEC="${PdBIUVT_SAVE[$PdBIUVT_ITER]}.map"
-    PdBIUVT_TEMP_LOGT="${PdBIUVT_SAVE[$PdBIUVT_ITER]}.log"
-    echo  '! '                                                                                               > $PdBIUVT_TEMP_INIT
-    echo  '! Task UV_COMPRESS'                                                                              >> $PdBIUVT_TEMP_INIT
-    echo  '! 3 parameters needed for all functions'                                                         >> $PdBIUVT_TEMP_INIT
-    echo  '!'                                                                                               >> $PdBIUVT_TEMP_INIT
-    echo  'TASK\CHARACTER "UV table 1"                  UV_INPUT$      "'${PdBIUVT_NAME[$PdBIUVT_ITER]}'"'  >> $PdBIUVT_TEMP_INIT
-    echo  'TASK\CHARACTER "UV table out"               UV_OUTPUT$      "'${PdBIUVT_SAVE[$PdBIUVT_ITER]}'"'  >> $PdBIUVT_TEMP_INIT
-    echo  'TASK\INTEGER   "Channel width"                     NC$       ' ${PdBIUVT_WCHN[$PdBIUVT_ITER]}    >> $PdBIUVT_TEMP_INIT
-    echo  'TASK\GO'                                                                                         >> $PdBIUVT_TEMP_INIT
-    echo  "run uv_compress $PdBIUVT_TEMP_INIT /NOWINDOW"  >> $PdBIUVT_TEMP_EXEC
-    echo  "@$PdBIUVT_TEMP_EXEC  |  mapping  > ""$PdBIUVT_TEMP_LOGT"
-    echo  "@$PdBIUVT_TEMP_EXEC" |  mapping  >  "$PdBIUVT_TEMP_LOGT"
+    if [[ ${PdBIUVT_TYPE[i]} == "uvt" || ${PdBIUVT_TYPE[i]} == "UVT" ]]; then
+        # 
+        # Set default output file name
+        # 
+        if [[ ${#PdBIUVT_SAVE[@]} -le $i ]]; then
+            PdBIUVT_SAVE+=("${PdBIUVT_NAME[i]}-Compressed")
+        fi
+        if [[ x"${PdBIUVT_SAVE[i]}" == x || x"${PdBIUVT_SAVE[i]}" == x"tmp_pdbi_uvt" ]]; then 
+            PdBIUVT_SAVE[i]="${PdBIUVT_NAME[i]}-Compressed"
+            echo ""; echo "Warning! Output name was not given for the input uvtable \"${PdBIUVT_NAME[i]}\", setting to \"${PdBIUVT_SAVE[i]}\""; echo ""
+        fi
+        # 
+        # Remove suffix
+        # 
+        if [[ x"${PdBIUVT_SAVE[i]}" == x*".uvt" ]]; then
+            PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.uvt$//g')
+        fi
+        if [[ x"${PdBIUVT_SAVE[i]}" == x*".UVT" ]]; then
+            PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.UVT$//g')
+        fi
+        # 
+        # Backup existing output file
+        # 
+        if [[ -f "${PdBIUVT_SAVE[i]}.uvt" ]]; then
+            echo "Warning! Found existing \"${PdBIUVT_SAVE[i]}.uvt\"! Backup as \"${PdBIUVT_SAVE[i]}.uvt.backup\"!"
+            mv "${PdBIUVT_SAVE[i]}.uvt" "${PdBIUVT_SAVE[i]}.uvt.backup"
+        fi
+        # 
+        # check input channel width
+        # 
+        if [[ ${#PdBIUVT_UVCOMPRESS_NC[@]} -le $i ]]; then
+            TEMP_NC="${PdBIUVT_UVCOMPRESS_NC[${#PdBIUVT_UVCOMPRESS_NC[@]}-1]}" # repeat the last input channel width if the input channel width number is less than uvtable number
+        else
+            TEMP_NC="${PdBIUVT_UVCOMPRESS_NC[i]}"
+        fi
+        # 
+        # prepare gildas/mapping init and script and run
+        # 
+        # 
+        PdBIUVT_TEMP_INIT="${PdBIUVT_SAVE[i]}.init"
+        PdBIUVT_TEMP_EXEC="${PdBIUVT_SAVE[i]}.map"
+        PdBIUVT_TEMP_LOGT="${PdBIUVT_SAVE[i]}.log"
+        echo  '! '                                                                                               > $PdBIUVT_TEMP_INIT
+        echo  '! Task UV_COMPRESS'                                                                              >> $PdBIUVT_TEMP_INIT
+        echo  '! 3 parameters needed for all functions'                                                         >> $PdBIUVT_TEMP_INIT
+        echo  '!'                                                                                               >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\CHARACTER "UV table 1"                  UV_INPUT$      "'${PdBIUVT_NAME[i]}'"'              >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\CHARACTER "UV table out"               UV_OUTPUT$      "'${PdBIUVT_SAVE[i]}'"'              >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\INTEGER   "Channel width"                     NC$       ' ${TEMP_NC}                        >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\GO'                                                                                         >> $PdBIUVT_TEMP_INIT
+        echo  "run uv_compress $PdBIUVT_TEMP_INIT /NOWINDOW" > $PdBIUVT_TEMP_EXEC
+        echo  "@$PdBIUVT_TEMP_EXEC | mapping > $PdBIUVT_TEMP_LOGT"
+        echo  "@$PdBIUVT_TEMP_EXEC" | mapping > "$PdBIUVT_TEMP_LOGT"
+        
+        if [[ -f "${PdBIUVT_SAVE[i]}.uvt" ]]; then
+            echo "Successufully saved to \"${PdBIUVT_SAVE[i]}.uvt\"!"
+            echo "--"
+            if [[ -f "$PdBIUVT_TEMP_LOGT" ]]; then
+                rm "$PdBIUVT_TEMP_LOGT"
+            fi
+        else
+            echo "Error! Failed to run GILDAS MAPPING UV_SUBTRACT and output \"${PdBIUVT_SAVE[i]}.uvt\"!"
+            echo "Please check \"$PdBIUVT_TEMP_LOGT\"!"
+            exit 1
+        fi
     
-    echo "Successufully saved to ${PdBIUVT_SAVE[$PdBIUVT_ITER]}.uvt"
+    fi
     
 done
+
+
+
+
+
+
+
+
+
+
+
 
 
 

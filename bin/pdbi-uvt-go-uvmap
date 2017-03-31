@@ -5,6 +5,7 @@
 # 
 # Last update:
 #    2017-02-19 rewritten, beautified, used "pdbi-uvt-core-arg"
+#    2017-03-30 using "pdbi-uvt-core-arg-v5"
 # 
 # 
 
@@ -21,21 +22,16 @@ usage() {
 
 
 
-#
-# readlink current dir
 # 
-PdBIUVT_DIR=$(perl -MCwd -e 'print Cwd::abs_path shift' $(dirname "${BASH_SOURCE[0]}"))
-
-
-
+# SOURCE pdbi-uvt-core-arg
 # 
-# Read input parameters by calling "pdbi-uvt-core-arg"
-# 
-if [[ -f "$PdBIUVT_DIR/pdbi-uvt-core-arg-v3" ]]; then
-    source "$PdBIUVT_DIR/pdbi-uvt-core-arg-v3" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" "$@"
 else
-    echo ""; echo "Error! Could not find \"$PdBIUVT_DIR/pdbi-uvt-core-arg\"! Please contact software supplier!"; echo ""
-    exit
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5\"!"
+    echo ""
+    exit 1
 fi
 
 
@@ -43,75 +39,114 @@ fi
 # 
 # Check input parameters -- uvt file name
 # 
-if [[ x"$PdBIUVT_NAME" == x ]]; then
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]]; then
     usage; exit
 fi
 
 
 
-
-
-
-
-
-
-
-
-
-
 # 
-# Deal with the input uvt file
-# Output to mapping script
-# "$PdBIUVT_NAME.uvt.go.uvmap.script"
+# Loop input uv tables
 # 
-PdBIUVT_EXE="$PdBIUVT_NAME.$PdBIUVT_TYPE.go.uvmap.script"
-PdBIUVT_LOG="$PdBIUVT_NAME.$PdBIUVT_TYPE.go.uvmap.log"
+for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
+    # 
+    # if type is uvtable
+    # 
+    if [[ ${PdBIUVT_TYPE[i]} == "uvt" || ${PdBIUVT_TYPE[i]} == "UVT" ]]; then
+        # 
+        # Set default output file name
+        # 
+        if [[ ${#PdBIUVT_SAVE[@]} -le $i ]]; then
+            PdBIUVT_SAVE+=("${PdBIUVT_NAME[i]}")
+        fi
+        if [[ x"${PdBIUVT_SAVE[i]}" == x || x"${PdBIUVT_SAVE[i]}" == x"tmp_pdbi_uvt" ]]; then 
+            PdBIUVT_SAVE[i]="${PdBIUVT_NAME[i]}"
+            echo ""; echo "Warning! Output name was not given for the input uvtable \"${PdBIUVT_NAME[i]}\", setting to \"${PdBIUVT_SAVE[i]}\""; echo ""
+        fi
+        # 
+        # Remove suffix
+        # 
+        if [[ x"${PdBIUVT_SAVE[i]}" == x*".eps" ]]; then
+            PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.eps$//g')
+        fi
+        if [[ x"${PdBIUVT_SAVE[i]}" == x*".EPS" ]]; then
+            PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.EPS$//g')
+        fi
+        # 
+        # Backup existing output file
+        # 
+        if [[ -f "${PdBIUVT_SAVE[i]}.eps" ]]; then
+            echo "Warning! Found existing \"${PdBIUVT_SAVE[i]}.eps\"! Backup as \"${PdBIUVT_SAVE[i]}.eps.backup\"!"
+            mv "${PdBIUVT_SAVE[i]}.eps" "${PdBIUVT_SAVE[i]}.eps.backup"
+        fi
+        # 
+        # 
+        # Deal with the input uvt file
+        # Output to mapping script
+        # "$PdBIUVT_NAME.uvt.go.uvmap.script"
+        # 
+        PdBIUVT_EXE="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_map.script"
+        PdBIUVT_LOG="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_map.log"
+        PdBIUVT_EPS="${PdBIUVT_SAVE[i]}"
+        
+        echo ""                                >  "$PdBIUVT_EXE"
+        echo ""                                >> "$PdBIUVT_EXE"
+        echo "let name \"${PdBIUVT_NAME[i]}\"" >> "$PdBIUVT_EXE"
+        
+        if [[ ${#PdBIUVT_SIZE[@]}     -gt 0 ]]; then echo "let size ${PdBIUVT_SIZE[0]}"          >> "$PdBIUVT_EXE"; PdBIUVT_EPS="${PdBIUVT_EPS}_FoV_"$(printf "%.0f" ${PdBIUVT_SIZE[0]})"_arcsec"; fi
+        if [[ ${#PdBIUVT_MAP_SIZE[@]} -gt 0 ]]; then echo "let map_size ${PdBIUVT_MAP_SIZE[0]}"  >> "$PdBIUVT_EXE"; fi
+        if [[ ${#PdBIUVT_MAP_CELL[@]} -gt 0 ]]; then echo "let map_cell ${PdBIUVT_MAP_CELL[0]}"  >> "$PdBIUVT_EXE"; fi
+        
+        echo "go uvmap"             >> "$PdBIUVT_EXE"
+        echo "go noise"             >> "$PdBIUVT_EXE"
+        echo "let spacing noise"    >> "$PdBIUVT_EXE"
+        echo "go view"              >> "$PdBIUVT_EXE"
+        
+        # 
+        # Overwrite or not
+        # 
+        if [[ "$PdBIUVT_OVERWRITE" == "YES" ]]; then
+            echo "hardcopy \"${PdBIUVT_EPS}.eps\" /overwrite"    >> "$PdBIUVT_EXE"
+            echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_EPS}.eps\""   >> "$PdBIUVT_EXE"
+        else
+            echo "hardcopy \"${PdBIUVT_EPS}.eps\""               >> "$PdBIUVT_EXE"
+            echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_EPS}.eps\""   >> "$PdBIUVT_EXE"
+        fi
+        
+        # 
+        # Run mapping script
+        # 
+        echo "@$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG"
+        
+        # 
+        # Check output
+        # 
+        if [[ -f "${PdBIUVT_EPS}.eps" ]]; then
+            echo "Successufully saved to \"${PdBIUVT_EPS}.eps\"!"
+            echo "--"
+            #if [[ -f "$PdBIUVT_LOG" ]]; then
+            #    rm "$PdBIUVT_LOG"
+            #fi
+        else
+            echo "Error! Failed to run GILDAS MAPPING UV_MAP and output \"${PdBIUVT_EPS}.eps\"!"
+            echo "Please check \"$PdBIUVT_LOG\"!"
+            exit 1
+        fi
+        
+    fi
+    
+done
 
-echo ""                        >  "$PdBIUVT_EXE"
-echo ""                        >> "$PdBIUVT_EXE"
-echo "let name $PdBIUVT_NAME"  >> "$PdBIUVT_EXE"
-
-i=0
-
-if [[ $i -lt ${#PdBIUVT_SIZE[@]}     ]]; then echo "let size ${PdBIUVT_SIZE[i]}"          >> "$PdBIUVT_EXE"; fi
-if [[ $i -lt ${#PdBIUVT_MAP_SIZE[@]} ]]; then echo "let map_size ${PdBIUVT_MAP_SIZE[i]}"  >> "$PdBIUVT_EXE"; fi
-if [[ $i -lt ${#PdBIUVT_MAP_CELL[@]} ]]; then echo "let map_cell ${PdBIUVT_MAP_CELL[i]}"  >> "$PdBIUVT_EXE"; fi
-
-echo "go uvmap"             >> "$PdBIUVT_EXE"
-echo "go noise"             >> "$PdBIUVT_EXE"
-echo "let spacing noise"    >> "$PdBIUVT_EXE"
-echo "go view"              >> "$PdBIUVT_EXE"
-
-# Set default output file as
-# "$PdBIUVT_NAME.uvt.go.uvmap.eps"
-if [[ x"$PdBIUVT_SAVE" == x || x"$PdBIUVT_SAVE" == x"tmp_pdbi_uvt" ]]; then 
-    PdBIUVT_SAVE="$PdBIUVT_NAME.uvt.go.uvmap.eps"
-    echo ""; echo "Warning! Output name was not given, setting to \"$PdBIUVT_SAVE\""; echo ""
-fi
-
-# Set default output file extension as eps
-if [[ x"$PdBIUVT_SAVE" != x*".eps" ]]; then
-    PdBIUVT_SAVE="$PdBIUVT_SAVE.eps"
-fi
-
-# Overwrite or not
-if [[ "$PdBIUVT_OVERWRITE" == "YES" ]]; then
-    echo "hardcopy \"$PdBIUVT_SAVE\" /overwrite"    >> "$PdBIUVT_EXE"
-    echo "sys \"ps2pdf -dEPSCrop $PdBIUVT_SAVE\""   >> "$PdBIUVT_EXE"
-else
-    echo "hardcopy \"$PdBIUVT_SAVE\""               >> "$PdBIUVT_EXE"
-    echo "sys \"ps2pdf -dEPSCrop $PdBIUVT_SAVE\""   >> "$PdBIUVT_EXE"
-fi
-
-# Run mapping script
-echo "@$PdBIUVT_EXE" | mapping | tee "$PdBIUVT_LOG"
 
 
-echo ""
-echo "Output to $PdBIUVT_SAVE"
-echo ""
 
 
-echo "Done!"
+
+
+
+
+
+
+
 
 
