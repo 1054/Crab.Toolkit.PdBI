@@ -99,11 +99,11 @@ if [[ 1 == 1 ]]; then
     # remove empty item
     i=0
     while [[ $i -lt ${#CRAB_BIN_SETUP_PATH_LIST[@]} && ${#CRAB_BIN_SETUP_PATH_LIST[@]} -gt 0 ]]; do
+        echo "Debug: Checking CRAB_BIN_SETUP_PATH_LIST[$i]: \"${CRAB_BIN_SETUP_PATH_LIST[i]}\""
         if [[ -z "${CRAB_BIN_SETUP_PATH_LIST[i]}" ]]; then
             unset CRAB_BIN_SETUP_PATH_LIST[i]
         else
             i=$((i+1))
-            echo $i
         fi
     done
     if [[ $CRAB_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
