@@ -101,7 +101,7 @@ if [[ 1 == 1 ]]; then
     while [[ $i -lt ${#CRAB_BIN_SETUP_PATH_LIST[@]} && ${#CRAB_BIN_SETUP_PATH_LIST[@]} -gt 0 ]]; do
         echo "Debug: Checking CRAB_BIN_SETUP_PATH_LIST[$i]: \"${CRAB_BIN_SETUP_PATH_LIST[i]}\""
         if [[ -z "${CRAB_BIN_SETUP_PATH_LIST[i]}" ]]; then
-            unset CRAB_BIN_SETUP_PATH_LIST[i]
+            CRAB_BIN_SETUP_PATH_LIST=(${CRAB_BIN_SETUP_PATH_LIST[@]:0:$i} ${CRAB_BIN_SETUP_PATH_LIST[@]:$(($i+1))})
         else
             i=$((i+1))
         fi
