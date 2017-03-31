@@ -94,7 +94,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo "Checking \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\""
         
         if [[ ! -f "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.header.txt" ]]; then
-            echo "header ${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}" | mapping -nw -nl > "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.header.txt"
+            echo "header ${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}" | mapping -nw -nl | sed 's/[^[:print:]]//g' > "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.header.txt"
         fi
         
         if [[ -f "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.header.txt" ]]; then
