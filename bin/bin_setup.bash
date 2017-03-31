@@ -103,6 +103,7 @@ if [[ 1 == 1 ]]; then
             unset CRAB_BIN_SETUP_PATH_LIST[i]
         else
             i=$((i+1))
+            echo $i
         fi
     done
     if [[ $CRAB_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
