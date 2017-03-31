@@ -145,7 +145,7 @@ if [[ 1 == 1 ]]; then
     if [[ x"$CRAB_BIN_SETUP_PATH_TEXT" != x ]]; then
         declare $CRAB_BIN_SETUP_VARIABLE="$CRAB_BIN_SETUP_PATH_TEXT:."
     else
-        declare $CRAB_BIN_SETUP_VARIABLE=""
+        declare $CRAB_BIN_SETUP_VARIABLE="."
     fi
     # print sorted/dup-removed/cleared PATH
     if [[ $CRAB_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
