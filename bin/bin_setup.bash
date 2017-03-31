@@ -98,7 +98,7 @@ if [[ 1 == 1 ]]; then
     IFS=$Old_IFS
     # remove empty item
     i=0
-    while [[ $i -lt ${#CRAB_BIN_SETUP_PATH_LIST[@]} ]]; do
+    while [[ $i -lt ${#CRAB_BIN_SETUP_PATH_LIST[@]} && ${#CRAB_BIN_SETUP_PATH_LIST[@]} -gt 0 ]]; do
         if [[ -z "${CRAB_BIN_SETUP_PATH_LIST[i]}" ]]; then
             unset CRAB_BIN_SETUP_PATH_LIST[i]
         else
