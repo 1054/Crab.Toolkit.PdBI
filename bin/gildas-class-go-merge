@@ -141,6 +141,7 @@ for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do
             echo "DEFINE REAL INP_MERGE_RA"                             >> "$GILDAS_EXE"
             echo "DEFINE REAL INP_MERGE_DEC"                            >> "$GILDAS_EXE"
             echo "FILE IN \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\""    >> "$GILDAS_EXE"
+            echo "FIND"                                                 >> "$GILDAS_EXE"
             echo "IF (FOUND.GT.0) THEN"                                 >> "$GILDAS_EXE"
             echo "    GET FIRST"                                        >> "$GILDAS_EXE"
             echo "    LET INP_MERGE_RA 'R%HEAD%POS%LAM/pi*180'"         >> "$GILDAS_EXE"
