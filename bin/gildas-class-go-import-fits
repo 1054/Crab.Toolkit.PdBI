@@ -1,0 +1,126 @@
+#!/bin/bash
+# 
+# Input class_fits
+# Output 30m
+# 
+# Last update:
+#    2017-04-01 copied from "pdbi-uvt-go-import-uvfits"
+# 
+# 
+
+
+
+# 
+# Uage
+# 
+usage() {
+    echo "Usage: "
+    echo "  gildas-class-go-import-uvfits -name NAME.fits [NAME_2.fits [NAME_3.fits]]"
+    echo ""
+}
+
+
+
+# 
+# SOURCE pdbi-uvt-core-arg
+# 
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" "$@"
+else
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5\"!"
+    echo ""
+    exit 1
+fi
+
+
+
+# 
+# Check input parameters -- uvt file name, ra dec
+# 
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]]; then
+    usage; exit
+fi
+
+
+
+# 
+# Loop input uv fits
+# 
+for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
+    # 
+    # if type is uvfits
+    # 
+    if [[ ${PdBIUVT_TYPE[i]} == "fits" || ${PdBIUVT_TYPE[i]} == "FITS" ]]; then
+        # 
+        # Set default output file name
+        # 
+        if [[ ${#PdBIUVT_SAVE[@]} -le $i ]]; then
+            PdBIUVT_SAVE+=($(basename "${PdBIUVT_NAME[i]}"))
+            echo ""; echo "Warning! Output name was not given for the input uvfits \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\", setting to \"${PdBIUVT_SAVE[i]}.30m\""; echo ""
+        fi
+        if [[ x"${PdBIUVT_SAVE[i]}" == x ]]; then 
+            PdBIUVT_SAVE[i]=$(basename "${PdBIUVT_NAME[i]}")
+            echo ""; echo "Warning! Output name was not given for the input uvfits \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\", setting to \"${PdBIUVT_SAVE[i]}.30m\""; echo ""
+        fi
+        # 
+        # Remove suffix
+        # 
+        if [[ x"${PdBIUVT_SAVE[i]}" == x*".30m" ]]; then
+            PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.30m$//g')
+        fi
+        if [[ x"${PdBIUVT_SAVE[i]}" == x*".30m" ]]; then
+            PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.30m$//g')
+        fi
+        # 
+        # Backup existing output file
+        # 
+        if [[ -f "${PdBIUVT_SAVE[i]}.30m" ]]; then
+            echo "Warning! Found existing \"${PdBIUVT_SAVE[i]}.30m\"! Backup as \"${PdBIUVT_SAVE[i]}.30m.backup\"!"
+            mv "${PdBIUVT_SAVE[i]}.30m" "${PdBIUVT_SAVE[i]}.30m.backup"
+        fi
+        # 
+        # Deal with the input fits file
+        # Write GILDAS script and import fits into *.30m
+        # 
+        GILDAS_EXE="${PdBIUVT_SAVE[i]}.30m.import.fits.script"
+        GILDAS_LOG="${PdBIUVT_SAVE[i]}.30m.import.fits.log"
+        GILDAS_INI="${PdBIUVT_SAVE[i]}.30m.import.fits.init"
+        
+        echo "! " > "$GILDAS_EXE"
+        echo "! GILDAS CLASS script" >> "$GILDAS_EXE"
+        echo "! " >> "$GILDAS_EXE"
+        
+        echo "Converting \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" to \"${PdBIUVT_SAVE[i]}.30m\""
+        echo "FITS READ \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\"" >> "$GILDAS_EXE"
+        echo "FILE OUT \"${PdBIUVT_SAVE[i]} /single /overwrite\"" >> "$GILDAS_EXE"
+        echo "" >> "$GILDAS_EXE"
+        
+        
+        echo "Running @$GILDAS_EXE in GILDAS class"
+        echo "@$GILDAS_EXE" | class -nw -nl > "$GILDAS_LOG"
+        
+        
+        echo "Successfully saved to ${PdBIUVT_SAVE[i]}.30m!"
+        echo "--"
+        
+    fi
+    
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
