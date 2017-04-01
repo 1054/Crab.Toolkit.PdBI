@@ -24,31 +24,31 @@ fi
 
 if [[ -d "CrabIO/CrabFitsIO/CrabFitsHeader/" ]]; then
     cd CrabIO/CrabFitsIO/CrabFitsHeader/
-    g++ -static-libstdc++ main.cpp CrabFitsIO.cpp -o "$OutputDir"/CrabFitsHeader_linux_x86_64
+    g++ main.cpp CrabFitsIO.cpp -o "$OutputDir"/CrabFitsHeader_linux_x86_64
     cd ../../../
 fi
 
 if [[ -d "CrabIO/CrabFitsIO/CrabFitsImageArithmetic/" ]]; then
     cd CrabIO/CrabFitsIO/CrabFitsImageArithmetic/
-    g++ -static-libstdc++ main.cpp CrabFitsIO.cpp -o "$OutputDir"/CrabFitsImageArithmetic_linux_x86_64
+    g++ main.cpp CrabFitsIO.cpp -o "$OutputDir"/CrabFitsImageArithmetic_linux_x86_64
     cd ../../../
 fi
 
 if [[ -d "CrabIO/CrabFitsIO/CrabFitsImageCut/" ]]; then
     cd CrabIO/CrabFitsIO/CrabFitsImageCut/
-    g++ -static-libstdc++ main.cpp CrabFitsIO.cpp -o "$OutputDir"/CrabFitsImageCrop_linux_x86_64
+    g++ main.cpp CrabFitsIO.cpp -o "$OutputDir"/CrabFitsImageCrop_linux_x86_64
     cd ../../../
 fi
 
 if [[ -d "CrabIO/CrabTable/CrabTableReadColumn/" ]]; then
     cd CrabIO/CrabTable/CrabTableReadColumn/
-    g++ -static-libstdc++ main.cpp -o "$OutputDir"/CrabTableReadColumn_linux_x86_64
+    g++ main.cpp -o "$OutputDir"/CrabTableReadColumn_linux_x86_64
     cd ../../../
 fi
 
 if [[ -d "CrabIO/CrabTable/CrabTableReadInfo/" ]]; then
     cd CrabIO/CrabTable/CrabTableReadInfo/
-    g++ -static-libstdc++ main.cpp -o "$OutputDir"/CrabTableReadInfo_linux_x86_64
+    g++ main.cpp -o "$OutputDir"/CrabTableReadInfo_linux_x86_64
     cd ../../../
 fi
 
