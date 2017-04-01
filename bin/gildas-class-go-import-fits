@@ -96,6 +96,9 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo "FILE OUT \"${PdBIUVT_SAVE[i]}\" SINGLE /OVERWRITE" >> "$GILDAS_EXE"
         echo "WRITE" >> "$GILDAS_EXE"
         echo "" >> "$GILDAS_EXE"
+        echo "FILE IN \"${PdBIUVT_SAVE[i]}\"" >> "$GILDAS_EXE"
+        echo "FIND" >> "$GILDAS_EXE"
+        echo "" >> "$GILDAS_EXE"
         
         
         echo "Running @$GILDAS_EXE in GILDAS class"
