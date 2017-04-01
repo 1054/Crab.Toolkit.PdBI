@@ -150,6 +150,10 @@ for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do
             echo "    SAY \"Error! No spectrum found!\""                >> "$GILDAS_EXE"
             echo "ENDIF"                                                >> "$GILDAS_EXE"
         fi
+        echo "" >> "$GILDAS_EXE"
+        echo "SAY \"\"" >> "$GILDAS_EXE"
+        echo "SAY \"Registering to common position\" 'INP_MERGE_RA' 'INP_MERGE_DEC' /FORMAT A F0.12 F0.12" >> "$GILDAS_EXE"
+        echo "SAY \"\"" >> "$GILDAS_EXE"
         GILDAS_HAS_DEFINE_POSITION=1
     fi
     # 
