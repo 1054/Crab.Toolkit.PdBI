@@ -144,7 +144,7 @@ for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do
             echo "FIND"                                                 >> "$GILDAS_EXE"
             echo "IF (FOUND.GT.0) THEN"                                 >> "$GILDAS_EXE"
             echo "    GET FIRST"                                        >> "$GILDAS_EXE"
-            echo "    LET INP_MERGE_RA 'R%HEAD%POS%LAM/pi*180'"         >> "$GILDAS_EXE"
+            echo "    LET INP_MERGE_RA 'R%HEAD%POS%LAM/pi*24'"          >> "$GILDAS_EXE"
             echo "    LET INP_MERGE_DEC 'R%HEAD%POS%BET/pi*180'"        >> "$GILDAS_EXE"
             echo "ELSE"                                                 >> "$GILDAS_EXE"
             echo "    SAY \"Error! No spectrum found!\""                >> "$GILDAS_EXE"
