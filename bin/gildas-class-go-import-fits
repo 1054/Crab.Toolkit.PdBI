@@ -15,7 +15,7 @@
 # 
 usage() {
     echo "Usage: "
-    echo "  gildas-class-go-import-uvfits -name NAME.fits [NAME_2.fits [NAME_3.fits]]"
+    echo "  gildas-class-go-import-fits -name NAME.fits [NAME_2.fits [NAME_3.fits]]"
     echo ""
 }
 

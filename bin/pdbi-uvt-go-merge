@@ -113,7 +113,7 @@ for (( i=1; i<${#PdBIUVT_NAME[@]}; i++ )); do
         # prepare gildas/mapping init and script and run
         # 
         if [[ $i -eq 1 ]]; then 
-        PdBIUVT_TEMP_TAB1="${PdBIUVT_NAME[i-1]}.${PdBIUVT_TYPE[i]}"
+        PdBIUVT_TEMP_TAB1="${PdBIUVT_NAME[i-1]}.${PdBIUVT_TYPE[i-1]}"
         else
         PdBIUVT_TEMP_TAB1="${PdBIUVT_SAVE[0]}."$((i-1))".uvt"
         fi

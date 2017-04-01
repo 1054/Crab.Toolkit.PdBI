@@ -1,0 +1,190 @@
+#!/bin/bash
+# 
+# Input class_fits
+# Output 30m
+# 
+# Last update:
+#    2017-04-01 copied from "pdbi-uvt-go-merge"
+# 
+# 
+
+
+
+# 
+# Uage
+# 
+usage() {
+    echo "Usage: "
+    echo "  gildas-class-go-merge -name NAME.fits [NAME_2.fits [NAME_3.fits]]"
+    echo ""
+}
+
+
+
+# 
+# SOURCE pdbi-uvt-core-arg
+# 
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" "$@"
+else
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5\"!"
+    echo ""
+    exit 1
+fi
+
+
+
+# 
+# Check input parameters -- file name
+# 
+if [[ ${#PdBIUVT_NAME[@]} -le 1 ]]; then
+    usage; exit
+fi
+
+
+
+# 
+# Make sure weighting array has the same dimension as the name array
+# 
+while [[ ${#PdBIUVT_UVMERGE_WEIGHT[@]} -lt ${#PdBIUVT_NAME[@]} ]]; do
+    PdBIUVT_UVMERGE_WEIGHT+=("1.0")
+done
+while [[ ${#PdBIUVT_UVMERGE_FACTOR[@]} -lt ${#PdBIUVT_NAME[@]} ]]; do
+    PdBIUVT_UVMERGE_FACTOR+=("1.0")
+done
+
+
+
+# 
+# Set default output file name
+# 
+if [[ ${#PdBIUVT_SAVE[@]} -eq 0 ]]; then
+    PdBIUVT_SAVE+=("${PdBIUVT_NAME[0]}-Merged")
+    echo ""; echo "Warning! Output name was not given, setting to \"${PdBIUVT_SAVE[0]}.30m\""; echo ""
+fi
+if [[ x"${PdBIUVT_SAVE[0]}" == x || x"${PdBIUVT_SAVE[0]}" == x"tmp_pdbi_uvt" ]]; then 
+    PdBIUVT_SAVE[0]="${PdBIUVT_NAME[0]}-Merged"
+    echo ""; echo "Warning! Output name was not given, setting to \"${PdBIUVT_SAVE[0]}.30m\""; echo ""
+fi
+# 
+# Remove suffix
+# 
+if [[ x"${PdBIUVT_SAVE[0]}" == x*".30m" ]]; then
+    PdBIUVT_SAVE[0]=$(echo "${PdBIUVT_SAVE[0]}" | sed -e 's/\.30m$//g')
+fi
+if [[ x"${PdBIUVT_SAVE[0]}" == x*".30m" ]]; then
+    PdBIUVT_SAVE[0]=$(echo "${PdBIUVT_SAVE[0]}" | sed -e 's/\.30m$//g')
+fi
+# 
+# Backup existing output file
+# 
+if [[ -f "${PdBIUVT_SAVE[0]}.30m" ]]; then
+    echo "Warning! Found existing \"${PdBIUVT_SAVE[0]}.30m\"! Backup as \"${PdBIUVT_SAVE[0]}.30m.backup\"!"
+    mv "${PdBIUVT_SAVE[0]}.30m" "${PdBIUVT_SAVE[0]}.30m.backup"
+fi
+
+
+
+# 
+# Print input file list
+# 
+echo Input = ${PdBIUVT_NAME[*]}
+echo Output = ${PdBIUVT_SAVE[0]}
+
+
+
+# 
+# Prepare output GILDAS script
+# 
+GILDAS_EXE="${PdBIUVT_SAVE[0]}.30m.merge.script"
+GILDAS_LOG="${PdBIUVT_SAVE[0]}.30m.merge.log"
+GILDAS_INI="${PdBIUVT_SAVE[0]}.30m.merge.init"
+
+echo "! " > "$GILDAS_EXE"
+echo "! GILDAS CLASS script" >> "$GILDAS_EXE"
+echo "! " >> "$GILDAS_EXE"
+
+echo "FILE OUT ${PdBIUVT_SAVE[0]} SINGLE" >> "$GILDAS_EXE"
+
+
+
+# 
+# Loop each input 30m spectrum, i starts from 0.
+# 
+for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do
+    # 
+    # check common position
+    # 
+    if [[ $i -eq 1 ]]; then
+        if [[ ${#PdBIUVT_RAND_OBJT[@]} -gt 0 && ${#PdBIUVT_DECD_OBJT[@]} -gt 0 ]]; then
+            echo ""                                                     >> "$GILDAS_EXE"
+            echo "DEFINE REAL INP_MERGE_RA"                             >> "$GILDAS_EXE"
+            echo "DEFINE REAL INP_MERGE_DEC"                            >> "$GILDAS_EXE"
+            echo "LET INP_MERGE_RA ${PdBIUVT_RAND_OBJT[0]}"             >> "$GILDAS_EXE"
+            echo "LET INP_MERGE_DEC ${PdBIUVT_DECD_OBJT[0]}"            >> "$GILDAS_EXE"
+        else
+            echo ""                                                     >> "$GILDAS_EXE"
+            echo "DEFINE REAL INP_MERGE_RA"                             >> "$GILDAS_EXE"
+            echo "DEFINE REAL INP_MERGE_DEC"                            >> "$GILDAS_EXE"
+            echo "FILE IN \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\""    >> "$GILDAS_EXE"
+            echo "IF (FOUND.GT.0) THEN"                                 >> "$GILDAS_EXE"
+            echo "    GET FIRST"                                        >> "$GILDAS_EXE"
+            echo "    LET INP_MERGE_RA 'R%HEAD%POS%LAM/pi*180'"         >> "$GILDAS_EXE"
+            echo "    LET INP_MERGE_DEC 'R%HEAD%POS%BET/pi*180'"        >> "$GILDAS_EXE"
+            echo "ELSE"                                                 >> "$GILDAS_EXE"
+            echo "    SAY \"Error! No spectrum found!\""                >> "$GILDAS_EXE"
+            echo "ENDIF"                                                >> "$GILDAS_EXE"
+        fi
+    fi
+    # 
+    # file in "${PdBIUVT_NAME[i-1]}.${PdBIUVT_TYPE[i]}"
+    # 
+    echo ""                                                     >> "$GILDAS_EXE"
+    echo "FILE IN \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\""    >> "$GILDAS_EXE"
+    echo "FIND"                                                 >> "$GILDAS_EXE"
+    echo "FOR I 1 TO FOUND"                                     >> "$GILDAS_EXE"
+    echo "    IF (I.EQ.1) THEN"                                 >> "$GILDAS_EXE"
+    echo "        GET FIRST"                                    >> "$GILDAS_EXE"
+    echo "    ELSE"                                             >> "$GILDAS_EXE"
+    echo "        GET NEXT"                                     >> "$GILDAS_EXE"
+    echo "    ENDIF"                                            >> "$GILDAS_EXE"
+    echo "    MODIFY POSITION INP_MERGE_RA INP_MERGE_DEC"       >> "$GILDAS_EXE"
+    echo "    WRITE"                                            >> "$GILDAS_EXE"
+    echo "NEXT"                                                 >> "$GILDAS_EXE"
+done
+
+echo "" >> "$GILDAS_EXE"
+
+
+# 
+# run gildas/class
+# 
+echo "@$GILDAS_EXE | class -nw -nl > $GILDAS_LOG"
+echo "@$GILDAS_EXE" | class -nw -nl > "$GILDAS_LOG"
+
+# check output 
+if [[ ! -f "${PdBIUVT_SAVE[0]}.30m" ]]; then
+    echo "Error! Failed to run GILDAS CLASS @$GILDAS_EXE!"
+    echo "Please check \"$GILDAS_LOG\"!"
+    exit
+fi
+
+echo "Successufully saved to \"${PdBIUVT_SAVE[0]}.30m\"!"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

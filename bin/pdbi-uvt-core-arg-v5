@@ -648,6 +648,12 @@ for (( PdBIUVT_ITER = 0; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ ))
     elif [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".UVFITS" ]]; then
         PdBIUVT_TYPE[PdBIUVT_ITER]="UVFITS"
         PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]UVFITS$//g')
+    elif [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".30m" ]]; then
+        PdBIUVT_TYPE[PdBIUVT_ITER]="30m"
+        PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]30m$//g')
+    elif [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".jcmt" ]]; then
+        PdBIUVT_TYPE[PdBIUVT_ITER]="jcmt"
+        PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]jcmt$//g')
     else
         PdBIUVT_TYPE[PdBIUVT_ITER]="uvt"
     fi
