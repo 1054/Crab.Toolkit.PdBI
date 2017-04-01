@@ -105,7 +105,7 @@ echo "! " > "$GILDAS_EXE"
 echo "! GILDAS CLASS script" >> "$GILDAS_EXE"
 echo "! " >> "$GILDAS_EXE"
 
-echo "FILE OUT ${PdBIUVT_SAVE[0]} SINGLE" >> "$GILDAS_EXE"
+echo "FILE OUT ${PdBIUVT_SAVE[0]} SINGLE /OVERWRITE" >> "$GILDAS_EXE"
 
 
 
