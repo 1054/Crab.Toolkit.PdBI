@@ -116,7 +116,7 @@ for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do
     # 
     # check common position
     # 
-    if [[ $i -eq 1 ]]; then
+    if [[ $i -eq 0 ]]; then
         if [[ ${#PdBIUVT_RAND_OBJT[@]} -gt 0 && ${#PdBIUVT_DECD_OBJT[@]} -gt 0 ]]; then
             echo ""                                                     >> "$GILDAS_EXE"
             echo "DEFINE REAL INP_MERGE_RA"                             >> "$GILDAS_EXE"
