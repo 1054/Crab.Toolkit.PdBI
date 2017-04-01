@@ -93,7 +93,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         
         echo "Converting \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" to \"${PdBIUVT_SAVE[i]}.30m\""
         echo "FITS READ \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\"" >> "$GILDAS_EXE"
-        echo "FILE OUT \"${PdBIUVT_SAVE[i]}\" /single /overwrite" >> "$GILDAS_EXE"
+        echo "FILE OUT \"${PdBIUVT_SAVE[i]}\" SINGLE /OVERWRITE" >> "$GILDAS_EXE"
         echo "" >> "$GILDAS_EXE"
         
         
