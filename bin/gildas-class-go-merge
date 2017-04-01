@@ -110,13 +110,26 @@ echo "FILE OUT ${PdBIUVT_SAVE[0]} SINGLE /OVERWRITE" >> "$GILDAS_EXE"
 
 
 # 
+# Define POSITION
+# 
+GILDAS_HAS_DEFINE_POSITION=0
+
+
+
+# 
 # Loop each input 30m spectrum, i starts from 0.
 # 
 for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do
     # 
+    # check whether it is itself
+    # 
+    if [[ "${PdBIUVT_NAME[i]}" == "${PdBIUVT_SAVE[0]}" ]]; then 
+        continue
+    fi
+    # 
     # check common position
     # 
-    if [[ $i -eq 0 ]]; then
+    if [[ $GILDAS_HAS_DEFINE_POSITION -eq 0 ]]; then
         if [[ ${#PdBIUVT_RAND_OBJT[@]} -gt 0 && ${#PdBIUVT_DECD_OBJT[@]} -gt 0 ]]; then
             echo ""                                                     >> "$GILDAS_EXE"
             echo "DEFINE REAL INP_MERGE_RA"                             >> "$GILDAS_EXE"
@@ -136,6 +149,7 @@ for (( i=0; i<${#PdBIUVT_NAME[@]}; i++ )); do
             echo "    SAY \"Error! No spectrum found!\""                >> "$GILDAS_EXE"
             echo "ENDIF"                                                >> "$GILDAS_EXE"
         fi
+        GILDAS_HAS_DEFINE_POSITION=1
     fi
     # 
     # file in "${PdBIUVT_NAME[i-1]}.${PdBIUVT_TYPE[i]}"
