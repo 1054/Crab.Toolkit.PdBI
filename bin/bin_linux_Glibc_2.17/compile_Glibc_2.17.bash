@@ -24,6 +24,7 @@ fi
 
 if [[ -d "CrabIO/CrabFitsIO/CrabFitsHeader/" ]]; then
     cd CrabIO/CrabFitsIO/CrabFitsHeader/
+    #g++ -static-libstdc++ main.cpp CrabFitsIO.cpp -o "$OutputDir"/CrabFitsHeader_linux_x86_64
     g++ main.cpp CrabFitsIO.cpp -o "$OutputDir"/CrabFitsHeader_linux_x86_64
     cd ../../../
 fi
