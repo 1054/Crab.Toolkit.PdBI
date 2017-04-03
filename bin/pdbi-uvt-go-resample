@@ -63,6 +63,20 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     
     
     # 
+    # If user input frequency range rather than velocity range, record the frequency range 
+    # 
+    if [[ ${#PdBIUVT_FMIN[@]} -gt 0 && ${#PdBIUVT_FMIN[@]} -gt 0 ]]; then
+        while [[ ${#PdBIUVT_FMIN[@]} -le $tk ]]; do
+            PdBIUVT_FMIN+=("${PdBIUVT_FMIN[${#PdBIUVT_FMIN[@]}-1]}")
+        done
+        while [[ ${#PdBIUVT_FMAX[@]} -le $tk ]]; do
+            PdBIUVT_FMAX+=("${PdBIUVT_FMAX[${#PdBIUVT_FMAX[@]}-1]}")
+        done
+    fi
+    
+    
+    
+    # 
     # SOURCE pdbi-uvt-core-cvf
     # 
     if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v5" ]]; then
@@ -80,7 +94,7 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     # Check input parameters -- crange
     # 
     if [[ ${#PdBIUVT_VMIN[@]} -le 0 || ${#PdBIUVT_VMAX[@]} -le 0 ]]; then
-        echo ""; echo "Error! Could not determine channel range for the input uv table \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"! Please check your input e.g. \"-crange 0 0\"!"; echo ""
+        echo ""; echo "Error! Could not determine velocity range for the input uv table \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"! Please check your input e.g. \"-crange 0 0\"!"; echo ""
         continue
     fi
     
