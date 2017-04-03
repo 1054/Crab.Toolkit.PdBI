@@ -213,8 +213,8 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     printf "%s %-25.5f %s\n"         "Checking VCENTER:" $TEMP_VCENTER      "(will be registered to the output reference channel)"
     printf "%s %-25d %s\n"           "Checking CNUMBER:" $TEMP_CNUMBER      "(the channel number of the output data cube)"
     printf "%s %-25d %s\n"           "Checking CCENTER:" $TEMP_CCENTER      "(the central channel of the output data cube)"
-    printf "%s %-25d %s\n"           "Checking CREF:   " $TEMP_CREF         "(the reference channel of the output data cube, should be consistent with original data cube)"
-    printf "%s %-25d %s\n"           "Checking CREF:   " $TEMP_VREF         "(the velocity at the reference channel of the output data cube, should be consistent with original data cube)"
+    printf "%s %-25.5f %s\n"         "Checking CREF:   " $TEMP_CREF         "(the reference channel of the output data cube, should be consistent with original data cube)"
+    printf "%s %-25.5f %s\n"         "Checking VREF:   " $TEMP_VREF         "(the velocity at the reference channel of the output data cube, should be consistent with original data cube)"
     #echo ""
     
     
