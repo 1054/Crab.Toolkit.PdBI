@@ -140,11 +140,13 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     PdBIUVT_FREQ_MIN_GHz=$(awk "BEGIN {print ($PdBIUVT_FREQ_MIN)/1e3;}")
     PdBIUVT_FREQ_MAX_GHz=$(awk "BEGIN {print ($PdBIUVT_FREQ_MAX)/1e3;}")
     if [[ $(awk "BEGIN {if((${TEMP_VRANGE[0]})>=($PdBIUVT_VELO_MIN)) print 1; else print 0;}") -eq 0 ]]; then
-        echo "Error! The input velocity range \"${TEMP_VRANGE[@]}\" exceeds the lower velocity coverage ($PdBIUVT_VELO_MIN $PdBIUVT_VELO_MAX) or frequency coverage ($PdBIUVT_FREQ_MIN_GHz $PdBIUVT_FREQ_MAX_GHz)! Will not run uv_resample for this uv table \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"!"
+        echo ""; echo "Error! The input velocity range \"${TEMP_VRANGE[@]}\" exceeds the lower velocity coverage ($PdBIUVT_VELO_MIN $PdBIUVT_VELO_MAX) or frequency coverage ($PdBIUVT_FREQ_MIN_GHz $PdBIUVT_FREQ_MAX_GHz)!"
+        echo "Will not run uv_resample for this uv table \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"!"; echo ""
         continue
     fi
     if [[ $(awk "BEGIN {if((${TEMP_VRANGE[1]})<=($PdBIUVT_VELO_MAX)) print 1; else print 0;}") -eq 0 ]]; then
-        echo "Error! The input velocity range \"${TEMP_VRANGE[@]}\" exceeds the upper velocity coverage ($PdBIUVT_VELO_MIN $PdBIUVT_VELO_MAX) or frequency coverage ($PdBIUVT_FREQ_MIN_GHz $PdBIUVT_FREQ_MAX_GHz)! Will not run uv_resample for this uv table \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"!"
+        echo ""; echo "Error! The input velocity range \"${TEMP_VRANGE[@]}\" exceeds the upper velocity coverage ($PdBIUVT_VELO_MIN $PdBIUVT_VELO_MAX) or frequency coverage ($PdBIUVT_FREQ_MIN_GHz $PdBIUVT_FREQ_MAX_GHz)!"
+        echo "Will not run uv_resample for this uv table \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"!"; echo ""
         continue
     fi
     # 
