@@ -325,16 +325,16 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         # 
         # Check the input frequency range of each object
         # Frequency range is given by "-frange FMIN1 FMAX1 FMIN2 FMAX2 ..."
-        if [[ "${#PdBIUVT_FMIN[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_FMIN[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_FMIN+=("0")
         fi
-        if [[ "${#PdBIUVT_FMAX[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_FMAX[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_FMAX+=("0")
         fi
-        if [[ "${#PdBIUVT_FWID[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_FWID[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_FWID+=("0")
         fi
-        if [[ "${#PdBIUVT_FCEN[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_FCEN[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_FCEN+=("0")
         fi
         # 
@@ -545,6 +545,7 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
             PdBIUVT_zRED[PdBIUVT_OBJI]="$TEMP_REDSHIFT"
         else
             echo "Selecting all channels for object $((PdBIUVT_OBJI+1))"
+            echo "--"
         fi
         # # 
         # # -- print channel range input
