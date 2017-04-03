@@ -73,6 +73,14 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
             PdBIUVT_FMAX+=("${PdBIUVT_FMAX[${#PdBIUVT_FMAX[@]}-1]}")
         fi
     fi
+    # 
+    # If user input PdBIUVT_UVRESAMPLE_VW
+    # 
+    if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -gt 0 ]]; then
+        if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -le $tk ]]; then
+            PdBIUVT_UVRESAMPLE_VW+=("${PdBIUVT_UVRESAMPLE_VW[${#PdBIUVT_UVRESAMPLE_VW[@]}-1]}")
+        fi
+    fi
     
     
     
