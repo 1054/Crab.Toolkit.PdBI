@@ -16,7 +16,8 @@
 usage() {
     echo "Usage: "
     echo "  pdbi-uvt-go-resample -name UV_TABLE_NAME_1 -width 100 -vrange -1000 +1000 -out UV_TABLE_NEW"
-    echo "  note that width is the velocity widht in km/s, "
+    echo ""
+    echo "  Note that \"-width\" is the velocity width in km/s, \"-vrange\" is the velocity range. We can also input \"-frange\" for frequency range in GHz."
     echo ""
 }
 
@@ -131,9 +132,9 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     # check velocity non-zero
     if [[ $(awk "BEGIN {if(($TEMP_VMIN)**2>1.0) print 1; else print 0;}") -eq 1 || \
           $(awk "BEGIN {if(($TEMP_VMAX)**2>1.0) print 1; else print 0;}") -eq 1 ]]; then
-        TEMP_VRANGE="$TEMP_VMIN $TEMP_VMAX"
+        TEMP_VRANGE=("$TEMP_VMIN" "$TEMP_VMAX")
     else
-        TEMP_VRANGE="$PdBIUVT_VELO_MIN $PdBIUVT_VELO_MAX"
+        TEMP_VRANGE=("$PdBIUVT_VELO_MIN" "$PdBIUVT_VELO_MAX")
     fi
     TEMP_VCENTER=$(awk "BEGIN {print ((${TEMP_VRANGE[0]})+(${TEMP_VRANGE[1]}))/2.0;}")
     # 
@@ -159,7 +160,7 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     # 
     # Print info
     echo ""
-    echo "VRANGE: $TEMP_VRANGE (the input velocity range)"
+    echo "VRANGE: ${TEMP_VRANGE[@]} (the input velocity range)"
     echo "VWIDTH: $TEMP_VWIDTH (the input velocity width for each channel)"
     echo "VCENTER: $TEMP_VCENTER (will be registered to the output central channel)"
     echo "CNUMBER: $TEMP_CNUMBER (the channel number of the output data cube)"
