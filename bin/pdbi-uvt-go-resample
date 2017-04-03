@@ -199,6 +199,7 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     TEMP_CNUMBER=$(awk "BEGIN {print int($TEMP_CNUMBER/2.0+0.5)*2;}")
     TEMP_CCENTER=$(awk "BEGIN {print ($TEMP_CNUMBER)/2+1;}") # this channel corresponds to the $TEMP_VCENTER in original data cube
     TEMP_CREF=$(awk "BEGIN {print (($PdBIUVT_VELO_REF)-($TEMP_VCENTER))/($PdBIUVT_VELO_BIN)/($PdBIUVT_CHAN_MAX/$TEMP_CNUMBER)+($TEMP_CCENTER);}")
+    TEMP_CREF=$(awk "BEGIN {printf '%0.f', ($TEMP_CREF) }")
     # 
     # Print info
     #echo ""
@@ -207,7 +208,7 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     printf "%s %-25.5f %s\n"         "Checking VCENTER:" $TEMP_VCENTER      "(will be registered to the output central channel, not the reference channel)"
     printf "%s %-25d %s\n"           "Checking CNUMBER:" $TEMP_CNUMBER      "(the channel number of the output data cube)"
     printf "%s %-25d %s\n"           "Checking CCENTER:" $TEMP_CCENTER      "(the central channel of the output data cube)"
-    printf "%s %-25d %s\n"           "Checking CCENTER:" $TEMP_CREF         "(the reference channel of the output data cube, should be consistent with original data cube)"
+    printf "%s %-25d %s\n"           "Checking CREF:"    $TEMP_CREF         "(the reference channel of the output data cube, should be consistent with original data cube)"
     #echo ""
     
     
