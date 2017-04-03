@@ -155,7 +155,7 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     # 
     # Compute output channel number from vrange and vwidth
     TEMP_CNUMBER=$(awk "BEGIN {print ((${TEMP_VRANGE[1]})-(${TEMP_VRANGE[0]}))/($TEMP_VWIDTH);}")
-    TEMP_CNUMBER=$(awk "BEGIN {print int($TEMP_CWIDTH/2.0+0.5)*2;}")
+    TEMP_CNUMBER=$(awk "BEGIN {print int($TEMP_CNUMBER/2.0+0.5)*2;}")
     TEMP_CCENTER=$(awk "BEGIN {print ($TEMP_CNUMBER)/2+1;}")
     # 
     # Print info
