@@ -120,6 +120,8 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     # Deal with the input uv data file
     # 
     # Prepare VRANGE list
+    echo "Checking PdBIUVT_VMIN=${PdBIUVT_VMIN[@]}"
+    echo "Checking PdBIUVT_VMAX=${PdBIUVT_VMAX[@]}"
     if [[ ${#PdBIUVT_VMIN[@]} -gt $tk && ${#PdBIUVT_VMAX[@]} -gt $tk ]]; then
         # read vrange from user input
         TEMP_VMIN=${PdBIUVT_VMIN[$tk]}
