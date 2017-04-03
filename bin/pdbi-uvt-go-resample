@@ -178,7 +178,6 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     # 
     # Compute VCENTER
     TEMP_VCENTER=$(awk "BEGIN {print ((${TEMP_VRANGE[0]})+(${TEMP_VRANGE[1]}))/2.0;}")
-    TEMP_VCENTER=0
     # 
     # Prepare VWIDTH list
     if [[ ${#TEMP_VWIDTH[0]} -gt $tk ]]; then
