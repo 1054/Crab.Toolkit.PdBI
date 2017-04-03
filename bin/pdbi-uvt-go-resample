@@ -65,13 +65,13 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     # 
     # If user input frequency range rather than velocity range, record the frequency range 
     # 
-    if [[ ${#PdBIUVT_FMIN[@]} -gt 0 && ${#PdBIUVT_FMIN[@]} -gt 0 ]]; then
-        while [[ ${#PdBIUVT_FMIN[@]} -le $tk ]]; do
+    if [[ ${#PdBIUVT_FMIN[@]} -gt 0 && ${#PdBIUVT_FMAX[@]} -gt 0 ]]; then
+        if [[ ${#PdBIUVT_FMIN[@]} -le $tk ]]; then
             PdBIUVT_FMIN+=("${PdBIUVT_FMIN[${#PdBIUVT_FMIN[@]}-1]}")
-        done
-        while [[ ${#PdBIUVT_FMAX[@]} -le $tk ]]; do
+        fi
+        if [[ ${#PdBIUVT_FMAX[@]} -le $tk ]]; then
             PdBIUVT_FMAX+=("${PdBIUVT_FMAX[${#PdBIUVT_FMAX[@]}-1]}")
-        done
+        fi
     fi
     
     
