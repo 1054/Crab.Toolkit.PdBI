@@ -1,0 +1,216 @@
+#!/bin/bash
+# 
+# Input uvtablefile and average channel width
+# Output resampled uvtablefile
+# 
+# Last update:
+#    2017-04-03 copied from "pdbi-uvt-go-compress"
+# 
+# 
+
+
+
+# 
+# Uage
+# 
+usage() {
+    echo "Usage: "
+    echo "  pdbi-uvt-go-resample -name UV_TABLE_NAME_1 -width 100 -vrange -1000 +1000 -out UV_TABLE_NEW"
+    echo "  note that width is the velocity widht in km/s, "
+    echo ""
+}
+
+
+
+# 
+# SOURCE pdbi-uvt-core-arg
+# 
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" "$@"
+else
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5\"!"
+    echo ""
+    exit 1
+fi
+
+
+
+# 
+# Check input parameters -- uvt file name, velocity width
+# 
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 || ${#PdBIUVT_UVRESAMPLE_VW[@]} -eq 0 ]]; then
+    usage; exit
+fi
+
+
+
+# 
+# Loop input uv tables
+# 
+for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
+    
+    
+    
+    # 
+    # if type is uvtable
+    # 
+    if [[ ${PdBIUVT_TYPE[tk]} != "uvt" && ${PdBIUVT_TYPE[tk]} != "UVT" ]]; then
+        continue
+    fi
+    
+    
+    
+    # 
+    # SOURCE pdbi-uvt-core-cvf
+    # 
+    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v5" ]]; then
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v5" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
+    else
+        echo ""
+        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v5\"!"
+        echo ""
+        exit 1
+    fi
+    
+    
+    
+    # 
+    # Check input parameters -- crange
+    # 
+    if [[ ${#PdBIUVT_VMIN[@]} -le 0 || ${#PdBIUVT_VMAX[@]} -le 0 ]]; then
+        echo ""; echo "Error! Could not determine channel range for the input uv table \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"! Please check your input e.g. \"-crange 0 0\"!"; echo ""
+        continue
+    fi
+    
+    
+    
+    # 
+    # Set default output file
+    # 
+    if [[ ${#PdBIUVT_SAVE[@]} -le $tk ]]; then
+        PdBIUVT_SAVE+=($(basename "${PdBIUVT_NAME[tk]}")"-Resampled")
+        echo ""; echo "Warning! Output name was not defined, we will set it as \"${PdBIUVT_SAVE[tk]}\"!"; echo ""
+    fi
+    if [[ x"${PdBIUVT_SAVE[tk]}" == x || x"${PdBIUVT_SAVE[tk]}" == x"tmp_pdbi_uvt" || x"${PdBIUVT_SAVE[tk]}" == x"tmp_pdbi_uvt_run_uv_fit" ]]; then
+        PdBIUVT_SAVE[tk]=$(basename "${PdBIUVT_NAME[tk]}")"-Resampled"
+        echo ""; echo "Warning! Output name was not defined, we will set it as \"${PdBIUVT_SAVE[tk]}\"!"; echo ""
+    fi
+    # 
+    # Remove suffix
+    # 
+    if [[ x"${PdBIUVT_SAVE[tk]}" == x*".uvt" ]]; then
+        PdBIUVT_SAVE[tk]=$(echo "${PdBIUVT_SAVE[tk]}" | sed -e 's/\.uvt$//g')
+    fi
+    if [[ x"${PdBIUVT_SAVE[tk]}" == x*".UVT" ]]; then
+        PdBIUVT_SAVE[tk]=$(echo "${PdBIUVT_SAVE[tk]}" | sed -e 's/\.UVT$//g')
+    fi
+    # 
+    # Backup existing output file
+    # 
+    if [[ -f "${PdBIUVT_SAVE[tk]}.uvt" ]]; then
+        echo "Warning! Found existing \"${PdBIUVT_SAVE[tk]}.uvt\"! Backup as \"${PdBIUVT_SAVE[tk]}.uvt.backup\"!"
+        mv "${PdBIUVT_SAVE[tk]}.uvt" "${PdBIUVT_SAVE[tk]}.uvt.backup"
+    fi
+    
+    
+    
+    # 
+    # Deal with the input uv data file
+    # 
+    # Prepare VRANGE list
+    if [[ ${#PdBIUVT_VMIN[0]} -gt $tk && ${#PdBIUVT_VMAX[0]} -gt $tk ]]; then
+        # read vrange from user input
+        TEMP_VMIN=${PdBIUVT_VMIN[$tk]}
+        TEMP_VMAX=${PdBIUVT_VMAX[$tk]}
+    else
+        # if the input vrange list is shorter than the input uvt list, repeat the last vrange choice
+        TEMP_VMIN=${PdBIUVT_VMIN[${#PdBIUVT_VMIN[@]}-1]}
+        TEMP_VMAX=${PdBIUVT_VMAX[${#PdBIUVT_VMAX[@]}-1]}
+    fi
+    # check velocity non-zero
+    if [[ $(awk "BEGIN {if(($TEMP_VMIN)**2>1.0) print 1; else print 0;}") -eq 1 || \
+          $(awk "BEGIN {if(($TEMP_VMAX)**2>1.0) print 1; else print 0;}") -eq 1 ]]; then
+        TEMP_VRANGE="$TEMP_VMIN $TEMP_VMAX"
+    else
+        TEMP_VRANGE="$PdBIUVT_VELO_MIN $PdBIUVT_VELO_MAX"
+    fi
+    TEMP_VCENTER=$(awk "BEGIN {print ((${TEMP_VRANGE[0]})+(${TEMP_VRANGE[1]}))/2.0;}")
+    # 
+    # Prepare VWIDTH list
+    if [[ ${#TEMP_VWIDTH[0]} -gt $tk ]]; then
+        # read width from user input
+        TEMP_VWIDTH=${PdBIUVT_UVRESAMPLE_VW[$tk]}
+    else
+        # if the input width list is shorter than the input uvt list, repeat the last width choice
+        TEMP_VWIDTH=${PdBIUVT_UVRESAMPLE_VW[${#PdBIUVT_UVRESAMPLE_VW[@]}-1]}
+    fi
+    # 
+    # check velocity width
+    if [[ $(awk "BEGIN {if(($TEMP_VWIDTH)>0) print 1; else print 0;}") -eq 0 ]]; then
+        echo "Error! The input velocity width \"$TEMP_VWIDTH\" is non-positive! Will not run uv_resample for this uv table \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"!"
+        continue
+    fi
+    # 
+    # Compute output channel number from vrange and vwidth
+    TEMP_CNUMBER=$(awk "BEGIN {print ((${TEMP_VRANGE[1]})-(${TEMP_VRANGE[0]}))/($TEMP_VWIDTH);}")
+    TEMP_CNUMBER=$(awk "BEGIN {print int($TEMP_CWIDTH/2.0+0.5)*2;}")
+    TEMP_CCENTER=$(awk "BEGIN {print ($TEMP_CNUMBER)/2+1;}")
+    # 
+    # Print info
+    echo ""
+    echo "VRANGE: $TEMP_VRANGE (the input velocity range)"
+    echo "VWIDTH: $TEMP_VWIDTH (the input velocity width for each channel)"
+    echo "VCENTER: $TEMP_VCENTER (will be registered to the output central channel)"
+    echo "CNUMBER: $TEMP_CNUMBER (the channel number of the output data cube)"
+    echo "CCENTER: $TEMP_CCENTER (the central channel of the output data cube)"
+    echo ""
+    
+    
+    
+    # 
+    # prepare gildas/mapping init and script and run
+    # 
+    # 
+    PdBIUVT_TEMP_INIT="${PdBIUVT_NAME[tk]}.uvt.uv_resample.init"
+    PdBIUVT_TEMP_EXEC="${PdBIUVT_NAME[tk]}.uvt.uv_resample.map"
+    PdBIUVT_TEMP_LOGT="${PdBIUVT_NAME[tk]}.uvt.uv_resample.log"
+    echo  '! '                                                                                                            > $PdBIUVT_TEMP_INIT
+    echo  '! Task UV_RESAMPLE'                                                                                           >> $PdBIUVT_TEMP_INIT
+    echo  '!'                                                                                                            >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "Input UV Table"              UV_INPUT$     "'${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}'"'       >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "Output UV Table"            UV_OUTPUT$     "'${PdBIUVT_SAVE[tk]}'"'                           >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\INTEGER   "Number of output channels"         NC$      '${TEMP_CNUMBER}                                  >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\REAL      "Ref, Val, Inc "               CONVERT$[3]   '${TEMP_CCENTER} ${TEMP_VCENTER} ${TEMP_VWIDTH}   >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\GO'                                                                                                      >> $PdBIUVT_TEMP_INIT
+    echo  "run uv_resample $PdBIUVT_TEMP_INIT /NOWINDOW" > $PdBIUVT_TEMP_EXEC
+    echo  "@$PdBIUVT_TEMP_EXEC | mapping > $PdBIUVT_TEMP_LOGT"
+    echo  "@$PdBIUVT_TEMP_EXEC" | mapping > "$PdBIUVT_TEMP_LOGT"
+    
+    if [[ -f "${PdBIUVT_SAVE[tk]}.uvt" ]]; then
+        echo "Successufully saved to \"${PdBIUVT_SAVE[tk]}.uvt\"!"
+        echo "--"
+        if [[ -f "$PdBIUVT_TEMP_LOGT" ]]; then
+            rm "$PdBIUVT_TEMP_LOGT"
+        fi
+    else
+        echo "Error! Failed to run GILDAS MAPPING UV_RESAMPLE and output \"${PdBIUVT_SAVE[tk]}.uvt\"!"
+        echo "Please check \"$PdBIUVT_TEMP_LOGT\"!"
+        exit 1
+    fi
+    
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+

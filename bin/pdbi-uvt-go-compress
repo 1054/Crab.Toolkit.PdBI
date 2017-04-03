@@ -95,7 +95,6 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         PdBIUVT_TEMP_LOGT="${PdBIUVT_SAVE[i]}.log"
         echo  '! '                                                                                               > $PdBIUVT_TEMP_INIT
         echo  '! Task UV_COMPRESS'                                                                              >> $PdBIUVT_TEMP_INIT
-        echo  '! 3 parameters needed for all functions'                                                         >> $PdBIUVT_TEMP_INIT
         echo  '!'                                                                                               >> $PdBIUVT_TEMP_INIT
         echo  'TASK\CHARACTER "UV table 1"                  UV_INPUT$      "'${PdBIUVT_NAME[i]}'"'              >> $PdBIUVT_TEMP_INIT
         echo  'TASK\CHARACTER "UV table out"               UV_OUTPUT$      "'${PdBIUVT_SAVE[i]}'"'              >> $PdBIUVT_TEMP_INIT
@@ -112,7 +111,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
                 rm "$PdBIUVT_TEMP_LOGT"
             fi
         else
-            echo "Error! Failed to run GILDAS MAPPING UV_SUBTRACT and output \"${PdBIUVT_SAVE[i]}.uvt\"!"
+            echo "Error! Failed to run GILDAS MAPPING UV_COMPRESS and output \"${PdBIUVT_SAVE[i]}.uvt\"!"
             echo "Please check \"$PdBIUVT_TEMP_LOGT\"!"
             exit 1
         fi

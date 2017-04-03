@@ -192,6 +192,26 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
     PdBIUVT_CHAN_REF=$(echo "$PdBIUVT_TEMP_TEXT" | cut -d ' ' -f 2)
     PdBIUVT_FREQ_REF=$(echo "$PdBIUVT_TEMP_TEXT" | cut -d ' ' -f 3)
     PdBIUVT_FREQ_BIN=$(echo "$PdBIUVT_TEMP_TEXT" | cut -d ' ' -f 4)
+    # 
+    # get frequency min max
+    # 
+    PdBIUVT_FREQ_MIN=$(awk "BEGIN {print (($PdBIUVT_CHAN_MIN)-($PdBIUVT_CHAN_REF))*($PdBIUVT_FREQ_BIN)+($PdBIUVT_FREQ_REF);}") # MHz
+    PdBIUVT_FREQ_MAX=$(awk "BEGIN {print (($PdBIUVT_CHAN_MAX)-($PdBIUVT_CHAN_REF))*($PdBIUVT_FREQ_BIN)+($PdBIUVT_FREQ_REF);}") # MHz
+    if [[ $(awk "BEGIN {if(($PdBIUVT_FREQ_MIN)>($PdBIUVT_FREQ_MAX)) print 1; else print 0;}") -eq 1 ]]; then
+        PdBIUVT_FREQ_TMP="$PdBIUVT_FREQ_MIN"
+        PdBIUVT_FREQ_MIN="$PdBIUVT_FREQ_MAX"
+        PdBIUVT_FREQ_MAX="$PdBIUVT_FREQ_TMP"
+    fi
+    # 
+    # get velocity min max
+    # 
+    PdBIUVT_VELO_MIN=$(awk "BEGIN {print (($PdBIUVT_CHAN_MIN)-($PdBIUVT_CHAN_REF))*($PdBIUVT_VELO_BIN)+($PdBIUVT_VELO_REF);}") # MHz
+    PdBIUVT_VELO_MAX=$(awk "BEGIN {print (($PdBIUVT_CHAN_MAX)-($PdBIUVT_CHAN_REF))*($PdBIUVT_VELO_BIN)+($PdBIUVT_VELO_REF);}") # MHz
+    if [[ $(awk "BEGIN {if(($PdBIUVT_VELO_MIN)>($PdBIUVT_VELO_MAX)) print 1; else print 0;}") -eq 1 ]]; then
+        PdBIUVT_VELO_TMP="$PdBIUVT_VELO_MIN"
+        PdBIUVT_VELO_MIN="$PdBIUVT_VELO_MAX"
+        PdBIUVT_VELO_MAX="$PdBIUVT_VELO_TMP"
+    fi
     
     
     # 
