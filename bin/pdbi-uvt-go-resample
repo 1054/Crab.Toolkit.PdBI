@@ -203,7 +203,7 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     #echo ""
     printf "%s %-12.5f %-12.5f %s\n" "Checking VRANGE: " ${TEMP_VRANGE[@]}  "(the input velocity range)"
     printf "%s %-25.5f %s\n"         "Checking VWIDTH: " $TEMP_VWIDTH       "(the input velocity width for each channel)"
-    printf "%s %-25.5f %s\n"         "Checking VCENTER:" $TEMP_VCENTER      "(will be registered to the output central channel)"
+    printf "%s %-25.5f %s\n"         "Checking VCENTER:" 0.0      "(will be registered to the output central channel)"
     printf "%s %-25d %s\n"           "Checking CNUMBER:" $TEMP_CNUMBER      "(the channel number of the output data cube)"
     printf "%s %-25d %s\n"           "Checking CCENTER:" $TEMP_CCENTER      "(the central channel of the output data cube)"
     #echo ""
