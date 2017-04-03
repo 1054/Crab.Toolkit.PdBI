@@ -199,7 +199,7 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     TEMP_CNUMBER=$(awk "BEGIN {print int($TEMP_CNUMBER/2.0+0.5)*2;}")
     TEMP_CCENTER=$(awk "BEGIN {print ($TEMP_CNUMBER)/2+1;}") # this channel corresponds to the $TEMP_VCENTER in original data cube
     TEMP_CREF=$(awk "BEGIN {print (($PdBIUVT_VELO_REF)-($TEMP_VCENTER))/($PdBIUVT_VELO_BIN)/($PdBIUVT_CHAN_MAX/$TEMP_CNUMBER)+($TEMP_CCENTER);}")
-    TEMP_CREF=$(awk "BEGIN {printf '%0.f', ($TEMP_CREF) }")
+    TEMP_CREF=$(awk "BEGIN {printf \"%0.f\", ($TEMP_CREF);}")
     # 
     # Print info
     #echo ""
