@@ -40,7 +40,7 @@ fi
 # 
 # Check input parameters -- uvt file name, velocity width ("-width") or line width ("-linewidth")
 # 
-if [[ ${#PdBIUVT_NAME[@]} -eq 0 || (${#PdBIUVT_UVRESAMPLE_VW[@]} -eq 0 && ${#PdBIUVT_VWID[@]} -eq 0) ]]; then
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 || (${#PdBIUVT_UVRESAMPLE_VW[@]} -eq 0) ]]; then
     usage; exit
 fi
 
