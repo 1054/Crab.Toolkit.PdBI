@@ -569,7 +569,6 @@ while [[ "$#" -gt 0 ]]; do
             return 2
         fi
         PdBIUVT_VWID+=("$1")
-        PdBIUVT_UVRESAMPLE_VW+=("$1")
     fi
     if [[ "$PdBIUVT_RPAR" == "lineobsfreq" ]];  then 
         if [[ "$#" -lt 1 ]]; then break; fi
