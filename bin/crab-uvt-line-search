@@ -222,6 +222,9 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             # prepare ds9 script
             echo "#!/bin/bash" > "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
             echo "#" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
+            echo "" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
+            echo "cd \$(dirname \"\${BASH_SOURCE[0]}\")" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
+            echo "" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
             echo "ds9 -title \"velo_bin_${velo_count}\" \"velo_bin_${velo_count}.lmv.fits\" -regions load \"velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.reg\"" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
             echo "" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
             chmod +x "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
