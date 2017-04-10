@@ -181,7 +181,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     velo_count=1
     velo_start="$PdBIUVT_VELO_MIN"
     velo_width="300.0"
-    velo_step="100.0"
+    velo_step="150.0"
     map_size="300" # 512 is 60 arcsec
     sigma_threshold="4.0" #<TODO># 
     
