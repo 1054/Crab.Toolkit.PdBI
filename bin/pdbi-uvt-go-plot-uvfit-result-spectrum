@@ -1,0 +1,65 @@
+#!/bin/bash
+# 
+# plot spectrum using supermongo
+
+
+if [[ $(type sm 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! Supermongo was not found in \$PATH!"
+    exit
+fi
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: pdbi-uvt-go-plot-uvfit-result-spectrum *.uv_fit.result.obj_1.txt"
+    exit
+fi
+
+
+echo "go"                                                               >  "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    load crabPlot.sm"                                             >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    data \"$1\""                                                  >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    read {x 5.f y 6.f yerr 7.f}"                                  >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    set valid = (y!=0 && yerr!=0)"                                >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    set x = x if(valid)"                                          >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    set y = y if(valid)"                                          >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    set yerr = yerr if(valid)"                                    >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    crabPlotOpenPS pdbi_uvt_go_plot_uvfit_result_spectrum.eps"    >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    set lim_y = (y*1.2) concat (y*0.8)"                           >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    limits x lim_y"                                               >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    location 6500 30000 10000 26000"                              >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    crabPlotDefaultPenForBox"                                     >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    box"                                                          >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    crabPlotDefaultPenForTitle"                                   >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    xlabel \"Frequency [GHz]\""                                   >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    ylabel \"Flux [mJy]\""                                        >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    crabPlotDefaultPenForConnect"                                 >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    histogram x y"                                                >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    errorbar x y yerr 2"                                          >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    errorbar x y yerr 4"                                          >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+# 
+if [[ $* == *"-frange "* ]]; then
+    frange=($(echo $* | perl -p -e 's/.* -frange[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
+    echo "Setting frange ${frange[@]}"
+    if [[ ${#frange[@]} -eq 2 ]]; then
+        echo "    "                                                                >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+        echo "    set i_shade = (x>(${frange[0]}) && x<(${frange[1]}))"            >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+        echo "    set x_shade = x if(i_shade)"                                     >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+        echo "    set y_shade = y if(i_shade)"                                     >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+        echo "    set x_shade = \$(x_shade[0]) concat x_shade"                     >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+        echo "    set y_shade = 0.0 concat y_shade"                                >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+        echo "    set x_shade = x_shade concat \$(x_shade[dimen(x_shade)-1])"      >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+        echo "    set y_shade = y_shade concat 0.0"                                >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+        echo "    ctype yellow "                                                   >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+        echo "    shade histogram 100 x_shade y_shade"                             >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+        echo "    "                                                                >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+    fi
+fi
+# 
+echo "    crabPlotClosePS"                                              >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo ""                                                                 >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+
+echo "macro read pdbi_uvt_go_plot_uvfit_result_spectrum.sm go | sm"
+echo "macro read pdbi_uvt_go_plot_uvfit_result_spectrum.sm go" | sm
+
+
+
+

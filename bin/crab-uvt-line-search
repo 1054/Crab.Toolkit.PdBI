@@ -1,0 +1,316 @@
+#!/bin/bash
+# 
+# Aim:
+#    Input uvt
+#    Search for line emitter
+# 
+# Last update:
+#    2017-04-09 Initialized
+# 
+
+
+
+# 
+# LANG
+# 
+LANG=C
+
+# 
+# CHECK bc
+# 
+if [[ $(bc <<< 1+2 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo Error! gnu tool bc not found! Exit!
+    exit -1
+fi
+
+# 
+# CHECK awk
+# 
+if [[ $(echo "Go" | awk "NR==1" 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo Error! gnu tool awk not found! Exit!
+    exit -1
+fi
+
+# 
+# CHECK GILDAS mapping
+# 
+if [[ $(echo "say hello" | mapping 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! GILDAS mapping not found! Exit!"
+    exit -1
+fi
+
+# 
+# CHECK radec2degree
+# 
+if [[ $(radec2degree 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! radec2degree not found! It should be included in this software! Please contact dzliu. "
+    exit -1
+fi
+
+# 
+# CHECK degree2radec
+# 
+if [[ $(degree2radec 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! degree2radec not found! It should be included in this software! Please contact dzliu. "
+    exit -1
+fi
+
+# 
+# CHECK degree2radec
+# 
+if [[ $(CrabTableReadInfo 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! CrabTableReadInfo not found! It should be included in this software! Please contact dzliu. "
+    exit -1
+fi
+
+
+
+# 
+# Check input arguments
+# 
+Usage() {
+    echo "Usage: crab-uvt-line-search -name a.uvt"
+    exit -1
+}
+if [[ $# -eq 0 ]]; then
+    Usage
+    exit
+fi
+
+
+
+# 
+# SOURCE pdbi-uvt-core-arg
+# 
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" "$@"
+else
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5\"!"
+    echo ""
+    exit 1
+fi
+
+
+
+# 
+# Check UVT name and Object RADec
+# 
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]]; then
+    Usage
+    exit
+fi
+
+
+
+# 
+# Loop input uv tables
+# 
+for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
+    
+    
+    
+    # 
+    # SOURCE pdbi-uvt-core-cvf
+    # 
+    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v5" ]]; then
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v5" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
+    else
+        echo ""
+        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v5\"!"
+        echo ""
+        exit 1
+    fi
+    
+    
+    
+    # 
+    # SOURCE pdbi-uvt-core-rad
+    # 
+    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v5" ]]; then
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v5" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
+    else
+        echo ""
+        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v5\"!"
+        echo ""
+        exit 1
+    fi
+    
+    
+    
+    # 
+    # Check Telescope pointing information
+    # 
+    if [[ x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
+        echo ""; echo "Error! Could not find telescope pointing information in the uv table file! Please input telescope pointing like \"-pointing 12:36:20 62:20:00\"!"; echo ""
+        exit 4
+    fi
+    
+    
+    
+    # 
+    # Set default output directory
+    # 
+    if [[ ${#PdBIUVT_SAVE[@]} -le $tk ]]; then
+        PdBIUVT_SAVE+=($(basename "${PdBIUVT_NAME[tk]}")"_crab_uvt_line_search")
+        echo "Warning! Output directory name was not defined, we will set it as \"${PdBIUVT_SAVE[tk]}\"!"
+    fi
+    if [[ x"${PdBIUVT_SAVE[tk]}" == x || x"${PdBIUVT_SAVE[tk]}" == x"tmp_pdbi_uvt" || x"${PdBIUVT_SAVE[tk]}" == x"tmp_pdbi_uvt_run_uv_fit" ]]; then
+        PdBIUVT_SAVE[tk]=$(basename "${PdBIUVT_NAME[tk]}")"_crab_uvt_line_search"
+        echo "Warning! Output directory name was not defined, we will set it as \"${PdBIUVT_SAVE[tk]}\"!"
+    fi
+    if [[ ! -d "${PdBIUVT_SAVE[tk]}" ]]; then
+        mkdir "${PdBIUVT_SAVE[tk]}"
+    fi
+    # 
+    # Backup existing output file
+    # 
+    
+    
+    
+    # 
+    # Print message
+    # 
+    echo ""
+    echo "*********"
+    echo "* hello *"
+    echo "*********"
+    echo "PdBIUVT_VELO_MIN = $PdBIUVT_VELO_MIN"
+    echo "PdBIUVT_VELO_MAX = $PdBIUVT_VELO_MAX"
+    
+    velo_count=1
+    velo_start="$PdBIUVT_VELO_MIN"
+    velo_width="300.0"
+    velo_step="100.0"
+    map_size="300" # 512 is 60 arcsec
+    sigma_threshold="4.0" #<TODO># 
+    
+    while [[ $(awk "BEGIN {if(($velo_start)<($PdBIUVT_VELO_MAX)) print 1; else print 0;}") -eq 1 ]]; do
+        velo_end=$(awk "BEGIN {print ($velo_start)+($velo_width)}")
+        if [[ $(awk "BEGIN {if(($velo_end)>=($PdBIUVT_VELO_MAX)) print 1; else print 0;}") -eq 1 ]]; then
+            velo_end="$PdBIUVT_VELO_MAX"
+        fi
+        
+        rm "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}."* 2>/dev/null
+        
+        if [[ ! -f "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt" ]]; then
+            echo "pdbi-uvt-go-average -name \"${PdBIUVT_NAME[tk]}\" -out \"${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt\" -vrange $velo_start $velo_end"
+            pdbi-uvt-go-average -name "${PdBIUVT_NAME[tk]}" -out "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt" -vrange "$velo_start" "$velo_end" > "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uv_average.log"
+        fi
+        
+        cd "${PdBIUVT_SAVE[tk]}/"
+        
+        #rm "velo_bin_${velo_count}.lmv"* "velo_bin_${velo_count}.lmv_bscale.detect_blob"* 2>/dev/null
+        
+        if [[ ! -f "velo_bin_${velo_count}.lmv.fits" || ! -f "velo_bin_${velo_count}.uvt.uv_map.log" ]]; then
+            echo "pdbi-uvt-go-uvmap -name \"velo_bin_${velo_count}.uvt\" -size 30 -map_size $map_size"
+            pdbi-uvt-go-uvmap -name "velo_bin_${velo_count}.uvt" -size 30 -map_size $map_size | sed -e 's/[^[[:print:]]]//g' > "velo_bin_${velo_count}.uv_map.log"
+        fi
+        #data_noise=$(cat "velo_bin_${velo_count}.uvt.uv_map.log" | grep "^NOISE" | grep "=")
+        data_noise=$(CrabTableReadInfo "velo_bin_${velo_count}.uvt.uv_map.log" "NOISE" "!")
+        echo "data_noise = $data_noise Jy"
+        
+        # convert gildas lmv converted fits image BSCALE
+        if [[ ! -f "velo_bin_${velo_count}.lmv_bscale.fits" ]]; then
+            data_bscale=$(gethead "velo_bin_${velo_count}.lmv.fits" BSCALE)
+            CrabFitsImageArithmetic "velo_bin_${velo_count}.lmv.fits" "times" "$data_bscale" "velo_bin_${velo_count}.lmv_bscale.fits" > "velo_bin_${velo_count}.lmv_bscale.fits.log"
+            sethead "velo_bin_${velo_count}.lmv_bscale.fits" BSCALE=1
+        fi
+        
+        # check previous blob detect results
+        if [[ ! -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh" ]]; then
+            # prepare ds9 script
+            echo "#!/bin/bash" > "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
+            echo "#" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
+            echo "ds9 -title \"velo_bin_${velo_count}\" \"velo_bin_${velo_count}.lmv.fits\" -regions load \"velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.reg\"" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
+            echo "" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
+            chmod +x "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
+        fi
+        if [[ ! -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.reg" ]]; then
+            # now try to find 4.5-sigma peaks in each velo_bin_*.lmv.fits image
+            detect_threshold=$(awk "BEGIN {print ($sigma_threshold*($data_noise));}")
+            CrabBlobDetector "velo_bin_${velo_count}.lmv_bscale.fits" -detect-threshold "$detect_threshold"  -deblend-level 10 > "velo_bin_${velo_count}.lmv_bscale.detect_blob.log"
+            cp "ds9.reg" "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.reg"
+        fi
+        
+        # get blobs
+        if [[ -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" ]]; then
+            blob_xc=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing xc = " | sed -e 's/Computing xc = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
+            blob_yc=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing yc = " | sed -e 's/Computing yc = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
+            blob_fc=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing fc = " | sed -e 's/Computing fc = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
+            blob_snr=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing snr = " | sed -e 's/Computing snr = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
+            blob_rms=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing rms = " | sed -e 's/Computing rms = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
+            #echo "blob_xc = ${blob_xc[@]}"
+            #echo "blob_yc = ${blob_yc[@]}"
+        
+            # convert xy2sky
+            if [[ -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.input.txt" ]]; then
+                rm "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.input.txt"
+            fi
+            for (( iblob=0; iblob<${#blob_xc[@]}; iblob++ )); do
+                printf "%15d %15d\n" "${blob_xc[iblob]}" "${blob_yc[iblob]}" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.input.txt"
+            done
+            if [[ -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.input.txt" ]]; then
+                xy2sky -d -n 10 "velo_bin_${velo_count}.lmv_bscale.fits" @"velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.input.txt" > "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.output.txt"
+                if [[ -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.output.txt" ]]; then
+                    # Got some blobs
+                    blob_ra=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.output.txt" | tr -s ' ' | sed -e 's/^ *//g' | cut -d ' ' -f 1))
+                    blob_dec=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.output.txt" | tr -s ' ' | sed -e 's/^ *//g' | cut -d ' ' -f 2))
+                    blob_radec=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.output.txt" | tr -s ' ' | sed -e 's/^ *//g' | cut -d ' ' -f 1,2))
+                    
+                    # run uvfit
+                    echo "pdbi-uvt-go-uvfit-v5 -name \"../${PdBIUVT_NAME[tk]}\" -out \"velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit\" -radec ${blob_radec[@]} -vrange $velo_start $velo_end"
+                    pdbi-uvt-go-uvfit-v5 -name "../${PdBIUVT_NAME[tk]}" -out "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit" -radec ${blob_radec[@]}  -vrange $velo_start $velo_end > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.log.log"
+                    
+                    # plot uvfit
+                    frange=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
+                    for (( iobj=1; iobj<=${#blob_ra[@]}; iobj++ )); do
+                        echo "pdbi-uvt-go-plot-uvfit-result-spectrum \"velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.result.obj_${iobj}.txt\" -frange ${frange[@]}"
+                        pdbi-uvt-go-plot-uvfit-result-spectrum "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.result.obj_${iobj}.txt" -frange ${frange[@]}
+                        cp pdbi_uvt_go_plot_uvfit_result_spectrum.sm "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotfit.obj_${iobj}.sm"
+                        cp pdbi_uvt_go_plot_uvfit_result_spectrum.eps "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotfit.obj_${iobj}.eps"
+                        cp pdbi_uvt_go_plot_uvfit_result_spectrum.pdf "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotfit.obj_${iobj}.pdf"
+                    done
+                    
+                fi
+            fi
+            
+            echo "--"
+            
+        fi
+        
+        cd "../"
+        
+        velo_start=$(awk "BEGIN {print ($velo_start)+($velo_step)}")
+        velo_count=$(($velo_count+1))
+        if [[ $(awk "BEGIN {if(($velo_end)>=($PdBIUVT_VELO_MAX)) print 1; else print 0;}") -eq 1 ]]; then
+            break
+        fi
+    done
+    
+    
+    
+    
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

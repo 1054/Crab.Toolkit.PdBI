@@ -257,6 +257,8 @@ while [[ "$#" -gt 0 ]]; do
          "-cont-mode") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_CONT_MODE=1;; # argument with no value, no shift;
          "-keep-file") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
         "-keep-files") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
+          "-keepfile") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
+         "-keepfiles") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
             "-weight") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_weight";;
          "-weighting") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_weight";;
             "-factor") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_factor";;
@@ -312,7 +314,7 @@ while [[ "$#" -gt 0 ]]; do
         if [[ "$#" -lt 1 ]]; then
             break
         fi
-        if echo "$1" | grep -q -v -E "^[0-9.+- ]*$"; then
+        if echo "$1" | grep -q -v -e "^[0-9 .+-]*$"; then
             echo ""; echo "Error! Input -map_size has a wrong format! Please input only number value."; echo ""
             return 2
         fi
@@ -323,7 +325,7 @@ while [[ "$#" -gt 0 ]]; do
         if [[ "$#" -lt 1 ]]; then
             break
         fi
-        if echo "$1" | grep -q -v -E "^[0-9.+- ]*$"; then
+        if echo "$1" | grep -q -v -e "^[0-9 .+-]*$"; then
             echo ""; echo "Error! Input -map_cell has a wrong format! Please input only number value."; echo ""
             return 2
         fi

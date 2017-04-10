@@ -6,6 +6,7 @@
 # Last update:
 #    2017-02-19 rewritten, beautified, used "pdbi-uvt-core-arg"
 #    2017-03-30 using "pdbi-uvt-core-arg-v5"
+#    2017-04-09 Now output "*.lmv.fits"
 # 
 # 
 
@@ -97,9 +98,22 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         if [[ ${#PdBIUVT_MAP_SIZE[@]} -gt 0 ]]; then echo "let map_size ${PdBIUVT_MAP_SIZE[0]}"  >> "$PdBIUVT_EXE"; fi
         if [[ ${#PdBIUVT_MAP_CELL[@]} -gt 0 ]]; then echo "let map_cell ${PdBIUVT_MAP_CELL[0]}"  >> "$PdBIUVT_EXE"; fi
         
+        echo "say \"\""             >> "$PdBIUVT_EXE"
+        echo "say \"go uvmap\""     >> "$PdBIUVT_EXE"
+        echo "say \"\""             >> "$PdBIUVT_EXE"
         echo "go uvmap"             >> "$PdBIUVT_EXE"
+        echo "say \"\""             >> "$PdBIUVT_EXE"
+        echo "say \"go noise\""     >> "$PdBIUVT_EXE"
+        echo "say \"\""             >> "$PdBIUVT_EXE"
         echo "go noise"             >> "$PdBIUVT_EXE"
         echo "let spacing noise"    >> "$PdBIUVT_EXE"
+        echo "say \"\""             >> "$PdBIUVT_EXE"
+        echo "say \"fits\""         >> "$PdBIUVT_EXE"
+        echo "say \"\""             >> "$PdBIUVT_EXE"
+        echo "fits ${PdBIUVT_SAVE[i]}.lmv.fits from ${PdBIUVT_SAVE[i]}.lmv" >> "$PdBIUVT_EXE"
+        echo "say \"\""             >> "$PdBIUVT_EXE"
+        echo "say \"go view\""      >> "$PdBIUVT_EXE"
+        echo "say \"\""             >> "$PdBIUVT_EXE"
         echo "go view"              >> "$PdBIUVT_EXE"
         
         # 
