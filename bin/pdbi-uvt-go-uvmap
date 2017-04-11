@@ -142,19 +142,17 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         #echo "say \"\""             >> "$PdBIUVT_EXE"
         #echo "go noise"             >> "$PdBIUVT_EXE"
         
-        echo ""                             >> "$PdBIUVT_EXE"
-        echo "say \"\""                     >> "$PdBIUVT_EXE"
-        echo "say \"on error continue\""    >> "$PdBIUVT_EXE"
-        echo "on error continue"            >> "$PdBIUVT_EXE"
         
         echo ""                             >> "$PdBIUVT_EXE"
         echo "say \"\""                     >> "$PdBIUVT_EXE"
         echo "say \"go uvmap\""             >> "$PdBIUVT_EXE"
+        echo "on error continue"            >> "$PdBIUVT_EXE"
         echo "go uvmap"                     >> "$PdBIUVT_EXE"
         
         echo ""                             >> "$PdBIUVT_EXE"
         echo "say \"\""                     >> "$PdBIUVT_EXE"
         echo "say \"go noise\""             >> "$PdBIUVT_EXE"
+        echo "on error continue"            >> "$PdBIUVT_EXE"
         echo "go noise"                     >> "$PdBIUVT_EXE"
         
         echo ""                             >> "$PdBIUVT_EXE"
@@ -183,6 +181,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo ""                             >> "$PdBIUVT_EXE"
         echo "say \"\""                     >> "$PdBIUVT_EXE"
         echo "say \"go view\""              >> "$PdBIUVT_EXE"
+        echo "on error continue"            >> "$PdBIUVT_EXE"
         echo "go view"                      >> "$PdBIUVT_EXE"
         
         # 
