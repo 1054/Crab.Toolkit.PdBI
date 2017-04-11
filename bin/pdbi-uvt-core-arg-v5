@@ -259,6 +259,10 @@ while [[ "$#" -gt 0 ]]; do
         "-keep-files") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
           "-keepfile") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
          "-keepfiles") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
+        "-clean-file") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
+       "-clean-files") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
+         "-cleanfile") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
+        "-cleanfiles") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
             "-weight") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_weight";;
          "-weighting") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_weight";;
             "-factor") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_factor";;

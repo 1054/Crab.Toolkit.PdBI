@@ -18,7 +18,7 @@ usage() {
     echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-keep-files]"
     echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-keep-files] [-weight 0.5 0.5 1.0 1.0]"
     echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-keep-files] [-factor 0.5 0.5 1.0 1.0]"
-    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-keep-files] [-continuum-mode]"
+    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-clean-files] [-continuum-mode]"
     echo ""
 }
 
@@ -180,11 +180,15 @@ for (( i=1; i<${#PdBIUVT_NAME[@]}; i++ )); do
         
         # clean intermediate uvt
         if [[ $i -ge 2 ]]; then 
-            if [[ $PdBIUVT_UVMERGE_KEEP_FILE -eq 0 ]]; then
+            if [[ $PdBIUVT_UVMERGE_KEEP_FILE -le 0 ]]; then
                 #echo "rm \"${PdBIUVT_SAVE[0]}.$((i-1)).\"*"
                 #rm "${PdBIUVT_SAVE[0]}.$((i-1))."*
                 echo "Deleted \"${PdBIUVT_SAVE[0]}.$((i-1)).uvt\""
                 rm "${PdBIUVT_SAVE[0]}.$((i-1)).uvt"
+            fi
+            if [[ $PdBIUVT_UVMERGE_KEEP_FILE -lt 0 ]]; then
+                echo "rm \"${PdBIUVT_SAVE[0]}.$((i-1)).\"*"
+                rm "${PdBIUVT_SAVE[0]}.$((i-1))."*
             fi
         fi
         
@@ -193,11 +197,15 @@ for (( i=1; i<${#PdBIUVT_NAME[@]}; i++ )); do
             echo "Copying \"${PdBIUVT_SAVE[0]}.$i.uvt\" to \"${PdBIUVT_SAVE[0]}.uvt\""
             cp "${PdBIUVT_SAVE[0]}.$i.uvt" "${PdBIUVT_SAVE[0]}.uvt"
             # clean final intermediate uvt
-            if [[ $PdBIUVT_UVMERGE_KEEP_FILE -eq 0 ]]; then
+            if [[ $PdBIUVT_UVMERGE_KEEP_FILE -le 0 ]]; then
                 #echo "rm \"${PdBIUVT_SAVE[0]}.$i.\"*"
                 #rm "${PdBIUVT_SAVE[0]}.$i."*
                 echo "Deleted \"${PdBIUVT_SAVE[0]}.$i.uvt\""
                 rm "${PdBIUVT_SAVE[0]}.$i.uvt"
+            fi
+            if [[ $PdBIUVT_UVMERGE_KEEP_FILE -lt 0 ]]; then
+                echo "rm \"${PdBIUVT_SAVE[0]}.$i.\"*"
+                rm "${PdBIUVT_SAVE[0]}.$i."*
             fi
         fi
         
