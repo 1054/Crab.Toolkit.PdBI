@@ -175,9 +175,9 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     echo "*********"
     echo "* hello *"
     echo "*********"
+    echo "PdBIUVT_SAVE[tk] = ${PdBIUVT_SAVE[tk]}"
     echo "PdBIUVT_VELO_MIN = $PdBIUVT_VELO_MIN"
     echo "PdBIUVT_VELO_MAX = $PdBIUVT_VELO_MAX"
-    echo "PdBIUVT_SAVE[tk] = ${PdBIUVT_SAVE[tk]}"
     
     velo_count=1
     velo_start="$PdBIUVT_VELO_MIN"
@@ -195,6 +195,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         
         if [[ $(ls -1f "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}."* 2>/dev/null | wc -l) -ne 0 ]]; then
             if [[ $(grep "Exit code" "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}."*".log" 2>/dev/null | wc -l) -ne 0 ]]; then
+                echo "Found \"Exit code\" in log files, will remove old results!"
+                echo "rm" "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}."* 2>/dev/null
                 rm "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}."* 2>/dev/null
             fi
         fi
