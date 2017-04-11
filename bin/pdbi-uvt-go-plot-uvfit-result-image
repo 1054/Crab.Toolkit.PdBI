@@ -52,19 +52,24 @@ if [[ $* == *"-radec "* ]]; then
         if [[ ${radec[0]} == *":"* || ${radec[1]} == *":"* ]]; then
             radec_sexagement=(${radec[@]})
             radec=($(radec2degree ${radec_sexagement[@]}))
-            ra_radian=$(awk "BEGIN {print (${radec[0]})/180.0*3.1415926}")
-            dec_radian=$(awk "BEGIN {print (${radec[1]})/180.0*3.1415926}")
+            ra_radian=$(awk "BEGIN {print (${radec[0]})/180.0*3.14159265358979}")
+            dec_radian=$(awk "BEGIN {print (${radec[1]})/180.0*3.14159265358979}")
         else
-            ra_radian=$(awk "BEGIN {print (${radec[0]})/180.0*3.1415926}")
-            dec_radian=$(awk "BEGIN {print (${radec[1]})/180.0*3.1415926}")
+            ra_radian=$(awk "BEGIN {print (${radec[0]})/180.0*3.14159265358979}")
+            dec_radian=$(awk "BEGIN {print (${radec[1]})/180.0*3.14159265358979}")
         fi
+        echo "ra_radian = $ra_radian"
+        echo "dec_radian = $dec_radian"
         echo "DEFINE HEADER UVT_HEADER 'NAME'.uvt READ" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "DEFINE REAL OBJ_RA_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "DEFINE REAL OBJ_DEC_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "DEFINE REAL OBJ_BOX_SIZE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "LET OBJ_DEC_OFF = '($dec_radian - UVT_HEADER%D0)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "LET OBJ_RA_OFF = '($ra_radian - UVT_HEADER%A0) * COS(UVT_HEADER%D0)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "LET OBJ_BOX_SIZE = '2.0 / 3600.0 / 180.0 * 3.1415926'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_BOX_SIZE = '2.0 / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "EXAM OBJ_RA_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "EXAM OBJ_DEC_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "EXAM OBJ_BOX_SIZE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "PENCIL /COLOUR BLACK /WEIGHT 5" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "DRAW RELOCATE 'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "DRAW LINE     'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF+OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
