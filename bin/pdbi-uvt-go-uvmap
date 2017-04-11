@@ -142,33 +142,48 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         #echo "say \"\""             >> "$PdBIUVT_EXE"
         #echo "go noise"             >> "$PdBIUVT_EXE"
         
-        echo "say \"\""             >> "$PdBIUVT_EXE"
-        echo "say \"go uvmap\""     >> "$PdBIUVT_EXE"
-        echo "say \"\""             >> "$PdBIUVT_EXE"
-        echo "on error go uvmap"    >> "$PdBIUVT_EXE"
+        echo ""                             >> "$PdBIUVT_EXE"
+        echo "say \"\""                     >> "$PdBIUVT_EXE"
+        echo "say \"on error continue\""    >> "$PdBIUVT_EXE"
+        echo "on error continue"            >> "$PdBIUVT_EXE"
         
-        echo "say \"\""             >> "$PdBIUVT_EXE"
-        echo "say \"go noise\""     >> "$PdBIUVT_EXE"
-        echo "say \"\""             >> "$PdBIUVT_EXE"
-        echo "go noise"             >> "$PdBIUVT_EXE"
+        echo ""                             >> "$PdBIUVT_EXE"
+        echo "say \"\""                     >> "$PdBIUVT_EXE"
+        echo "say \"go uvmap\""             >> "$PdBIUVT_EXE"
+        echo "go uvmap"                     >> "$PdBIUVT_EXE"
         
-        echo "let spacing noise"    >> "$PdBIUVT_EXE"
+        echo ""                             >> "$PdBIUVT_EXE"
+        echo "say \"\""                     >> "$PdBIUVT_EXE"
+        echo "say \"go noise\""             >> "$PdBIUVT_EXE"
+        echo "go noise"                     >> "$PdBIUVT_EXE"
         
-        echo "say \"\""             >> "$PdBIUVT_EXE"
-        echo "exam map_size"        >> "$PdBIUVT_EXE"
-        echo "exam map_cell"        >> "$PdBIUVT_EXE"
-        echo "exam noise"           >> "$PdBIUVT_EXE"
-        echo "say \"\""             >> "$PdBIUVT_EXE"
+        echo ""                             >> "$PdBIUVT_EXE"
+        echo "let spacing noise"            >> "$PdBIUVT_EXE"
         
-        echo "say \"\""             >> "$PdBIUVT_EXE"
-        echo "say \"fits\""         >> "$PdBIUVT_EXE"
-        echo "say \"\""             >> "$PdBIUVT_EXE"
-        echo "fits 'name'.lmv.fits from 'name'.lmv /overwrite" >> "$PdBIUVT_EXE"
+        echo ""                             >> "$PdBIUVT_EXE"
+        echo "say \"\""                     >> "$PdBIUVT_EXE"
+        echo "say \"examine map_size\""     >> "$PdBIUVT_EXE"
+        echo "exam map_size"                >> "$PdBIUVT_EXE"
         
-        echo "say \"\""             >> "$PdBIUVT_EXE"
-        echo "say \"go view\""      >> "$PdBIUVT_EXE"
-        echo "say \"\""             >> "$PdBIUVT_EXE"
-        echo "go view"              >> "$PdBIUVT_EXE"
+        echo ""                             >> "$PdBIUVT_EXE"
+        echo "say \"\""                     >> "$PdBIUVT_EXE"
+        echo "say \"examine map_cell\""     >> "$PdBIUVT_EXE"
+        echo "exam map_cell"                >> "$PdBIUVT_EXE"
+        
+        echo ""                             >> "$PdBIUVT_EXE"
+        echo "say \"\""                     >> "$PdBIUVT_EXE"
+        echo "say \"examine noise\""        >> "$PdBIUVT_EXE"
+        echo "exam noise"                   >> "$PdBIUVT_EXE"
+        
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"fits\""                                     >> "$PdBIUVT_EXE"
+        echo "fits 'name'.lmv.fits from 'name'.lmv /overwrite"  >> "$PdBIUVT_EXE"
+        
+        echo ""                             >> "$PdBIUVT_EXE"
+        echo "say \"\""                     >> "$PdBIUVT_EXE"
+        echo "say \"go view\""              >> "$PdBIUVT_EXE"
+        echo "go view"                      >> "$PdBIUVT_EXE"
         
         # 
         # Overwrite or not (always overwrite)
@@ -176,6 +191,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         if [[ -f "${PdBIUVT_EPS}.eps" ]]; then
             mv "${PdBIUVT_EPS}.eps" "${PdBIUVT_EPS}.eps.backup"
         fi
+        echo ""                                              >> "$PdBIUVT_EXE"
         echo "hardcopy \"${PdBIUVT_EPS}.eps\" /overwrite"    >> "$PdBIUVT_EXE"
         echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_EPS}.eps\""   >> "$PdBIUVT_EXE"
         #if [[ "$PdBIUVT_OVERWRITE" == "YES" ]]; then
