@@ -177,6 +177,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     echo "*********"
     echo "PdBIUVT_VELO_MIN = $PdBIUVT_VELO_MIN"
     echo "PdBIUVT_VELO_MAX = $PdBIUVT_VELO_MAX"
+    echo "PdBIUVT_SAVE[tk] = ${PdBIUVT_SAVE[tk]}"
     
     velo_count=1
     velo_start="$PdBIUVT_VELO_MIN"
@@ -192,7 +193,11 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             velo_end="$PdBIUVT_VELO_MAX"
         fi
         
-        rm "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}."* 2>/dev/null
+        if [[ $(ls -1f "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}."* 2>/dev/null | wc -l) -ne 0 ]]; then
+            if [[ $(grep "Exit code" "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}."*".log" 2>/dev/null | wc -l) -ne 0 ]]; then
+                rm "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}."* 2>/dev/null
+            fi
+        fi
         
         if [[ ! -f "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt" ]]; then
             echo "pdbi-uvt-go-average -name \"${PdBIUVT_NAME[tk]}\" -out \"${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt\" -vrange $velo_start $velo_end"
@@ -203,24 +208,27 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         
         #rm "velo_bin_${velo_count}.lmv"* "velo_bin_${velo_count}.lmv_bscale.detect_blob"* 2>/dev/null
         
-        if [[ ! -f "velo_bin_${velo_count}.lmv.fits" || ! -f "velo_bin_${velo_count}.uvt.uv_map.log" ]]; then
+        if [[ ! -f "velo_bin_${velo_count}.lmv" || ! -f "velo_bin_${velo_count}.lmv.fits" || ! -f "velo_bin_${velo_count}.uvt.uv_map.log" ]]; then
             echo "pdbi-uvt-go-uvmap -name \"velo_bin_${velo_count}.uvt\" -size $fov_size -map_size $map_size"
-            pdbi-uvt-go-uvmap -name "velo_bin_${velo_count}.uvt" -size $fov_size -map_size $map_size | sed -e 's/[^[[:print:]]]//g' > "velo_bin_${velo_count}.uv_map.log"
+            pdbi-uvt-go-uvmap -name "velo_bin_${velo_count}.uvt" -size $fov_size -map_size $map_size | sed -e 's/[^[[:print:]]]//g' > "velo_bin_${velo_count}.uvt.uv_map.log.log"
         fi
         
         if [[ ! -f "velo_bin_${velo_count}.lmv" ]]; then
             echo "Error! Failed to create \"velo_bin_${velo_count}.uvt\"!"
-            echo "Error! Failed to create \"velo_bin_${velo_count}.uvt\"!" > "velo_bin_${velo_count}.lmv.error"
             echo "Please check \"velo_bin_${velo_count}.uvt.uv_map.log\"!"
-            echo "Please check \"velo_bin_${velo_count}.uvt.uv_map.log\"!" >> "velo_bin_${velo_count}.lmv.error"
             echo "Current directory \"$(pwd -P)\"!"
-            echo "Current directory \"$(pwd -P)\"!" >> "velo_bin_${velo_count}.lmv.error"
             exit
         done
         
         #data_noise=$(cat "velo_bin_${velo_count}.uvt.uv_map.log" | grep "^NOISE" | grep "=")
         data_noise=$(CrabTableReadInfo "velo_bin_${velo_count}.uvt.uv_map.log" "NOISE" "!")
         echo "data_noise = $data_noise Jy"
+        if [[ x"$data_noise" == x ]]; then
+            echo "Error! Failed to get data_noise for \"velo_bin_${velo_count}.uvt\"!"
+            echo "Please check \"velo_bin_${velo_count}.uvt.uv_map.log\" and \"velo_bin_${velo_count}.uvt.uv_map.log.log\"!"
+            echo "Current directory \"$(pwd -P)\"!"
+            exit
+        done
         
         # convert gildas lmv converted fits image BSCALE
         if [[ ! -f "velo_bin_${velo_count}.lmv_bscale.fits" ]]; then
@@ -230,6 +238,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         fi
         
         # check previous blob detect results
+        blob_overwrite=0
         if [[ ! -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh" ]]; then
             # prepare ds9 script
             echo "#!/bin/bash" > "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
@@ -240,16 +249,25 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             echo "ds9 -title \"velo_bin_${velo_count}\" \"velo_bin_${velo_count}.lmv.fits\" -regions load \"velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.reg\"" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
             echo "" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
             chmod +x "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
+            blob_overwrite=1
         fi
         if [[ ! -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.reg" ]]; then
             # now try to find 4.5-sigma peaks in each velo_bin_*.lmv.fits image
             detect_threshold=$(awk "BEGIN {print ($sigma_threshold*($data_noise));}")
-            CrabBlobDetector "velo_bin_${velo_count}.lmv_bscale.fits" -detect-threshold "$detect_threshold"  -deblend-level 10 > "velo_bin_${velo_count}.lmv_bscale.detect_blob.log"
+            CrabBlobDetector "velo_bin_${velo_count}.lmv_bscale.fits" -detect-threshold "$detect_threshold"  -deblend-level 10 \
+                       > "velo_bin_${velo_count}.lmv_bscale.detect_blob.log"
             cp "ds9.reg" "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.reg"
+            blob_overwrite=1
+        fi
+        if [[ ! -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" ]]; then
+            echo "Error! Failed to run \"CrabBlobDetector\" and output \"velo_bin_${velo_count}.lmv_bscale.detect_blob.log\"!"
+            echo "Please check \"velo_bin_${velo_count}.lmv_bscale.detect_blob.log\"!"
+            echo "Current directory \"$(pwd -P)\"!"
+            exit
         fi
         
         # get blobs
-        if [[ -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" ]]; then
+        if [[ $blob_overwrite -eq 1 ]]; then
             blob_xc=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing xc = " | sed -e 's/Computing xc = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
             blob_yc=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing yc = " | sed -e 's/Computing yc = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
             blob_fc=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing fc = " | sed -e 's/Computing fc = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
@@ -266,7 +284,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                 printf "%15d %15d\n" "${blob_xc[iblob]}" "${blob_yc[iblob]}" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.input.txt"
             done
             if [[ -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.input.txt" ]]; then
-                xy2sky -d -n 10 "velo_bin_${velo_count}.lmv_bscale.fits" @"velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.input.txt" > "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.output.txt"
+                xy2sky -d -n 10 "velo_bin_${velo_count}.lmv_bscale.fits" @"velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.input.txt" \
+                       > "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.output.txt"
                 if [[ -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.output.txt" ]]; then
                     # Got some blobs
                     blob_ra=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.output.txt" | tr -s ' ' | sed -e 's/^ *//g' | cut -d ' ' -f 1))
@@ -275,7 +294,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                     
                     # run uvfit
                     echo "pdbi-uvt-go-uvfit-v5 -name \"../${PdBIUVT_NAME[tk]}\" -out \"velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit\" -radec ${blob_radec[@]} -vrange $velo_start $velo_end"
-                    pdbi-uvt-go-uvfit-v5 -name "../${PdBIUVT_NAME[tk]}" -out "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit" -radec ${blob_radec[@]} -vrange $velo_start $velo_end > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.log.log"
+                    pdbi-uvt-go-uvfit-v5 -name "../${PdBIUVT_NAME[tk]}" -out "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit" -radec ${blob_radec[@]} -vrange $velo_start $velo_end \
+                                                                           > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.log.log"
                     
                     # plot uvfit
                     frange=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
@@ -299,6 +319,12 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                 fi
             fi
             
+            echo "--"
+            
+        else
+            
+            echo "Found existing \"velo_bin_${velo_count}.lmv_bscale.detect_blob.*\"!"
+            echo "Will skip blob detecting and continue!"
             echo "--"
             
         fi
