@@ -121,15 +121,20 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo "go view"              >> "$PdBIUVT_EXE"
         
         # 
-        # Overwrite or not
+        # Overwrite or not (always overwrite)
         # 
-        if [[ "$PdBIUVT_OVERWRITE" == "YES" ]]; then
-            echo "hardcopy \"${PdBIUVT_EPS}.eps\" /overwrite"    >> "$PdBIUVT_EXE"
-            echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_EPS}.eps\""   >> "$PdBIUVT_EXE"
-        else
-            echo "hardcopy \"${PdBIUVT_EPS}.eps\""               >> "$PdBIUVT_EXE"
-            echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_EPS}.eps\""   >> "$PdBIUVT_EXE"
+        if [[ -f "${PdBIUVT_EPS}.eps" ]]; then
+            mv "${PdBIUVT_EPS}.eps" "${PdBIUVT_EPS}.eps.backup"
         fi
+        echo "hardcopy \"${PdBIUVT_EPS}.eps\" /overwrite"    >> "$PdBIUVT_EXE"
+        echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_EPS}.eps\""   >> "$PdBIUVT_EXE"
+        #if [[ "$PdBIUVT_OVERWRITE" == "YES" ]]; then
+        #    echo "hardcopy \"${PdBIUVT_EPS}.eps\" /overwrite"    >> "$PdBIUVT_EXE"
+        #    echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_EPS}.eps\""   >> "$PdBIUVT_EXE"
+        #else
+        #    echo "hardcopy \"${PdBIUVT_EPS}.eps\""               >> "$PdBIUVT_EXE"
+        #    echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_EPS}.eps\""   >> "$PdBIUVT_EXE"
+        #fi
         
         # 
         # Run mapping script
