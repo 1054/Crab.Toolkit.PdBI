@@ -84,8 +84,8 @@ echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "@pdbi_uvt_go_plot_uvfit_result_image.map | mapping -nw -nl"
 echo "@pdbi_uvt_go_plot_uvfit_result_image.map" | mapping -nw -nl
 
-if [[ -f "pdbi_uvt_go_plot_uvfit_result_spectrum.eps" ]]; then
-    ps2pdf -dEPSCrop "pdbi_uvt_go_plot_uvfit_result_spectrum.eps" "pdbi_uvt_go_plot_uvfit_result_spectrum.pdf"
+if [[ -f "pdbi_uvt_go_plot_uvfit_result_image.eps" ]]; then
+    ps2pdf -dEPSCrop "pdbi_uvt_go_plot_uvfit_result_image.eps" "pdbi_uvt_go_plot_uvfit_result_image.pdf"
 fi
 
 
