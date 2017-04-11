@@ -218,7 +218,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             echo "Please check \"velo_bin_${velo_count}.uvt.uv_map.log\"!"
             echo "Current directory \"$(pwd -P)\"!"
             exit
-        done
+        fi
         
         #data_noise=$(cat "velo_bin_${velo_count}.uvt.uv_map.log" | grep "^NOISE" | grep "=")
         data_noise=$(CrabTableReadInfo "velo_bin_${velo_count}.uvt.uv_map.log" "NOISE" "!")
@@ -228,7 +228,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             echo "Please check \"velo_bin_${velo_count}.uvt.uv_map.log\" and \"velo_bin_${velo_count}.uvt.uv_map.log.log\"!"
             echo "Current directory \"$(pwd -P)\"!"
             exit
-        done
+        fi
         
         # convert gildas lmv converted fits image BSCALE
         if [[ ! -f "velo_bin_${velo_count}.lmv_bscale.fits" ]]; then
