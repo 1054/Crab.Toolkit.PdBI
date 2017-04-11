@@ -88,9 +88,32 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # 
         PdBIUVT_EXE="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_map.script"
         PdBIUVT_LOG="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_map.log"
+        PdBIUVT_INI="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_map.init" #<TODO>
         PdBIUVT_EPS="${PdBIUVT_SAVE[i]}"
         
-        echo ""                                >  "$PdBIUVT_EXE"
+        #echo "" > "$PdBIUVT_INI"
+        #echo 'TASK\FILE      "UV table" UV_TABLE$ "'${PdBIUVT_NAME[i]}'"'
+        #echo 'TASK\CHARACTER "Map name" MAP_NAME$ "'${PdBIUVT_NAME[i]}'"'
+        #echo 'TASK\REAL      "UV taper (1/e level) [m]" UV_TAPER$[4]  0 0 0 0'
+        #echo 'TASK\CHARACTER "Weight mode (NA or UN)" WEIGHT_MODE$ "NA"'
+        #echo 'TASK\REAL      "Field of view [arc sec]" MAP_FIELD$[2]  0 0'
+        #echo 'TASK\INTEGER   "Map size [pixel]" MAP_SIZE$[2]  0 0'
+        #echo 'TASK\REAL      "Map cell [arc sec]" MAP_CELL$[2]  0 0'
+        #echo 'TASK\REAL      "UV cell [m], for unif. weighting" UV_CELL$[2]  7.5 1'
+        #echo 'TASK\LOGICAL   "Make one beam (NO), or one per channel (YES)" ONEBEAM$ NO'
+        #echo 'TASK\INTEGER   "Weight channel" WCOL$ 0'
+        #echo 'TASK\INTEGER   "Beam channel" BCOL$ 0'
+        #echo 'TASK\INTEGER   "First and Last channel to map" MCOL$[2]  0 0'
+        #echo 'TASK\INTEGER   "Convolution function [0-5]" CONVOLUTION$ 5'
+        #echo '!'
+        #echo 'TASK\LOGICAL   "Change map center or map orientation" UV_SHIFT$ NO'
+        #echo 'TASK\CHARACTER "Map Center RA" RA_CENTER$ "0"'
+        #echo 'TASK\CHARACTER "Map Center DEC" DEC_CENTER$ "0"'
+        #echo 'TASK\REAL      "Map Position Angle [deg]" ANGLE$ 0'
+        #echo 'TASK\GO'
+        
+        
+        echo "! GILDAS MAPPING SCRIPT"         >  "$PdBIUVT_EXE"
         echo ""                                >> "$PdBIUVT_EXE"
         echo "let name \"${PdBIUVT_NAME[i]}\"" >> "$PdBIUVT_EXE"
         
@@ -102,19 +125,45 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
             mv "${PdBIUVT_SAVE[i]}.lmv.fits" "${PdBIUVT_SAVE[i]}.lmv.fits.backup"
         fi
         
-        echo "say \"\""             >> "$PdBIUVT_EXE"
-        echo "say \"go uvmap\""     >> "$PdBIUVT_EXE"
-        echo "say \"\""             >> "$PdBIUVT_EXE"
-        echo "go uvmap"             >> "$PdBIUVT_EXE"
+        echo "say \"\""                         >> "$PdBIUVT_EXE"
+        echo "say \"uv_map\""                   >> "$PdBIUVT_EXE"
+        echo "say \"\""                         >> "$PdBIUVT_EXE"
+        echo "@ p_setup.map inter"              >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
+        echo "let map_size used%size"           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
+        echo "let map_cell used%cell"           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
+        echo "uv_map"                           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map -- <TODO> THIS CAN NOT BE APPLIED TO MOSAIC UV DATA
+        echo "fit"                              >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
+        echo "write dirty 'name'.alt.lmv"           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
+        echo "write beam 'name'.alt.beam"           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
+        
         echo "say \"\""             >> "$PdBIUVT_EXE"
         echo "say \"go noise\""     >> "$PdBIUVT_EXE"
         echo "say \"\""             >> "$PdBIUVT_EXE"
         echo "go noise"             >> "$PdBIUVT_EXE"
+        
+        #echo "say \"\""             >> "$PdBIUVT_EXE"
+        #echo "say \"go uvmap\""     >> "$PdBIUVT_EXE"
+        #echo "say \"\""             >> "$PdBIUVT_EXE"
+        #echo "go uvmap"             >> "$PdBIUVT_EXE"
+        
+        #echo "say \"\""             >> "$PdBIUVT_EXE"
+        #echo "say \"go noise\""     >> "$PdBIUVT_EXE"
+        #echo "say \"\""             >> "$PdBIUVT_EXE"
+        #echo "go noise"             >> "$PdBIUVT_EXE"
+        
         echo "let spacing noise"    >> "$PdBIUVT_EXE"
+        
+        echo "say \"\""             >> "$PdBIUVT_EXE"
+        echo "exam map_size"        >> "$PdBIUVT_EXE"
+        echo "exam map_cell"        >> "$PdBIUVT_EXE"
+        echo "exam noise"           >> "$PdBIUVT_EXE"
+        echo "say \"\""             >> "$PdBIUVT_EXE"
+        
         echo "say \"\""             >> "$PdBIUVT_EXE"
         echo "say \"fits\""         >> "$PdBIUVT_EXE"
         echo "say \"\""             >> "$PdBIUVT_EXE"
-        echo "fits ${PdBIUVT_SAVE[i]}.lmv.fits from ${PdBIUVT_SAVE[i]}.lmv /overwrite" >> "$PdBIUVT_EXE"
+        echo "fits 'name'.lmv.fits from 'name'.lmv /overwrite" >> "$PdBIUVT_EXE"
+        
         echo "say \"\""             >> "$PdBIUVT_EXE"
         echo "say \"go view\""      >> "$PdBIUVT_EXE"
         echo "say \"\""             >> "$PdBIUVT_EXE"
@@ -139,7 +188,15 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # 
         # Run mapping script
         # 
-        echo "@$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG"
+        # -- must wait for other mapping processes (for example when another uv_merge is running... strange though)
+        echo "@$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG" 
+        PdBIUVT_REPEAT=0
+        while [[ ! -f "${PdBIUVT_EPS}.eps" || ! -f "${PdBIUVT_SAVE[i]}.lmv" || ! -f "${PdBIUVT_SAVE[i]}.lmv.fits" ]]; do
+            echo "Failed to get the uv_map result? Perhaps conflicting with other running mapping processes! Try again!"; sleep 1.0
+            echo "@$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG" 
+            PdBIUVT_REPEAT=$(($PdBIUVT_REPEAT+1))
+            # repeat running it
+        done
         
         # 
         # Check output

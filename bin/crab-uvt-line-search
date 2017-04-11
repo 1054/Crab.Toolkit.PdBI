@@ -207,6 +207,17 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             echo "pdbi-uvt-go-uvmap -name \"velo_bin_${velo_count}.uvt\" -size $fov_size -map_size $map_size"
             pdbi-uvt-go-uvmap -name "velo_bin_${velo_count}.uvt" -size $fov_size -map_size $map_size | sed -e 's/[^[[:print:]]]//g' > "velo_bin_${velo_count}.uv_map.log"
         fi
+        
+        if [[ ! -f "velo_bin_${velo_count}.lmv" ]]; then
+            echo "Error! Failed to create \"velo_bin_${velo_count}.uvt\"!"
+            echo "Error! Failed to create \"velo_bin_${velo_count}.uvt\"!" > "velo_bin_${velo_count}.lmv.error"
+            echo "Please check \"velo_bin_${velo_count}.uvt.uv_map.log\"!"
+            echo "Please check \"velo_bin_${velo_count}.uvt.uv_map.log\"!" >> "velo_bin_${velo_count}.lmv.error"
+            echo "Current directory \"$(pwd -P)\"!"
+            echo "Current directory \"$(pwd -P)\"!" >> "velo_bin_${velo_count}.lmv.error"
+            exit
+        done
+        
         #data_noise=$(cat "velo_bin_${velo_count}.uvt.uv_map.log" | grep "^NOISE" | grep "=")
         data_noise=$(CrabTableReadInfo "velo_bin_${velo_count}.uvt.uv_map.log" "NOISE" "!")
         echo "data_noise = $data_noise Jy"
