@@ -181,14 +181,16 @@ for (( i=1; i<${#PdBIUVT_NAME[@]}; i++ )); do
         # clean intermediate uvt
         if [[ $i -ge 2 ]]; then 
             if [[ $PdBIUVT_UVMERGE_KEEP_FILE -le 0 ]]; then
-                #echo "rm \"${PdBIUVT_SAVE[0]}.$((i-1)).\"*"
-                #rm "${PdBIUVT_SAVE[0]}.$((i-1))."*
                 echo "Deleted \"${PdBIUVT_SAVE[0]}.$((i-1)).uvt\""
                 rm "${PdBIUVT_SAVE[0]}.$((i-1)).uvt"
             fi
             if [[ $PdBIUVT_UVMERGE_KEEP_FILE -lt 0 ]]; then
-                echo "rm \"${PdBIUVT_SAVE[0]}.$((i-1)).\"*"
-                rm "${PdBIUVT_SAVE[0]}.$((i-1))."*
+                echo "Deleted \"${PdBIUVT_SAVE[0]}.$((i-1)).log\""
+                rm "${PdBIUVT_SAVE[0]}.$((i-1)).log"
+                echo "Deleted \"${PdBIUVT_SAVE[0]}.$((i-1)).map\""
+                rm "${PdBIUVT_SAVE[0]}.$((i-1)).map"
+                echo "Deleted \"${PdBIUVT_SAVE[0]}.$((i-1)).init\""
+                rm "${PdBIUVT_SAVE[0]}.$((i-1)).init"
             fi
         fi
         
@@ -198,14 +200,16 @@ for (( i=1; i<${#PdBIUVT_NAME[@]}; i++ )); do
             cp "${PdBIUVT_SAVE[0]}.$i.uvt" "${PdBIUVT_SAVE[0]}.uvt"
             # clean final intermediate uvt
             if [[ $PdBIUVT_UVMERGE_KEEP_FILE -le 0 ]]; then
-                #echo "rm \"${PdBIUVT_SAVE[0]}.$i.\"*"
-                #rm "${PdBIUVT_SAVE[0]}.$i."*
                 echo "Deleted \"${PdBIUVT_SAVE[0]}.$i.uvt\""
                 rm "${PdBIUVT_SAVE[0]}.$i.uvt"
             fi
             if [[ $PdBIUVT_UVMERGE_KEEP_FILE -lt 0 ]]; then
-                echo "rm \"${PdBIUVT_SAVE[0]}.$i.\"*"
-                rm "${PdBIUVT_SAVE[0]}.$i."*
+                echo "Deleted \"${PdBIUVT_SAVE[0]}.$i.log\""
+                rm "${PdBIUVT_SAVE[0]}.$i.log"
+                echo "Deleted \"${PdBIUVT_SAVE[0]}.$i.map\""
+                rm "${PdBIUVT_SAVE[0]}.$i.map"
+                echo "Deleted \"${PdBIUVT_SAVE[0]}.$i.init\""
+                rm "${PdBIUVT_SAVE[0]}.$i.init"
             fi
         fi
         
