@@ -83,6 +83,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         PdBIUVT_LOG="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_map.log"
         PdBIUVT_INI="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_map.init" #<TODO>
         PdBIUVT_EPS="${PdBIUVT_SAVE[i]}"
+        if [[ ${#PdBIUVT_SIZE[@]} -gt 0 ]]; then PdBIUVT_EPS="${PdBIUVT_EPS}_FoV_"$(printf "%.0f" ${PdBIUVT_SIZE[0]})"_arcsec"; fi
         # 
         # Backup existing output file
         # 
@@ -119,7 +120,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo ""                                >> "$PdBIUVT_EXE"
         echo "let name \"${PdBIUVT_NAME[i]}\"" >> "$PdBIUVT_EXE"
         
-        if [[ ${#PdBIUVT_SIZE[@]}     -gt 0 ]]; then echo "let size ${PdBIUVT_SIZE[0]}"          >> "$PdBIUVT_EXE"; PdBIUVT_EPS="${PdBIUVT_EPS}_FoV_"$(printf "%.0f" ${PdBIUVT_SIZE[0]})"_arcsec"; fi
+        if [[ ${#PdBIUVT_SIZE[@]}     -gt 0 ]]; then echo "let size ${PdBIUVT_SIZE[0]}"          >> "$PdBIUVT_EXE"; fi
         if [[ ${#PdBIUVT_MAP_SIZE[@]} -gt 0 ]]; then echo "let map_size ${PdBIUVT_MAP_SIZE[0]}"  >> "$PdBIUVT_EXE"; fi
         if [[ ${#PdBIUVT_MAP_CELL[@]} -gt 0 ]]; then echo "let map_cell ${PdBIUVT_MAP_CELL[0]}"  >> "$PdBIUVT_EXE"; fi
         
