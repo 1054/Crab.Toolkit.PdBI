@@ -125,31 +125,32 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
             mv "${PdBIUVT_SAVE[i]}.lmv.fits" "${PdBIUVT_SAVE[i]}.lmv.fits.backup"
         fi
         
-        echo "say \"\""                         >> "$PdBIUVT_EXE"
-        echo "say \"uv_map\""                   >> "$PdBIUVT_EXE"
-        echo "say \"\""                         >> "$PdBIUVT_EXE"
-        echo "@ p_setup.map inter"              >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
-        echo "let map_size used%size"           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
-        echo "let map_cell used%cell"           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
-        echo "uv_map"                           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map -- <TODO> THIS CAN NOT BE APPLIED TO MOSAIC UV DATA
-        echo "fit"                              >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
-        echo "write dirty 'name'.alt.lmv"           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
-        echo "write beam 'name'.alt.beam"           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
-        
-        echo "say \"\""             >> "$PdBIUVT_EXE"
-        echo "say \"go noise\""     >> "$PdBIUVT_EXE"
-        echo "say \"\""             >> "$PdBIUVT_EXE"
-        echo "go noise"             >> "$PdBIUVT_EXE"
-        
-        #echo "say \"\""             >> "$PdBIUVT_EXE"
-        #echo "say \"go uvmap\""     >> "$PdBIUVT_EXE"
-        #echo "say \"\""             >> "$PdBIUVT_EXE"
-        #echo "go uvmap"             >> "$PdBIUVT_EXE"
+        #echo "say \"\""                         >> "$PdBIUVT_EXE"
+        #echo "say \"uv_map\""                   >> "$PdBIUVT_EXE"
+        #echo "say \"\""                         >> "$PdBIUVT_EXE"
+        #echo "@ p_setup.map inter"              >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
+        #echo "let map_size used%size"           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
+        #echo "let map_cell used%cell"           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
+        #echo "uv_map"                           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map -- <TODO> THIS CAN NOT BE APPLIED TO MOSAIC UV DATA
+        ##echo "fit"                             >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
+        #echo "on error fit"                     >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
+        #echo "write dirty 'name'.lmv"           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
+        #echo "write beam 'name'.beam"           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
         
         #echo "say \"\""             >> "$PdBIUVT_EXE"
         #echo "say \"go noise\""     >> "$PdBIUVT_EXE"
         #echo "say \"\""             >> "$PdBIUVT_EXE"
         #echo "go noise"             >> "$PdBIUVT_EXE"
+        
+        echo "say \"\""             >> "$PdBIUVT_EXE"
+        echo "say \"go uvmap\""     >> "$PdBIUVT_EXE"
+        echo "say \"\""             >> "$PdBIUVT_EXE"
+        echo "on error go uvmap"    >> "$PdBIUVT_EXE"
+        
+        echo "say \"\""             >> "$PdBIUVT_EXE"
+        echo "say \"go noise\""     >> "$PdBIUVT_EXE"
+        echo "say \"\""             >> "$PdBIUVT_EXE"
+        echo "go noise"             >> "$PdBIUVT_EXE"
         
         echo "let spacing noise"    >> "$PdBIUVT_EXE"
         
