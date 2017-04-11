@@ -208,7 +208,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # Run mapping script
         # 
         # -- must wait for other mapping processes (for example when another uv_merge is running... strange though)
-        echo "on error continue & @$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG" 
+        echo "on error continue ; @$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG" 
         
         PdBIUVT_REPEAT=0
         while [[ ! -f "${PdBIUVT_EPS}.eps" || ! -f "${PdBIUVT_SAVE[i]}.lmv" || ! -f "${PdBIUVT_SAVE[i]}.lmv.fits" ]]; do
