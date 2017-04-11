@@ -98,6 +98,10 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         if [[ ${#PdBIUVT_MAP_SIZE[@]} -gt 0 ]]; then echo "let map_size ${PdBIUVT_MAP_SIZE[0]}"  >> "$PdBIUVT_EXE"; fi
         if [[ ${#PdBIUVT_MAP_CELL[@]} -gt 0 ]]; then echo "let map_cell ${PdBIUVT_MAP_CELL[0]}"  >> "$PdBIUVT_EXE"; fi
         
+        if [[ -f "${PdBIUVT_SAVE[i]}.lmv.fits" ]]; then
+            mv "${PdBIUVT_SAVE[i]}.lmv.fits" "${PdBIUVT_SAVE[i]}.lmv.fits.backup"
+        fi
+        
         echo "say \"\""             >> "$PdBIUVT_EXE"
         echo "say \"go uvmap\""     >> "$PdBIUVT_EXE"
         echo "say \"\""             >> "$PdBIUVT_EXE"
@@ -110,7 +114,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo "say \"\""             >> "$PdBIUVT_EXE"
         echo "say \"fits\""         >> "$PdBIUVT_EXE"
         echo "say \"\""             >> "$PdBIUVT_EXE"
-        echo "fits ${PdBIUVT_SAVE[i]}.lmv.fits from ${PdBIUVT_SAVE[i]}.lmv" >> "$PdBIUVT_EXE"
+        echo "fits ${PdBIUVT_SAVE[i]}.lmv.fits from ${PdBIUVT_SAVE[i]}.lmv /overwrite" >> "$PdBIUVT_EXE"
         echo "say \"\""             >> "$PdBIUVT_EXE"
         echo "say \"go view\""      >> "$PdBIUVT_EXE"
         echo "say \"\""             >> "$PdBIUVT_EXE"
