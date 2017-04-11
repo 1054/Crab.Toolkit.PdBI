@@ -214,10 +214,11 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         
         PdBIUVT_REPEAT=0
         while [[ ! -f "${PdBIUVT_EPS}.eps" || ! -f "${PdBIUVT_SAVE[i]}.lmv" || ! -f "${PdBIUVT_SAVE[i]}.lmv.fits" ]]; do
-            echo "Failed to get the uv_map result? Perhaps conflicting with other running mapping processes! Try again!"; sleep 1.0
+            echo "Failed to get the uv_map result? Perhaps conflicting with other running mapping processes! Try again!"
             echo ls "${PdBIUVT_EPS}.eps"; ls "${PdBIUVT_EPS}.eps"
             echo ls "${PdBIUVT_SAVE[i]}.lmv"; ls "${PdBIUVT_SAVE[i]}.lmv"
             echo ls "${PdBIUVT_SAVE[i]}.lmv.fits"; ls "${PdBIUVT_SAVE[i]}.lmv.fits"
+            sleep 1.5
             echo "@$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG" 
             PdBIUVT_REPEAT=$(($PdBIUVT_REPEAT+1))
             # repeat running it
