@@ -187,12 +187,14 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # 
         # Overwrite or not (always overwrite)
         # 
-        if [[ -f "${PdBIUVT_EPS}.eps" ]]; then
-            mv "${PdBIUVT_EPS}.eps" "${PdBIUVT_EPS}.eps.backup"
+        if [[ -f "${PdBIUVT_SAVE[i]}.eps" ]]; then
+            mv "${PdBIUVT_SAVE[i]}.eps" "${PdBIUVT_SAVE[i]}.eps.backup"
         fi
-        echo ""                                              >> "$PdBIUVT_EXE"
-        echo "hardcopy \"${PdBIUVT_EPS}.eps\" /overwrite"    >> "$PdBIUVT_EXE"
-        echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_EPS}.eps\""   >> "$PdBIUVT_EXE"
+        echo ""                                                  >> "$PdBIUVT_EXE"
+        echo "hardcopy \"${PdBIUVT_SAVE[i]}.eps\" /overwrite"    >> "$PdBIUVT_EXE"
+        echo "if(FILE(\"${PdBIUVT_SAVE[i]}.eps\")) then"         >> "$PdBIUVT_EXE"
+        echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_SAVE[i]}.eps\""   >> "$PdBIUVT_EXE"
+        echo "endif"                                             >> "$PdBIUVT_EXE"
         #if [[ "$PdBIUVT_OVERWRITE" == "YES" ]]; then
         #    echo "hardcopy \"${PdBIUVT_EPS}.eps\" /overwrite"    >> "$PdBIUVT_EXE"
         #    echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_EPS}.eps\""   >> "$PdBIUVT_EXE"
@@ -206,9 +208,13 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # 
         # -- must wait for other mapping processes (for example when another uv_merge is running... strange though)
         echo "@$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG" 
+        
         PdBIUVT_REPEAT=0
-        while [[ ! -f "${PdBIUVT_EPS}.eps" || ! -f "${PdBIUVT_SAVE[i]}.lmv" || ! -f "${PdBIUVT_SAVE[i]}.lmv.fits" ]]; do
+        while [[ ! -f "${PdBIUVT_SAVE[i]}.eps" || ! -f "${PdBIUVT_SAVE[i]}.lmv" || ! -f "${PdBIUVT_SAVE[i]}.lmv.fits" ]]; do
             echo "Failed to get the uv_map result? Perhaps conflicting with other running mapping processes! Try again!"; sleep 1.0
+            echo ls "${PdBIUVT_SAVE[i]}.eps"; ls "${PdBIUVT_SAVE[i]}.eps"
+            echo ls "${PdBIUVT_SAVE[i]}.lmv"; ls "${PdBIUVT_SAVE[i]}.lmv"
+            echo ls "${PdBIUVT_SAVE[i]}.lmv.fits"; ls "${PdBIUVT_SAVE[i]}.lmv.fits"
             echo "@$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG" 
             PdBIUVT_REPEAT=$(($PdBIUVT_REPEAT+1))
             # repeat running it
@@ -217,14 +223,14 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # 
         # Check output
         # 
-        if [[ -f "${PdBIUVT_EPS}.eps" ]]; then
-            echo "Successufully saved to \"${PdBIUVT_EPS}.eps\"!"
+        if [[ -f "${PdBIUVT_SAVE[i]}.eps" ]]; then
+            echo "Successufully saved to \"${PdBIUVT_SAVE[i]}.eps\"!"
             echo "--"
             #if [[ -f "$PdBIUVT_LOG" ]]; then
             #    rm "$PdBIUVT_LOG"
             #fi
         else
-            echo "Error! Failed to run GILDAS MAPPING UV_MAP and output \"${PdBIUVT_EPS}.eps\"!"
+            echo "Error! Failed to run GILDAS MAPPING UV_MAP and output \"${PdBIUVT_SAVE[i]}.eps\"!"
             echo "Please check \"$PdBIUVT_LOG\"!"
             exit 1
         fi
