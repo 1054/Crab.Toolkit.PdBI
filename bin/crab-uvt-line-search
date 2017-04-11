@@ -182,7 +182,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     velo_start="$PdBIUVT_VELO_MIN"
     velo_width="300.0"
     velo_step="150.0"
-    map_size="300" # 512 is 60 arcsec
+    map_size="300" # pixel, 512 is 60 arcsec
+    fov_size="30" # arcsec
     sigma_threshold="4.0" #<TODO># 
     
     while [[ $(awk "BEGIN {if(($velo_start)<($PdBIUVT_VELO_MAX)) print 1; else print 0;}") -eq 1 ]]; do
@@ -203,8 +204,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         #rm "velo_bin_${velo_count}.lmv"* "velo_bin_${velo_count}.lmv_bscale.detect_blob"* 2>/dev/null
         
         if [[ ! -f "velo_bin_${velo_count}.lmv.fits" || ! -f "velo_bin_${velo_count}.uvt.uv_map.log" ]]; then
-            echo "pdbi-uvt-go-uvmap -name \"velo_bin_${velo_count}.uvt\" -size 30 -map_size $map_size"
-            pdbi-uvt-go-uvmap -name "velo_bin_${velo_count}.uvt" -size 30 -map_size $map_size | sed -e 's/[^[[:print:]]]//g' > "velo_bin_${velo_count}.uv_map.log"
+            echo "pdbi-uvt-go-uvmap -name \"velo_bin_${velo_count}.uvt\" -size $fov_size -map_size $map_size"
+            pdbi-uvt-go-uvmap -name "velo_bin_${velo_count}.uvt" -size $fov_size -map_size $map_size | sed -e 's/[^[[:print:]]]//g' > "velo_bin_${velo_count}.uv_map.log"
         fi
         #data_noise=$(cat "velo_bin_${velo_count}.uvt.uv_map.log" | grep "^NOISE" | grep "=")
         data_noise=$(CrabTableReadInfo "velo_bin_${velo_count}.uvt.uv_map.log" "NOISE" "!")
@@ -263,16 +264,25 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                     
                     # run uvfit
                     echo "pdbi-uvt-go-uvfit-v5 -name \"../${PdBIUVT_NAME[tk]}\" -out \"velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit\" -radec ${blob_radec[@]} -vrange $velo_start $velo_end"
-                    pdbi-uvt-go-uvfit-v5 -name "../${PdBIUVT_NAME[tk]}" -out "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit" -radec ${blob_radec[@]}  -vrange $velo_start $velo_end > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.log.log"
+                    pdbi-uvt-go-uvfit-v5 -name "../${PdBIUVT_NAME[tk]}" -out "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit" -radec ${blob_radec[@]} -vrange $velo_start $velo_end > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.log.log"
                     
                     # plot uvfit
                     frange=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
                     for (( iobj=1; iobj<=${#blob_ra[@]}; iobj++ )); do
                         echo "pdbi-uvt-go-plot-uvfit-result-spectrum \"velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.result.obj_${iobj}.txt\" -frange ${frange[@]}"
-                        pdbi-uvt-go-plot-uvfit-result-spectrum "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.result.obj_${iobj}.txt" -frange ${frange[@]}
-                        cp pdbi_uvt_go_plot_uvfit_result_spectrum.sm "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotfit.obj_${iobj}.sm"
+                        pdbi-uvt-go-plot-uvfit-result-spectrum "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.result.obj_${iobj}.txt" -frange ${frange[@]} \
+                                                                    > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotfit.obj_${iobj}.log"
+                        cp pdbi_uvt_go_plot_uvfit_result_spectrum.sm  "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotfit.obj_${iobj}.sm"
                         cp pdbi_uvt_go_plot_uvfit_result_spectrum.eps "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotfit.obj_${iobj}.eps"
                         cp pdbi_uvt_go_plot_uvfit_result_spectrum.pdf "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotfit.obj_${iobj}.pdf"
+                        
+                        echo "pdbi-uvt-go-plot-uvfit-result-image \"velo_bin_${velo_count}.uvt\" -size $fov_size -radec ${blob_radec[@]}"
+                        pdbi-uvt-go-plot-uvfit-result-image "velo_bin_${velo_count}.uvt" -size $fov_size -radec ${blob_radec[@]} \
+                                                                    > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotmap.obj_${iobj}.log"
+                        cp pdbi_uvt_go_plot_uvfit_result_spectrum.map "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotmap.obj_${iobj}.map"
+                        cp pdbi_uvt_go_plot_uvfit_result_spectrum.eps "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotmap.obj_${iobj}.eps"
+                        cp pdbi_uvt_go_plot_uvfit_result_spectrum.pdf "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotmap.obj_${iobj}.pdf"
+                        
                     done
                     
                 fi

@@ -1,0 +1,92 @@
+#!/bin/bash
+# 
+# plot image using supermongo
+
+
+if [[ $(type sm 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! Supermongo was not found in \$PATH!"
+    exit
+fi
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: pdbi-uvt-go-plot-uvfit-result-image *.uvt -radec ra dec"
+    exit
+fi
+
+uv_filename=$(echo $1 | sed -e 's/\.uvt$//g')
+
+echo "! GILDAS MAPPING SCRIPT" > "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "let name \"$uv_filename\"" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+#echo "LET TYPE LMV" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+#echo "READ UV 'NAME'.uvt" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+#echo "INPUT UV_MAP" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+#echo "UV_MAP" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+#echo "UV_STAT WEIGHT" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+#echo "UV_MAP" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "go uvmap" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "go bit" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+# 
+echo "let size 30" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+# 
+if [[ $* == *"-size "* ]]; then
+    msize=($(echo $* | perl -p -e 's/.* -size[ ]+([0-9.+-]+).*/\1/g'))
+    echo "let size $msize" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+fi
+# 
+echo "let niter 1" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "clean" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+# 
+echo "write * 'name'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "let type lmv-clean" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "go noise" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "let spacing noise" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+#echo "lut rainbow3" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "let do_bit yes" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "let do_contour yes" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "go nice" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+# 
+if [[ $* == *"-radec "* ]]; then
+    radec=($(echo $* | perl -p -e 's/.* -radec[ ]+([0-9.+-:]+)[ ]+([0-9.+-:]+).*/\1 \2/g')) # must be in degrees
+    echo "Setting radec ${radec[@]}"
+    if [[ ${#radec[@]} -eq 2 ]]; then
+        if [[ ${radec[0]} == *":"* || ${radec[1]} == *":"* ]]; then
+            radec_sexagement=(${radec[@]})
+            radec=($(radec2degree ${radec_sexagement[@]}))
+            ra_radian=$(awk "BEGIN {print (${radec[0]})/180.0*3.1415926}")
+            dec_radian=$(awk "BEGIN {print (${radec[1]})/180.0*3.1415926}")
+        else
+            ra_radian=$(awk "BEGIN {print (${radec[0]})/180.0*3.1415926}")
+            dec_radian=$(awk "BEGIN {print (${radec[1]})/180.0*3.1415926}")
+        fi
+        echo "DEFINE HEADER UVT_HEADER 'NAME'.uvt READ" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DEFINE REAL OBJ_RA_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DEFINE REAL OBJ_DEC_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DEFINE REAL OBJ_BOX_SIZE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_DEC_OFF = '($dec_radian - UVT_HEADER%D0)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_RA_OFF = '($ra_radian - UVT_HEADER%A0) * COS(UVT_HEADER%D0)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_BOX_SIZE = '2.0 / 3600.0 / 180.0 * 3.1415926'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "PENCIL /COLOUR BLACK /WEIGHT 5" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DRAW RELOCATE 'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DRAW LINE     'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF+OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DRAW LINE     'OBJ_RA_OFF+OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF+OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DRAW LINE     'OBJ_RA_OFF+OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DRAW LINE     'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "PENCIL 0" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+    fi
+fi
+# 
+#echo "LET DO_HEADER NO" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+#echo "LET DO_NICE YES" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+# 
+echo "hardcopy pdbi_uvt_go_plot_uvfit_result_image.eps /OVERWRITE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+
+echo "@pdbi_uvt_go_plot_uvfit_result_image.map | mapping -nw -nl"
+echo "@pdbi_uvt_go_plot_uvfit_result_image.map" | mapping -nw -nl
+
+if [[ -f "pdbi_uvt_go_plot_uvfit_result_spectrum.eps" ]]; then
+    ps2pdf -dEPSCrop "pdbi_uvt_go_plot_uvfit_result_spectrum.eps" "pdbi_uvt_go_plot_uvfit_result_spectrum.pdf"
+fi
+
+
+
