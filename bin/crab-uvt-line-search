@@ -277,7 +277,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                         cp pdbi_uvt_go_plot_uvfit_result_spectrum.pdf "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotfit.obj_${iobj}.pdf"
                         
                         echo "pdbi-uvt-go-plot-uvfit-result-image \"velo_bin_${velo_count}.uvt\" -size $fov_size -radec ${blob_radec[@]}"
-                        pdbi-uvt-go-plot-uvfit-result-image "velo_bin_${velo_count}.uvt" -size $fov_size -radec ${blob_ra[iobj]} ${blob_dec[iobj]} \
+                        pdbi-uvt-go-plot-uvfit-result-image "velo_bin_${velo_count}.uvt" -size $fov_size -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} \
                                                                  > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotmap.obj_${iobj}.log"
                         cp pdbi_uvt_go_plot_uvfit_result_image.map "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotmap.obj_${iobj}.map"
                         cp pdbi_uvt_go_plot_uvfit_result_image.eps "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotmap.obj_${iobj}.eps"
