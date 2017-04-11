@@ -52,11 +52,11 @@ if [[ $* == *"-radec "* ]]; then
         if [[ ${radec[0]} == *":"* || ${radec[1]} == *":"* ]]; then
             radec_sexagement=(${radec[@]})
             radec=($(radec2degree ${radec_sexagement[@]}))
-            ra_radian=$(awk "BEGIN {print (${radec[0]})/180.0*3.14159265358979}")
-            dec_radian=$(awk "BEGIN {print (${radec[1]})/180.0*3.14159265358979}")
+            ra_radian=$(awk "BEGIN {printf \"%0.15f\", (${radec[0]})/180.0*3.14159265358979}")
+            dec_radian=$(awk "BEGIN {printf \"%0.15f\", (${radec[1]})/180.0*3.14159265358979}")
         else
-            ra_radian=$(awk "BEGIN {print (${radec[0]})/180.0*3.14159265358979}")
-            dec_radian=$(awk "BEGIN {print (${radec[1]})/180.0*3.14159265358979}")
+            ra_radian=$(awk "BEGIN {printf \"%0.15f\", (${radec[0]})/180.0*3.14159265358979}")
+            dec_radian=$(awk "BEGIN {printf \"%0.15f\", (${radec[1]})/180.0*3.14159265358979}")
         fi
         echo "ra_radian = $ra_radian"
         echo "dec_radian = $dec_radian"
