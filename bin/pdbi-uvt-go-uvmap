@@ -74,13 +74,6 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
             PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.EPS$//g')
         fi
         # 
-        # Backup existing output file
-        # 
-        if [[ -f "${PdBIUVT_SAVE[i]}.eps" ]]; then
-            echo "Warning! Found existing \"${PdBIUVT_SAVE[i]}.eps\"! Backup as \"${PdBIUVT_SAVE[i]}.eps.backup\"!"
-            mv "${PdBIUVT_SAVE[i]}.eps" "${PdBIUVT_SAVE[i]}.eps.backup"
-        fi
-        # 
         # 
         # Deal with the input uvt file
         # Output to mapping script
@@ -90,7 +83,16 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         PdBIUVT_LOG="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_map.log"
         PdBIUVT_INI="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_map.init" #<TODO>
         PdBIUVT_EPS="${PdBIUVT_SAVE[i]}"
-        
+        # 
+        # Backup existing output file
+        # 
+        if [[ -f "${PdBIUVT_EPS}.eps" ]]; then
+            echo "Warning! Found existing \"${PdBIUVT_EPS}.eps\"! Backup as \"${PdBIUVT_EPS}.eps.backup\"!"
+            mv "${PdBIUVT_EPS}.eps" "${PdBIUVT_EPS}.eps.backup"
+        fi
+        # 
+        # 
+        # 
         #echo "" > "$PdBIUVT_INI"
         #echo 'TASK\FILE      "UV table" UV_TABLE$ "'${PdBIUVT_NAME[i]}'"'
         #echo 'TASK\CHARACTER "Map name" MAP_NAME$ "'${PdBIUVT_NAME[i]}'"'
@@ -187,13 +189,13 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # 
         # Overwrite or not (always overwrite)
         # 
-        if [[ -f "${PdBIUVT_SAVE[i]}.eps" ]]; then
-            mv "${PdBIUVT_SAVE[i]}.eps" "${PdBIUVT_SAVE[i]}.eps.backup"
+        if [[ -f "${PdBIUVT_EPS}.eps" ]]; then
+            mv "${PdBIUVT_EPS}.eps" "${PdBIUVT_EPS}.eps.backup"
         fi
         echo ""                                                  >> "$PdBIUVT_EXE"
-        echo "hardcopy \"${PdBIUVT_SAVE[i]}.eps\" /overwrite"    >> "$PdBIUVT_EXE"
-        echo "if(FILE(\"${PdBIUVT_SAVE[i]}.eps\")) then"         >> "$PdBIUVT_EXE"
-        echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_SAVE[i]}.eps\""   >> "$PdBIUVT_EXE"
+        echo "hardcopy \"${PdBIUVT_EPS}.eps\" /overwrite"    >> "$PdBIUVT_EXE"
+        echo "if(FILE(\"${PdBIUVT_EPS}.eps\")) then"         >> "$PdBIUVT_EXE"
+        echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_EPS}.eps\""   >> "$PdBIUVT_EXE"
         echo "endif"                                             >> "$PdBIUVT_EXE"
         #if [[ "$PdBIUVT_OVERWRITE" == "YES" ]]; then
         #    echo "hardcopy \"${PdBIUVT_EPS}.eps\" /overwrite"    >> "$PdBIUVT_EXE"
@@ -210,9 +212,9 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo "@$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG" 
         
         PdBIUVT_REPEAT=0
-        while [[ ! -f "${PdBIUVT_SAVE[i]}.eps" || ! -f "${PdBIUVT_SAVE[i]}.lmv" || ! -f "${PdBIUVT_SAVE[i]}.lmv.fits" ]]; do
+        while [[ ! -f "${PdBIUVT_EPS}.eps" || ! -f "${PdBIUVT_SAVE[i]}.lmv" || ! -f "${PdBIUVT_SAVE[i]}.lmv.fits" ]]; do
             echo "Failed to get the uv_map result? Perhaps conflicting with other running mapping processes! Try again!"; sleep 1.0
-            echo ls "${PdBIUVT_SAVE[i]}.eps"; ls "${PdBIUVT_SAVE[i]}.eps"
+            echo ls "${PdBIUVT_EPS}.eps"; ls "${PdBIUVT_EPS}.eps"
             echo ls "${PdBIUVT_SAVE[i]}.lmv"; ls "${PdBIUVT_SAVE[i]}.lmv"
             echo ls "${PdBIUVT_SAVE[i]}.lmv.fits"; ls "${PdBIUVT_SAVE[i]}.lmv.fits"
             echo "@$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG" 
@@ -223,14 +225,14 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # 
         # Check output
         # 
-        if [[ -f "${PdBIUVT_SAVE[i]}.eps" ]]; then
-            echo "Successufully saved to \"${PdBIUVT_SAVE[i]}.eps\"!"
+        if [[ -f "${PdBIUVT_EPS}.eps" ]]; then
+            echo "Successufully saved to \"${PdBIUVT_EPS}.eps\"!"
             echo "--"
             #if [[ -f "$PdBIUVT_LOG" ]]; then
             #    rm "$PdBIUVT_LOG"
             #fi
         else
-            echo "Error! Failed to run GILDAS MAPPING UV_MAP and output \"${PdBIUVT_SAVE[i]}.eps\"!"
+            echo "Error! Failed to run GILDAS MAPPING UV_MAP and output \"${PdBIUVT_EPS}.eps\"!"
             echo "Please check \"$PdBIUVT_LOG\"!"
             exit 1
         fi
