@@ -178,6 +178,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     echo "PdBIUVT_SAVE[tk] = ${PdBIUVT_SAVE[tk]}"
     echo "PdBIUVT_VELO_MIN = $PdBIUVT_VELO_MIN"
     echo "PdBIUVT_VELO_MAX = $PdBIUVT_VELO_MAX"
+    echo "--"
     
     velo_count=1
     velo_start="$PdBIUVT_VELO_MIN"
@@ -268,8 +269,30 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             exit
         fi
         
+        # count blobs
+        blob_num=$(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing xc = " | wc -l)
+        
+        # check blob txt, determine fit simultaneously or separately
+        blob_uv_fit_separ=0
+        blob_txt_check_num=$(ls -1f "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.result.obj_"*".txt" | wc -l)
+        if [[ $blob_txt_check_num -ne $blob_num ]]; then
+            echo "* "
+            echo "* Warning! Blob uv_fit result number does not match blob number in log file! Perhaps it is because of too many blobs fitted with uv_fit simultaneously. Will try to run uv_fit separately!"
+            echo "* Current directory \"$(pwd -P)\""
+            echo "* "
+            blob_overwrite=1
+            blob_uv_fit_separ=1
+        fi
+        if [[ $blob_num -gt 6 ]]; then
+            echo "* "
+            echo "* Warning! Blob number is larger than 6! We will run uv_fit separately!"
+            echo "* Current directory \"$(pwd -P)\""
+            echo "* "
+            blob_uv_fit_separ=1
+        fi
+        
         # get blobs
-        if [[ $blob_overwrite -eq 1 ]]; then
+        if [[ $blob_overwrite -ge 1 ]]; then
             blob_xc=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing xc = " | sed -e 's/Computing xc = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
             blob_yc=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing yc = " | sed -e 's/Computing yc = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
             blob_fc=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing fc = " | sed -e 's/Computing fc = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
@@ -295,13 +318,27 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                     blob_radec=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.output.txt" | tr -s ' ' | sed -e 's/^ *//g' | cut -d ' ' -f 1,2))
                     
                     # run uvfit
-                    echo "pdbi-uvt-go-uvfit-v5 -name \"../${PdBIUVT_NAME[tk]}\" -out \"velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit\" -radec ${blob_radec[@]} -vrange $velo_start $velo_end"
-                    pdbi-uvt-go-uvfit-v5 -name "../${PdBIUVT_NAME[tk]}" -out "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit" -radec ${blob_radec[@]} -vrange $velo_start $velo_end \
-                                                                           > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.log.log"
+                    if [[ $blob_uv_fit_separ -ne 1 ]]; then
+                        # run uvfit simultaneously for all blobs (note that the blob_num should not be larger than 11, limited by GILDAS/MAPPING)
+                        echo "pdbi-uvt-go-uvfit-v5 -name \"../${PdBIUVT_NAME[tk]}\" -out \"velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit\" -radec ${blob_radec[@]} -vrange $velo_start $velo_end"
+                        pdbi-uvt-go-uvfit-v5 -name "../${PdBIUVT_NAME[tk]}" -out "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit" -radec ${blob_radec[@]} -vrange $velo_start $velo_end \
+                                                                               > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.log.log"
+                        frange=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
+                    fi
                     
                     # plot uvfit
-                    frange=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
                     for (( iobj=1; iobj<=${#blob_ra[@]}; iobj++ )); do
+                        
+                        if [[ $blob_uv_fit_separ -eq 1 ]]; then
+                            # run uvfit separately for each blob
+                            echo "pdbi-uvt-go-uvfit-v5 -name \"../${PdBIUVT_NAME[tk]}\" -out \"velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.run.obj_${iobj}\" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end"
+                            pdbi-uvt-go-uvfit-v5 -name "../${PdBIUVT_NAME[tk]}" -out "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.run.obj_${iobj}" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end \
+                                                                                   > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.run.obj_${iobj}.log.log"
+                            frange=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.run.obj_${iobj}.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
+                            cp "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.run.obj_${iobj}.uv_fit.result.obj_1.txt" \
+                               "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.result.obj_${iobj}.txt"
+                        fi
+                        
                         echo "pdbi-uvt-go-plot-uvfit-result-spectrum \"velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.result.obj_${iobj}.txt\" -frange ${frange[@]}"
                         pdbi-uvt-go-plot-uvfit-result-spectrum "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.result.obj_${iobj}.txt" -frange ${frange[@]} \
                                                                     > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotfit.obj_${iobj}.log"
