@@ -274,8 +274,18 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         
         # check blob txt, determine fit simultaneously or separately
         blob_uv_fit_separ=0
-        blob_txt_check_num=$(ls -1f "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.result.obj_"*".txt" | wc -l)
-        if [[ $blob_txt_check_num -ne $blob_num ]]; then
+        blob_txt_check_num=$(ls -1f "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.result.obj_"*".txt" 2>/dev/null | wc -l)
+        if [[ $blob_num -eq 0 ]]; then
+            echo "no blob detected"
+        fi
+        if [[ $blob_num -gt 0 && $blob_txt_check_num -eq 0 && $blob_overwrite -eq 0 ]]; then
+            echo "* "
+            echo "* Warning! Blob uv_fit result *.uv_fit.result.obj_*.txt was not found! We will run uv_fit anyway!"
+            echo "* Current directory \"$(pwd -P)\""
+            echo "* "
+            blob_overwrite=1
+        fi
+        if [[ $blob_num -gt 0 && $blob_txt_check_num -gt 0 && $blob_txt_check_num -ne $blob_num ]]; then
             echo "* "
             echo "* Warning! Blob uv_fit result number does not match blob number in log file! Perhaps it is because of too many blobs fitted with uv_fit simultaneously. Will try to run uv_fit separately!"
             echo "* Current directory \"$(pwd -P)\""
@@ -300,7 +310,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             blob_rms=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing rms = " | sed -e 's/Computing rms = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
             #echo "blob_xc = ${blob_xc[@]}"
             #echo "blob_yc = ${blob_yc[@]}"
-        
+            
             # convert xy2sky
             if [[ -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.input.txt" ]]; then
                 rm "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.input.txt"
@@ -346,7 +356,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                         cp pdbi_uvt_go_plot_uvfit_result_spectrum.eps "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotfit.obj_${iobj}.eps"
                         cp pdbi_uvt_go_plot_uvfit_result_spectrum.pdf "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotfit.obj_${iobj}.pdf"
                         
-                        echo "pdbi-uvt-go-plot-uvfit-result-image \"velo_bin_${velo_count}.uvt\" -size $fov_size -radec ${blob_radec[@]}"
+                        echo "pdbi-uvt-go-plot-uvfit-result-image \"velo_bin_${velo_count}.uvt\" -size $fov_size -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]}"
                         pdbi-uvt-go-plot-uvfit-result-image "velo_bin_${velo_count}.uvt" -size $fov_size -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} \
                                                                  > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotmap.obj_${iobj}.log"
                         cp pdbi_uvt_go_plot_uvfit_result_image.map "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotmap.obj_${iobj}.map"
