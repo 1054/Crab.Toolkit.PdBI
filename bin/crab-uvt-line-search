@@ -335,7 +335,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                             pdbi-uvt-go-uvfit-v5 -name "../${PdBIUVT_NAME[tk]}" -out "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.run.obj_${iobj}" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end \
                                                                                    > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.run.obj_${iobj}.log.log"
                             frange=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.run.obj_${iobj}.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
-                            cp "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.run.obj_${iobj}.uv_fit.result.obj_1.txt" \
+                            cp "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.run.obj_${iobj}.result.obj_1.txt" \
                                "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.result.obj_${iobj}.txt"
                         fi
                         
