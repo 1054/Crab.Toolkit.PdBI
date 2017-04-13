@@ -257,6 +257,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         if [[ ! -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.reg" ]]; then
             # now try to find 4.5-sigma peaks in each velo_bin_*.lmv.fits image
             detect_threshold=$(awk "BEGIN {print ($sigma_threshold*($data_noise));}")
+            echo "detect_threshold = $detect_threshold Jy"
             echo "CrabBlobDetector \"velo_bin_${velo_count}.lmv_bscale.fits\" -detect-threshold $detect_threshold  -deblend-level 10"
             CrabBlobDetector "velo_bin_${velo_count}.lmv_bscale.fits" -detect-threshold "$detect_threshold"  -deblend-level 10 \
                        > "velo_bin_${velo_count}.lmv_bscale.detect_blob.log"
