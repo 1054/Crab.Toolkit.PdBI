@@ -204,7 +204,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         
         if [[ ! -f "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt" ]]; then
             echo "pdbi-uvt-go-average -name \"${PdBIUVT_NAME[tk]}\" -out \"${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt\" -vrange $velo_start $velo_end"
-            pdbi-uvt-go-average -name "${PdBIUVT_NAME[tk]}" -out "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt" -vrange "$velo_start" "$velo_end" > "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uv_average.log"
+            pdbi-uvt-go-average -name "${PdBIUVT_NAME[tk]}" -out "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt" -vrange "$velo_start" "$velo_end" \
+                                                               > "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uv_average.log"
         fi
         
         cd "${PdBIUVT_SAVE[tk]}/"
@@ -213,7 +214,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         
         if [[ ! -f "velo_bin_${velo_count}.lmv" || ! -f "velo_bin_${velo_count}.lmv.fits" || ! -f "velo_bin_${velo_count}.uvt.uv_map.log" ]]; then
             echo "pdbi-uvt-go-uvmap -name \"velo_bin_${velo_count}.uvt\" -size $fov_size -map_size $map_size"
-            pdbi-uvt-go-uvmap -name "velo_bin_${velo_count}.uvt" -size $fov_size -map_size $map_size | sed -e 's/[^[[:print:]]]//g' > "velo_bin_${velo_count}.uvt.uv_map.log.log"
+            pdbi-uvt-go-uvmap -name "velo_bin_${velo_count}.uvt" -size $fov_size -map_size $map_size | sed -e 's/[^[[:print:]]]//g' \
+                                  > "velo_bin_${velo_count}.uvt.uv_map.log.log"
         fi
         
         if [[ ! -f "velo_bin_${velo_count}.lmv" ]]; then
@@ -236,7 +238,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         # convert gildas lmv converted fits image BSCALE
         if [[ ! -f "velo_bin_${velo_count}.lmv_bscale.fits" ]]; then
             data_bscale=$(gethead "velo_bin_${velo_count}.lmv.fits" BSCALE)
-            CrabFitsImageArithmetic "velo_bin_${velo_count}.lmv.fits" "times" "$data_bscale" "velo_bin_${velo_count}.lmv_bscale.fits" > "velo_bin_${velo_count}.lmv_bscale.fits.log"
+            CrabFitsImageArithmetic "velo_bin_${velo_count}.lmv.fits" "times" "$data_bscale" "velo_bin_${velo_count}.lmv_bscale.fits" \
+                                  > "velo_bin_${velo_count}.lmv_bscale.fits.log" 2>&1
             sethead "velo_bin_${velo_count}.lmv_bscale.fits" BSCALE=1
         fi
         
@@ -249,7 +252,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             echo "" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
             echo "cd \$(dirname \"\${BASH_SOURCE[0]}\")" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
             echo "" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
-            echo "ds9 -title \"velo_bin_${velo_count}\" \"velo_bin_${velo_count}.lmv.fits\" -regions load \"velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.reg\"" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
+            echo "ds9 -title \"velo_bin_${velo_count}\" \"velo_bin_${velo_count}.lmv.fits\" -regions load \"velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.reg\"" \
+                    >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
             echo "" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
             chmod +x "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
             blob_overwrite=1
@@ -260,7 +264,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             echo "detect_threshold = $detect_threshold Jy"
             echo "CrabBlobDetector \"velo_bin_${velo_count}.lmv_bscale.fits\" -detect-threshold $detect_threshold  -deblend-level 10"
             CrabBlobDetector "velo_bin_${velo_count}.lmv_bscale.fits" -detect-threshold "$detect_threshold"  -deblend-level 10 \
-                       > "velo_bin_${velo_count}.lmv_bscale.detect_blob.log"
+                       > "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" 2>&1
             cp "ds9.reg" "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.reg"
             blob_overwrite=1
         fi
