@@ -243,146 +243,160 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             sethead "velo_bin_${velo_count}.lmv_bscale.fits" BSCALE=1
         fi
         
-        # check previous blob detect results
-        blob_overwrite=0
-        if [[ ! -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh" ]]; then
-            # prepare ds9 script
-            echo "#!/bin/bash" > "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
-            echo "#" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
-            echo "" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
-            echo "cd \$(dirname \"\${BASH_SOURCE[0]}\")" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
-            echo "" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
-            echo "ds9 -title \"velo_bin_${velo_count}\" \"velo_bin_${velo_count}.lmv.fits\" -regions load \"velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.reg\"" \
-                    >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
-            echo "" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
-            chmod +x "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.sh"
-            blob_overwrite=1
-        fi
-        if [[ ! -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.reg" ]]; then
-            # now try to find 4.5-sigma peaks in each velo_bin_*.lmv.fits image
-            detect_threshold=$(awk "BEGIN {print ($sigma_threshold*($data_noise));}")
-            echo "detect_threshold = $detect_threshold Jy"
-            echo "CrabBlobDetector \"velo_bin_${velo_count}.lmv_bscale.fits\" -detect-threshold $detect_threshold  -deblend-level 10"
-            CrabBlobDetector "velo_bin_${velo_count}.lmv_bscale.fits" -detect-threshold "$detect_threshold"  -deblend-level 10 \
-                       > "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" 2>&1
-            cp "ds9.reg" "velo_bin_${velo_count}.lmv_bscale.detect_blob.ds9.reg"
-            blob_overwrite=1
-        fi
-        if [[ ! -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" ]]; then
-            echo "Error! Failed to run \"CrabBlobDetector\" and output \"velo_bin_${velo_count}.lmv_bscale.detect_blob.log\"!"
-            echo "Please check \"velo_bin_${velo_count}.lmv_bscale.detect_blob.log\"!"
-            echo "Current directory \"$(pwd -P)\"!"
-            exit
+        # invert gildas lmv converted fits image BSCALE (negative image)
+        if [[ ! -f "velo_bin_${velo_count}.lmv_invert.fits" ]]; then
+            CrabFitsImageArithmetic "velo_bin_${velo_count}.lmv_bscale.fits" "times" "0.0" "velo_bin_${velo_count}.lmv_zero.fits" \
+                                  > "velo_bin_${velo_count}.lmv_zero.fits.log" 2>&1
+            sethead "velo_bin_${velo_count}.lmv_zero.fits" BZERO=0
+            CrabFitsImageArithmetic "velo_bin_${velo_count}.lmv_zero.fits" "minus" "velo_bin_${velo_count}.lmv_bscale.fits" "velo_bin_${velo_count}.lmv_invert.fits" \
+                                  > "velo_bin_${velo_count}.lmv_invert.fits.log" 2>&1
+            #<DEBUG># rm "velo_bin_${velo_count}.lmv_invert"*
         fi
         
-        # count blobs
-        blob_num=$(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing xc = " | wc -l)
-        
-        # check blob txt, determine fit simultaneously or separately
-        blob_uv_fit_separ=0
-        blob_txt_check_num=$(ls -1f "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.result.obj_"*".txt" 2>/dev/null | wc -l)
-        if [[ $blob_num -eq 0 ]]; then
-            echo "no blob detected"
-        fi
-        if [[ $blob_num -gt 0 && $blob_txt_check_num -eq 0 && $blob_overwrite -eq 0 ]]; then
-            echo "* "
-            echo "* Warning! Blob uv_fit result *.uv_fit.result.obj_*.txt was not found! We will run uv_fit anyway!"
-            echo "* Current directory \"$(pwd -P)\""
-            echo "* "
-            blob_overwrite=1
-        fi
-        if [[ $blob_num -gt 0 && $blob_txt_check_num -gt 0 && $blob_txt_check_num -ne $blob_num ]]; then
-            echo "* "
-            echo "* Warning! Blob uv_fit result number does not match blob number in log file! Perhaps it is because of too many blobs fitted with uv_fit simultaneously. Will try to run uv_fit separately!"
-            echo "* Current directory \"$(pwd -P)\""
-            echo "* "
-            blob_overwrite=1
-            blob_uv_fit_separ=1
-        fi
-        if [[ $blob_num -gt 6 ]]; then
-            echo "* "
-            echo "* Warning! Blob number is larger than 6! We will run uv_fit separately!"
-            echo "* Current directory \"$(pwd -P)\""
-            echo "* "
-            blob_uv_fit_separ=1
-        fi
-        
-        # get blobs
-        if [[ $blob_overwrite -ge 1 ]]; then
-            blob_xc=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing xc = " | sed -e 's/Computing xc = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
-            blob_yc=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing yc = " | sed -e 's/Computing yc = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
-            blob_fc=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing fc = " | sed -e 's/Computing fc = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
-            blob_snr=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing snr = " | sed -e 's/Computing snr = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
-            blob_rms=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.log" | grep "^Computing rms = " | sed -e 's/Computing rms = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
-            #echo "blob_xc = ${blob_xc[@]}"
-            #echo "blob_yc = ${blob_yc[@]}"
-            
-            # convert xy2sky
-            if [[ -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.input.txt" ]]; then
-                rm "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.input.txt"
+        # perform blob search on both lmv_bscale and lmv_invert fits images <20170417><dzliu><edaddi>
+        for lmv_type in lmv_bscale lmv_invert; do
+            # check previous blob detect results
+            blob_overwrite=0
+            if [[ ! -f "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.sh" ]]; then
+                # prepare ds9 script
+                echo "#!/bin/bash" > "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.sh"
+                echo "#" >> "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.sh"
+                echo "" >> "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.sh"
+                echo "cd \$(dirname \"\${BASH_SOURCE[0]}\")" >> "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.sh"
+                echo "" >> "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.sh"
+                echo "ds9 -title \"velo_bin_${velo_count}\" \"velo_bin_${velo_count}.lmv.fits\" -regions load \"velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.reg\"" \
+                        >> "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.sh"
+                echo "" >> "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.sh"
+                chmod +x "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.sh"
+                blob_overwrite=1
             fi
-            for (( iblob=0; iblob<${#blob_xc[@]}; iblob++ )); do
-                printf "%15d %15d\n" "${blob_xc[iblob]}" "${blob_yc[iblob]}" >> "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.input.txt"
-            done
-            if [[ -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.input.txt" ]]; then
-                xy2sky -d -n 10 "velo_bin_${velo_count}.lmv_bscale.fits" @"velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.input.txt" \
-                       > "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.output.txt"
-                if [[ -f "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.output.txt" ]]; then
-                    # Got some blobs
-                    blob_ra=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.output.txt" | tr -s ' ' | sed -e 's/^ *//g' | cut -d ' ' -f 1))
-                    blob_dec=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.output.txt" | tr -s ' ' | sed -e 's/^ *//g' | cut -d ' ' -f 2))
-                    blob_radec=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.xy2sky.output.txt" | tr -s ' ' | sed -e 's/^ *//g' | cut -d ' ' -f 1,2))
-                    
-                    # run uvfit
-                    if [[ $blob_uv_fit_separ -ne 1 ]]; then
-                        # run uvfit simultaneously for all blobs (note that the blob_num should not be larger than 11, limited by GILDAS/MAPPING)
-                        echo "pdbi-uvt-go-uvfit-v5 -name \"../${PdBIUVT_NAME[tk]}\" -out \"velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit\" -radec ${blob_radec[@]} -vrange $velo_start $velo_end"
-                        pdbi-uvt-go-uvfit-v5 -name "../${PdBIUVT_NAME[tk]}" -out "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit" -radec ${blob_radec[@]} -vrange $velo_start $velo_end \
-                                                                               > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.log.log"
-                        frange=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
-                    fi
-                    
-                    # plot uvfit
-                    for (( iobj=1; iobj<=${#blob_ra[@]}; iobj++ )); do
+            if [[ ! -f "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.reg" ]]; then
+                # now try to find 4.5-sigma peaks in each velo_bin_*.lmv.fits image
+                detect_threshold=$(awk "BEGIN {print ($sigma_threshold*($data_noise));}")
+                echo "detect_threshold = $detect_threshold Jy"
+                echo "CrabBlobDetector \"velo_bin_${velo_count}.${lmv_type}.fits\" -detect-threshold $detect_threshold  -deblend-level 10"
+                CrabBlobDetector "velo_bin_${velo_count}.${lmv_type}.fits" -detect-threshold "$detect_threshold"  -deblend-level 10 \
+                           > "velo_bin_${velo_count}.${lmv_type}.detect_blob.log" 2>&1
+                cp "ds9.reg" "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.reg"
+                blob_overwrite=1
+            fi
+            if [[ ! -f "velo_bin_${velo_count}.${lmv_type}.detect_blob.log" ]]; then
+                echo "Error! Failed to run \"CrabBlobDetector\" and output \"velo_bin_${velo_count}.${lmv_type}.detect_blob.log\"!"
+                echo "Please check \"velo_bin_${velo_count}.${lmv_type}.detect_blob.log\"!"
+                echo "Current directory \"$(pwd -P)\"!"
+                exit
+            fi
+            
+            # count blobs
+            blob_num=$(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.log" | grep "^Computing xc = " | wc -l)
+            
+            # check blob txt, determine fit simultaneously or separately
+            blob_uv_fit_separ=0
+            blob_txt_check_num=$(ls -1f "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_"*".txt" 2>/dev/null | wc -l)
+            if [[ $blob_num -eq 0 ]]; then
+                echo "no blob detected"
+            fi
+            if [[ $blob_num -gt 0 && $blob_txt_check_num -eq 0 && $blob_overwrite -eq 0 ]]; then
+                echo "* "
+                echo "* Warning! Blob uv_fit result *.uv_fit.result.obj_*.txt was not found! We will run uv_fit anyway!"
+                echo "* Current directory \"$(pwd -P)\""
+                echo "* "
+                blob_overwrite=1
+            fi
+            if [[ $blob_num -gt 0 && $blob_txt_check_num -gt 0 && $blob_txt_check_num -ne $blob_num ]]; then
+                echo "* "
+                echo "* Warning! Blob uv_fit result number does not match blob number in log file! Perhaps it is because of too many blobs fitted with uv_fit simultaneously. Will try to run uv_fit separately!"
+                echo "* Current directory \"$(pwd -P)\""
+                echo "* "
+                blob_overwrite=1
+                blob_uv_fit_separ=1
+            fi
+            if [[ $blob_num -gt 6 ]]; then
+                echo "* "
+                echo "* Warning! Blob number is larger than 6! We will run uv_fit separately!"
+                echo "* Current directory \"$(pwd -P)\""
+                echo "* "
+                blob_uv_fit_separ=1
+            fi
+            
+            # get blobs
+            if [[ $blob_overwrite -ge 1 ]]; then
+                blob_xc=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.log" | grep "^Computing xc = " | sed -e 's/Computing xc = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
+                blob_yc=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.log" | grep "^Computing yc = " | sed -e 's/Computing yc = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
+                blob_fc=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.log" | grep "^Computing fc = " | sed -e 's/Computing fc = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
+                blob_snr=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.log" | grep "^Computing snr = " | sed -e 's/Computing snr = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
+                blob_rms=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.log" | grep "^Computing rms = " | sed -e 's/Computing rms = //g' | tr -s ' ' | sed -e 's/^ *//g' | sed -e 's/ *$//g'))
+                #echo "blob_xc = ${blob_xc[@]}"
+                #echo "blob_yc = ${blob_yc[@]}"
+                
+                # convert xy2sky
+                if [[ -f "velo_bin_${velo_count}.${lmv_type}.detect_blob.xy2sky.input.txt" ]]; then
+                    rm "velo_bin_${velo_count}.${lmv_type}.detect_blob.xy2sky.input.txt"
+                fi
+                for (( iblob=0; iblob<${#blob_xc[@]}; iblob++ )); do
+                    printf "%15d %15d\n" "${blob_xc[iblob]}" "${blob_yc[iblob]}" >> "velo_bin_${velo_count}.${lmv_type}.detect_blob.xy2sky.input.txt"
+                done
+                if [[ -f "velo_bin_${velo_count}.${lmv_type}.detect_blob.xy2sky.input.txt" ]]; then
+                    xy2sky -d -n 10 "velo_bin_${velo_count}.${lmv_type}.fits" @"velo_bin_${velo_count}.${lmv_type}.detect_blob.xy2sky.input.txt" \
+                           > "velo_bin_${velo_count}.${lmv_type}.detect_blob.xy2sky.output.txt"
+                    if [[ -f "velo_bin_${velo_count}.${lmv_type}.detect_blob.xy2sky.output.txt" ]]; then
+                        # Got some blobs
+                        blob_ra=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.xy2sky.output.txt" | tr -s ' ' | sed -e 's/^ *//g' | cut -d ' ' -f 1))
+                        blob_dec=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.xy2sky.output.txt" | tr -s ' ' | sed -e 's/^ *//g' | cut -d ' ' -f 2))
+                        blob_radec=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.xy2sky.output.txt" | tr -s ' ' | sed -e 's/^ *//g' | cut -d ' ' -f 1,2))
                         
-                        if [[ $blob_uv_fit_separ -eq 1 ]]; then
-                            # run uvfit separately for each blob
-                            echo "pdbi-uvt-go-uvfit-v5 -name \"../${PdBIUVT_NAME[tk]}\" -out \"velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.run.obj_${iobj}\" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end"
-                            pdbi-uvt-go-uvfit-v5 -name "../${PdBIUVT_NAME[tk]}" -out "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.run.obj_${iobj}" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end \
-                                                                                   > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.run.obj_${iobj}.log.log"
-                            frange=($(cat "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.run.obj_${iobj}.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
-                            cp "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.run.obj_${iobj}.result.obj_1.txt" \
-                               "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.result.obj_${iobj}.txt"
+                        # run uvfit
+                        if [[ $blob_uv_fit_separ -ne 1 ]]; then
+                            # run uvfit simultaneously for all blobs (note that the blob_num should not be larger than 11, limited by GILDAS/MAPPING)
+                            echo "pdbi-uvt-go-uvfit-v5 -name \"../${PdBIUVT_NAME[tk]}\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit\" -radec ${blob_radec[@]} -vrange $velo_start $velo_end"
+                            pdbi-uvt-go-uvfit-v5 -name "../${PdBIUVT_NAME[tk]}" -out "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit" -radec ${blob_radec[@]} -vrange $velo_start $velo_end \
+                                                                                   > "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log"
+                            frange=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
                         fi
                         
-                        echo "pdbi-uvt-go-plot-uvfit-result-spectrum \"velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.result.obj_${iobj}.txt\" -frange ${frange[@]}"
-                        pdbi-uvt-go-plot-uvfit-result-spectrum "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.result.obj_${iobj}.txt" -frange ${frange[@]} \
-                                                                    > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotfit.obj_${iobj}.log"
-                        cp pdbi_uvt_go_plot_uvfit_result_spectrum.sm  "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotfit.obj_${iobj}.sm"
-                        cp pdbi_uvt_go_plot_uvfit_result_spectrum.eps "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotfit.obj_${iobj}.eps"
-                        cp pdbi_uvt_go_plot_uvfit_result_spectrum.pdf "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotfit.obj_${iobj}.pdf"
+                        # plot uvfit
+                        for (( iobj=1; iobj<=${#blob_ra[@]}; iobj++ )); do
+                            
+                            if [[ $blob_uv_fit_separ -eq 1 ]]; then
+                                # run uvfit separately for each blob
+                                echo "pdbi-uvt-go-uvfit-v5 -name \"../${PdBIUVT_NAME[tk]}\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}\" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end"
+                                pdbi-uvt-go-uvfit-v5 -name "../${PdBIUVT_NAME[tk]}" -out "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end \
+                                                                                       > "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log"
+                                frange=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
+                                cp "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.result.obj_1.txt" \
+                                   "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt"
+                            fi
+                            
+                            echo "pdbi-uvt-go-plot-uvfit-result-spectrum \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt\" -frange ${frange[@]}"
+                            pdbi-uvt-go-plot-uvfit-result-spectrum "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt" -frange ${frange[@]} \
+                                                                        > "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotfit.obj_${iobj}.log"
+                            cp pdbi_uvt_go_plot_uvfit_result_spectrum.sm  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotfit.obj_${iobj}.sm"
+                            cp pdbi_uvt_go_plot_uvfit_result_spectrum.eps "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotfit.obj_${iobj}.eps"
+                            cp pdbi_uvt_go_plot_uvfit_result_spectrum.pdf "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotfit.obj_${iobj}.pdf"
+                            
+                            echo "pdbi-uvt-go-plot-uvfit-result-image \"velo_bin_${velo_count}.uvt\" -size $fov_size -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]}"
+                            pdbi-uvt-go-plot-uvfit-result-image "velo_bin_${velo_count}.uvt" -size $fov_size -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} \
+                                                                     > "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotmap.obj_${iobj}.log"
+                            cp pdbi_uvt_go_plot_uvfit_result_image.map "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotmap.obj_${iobj}.map"
+                            cp pdbi_uvt_go_plot_uvfit_result_image.eps "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotmap.obj_${iobj}.eps"
+                            cp pdbi_uvt_go_plot_uvfit_result_image.pdf "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotmap.obj_${iobj}.pdf"
+                            
+                        done
                         
-                        echo "pdbi-uvt-go-plot-uvfit-result-image \"velo_bin_${velo_count}.uvt\" -size $fov_size -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]}"
-                        pdbi-uvt-go-plot-uvfit-result-image "velo_bin_${velo_count}.uvt" -size $fov_size -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} \
-                                                                 > "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotmap.obj_${iobj}.log"
-                        cp pdbi_uvt_go_plot_uvfit_result_image.map "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotmap.obj_${iobj}.map"
-                        cp pdbi_uvt_go_plot_uvfit_result_image.eps "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotmap.obj_${iobj}.eps"
-                        cp pdbi_uvt_go_plot_uvfit_result_image.pdf "velo_bin_${velo_count}.lmv_bscale.detect_blob.uv_fit.plotmap.obj_${iobj}.pdf"
-                        
-                    done
-                    
+                    fi
                 fi
+                
+                echo "--"
+                
+            else
+                
+                echo "Found existing \"velo_bin_${velo_count}.${lmv_type}.detect_blob.*\"!"
+                echo "Will skip blob detecting and continue!"
+                echo "--"
+                
             fi
             
-            echo "--"
-            
-        else
-            
-            echo "Found existing \"velo_bin_${velo_count}.lmv_bscale.detect_blob.*\"!"
-            echo "Will skip blob detecting and continue!"
-            echo "--"
-            
-        fi
+        done
         
         cd "../"
         
