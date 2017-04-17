@@ -156,7 +156,7 @@ for (( i=0; i<${#Input_files[@]}; i++ )); do
     echo "    let rf_flux_err  rf_flux_err*1e3    ! to mJy" >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_snr       rf_flux/rf_flux_err" >> "$PdBIUVT_SAVE.result.map"
     echo "    if (rf_snr.LT.0) let rf_snr 0" >> "$PdBIUVT_SAVE.result.map"
-    echo "    if (f%a0.GT.0) then" >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (f%a0.GT.0) then" >> "$PdBIUVT_SAVE.result.map" #<fixed><20170414># 
     echo "    let rf_ra f%a0/pi*180+rf_x/3600/cos(f%d0)" >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_dec f%d0/pi*180+rf_y/3600" >> "$PdBIUVT_SAVE.result.map"
     echo "    else" >> "$PdBIUVT_SAVE.result.map"

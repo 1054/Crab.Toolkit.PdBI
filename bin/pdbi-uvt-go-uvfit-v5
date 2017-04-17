@@ -64,12 +64,12 @@ LANG=C
 # 
 # CHECK supermongo
 # 
-PdBIUVT_HAS_SUPERMONGO=1
-if [[ x$(echo echo hello | sm 2>/dev/null | tail -n 1) != xhello ]]; then
-    echo ""; echo "Warning! Supermongo was not found or not working! We will not produce the spectrum figures."
-    PdBIUVT_HAS_SUPERMONGO=0
-    #exit 1
-fi
+#PdBIUVT_HAS_SUPERMONGO=1
+#if [[ x$(echo echo hello | sm -nodevice 2>/dev/null | tail -n 1) != xhello ]]; then
+#    echo ""; echo "Warning! Supermongo was not found or not working! We will not produce the spectrum figures."
+#    PdBIUVT_HAS_SUPERMONGO=0
+#    #exit 1
+#fi
 
 
 
