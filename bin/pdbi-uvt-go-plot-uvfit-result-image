@@ -43,6 +43,11 @@ echo "let spacing noise" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 #echo "lut rainbow3" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "let do_bit yes" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "let do_contour yes" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+# 
+if [[ $* == *"-noheader"* ]]; then
+echo "let do_header no" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+fi
+# 
 echo "go nice" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 # 
 if [[ $* == *"-radec "* ]]; then

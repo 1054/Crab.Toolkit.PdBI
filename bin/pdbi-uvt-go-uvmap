@@ -191,6 +191,9 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         #echo "on error continue"            >> "$PdBIUVT_EXE"
         echo "go view"                      >> "$PdBIUVT_EXE"
         
+        echo "let do_header no"             >> "$PdBIUVT_EXE"
+        echo "go nice"                      >> "$PdBIUVT_EXE"
+        
         echo ""                                                  >> "$PdBIUVT_EXE"
         echo "hardcopy \"${PdBIUVT_EPS}.eps\" /overwrite"        >> "$PdBIUVT_EXE"
         echo "if (FILE(\"${PdBIUVT_EPS}.eps\")) then"             >> "$PdBIUVT_EXE"
