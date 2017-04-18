@@ -34,7 +34,7 @@ echo "    xlabel \"Frequency [GHz]\""                                   >> "pdbi
 echo "    ylabel \"Flux [mJy]\""                                        >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
 echo "    crabPlotDefaultPenForConnect"                                 >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
 echo "    histogram x y"                                                >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
-echo "    lweight 0.5"                                                  >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    lweight 0.2"                                                  >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
 echo "    errorbar x y yerr 2"                                          >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
 echo "    errorbar x y yerr 4"                                          >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
 echo "    lweight 1.5"                                                  >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
