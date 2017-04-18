@@ -24,6 +24,7 @@ echo "    set y = y if(valid)"                                          >> "pdbi
 echo "    set yerr = yerr if(valid)"                                    >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
 echo "    crabPlotOpenPS pdbi_uvt_go_plot_uvfit_result_spectrum.eps"    >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
 echo "    set lim_y = (y*1.2) concat (y*0.8)"                           >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    set lim_y = (lim_y) concat (-lim_y)"                          >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
 echo "    limits x lim_y"                                               >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
 echo "    location 6500 30000 10000 26000"                              >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
 echo "    crabPlotDefaultPenForBox"                                     >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
@@ -35,6 +36,8 @@ echo "    crabPlotDefaultPenForConnect"                                 >> "pdbi
 echo "    histogram x y"                                                >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
 echo "    errorbar x y yerr 2"                                          >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
 echo "    errorbar x y yerr 4"                                          >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    relocate \$fx1 0"                                             >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
+echo "    draw \$fx2 0"                                                 >> "pdbi_uvt_go_plot_uvfit_result_spectrum.sm"
 # 
 if [[ $* == *"-frange "* ]]; then
     frange=($(echo $* | perl -p -e 's/.* -frange[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
