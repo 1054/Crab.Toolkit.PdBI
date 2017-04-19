@@ -185,8 +185,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     velo_width="300.0"
     velo_step="150.0"
     map_size="300" # pixel, 512 is 60 arcsec
-    fov_size="30" # arcsec
-    sigma_threshold="4.0" #<TODO># 
+    fov_size="45" # arcsec
+    sigma_threshold="4.4" #<TODO># 
     
     while [[ $(awk "BEGIN {if(($velo_start)<($PdBIUVT_VELO_MAX)) print 1; else print 0;}") -eq 1 ]]; do
         velo_end=$(awk "BEGIN {print ($velo_start)+($velo_width)}")
