@@ -244,9 +244,9 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         fi
         
         # invert gildas lmv converted fits image BSCALE (negative image)
-        if [[ 1 == 1 || ! -f "velo_bin_${velo_count}.lmv_invert.fits" ]]; then
+        if [[ ! -f "velo_bin_${velo_count}.lmv_invert.fits" ]]; then
             #<DEBUG># 
-            rm "velo_bin_${velo_count}.lmv_invert"*
+            #rm "velo_bin_${velo_count}.lmv_invert"*
             #<DEBUG># 
             CrabFitsImageArithmetic "velo_bin_${velo_count}.lmv_bscale.fits" "times" "0.0" "velo_bin_${velo_count}.lmv_zero.fits" \
                                   > "velo_bin_${velo_count}.lmv_zero.fits.log" 2>&1
@@ -256,7 +256,11 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         fi
         
         # perform blob search on both lmv_bscale and lmv_invert fits images <20170417><dzliu><edaddi>
-        for lmv_type in lmv_bscale lmv_invert; do
+        lmv_types=(lmv_bscale)
+        if [[ $* == *"-do-negative"* ]]; then
+            lmv_types+=(lmv_invert)
+        fi
+        for lmv_type in ${lmv_types[@]}; do
             # check previous blob detect results
             blob_overwrite=0
             if [[ ! -f "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.sh" ]]; then
