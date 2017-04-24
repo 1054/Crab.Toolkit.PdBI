@@ -80,6 +80,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # "$PdBIUVT_NAME.uvt.go.uvmap.script"
         # 
         PdBIUVT_EXE="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_map.script"
+        PdBIUVT_PAR="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_map.ipar"
         PdBIUVT_LOG="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_map.log"
         PdBIUVT_INI="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_map.init" #<TODO>
         PdBIUVT_EPS="${PdBIUVT_SAVE[i]}"
@@ -91,38 +92,6 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
             echo "Warning! Found existing \"${PdBIUVT_EPS}.eps\"! Backup as \"${PdBIUVT_EPS}.eps.backup\"!"
             mv "${PdBIUVT_EPS}.eps" "${PdBIUVT_EPS}.eps.backup"
         fi
-        # 
-        # 
-        # 
-        #echo "" > "$PdBIUVT_INI"
-        #echo 'TASK\FILE      "UV table" UV_TABLE$ "'${PdBIUVT_NAME[i]}'"'
-        #echo 'TASK\CHARACTER "Map name" MAP_NAME$ "'${PdBIUVT_NAME[i]}'"'
-        #echo 'TASK\REAL      "UV taper (1/e level) [m]" UV_TAPER$[4]  0 0 0 0'
-        #echo 'TASK\CHARACTER "Weight mode (NA or UN)" WEIGHT_MODE$ "NA"'
-        #echo 'TASK\REAL      "Field of view [arc sec]" MAP_FIELD$[2]  0 0'
-        #echo 'TASK\INTEGER   "Map size [pixel]" MAP_SIZE$[2]  0 0'
-        #echo 'TASK\REAL      "Map cell [arc sec]" MAP_CELL$[2]  0 0'
-        #echo 'TASK\REAL      "UV cell [m], for unif. weighting" UV_CELL$[2]  7.5 1'
-        #echo 'TASK\LOGICAL   "Make one beam (NO), or one per channel (YES)" ONEBEAM$ NO'
-        #echo 'TASK\INTEGER   "Weight channel" WCOL$ 0'
-        #echo 'TASK\INTEGER   "Beam channel" BCOL$ 0'
-        #echo 'TASK\INTEGER   "First and Last channel to map" MCOL$[2]  0 0'
-        #echo 'TASK\INTEGER   "Convolution function [0-5]" CONVOLUTION$ 5'
-        #echo '!'
-        #echo 'TASK\LOGICAL   "Change map center or map orientation" UV_SHIFT$ NO'
-        #echo 'TASK\CHARACTER "Map Center RA" RA_CENTER$ "0"'
-        #echo 'TASK\CHARACTER "Map Center DEC" DEC_CENTER$ "0"'
-        #echo 'TASK\REAL      "Map Position Angle [deg]" ANGLE$ 0'
-        #echo 'TASK\GO'
-        
-        
-        echo "! GILDAS MAPPING SCRIPT"         >  "$PdBIUVT_EXE"
-        echo ""                                >> "$PdBIUVT_EXE"
-        echo "let name \"${PdBIUVT_NAME[i]}\"" >> "$PdBIUVT_EXE"
-        
-        if [[ ${#PdBIUVT_SIZE[@]}     -gt 0 ]]; then echo "let size ${PdBIUVT_SIZE[0]}"          >> "$PdBIUVT_EXE"; fi
-        if [[ ${#PdBIUVT_MAP_SIZE[@]} -gt 0 ]]; then echo "let map_size ${PdBIUVT_MAP_SIZE[0]}"  >> "$PdBIUVT_EXE"; fi
-        if [[ ${#PdBIUVT_MAP_CELL[@]} -gt 0 ]]; then echo "let map_cell ${PdBIUVT_MAP_CELL[0]}"  >> "$PdBIUVT_EXE"; fi
         
         if [[ -f "${PdBIUVT_SAVE[i]}.lmv.fits" ]]; then
             mv "${PdBIUVT_SAVE[i]}.lmv.fits" "${PdBIUVT_SAVE[i]}.lmv.fits.backup"
@@ -144,41 +113,47 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         #echo "write dirty 'name'.lmv"           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
         #echo "write beam 'name'.beam"           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
         
-        #echo "say \"\""             >> "$PdBIUVT_EXE"
-        #echo "say \"go noise\""     >> "$PdBIUVT_EXE"
-        #echo "say \"\""             >> "$PdBIUVT_EXE"
-        #echo "go noise"             >> "$PdBIUVT_EXE"
+        echo "! GILDAS MAPPING SCRIPT"         >  "$PdBIUVT_EXE"
+        echo ""                                >> "$PdBIUVT_EXE"
+        echo "let name \"${PdBIUVT_NAME[i]}\"" >> "$PdBIUVT_EXE"
         
+        if [[ ${#PdBIUVT_SIZE[@]}     -gt 0 ]]; then echo "let size ${PdBIUVT_SIZE[0]}"          >> "$PdBIUVT_EXE"; fi
+        if [[ ${#PdBIUVT_MAP_SIZE[@]} -gt 0 ]]; then echo "let map_size ${PdBIUVT_MAP_SIZE[0]}"  >> "$PdBIUVT_EXE"; fi
+        if [[ ${#PdBIUVT_MAP_CELL[@]} -gt 0 ]]; then echo "let map_cell ${PdBIUVT_MAP_CELL[0]}"  >> "$PdBIUVT_EXE"; fi
         
-        echo ""                             >> "$PdBIUVT_EXE"
-        echo "say \"\""                     >> "$PdBIUVT_EXE"
-        echo "say \"go uvmap\""             >> "$PdBIUVT_EXE"
-        #echo "on error continue"            >> "$PdBIUVT_EXE"
-        echo "go uvmap"                     >> "$PdBIUVT_EXE"
+        if [[ $PdBIUVT_PARALLELS -eq 1 ]]; then
+            echo "let type lmv"                                 >> "$PdBIUVT_EXE"
+        else
+            echo ""                                             >> "$PdBIUVT_EXE"
+            echo "say \"\""                                     >> "$PdBIUVT_EXE"
+            echo "say \"go uvmap\""                             >> "$PdBIUVT_EXE"
+            #echo "on error continue"                           >> "$PdBIUVT_EXE"
+            echo "go uvmap"                                     >> "$PdBIUVT_EXE"
+        fi
         
-        echo ""                             >> "$PdBIUVT_EXE"
-        echo "say \"\""                     >> "$PdBIUVT_EXE"
-        echo "say \"go noise\""             >> "$PdBIUVT_EXE"
-        #echo "on error continue"            >> "$PdBIUVT_EXE"
-        echo "go noise"                     >> "$PdBIUVT_EXE"
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"go noise\""                                 >> "$PdBIUVT_EXE"
+        #echo "on error continue"                               >> "$PdBIUVT_EXE"
+        echo "go noise"                                         >> "$PdBIUVT_EXE"
         
-        echo ""                             >> "$PdBIUVT_EXE"
-        echo "let spacing noise"            >> "$PdBIUVT_EXE"
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "let spacing noise"                                >> "$PdBIUVT_EXE"
         
-        echo ""                             >> "$PdBIUVT_EXE"
-        echo "say \"\""                     >> "$PdBIUVT_EXE"
-        echo "say \"examine map_size\""     >> "$PdBIUVT_EXE"
-        echo "exam map_size"                >> "$PdBIUVT_EXE"
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"examine map_size\""                         >> "$PdBIUVT_EXE"
+        echo "exam map_size"                                    >> "$PdBIUVT_EXE"
         
-        echo ""                             >> "$PdBIUVT_EXE"
-        echo "say \"\""                     >> "$PdBIUVT_EXE"
-        echo "say \"examine map_cell\""     >> "$PdBIUVT_EXE"
-        echo "exam map_cell"                >> "$PdBIUVT_EXE"
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"examine map_cell\""                         >> "$PdBIUVT_EXE"
+        echo "exam map_cell"                                    >> "$PdBIUVT_EXE"
         
-        echo ""                             >> "$PdBIUVT_EXE"
-        echo "say \"\""                     >> "$PdBIUVT_EXE"
-        echo "say \"examine noise\""        >> "$PdBIUVT_EXE"
-        echo "exam noise"                   >> "$PdBIUVT_EXE"
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"examine noise\""                            >> "$PdBIUVT_EXE"
+        echo "exam noise"                                       >> "$PdBIUVT_EXE"
         
         echo ""                                                 >> "$PdBIUVT_EXE"
         echo "say \"\""                                         >> "$PdBIUVT_EXE"
@@ -188,7 +163,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo ""                             >> "$PdBIUVT_EXE"
         echo "say \"\""                     >> "$PdBIUVT_EXE"
         echo "say \"go view\""              >> "$PdBIUVT_EXE"
-        #echo "on error continue"            >> "$PdBIUVT_EXE"
+        #echo "on error continue"           >> "$PdBIUVT_EXE"
         echo "go view"                      >> "$PdBIUVT_EXE"
         
         echo "let do_header no"             >> "$PdBIUVT_EXE"
@@ -196,7 +171,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         
         echo ""                                                  >> "$PdBIUVT_EXE"
         echo "hardcopy \"${PdBIUVT_EPS}.eps\" /overwrite"        >> "$PdBIUVT_EXE"
-        echo "if (FILE(\"${PdBIUVT_EPS}.eps\")) then"             >> "$PdBIUVT_EXE"
+        echo "if (FILE(\"${PdBIUVT_EPS}.eps\")) then"            >> "$PdBIUVT_EXE"
         echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_EPS}.eps\""       >> "$PdBIUVT_EXE"
         echo "endif"                                             >> "$PdBIUVT_EXE"
         #if [[ "$PdBIUVT_OVERWRITE" == "YES" ]]; then
@@ -208,19 +183,95 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         #fi
         
         # 
+        # Run uv_map in parallel mode
+        # 
+        if [[ $PdBIUVT_PARALLELS -eq 1 ]]; then
+            # do parallel! directly call $GAG_EXEC_DIR/tasks/uv_map.exe
+            # <TODO> this needs more test and confirmation!
+            echo "Running GILDAS mapping in parallel mode"
+            if [[ -z "$GAG_EXEC_DIR" && -f "/opt/local/lib/gildas/x86_64-darwin-gfortran/tasks/uv_map.exe" ]]; then
+                export GAG_EXEC_DIR="/opt/local/lib/gildas/x86_64-darwin-gfortran"
+                export GAG_EXEC_SYSTEM="x86_64-darwin-gfortran"
+                export GAG_ROOT_DIR="/opt/local/lib/gildas"
+                export GAG_PATH="/opt/local/lib/gildas/etc"
+            fi
+            if [[ -f "$GAG_EXEC_DIR/tasks/uv_map.exe" ]]; then
+                # 
+                PdBIUVT_TEMP_MAP_FIELD="0 0"
+                PdBIUVT_TEMP_MAP_SIZE="0 0"
+                PdBIUVT_TEMP_MAP_CELL="0 0"
+                if [[ ${#PdBIUVT_SIZE[@]}     -gt $i ]]; then PdBIUVT_TEMP_MAP_FIELD="${PdBIUVT_SIZE[$i]}"; fi
+                if [[ ${#PdBIUVT_MAP_SIZE[@]} -gt $i ]]; then PdBIUVT_TEMP_MAP_SIZE="${PdBIUVT_MAP_SIZE[$i]}"; fi
+                if [[ ${#PdBIUVT_MAP_CELL[@]} -gt $i ]]; then PdBIUVT_TEMP_MAP_CELL="${PdBIUVT_MAP_CELL[$i]}"; fi
+                PdBIUVT_TEMP_MAP_FIELD=($PdBIUVT_TEMP_MAP_FIELD)
+                PdBIUVT_TEMP_MAP_SIZE=($PdBIUVT_TEMP_MAP_SIZE)
+                PdBIUVT_TEMP_MAP_CELL=($PdBIUVT_TEMP_MAP_CELL)
+                if [[ ${#PdBIUVT_TEMP_MAP_FIELD[@]} -eq 1 ]]; then PdBIUVT_TEMP_MAP_FIELD+=(${PdBIUVT_TEMP_MAP_FIELD[0]}); fi
+                if [[ ${#PdBIUVT_TEMP_MAP_SIZE[@]} -eq 1 ]]; then PdBIUVT_TEMP_MAP_SIZE+=(${PdBIUVT_TEMP_MAP_SIZE[0]}); fi
+                if [[ ${#PdBIUVT_TEMP_MAP_CELL[@]} -eq 1 ]]; then PdBIUVT_TEMP_MAP_CELL+=(${PdBIUVT_TEMP_MAP_CELL[0]}); fi
+                echo PdBIUVT_TEMP_MAP_FIELD="${PdBIUVT_TEMP_MAP_FIELD[@]}"
+                echo PdBIUVT_TEMP_MAP_SIZE="${PdBIUVT_TEMP_MAP_SIZE[@]}"
+                echo PdBIUVT_TEMP_MAP_CELL="${PdBIUVT_TEMP_MAP_CELL[@]}"
+                # 
+                echo "" > "$PdBIUVT_INI"
+                echo 'TASK\FILE      "UV table"                            UV_TABLE$     "'${PdBIUVT_NAME[i]}'"'                                    >> "$PdBIUVT_INI"
+                echo 'TASK\CHARACTER "Map name"                            MAP_NAME$     "'${PdBIUVT_NAME[i]}'"'                                    >> "$PdBIUVT_INI"
+                echo 'TASK\REAL      "UV taper (1/e level) [m]"            UV_TAPER$[4]  0 0 0 0'                                                   >> "$PdBIUVT_INI"
+                echo 'TASK\CHARACTER "Weight mode (NA or UN)"           WEIGHT_MODE$     "NA"'                                                      >> "$PdBIUVT_INI"
+                echo 'TASK\REAL      "Field of view [arc sec]"            MAP_FIELD$[2]  '${PdBIUVT_TEMP_MAP_FIELD[0]} ${PdBIUVT_TEMP_MAP_FIELD[1]} >> "$PdBIUVT_INI"
+                echo 'TASK\INTEGER   "Map size [pixel]"                    MAP_SIZE$[2]  '${PdBIUVT_TEMP_MAP_SIZE[0]} ${PdBIUVT_TEMP_MAP_SIZE[1]}   >> "$PdBIUVT_INI"
+                echo 'TASK\REAL      "Map cell [arc sec]"                  MAP_CELL$[2]  '${PdBIUVT_TEMP_MAP_CELL[0]} ${PdBIUVT_TEMP_MAP_CELL[1]}   >> "$PdBIUVT_INI"
+                echo 'TASK\REAL      "UV cell [m], for unif. weighting"     UV_CELL$[2]  0 0'         >> "$PdBIUVT_INI"
+                echo 'TASK\LOGICAL   "Make one beam (NO), or one per channel (YES)" ONEBEAM$ YES'     >> "$PdBIUVT_INI"
+                echo 'TASK\INTEGER   "Weight channel" WCOL$ 0'                                        >> "$PdBIUVT_INI"
+                echo 'TASK\INTEGER   "Beam channel" BCOL$ 0'                                          >> "$PdBIUVT_INI"
+                echo 'TASK\INTEGER   "First and Last channel to map" MCOL$[2]  0 0'                   >> "$PdBIUVT_INI"
+                echo 'TASK\INTEGER   "Convolution function [0-5]" CONVOLUTION$ 5'                     >> "$PdBIUVT_INI"
+                echo '!'                                                                              >> "$PdBIUVT_INI"
+                echo 'TASK\LOGICAL   "Change map center or map orientation" UV_SHIFT$ NO'             >> "$PdBIUVT_INI"
+                echo 'TASK\CHARACTER "Map Center RA" RA_CENTER$ "0"'                                  >> "$PdBIUVT_INI"
+                echo 'TASK\CHARACTER "Map Center DEC" DEC_CENTER$ "0"'                                >> "$PdBIUVT_INI"
+                echo 'TASK\REAL      "Map Position Angle [deg]" ANGLE$ 0'                             >> "$PdBIUVT_INI"
+                echo '!'                                                                              >> "$PdBIUVT_INI"
+                echo 'TASK\GO'                                                                        >> "$PdBIUVT_INI"
+                # 
+                # run uv_map.exe
+                # -- this will output *.lmv and *.beam
+                cat "$PdBIUVT_INI" | grep '^TASK' | grep -v '^TASK\\GO' | perl -p -e 's/.*\s+(\S*)(\$)\S*\s*(.*)/\1\2\3/g' | grep -v '^RES' | perl -p -e 's/\$/\$\n/g' | sed 's/["]//g' | sed 's/^YES$/.TRUE./g' | sed 's/^NO$/.FALSE./g' >  "$PdBIUVT_PAR"
+                cat "$PdBIUVT_INI" | grep '^TASK' | grep -v '^TASK\\GO' | perl -p -e 's/.*\s+(\S*)(\$)\S*\s*(.*)/\1\2\3/g' | grep    '^RES' | perl -p -e 's/\$/\$\n/g' | sed 's/["]//g' | sed 's/^YES$/.TRUE./g' | sed 's/^NO$/.FALSE./g' >> "$PdBIUVT_PAR"
+                echo "" >> "$PdBIUVT_PAR"
+                echo "" >> "$PdBIUVT_PAR"
+                echo "" >> "$PdBIUVT_PAR"
+                echo "# now executing the following command to run gildas mapping uv_map, this might take a while" >> "$PdBIUVT_PAR"
+                echo "# cat \"$PdBIUVT_PAR\" | \"$GAG_EXEC_DIR/tasks/uv_map.exe\" > \"$PdBIUVT_LOG\"" >> "$PdBIUVT_PAR"
+                        cat  "$PdBIUVT_PAR"  |  tail -n 2
+                        cat  "$PdBIUVT_PAR"  |  "$GAG_EXEC_DIR/tasks/uv_map.exe"  >  "$PdBIUVT_LOG"
+                if tail -n 1 "$PdBIUVT_LOG" | grep -q "F-SYSTEM,  Exit code"; then
+                    echo "Error! Failed to run cat \"$PdBIUVT_PAR\" | \"$GAG_EXEC_DIR/tasks/uv_map.exe\" > \"$PdBIUVT_LOG\"! Perhaps GILDAS is not set well? Sorry!"
+                    exit
+                fi
+            else
+                echo "Error! For parallelly runing GILDAS mapping, we need system environment \$GAG_EXEC_DIR, however it is not defined! Exit!"
+                exit
+            fi
+        fi
+        
+        # 
         # Run mapping script
+        # -- if not in parallel mode, then we run 'go uvmap', 'go noise', 'go view'
+        # -- if we are in parallel mode, then we have already run 'uv_map.exe' above, now we run 'go noise' and 'go view'. 
         # 
         # -- must wait for other mapping processes (for example when another uv_merge is running... strange though)
-        echo "on error continue ; @$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG" 
+        echo "on error continue ; @$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG"
         
         PdBIUVT_REPEAT=0
         while [[ ! -f "${PdBIUVT_EPS}.eps" || ! -f "${PdBIUVT_SAVE[i]}.lmv" || ! -f "${PdBIUVT_SAVE[i]}.lmv.fits" ]]; do
-            echo "Failed to get the uv_map result? Perhaps conflicting with other running mapping processes! Try again!"
+            echo "Failed to get the uv_map result? Perhaps conflicting with other running mapping processes! We will try again!" 1>&2
             echo ls "${PdBIUVT_EPS}.eps"; ls "${PdBIUVT_EPS}.eps"
             echo ls "${PdBIUVT_SAVE[i]}.lmv"; ls "${PdBIUVT_SAVE[i]}.lmv"
             echo ls "${PdBIUVT_SAVE[i]}.lmv.fits"; ls "${PdBIUVT_SAVE[i]}.lmv.fits"
             sleep 1.5
-            echo "@$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG" 
+            echo "@$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG"
             PdBIUVT_REPEAT=$(($PdBIUVT_REPEAT+1))
             # repeat running it
         done

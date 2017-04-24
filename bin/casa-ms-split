@@ -666,6 +666,8 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "for (( i=0; i<\${#uvfits_list[@]}; i++ )); do"                                                    >> "$CASAMS_Script6"
                     echo "    pdbi-uvt-go-import-uvfits -name \"\${uvfits_list[i]}\" \\"                                    >> "$CASAMS_Script6"
                     echo "                              -out \"\$(echo \${uvfits_list[i]} | sed -e 's/\.uvfits/\.uvt/g')\"" >> "$CASAMS_Script6"
+                    echo "    pdbi-uvt-go-splitpolar -name \"\$(echo \${uvfits_list[i]} | sed -e 's/\.uvfits/\.uvt/g')\" \\" >> "$CASAMS_Script6"
+                    echo "                           -out \"\$(echo \${uvfits_list[i]} | sed -e 's/\.uvfits/_SP\.uvt/g')\"" >> "$CASAMS_Script6"
                     echo "done"                                                                                             >> "$CASAMS_Script6"
                     if [[ x"${SPLIT_FEQ}" != x ]]; then
                     echo ""                                                                                                 >> "$CASAMS_Script6"
@@ -676,6 +678,8 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "for (( i=0; i<\${#uvfits_list[@]}; i++ )); do"                                                    >> "$CASAMS_Script6"
                     echo "    pdbi-uvt-go-import-uvfits -name \"\${uvfits_list[i]}\" \\"                                    >> "$CASAMS_Script6"
                     echo "                              -out \"\$(echo \${uvfits_list[i]} | sed -e 's/\.uvfits/\.uvt/g')\"" >> "$CASAMS_Script6"
+                    echo "    pdbi-uvt-go-splitpolar -name \"\$(echo \${uvfits_list[i]} | sed -e 's/\.uvfits/\.uvt/g')\" \\" >> "$CASAMS_Script6"
+                    echo "                           -out \"\$(echo \${uvfits_list[i]} | sed -e 's/\.uvfits/_SP\.uvt/g')\"" >> "$CASAMS_Script6"
                     echo "done"                                                                                             >> "$CASAMS_Script6"
                     fi
                     echo ""                                                                                                 >> "$CASAMS_Script6"

@@ -9,9 +9,30 @@ if [[ $(type sm 2>/dev/null | wc -l) -eq 0 ]]; then
 fi
 
 if [[ $# -lt 1 ]]; then
-    echo "Usage: pdbi-uvt-go-plot-uvfit-result-image *.uvt -radec ra dec"
+    echo "Usage: pdbi-uvt-go-plot-uvfit-result-image *.uvt -radec ra dec -offset xoff yoff"
     exit
 fi
+
+function Is_Float_Number() {
+    # http://stackoverflow.com/questions/13790763/bash-regex-to-check-floating-point-numbers-from-user-input
+    #echo $1
+    if [[ $# -ge 1 ]]; then
+        #regExp='^[+-]?([0-9]+\.?|[0-9]*\.[0-9]+)$'
+        regExp='^([+-])?([0-9]+\.?|[0-9]*\.[0-9]+)([eE][+-]?[0-9]+)?$'
+        if [[ "$1" =~ $regExp ]]; then
+            #echo "That is a number!"
+            return 0
+        else
+            #echo "Damn! Not A Number!"
+            #seq  -f "*" -s '' $(echo "${#1}+7+2+23" | bc); echo
+            #echo "Error! \"$1\" is not a float number!"
+            #seq  -f "*" -s '' $(echo "${#1}+7+2+23" | bc); echo
+            #exit -1
+            return -1
+        fi
+    fi
+    return -1
+}
 
 uv_filename=$(echo $1 | sed -e 's/\.uvt$//g')
 
@@ -50,10 +71,28 @@ fi
 # 
 echo "go nice" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 # 
+echo "define header UVT_HEADER 'name'.uvt read" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "define real OBJ_RA_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "define real OBJ_DEC_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "define real OBJ_BOX_SIZE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+# 
 if [[ $* == *"-radec "* ]]; then
-    radec=($(echo $* | perl -p -e 's/.* -radec[ ]+([0-9.+-:]+)[ ]+([0-9.+-:]+).*/\1 \2/g')) # must be in degrees
+    #radec=($(echo $* | perl -p -e 's/.* -radec[ ]+([0-9.+-:]+)[ ]+([0-9.+-:]+).*/\1 \2/g')) # must be in degrees
+    radec_arg=0
+    radec=()
+    for (( i=1; i<=$#; i++ )); do
+        if [[ "${!i}" == "-radec" ]]; then radec_arg=1; continue; fi
+        if [[ $radec_arg -eq 1 ]]; then
+            radec_str=$(echo "${!i}" | sed -e 's/://g')
+            if Is_Float_Number "$radec_str"; then
+                radec+=("${!i}")
+            else
+                radec_arg=0
+            fi
+        fi
+    done
     echo "Setting radec ${radec[@]}"
-    if [[ ${#radec[@]} -eq 2 ]]; then
+    while [[ ${#radec[@]} -ge 2 ]]; do
         if [[ ${radec[0]} == *":"* || ${radec[1]} == *":"* ]]; then
             radec_sexagement=(${radec[@]})
             radec=($(radec2degree ${radec_sexagement[@]}))
@@ -63,12 +102,10 @@ if [[ $* == *"-radec "* ]]; then
             ra_radian=$(awk "BEGIN {printf \"%0.15f\", (${radec[0]})/180.0*3.14159265358979}")
             dec_radian=$(awk "BEGIN {printf \"%0.15f\", (${radec[1]})/180.0*3.14159265358979}")
         fi
+        radec=(${radec[@]:2})
         echo "ra_radian = $ra_radian"
         echo "dec_radian = $dec_radian"
-        echo "DEFINE HEADER UVT_HEADER 'NAME'.uvt READ" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "DEFINE REAL OBJ_RA_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "DEFINE REAL OBJ_DEC_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "DEFINE REAL OBJ_BOX_SIZE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "LET OBJ_DEC_OFF = '($dec_radian - UVT_HEADER%D0)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "LET OBJ_RA_OFF = '($ra_radian - UVT_HEADER%A0) * COS(UVT_HEADER%D0)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "LET OBJ_BOX_SIZE = '2.0 / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
@@ -82,20 +119,69 @@ if [[ $* == *"-radec "* ]]; then
         echo "DRAW LINE     'OBJ_RA_OFF+OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "DRAW LINE     'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "PENCIL 0" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-    fi
+    done
+fi
+# 
+if [[ $* == *"-offset "* ]]; then
+    #offset=($(echo $* | perl -p -e 's/.* -offset[ ]+([0-9.+-:]+)[ ]+([0-9.+-:]+).*/\1 \2/g')) # must be in degrees
+    offset_arg=0
+    offset=()
+    for (( i=1; i<=$#; i++ )); do
+        if [[ "${!i}" == "-offset" ]]; then offset_arg=1; continue; fi
+        if [[ $offset_arg -eq 1 ]]; then
+            offset_str=$(echo "${!i}" | sed -e 's/://g')
+            if Is_Float_Number "$offset_str"; then
+                offset+=("${!i}")
+            else
+                offset_arg=0
+            fi
+        fi
+    done
+    echo "Setting offset ${offset[@]}"
+    while [[ ${#offset[@]} -ge 2 ]]; do
+        ra_offset=${offset[0]}
+        dec_offset=${offset[1]}
+        offset=(${offset[@]:2})
+        echo "ra_offset = $ra_offset"
+        echo "dec_offset = $dec_offset"
+        echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_DEC_OFF = '($dec_offset) / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_RA_OFF = '($ra_offset) / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_BOX_SIZE = '2.0 / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "EXAM OBJ_RA_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "EXAM OBJ_DEC_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "EXAM OBJ_BOX_SIZE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "PENCIL /COLOUR BLACK /WEIGHT 5" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DRAW RELOCATE 'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DRAW LINE     'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF+OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DRAW LINE     'OBJ_RA_OFF+OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF+OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DRAW LINE     'OBJ_RA_OFF+OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DRAW LINE     'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "PENCIL 0" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+    done
 fi
 # 
 #echo "LET DO_HEADER NO" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 #echo "LET DO_NICE YES" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 # 
+echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "hardcopy pdbi_uvt_go_plot_uvfit_result_image.eps /OVERWRITE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-
+# 
 echo "@pdbi_uvt_go_plot_uvfit_result_image.map | mapping -nw -nl"
 echo "@pdbi_uvt_go_plot_uvfit_result_image.map" | mapping -nw -nl
-
+# 
 if [[ -f "pdbi_uvt_go_plot_uvfit_result_image.eps" ]]; then
     ps2pdf -dEPSCrop "pdbi_uvt_go_plot_uvfit_result_image.eps" "pdbi_uvt_go_plot_uvfit_result_image.pdf"
+fi
+# 
+# Final output
+if [[ $* == *"-output "* ]]; then
+    output=($(echo $* | perl -p -e 's/.* -output[ ]+([^ ]+).*/\1/g')) # must be in degrees
+    for i in map pdf eps; do
+        mv "pdbi_uvt_go_plot_uvfit_result_image.${i}" "${output}.${i}"
+        echo "Output to \"${output}.${i}\""
+    done
 fi
 
 

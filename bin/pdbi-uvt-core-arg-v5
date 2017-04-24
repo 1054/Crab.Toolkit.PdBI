@@ -76,6 +76,8 @@ PdBIUVT_OVERWRITE="NO"    #
 # ----------------------- # uvmap parameters
 PdBIUVT_MAP_SIZE=()
 PdBIUVT_MAP_CELL=()
+# ----------------------- # other parameters
+PdBIUVT_FOV_SIZE=()
 # ----------------------- # fitting parameters
 PdBIUVT_OBJ_NUMB=0        # Number of objects to fit, according to the input RA Dec
 PdBIUVT_OBJ_NAME=()       # 
@@ -138,6 +140,11 @@ PdBIUVT_UVMERGE_CONT_MODE=0
 PdBIUVT_UVCOMPRESS_NC=()  # channel number to compress
 # ------------------------# uv compress
 PdBIUVT_UVRESAMPLE_VW=()  # velocity width to resample
+# ----------------------- # uvt line search
+PdBIUVT_LINE_SEARCH_WIDTH=()
+PdBIUVT_LINE_SEARCH_STEP=()
+PdBIUVT_LINE_SEARCH_SIGMA=()
+PdBIUVT_LINE_SEARCH_BLEND=()
 # ------------------------# program control
 PdBIUVT_PARALLELS=0
 
@@ -269,7 +276,10 @@ while [[ "$#" -gt 0 ]]; do
            "-scaling") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_factor";;
   
              "-width") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvcompress_nc";;
-
+              "-step") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="step";;
+             "-sigma") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="sigma";;
+             "-blend") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="blend";;
+            
       "-simultaneous") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run
           "-parallel") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run
 
@@ -609,11 +619,30 @@ while [[ "$#" -gt 0 ]]; do
     fi
     
     
-    # -- uvcompress
+    # -- uvcompress/uvresample/uvtlinesearch
     if [[ "$PdBIUVT_RPAR" == "uvcompress_nc" ]];  then 
         if [[ "$#" -lt 1 ]]; then break; fi
         PdBIUVT_UVCOMPRESS_NC+=("$1")
         PdBIUVT_UVRESAMPLE_VW+=("$1")
+        PdBIUVT_LINE_SEARCH_WIDTH+=("$1")
+    fi
+    
+    # -- uvtlinesearch
+    if [[ "$PdBIUVT_RPAR" == "step" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_LINE_SEARCH_STEP+=("$1")
+    fi
+    
+    # -- uvtlinesearch
+    if [[ "$PdBIUVT_RPAR" == "sigma" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_LINE_SEARCH_SIGMA+=("$1")
+    fi
+    
+    # -- uvtlinesearch
+    if [[ "$PdBIUVT_RPAR" == "blend" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_LINE_SEARCH_BLEND+=("$1")
     fi
     
     

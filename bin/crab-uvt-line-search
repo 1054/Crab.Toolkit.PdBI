@@ -69,7 +69,7 @@ fi
 # Check input arguments
 # 
 Usage() {
-    echo "Usage: crab-uvt-line-search -name a.uvt"
+    echo "Usage: crab-uvt-line-search -name a.uvt -sigma 5.0 -bin 500 -map-size 300 -fov-size 45"
     exit -1
 }
 if [[ $# -eq 0 ]]; then
@@ -100,6 +100,18 @@ if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]]; then
     Usage
     exit
 fi
+
+
+
+# 
+# Parse input arguments
+# 
+default_velo_width="300.0"
+default_velo_step="150.0"
+default_map_size="300" # pixel, 512 is 60 arcsec
+default_fov_size="45" # arcsec
+default_sigma_threshold="4.4" #<TODO># 
+default_deblend_level="10"
 
 
 
@@ -182,11 +194,50 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     
     velo_count=1
     velo_start="$PdBIUVT_VELO_MIN"
-    velo_width="300.0"
-    velo_step="150.0"
-    map_size="300" # pixel, 512 is 60 arcsec
-    fov_size="45" # arcsec
-    sigma_threshold="4.4" #<TODO># 
+    #velo_width="300.0"
+    #velo_step="150.0"
+    #map_size="300" # pixel, 512 is 60 arcsec
+    #fov_size="45" # arcsec
+    #sigma_threshold="4.4" #<TODO># 
+    if [[ ${#PdBIUVT_LINE_SEARCH_WIDTH[@]} -gt $tk ]]; then
+        velo_width="${PdBIUVT_LINE_SEARCH_BIN_WIDTH[$tk]}"
+    else
+        velo_width="$default_velo_width"
+    fi
+    if [[ ${#PdBIUVT_LINE_SEARCH_STEP[@]} -gt $tk ]]; then
+        velo_step="${PdBIUVT_LINE_SEARCH_BIN_STEP[$tk]}"
+    else
+        velo_step="$default_velo_step"
+    fi
+    if [[ ${#PdBIUVT_MAP_SIZE[@]} -gt $tk ]]; then
+        map_size="${PdBIUVT_MAP_SIZE[$tk]}"
+    else
+        map_size="$default_map_size"
+    fi
+    if [[ ${#PdBIUVT_FOV_SIZE[@]} -gt $tk ]]; then
+        fov_size="${PdBIUVT_FOV_SIZE[$tk]}"
+    else
+        fov_size="$default_fov_size"
+    fi
+    if [[ ${#PdBIUVT_LINE_SEARCH_SIGMA[@]} -gt $tk ]]; then
+        sigma_threshold="${PdBIUVT_LINE_SEARCH_SIGMA[$tk]}"
+    else
+        sigma_threshold="$default_sigma_threshold"
+    fi
+    if [[ ${#PdBIUVT_LINE_SEARCH_BLEND[@]} -gt $tk ]]; then
+        deblend_level="${PdBIUVT_LINE_SEARCH_BLEND[$tk]}"
+    else
+        deblend_level="$default_deblend_level"
+    fi
+    
+    # patch for continuum uvt
+    continuum_mode=0
+    if [[ "$PdBIUVT_VELO_MIN" == "$PdBIUVT_VELO_MAX" && "$PdBIUVT_VELO_MIN" == "0" ]]; then
+        continuum_mode=1
+    fi
+    if [[ $continuum_mode -eq 1 ]]; then
+        PdBIUVT_VELO_MAX="$velo_width"
+    fi
     
     while [[ $(awk "BEGIN {if(($velo_start)<($PdBIUVT_VELO_MAX)) print 1; else print 0;}") -eq 1 ]]; do
         velo_end=$(awk "BEGIN {print ($velo_start)+($velo_width)}")
@@ -202,10 +253,17 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             fi
         fi
         
+        # run uv_average to average every velo_width km/s bin
         if [[ ! -f "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt" ]]; then
-            echo "pdbi-uvt-go-average -name \"${PdBIUVT_NAME[tk]}\" -out \"${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt\" -vrange $velo_start $velo_end"
-            pdbi-uvt-go-average -name "${PdBIUVT_NAME[tk]}" -out "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt" -vrange "$velo_start" "$velo_end" \
-                                                               > "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uv_average.log"
+            # patch for continuum uvt
+            if [[ $continuum_mode -eq 1 ]]; then
+                echo "cp \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\" \"${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt\""
+                cp "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt"
+            else
+                echo "pdbi-uvt-go-average -name \"${PdBIUVT_NAME[tk]}\" -out \"${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt\" -vrange $velo_start $velo_end"
+                pdbi-uvt-go-average -name "${PdBIUVT_NAME[tk]}" -out "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt" -vrange "$velo_start" "$velo_end" \
+                                                                   > "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uv_average.log"
+            fi
         fi
         
         cd "${PdBIUVT_SAVE[tk]}/"
@@ -243,26 +301,38 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             sethead "velo_bin_${velo_count}.lmv_bscale.fits" BSCALE=1
         fi
         
+        # convert gildas lmv converted fits image BZERO
+        if [[ ! -f "velo_bin_${velo_count}.lmv_bzero.fits" ]]; then
+            data_bzero=$(gethead "velo_bin_${velo_count}.lmv.fits" BZERO)
+            CrabFitsImageArithmetic "velo_bin_${velo_count}.lmv_bscale.fits" "+" "$data_bzero" "velo_bin_${velo_count}.lmv_bzero.fits" \
+                                  > "velo_bin_${velo_count}.lmv_bzero.fits.log" 2>&1
+            sethead "velo_bin_${velo_count}.lmv_bzero.fits" BZERO=0
+        fi
+        
         # invert gildas lmv converted fits image BSCALE (negative image)
         if [[ ! -f "velo_bin_${velo_count}.lmv_invert.fits" ]]; then
             #<DEBUG># 
             #rm "velo_bin_${velo_count}.lmv_invert"*
             #<DEBUG># 
-            CrabFitsImageArithmetic "velo_bin_${velo_count}.lmv_bscale.fits" "times" "0.0" "velo_bin_${velo_count}.lmv_zero.fits" \
+            CrabFitsImageArithmetic "velo_bin_${velo_count}.lmv_bzero.fits" "times" "0.0" "velo_bin_${velo_count}.lmv_zero.fits" \
                                   > "velo_bin_${velo_count}.lmv_zero.fits.log" 2>&1
             sethead "velo_bin_${velo_count}.lmv_zero.fits" BZERO=0
-            CrabFitsImageArithmetic "velo_bin_${velo_count}.lmv_zero.fits" "minus" "velo_bin_${velo_count}.lmv_bscale.fits" "velo_bin_${velo_count}.lmv_invert.fits" \
+            CrabFitsImageArithmetic "velo_bin_${velo_count}.lmv_zero.fits" "minus" "velo_bin_${velo_count}.lmv_bzero.fits" "velo_bin_${velo_count}.lmv_invert.fits" \
                                   > "velo_bin_${velo_count}.lmv_invert.fits.log" 2>&1
         fi
         
         # perform blob search on both lmv_bscale and lmv_invert fits images <20170417><dzliu><edaddi>
-        lmv_types=(lmv_bscale)
+        #lmv_types=(lmv_bscale)
+        lmv_types=(lmv_bzero)
         if [[ $* == *"-do-negative"* ]]; then
             lmv_types+=(lmv_invert)
         fi
         for lmv_type in ${lmv_types[@]}; do
             # check previous blob detect results
             blob_overwrite=0
+            if [[ $* == *"-overwrite"* ]]; then
+                blob_overwrite=1
+            fi
             if [[ ! -f "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.sh" ]]; then
                 # prepare ds9 script
                 echo "#!/bin/bash" > "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.sh"
@@ -276,12 +346,12 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                 chmod +x "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.sh"
                 blob_overwrite=1
             fi
-            if [[ ! -f "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.reg" ]]; then
+            if [[ ! -f "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.reg" || $blob_overwrite -eq 1 ]]; then
                 # now try to find 4.5-sigma peaks in each velo_bin_*.lmv.fits image
                 detect_threshold=$(awk "BEGIN {print ($sigma_threshold*($data_noise));}")
                 echo "detect_threshold = $detect_threshold Jy"
-                echo "CrabBlobDetector \"velo_bin_${velo_count}.${lmv_type}.fits\" -detect-threshold $detect_threshold  -deblend-level 10"
-                CrabBlobDetector "velo_bin_${velo_count}.${lmv_type}.fits" -detect-threshold "$detect_threshold"  -deblend-level 10 \
+                echo "CrabBlobDetector \"velo_bin_${velo_count}.${lmv_type}.fits\" -detect-threshold $detect_threshold  -deblend-level $deblend_level"
+                CrabBlobDetector "velo_bin_${velo_count}.${lmv_type}.fits" -detect-threshold "$detect_threshold"  -deblend-level "$deblend_level" \
                            > "velo_bin_${velo_count}.${lmv_type}.detect_blob.log" 2>&1
                 cp "ds9.reg" "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.reg"
                 blob_overwrite=1
