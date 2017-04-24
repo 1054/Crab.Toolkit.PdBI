@@ -95,9 +95,9 @@ if [[ $* == *"-radec "* ]]; then
     while [[ ${#radec[@]} -ge 2 ]]; do
         if [[ ${radec[0]} == *":"* || ${radec[1]} == *":"* ]]; then
             radec_sexagement=(${radec[@]})
-            radec=($(radec2degree ${radec_sexagement[@]}))
-            ra_radian=$(awk "BEGIN {printf \"%0.15f\", (${radec[0]})/180.0*3.14159265358979}")
-            dec_radian=$(awk "BEGIN {printf \"%0.15f\", (${radec[1]})/180.0*3.14159265358979}")
+            radec_degree=($(radec2degree ${radec_sexagement[0]} ${radec_sexagement[1]}))
+            ra_radian=$(awk "BEGIN {printf \"%0.15f\", (${radec_degree[0]})/180.0*3.14159265358979}")
+            dec_radian=$(awk "BEGIN {printf \"%0.15f\", (${radec_degree[1]})/180.0*3.14159265358979}")
         else
             ra_radian=$(awk "BEGIN {printf \"%0.15f\", (${radec[0]})/180.0*3.14159265358979}")
             dec_radian=$(awk "BEGIN {printf \"%0.15f\", (${radec[1]})/180.0*3.14159265358979}")
