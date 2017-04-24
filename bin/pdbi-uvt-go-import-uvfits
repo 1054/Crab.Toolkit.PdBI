@@ -107,6 +107,11 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo "CRVAL4   = $PdBIUVT_CRVAL4" > "$PdBIUVT_GETHEAD"
         echo "RESTFREQ = $PdBIUVT_RESTFREQ" >> "$PdBIUVT_GETHEAD"
         cat "$PdBIUVT_GETHEAD"
+        # 
+        # 
+        # Check whether ($PdBIUVT_CRVAL4) equals ($PdBIUVT_RESTFREQ)
+        # note that for float number comparison, we choose a 0.001 fractional precesion. 
+        # 
         #echo "BEGIN {val=(($PdBIUVT_CRVAL4)-($PdBIUVT_RESTFREQ))/((($PdBIUVT_CRVAL4)+($PdBIUVT_RESTFREQ))/2.0); print (val>0)?(val<0.001):(-val<0.001)}"
         PdBIUVT_CHECK=$(awk "BEGIN {val=(($PdBIUVT_CRVAL4)-($PdBIUVT_RESTFREQ))/((($PdBIUVT_CRVAL4)+($PdBIUVT_RESTFREQ))/2.0); print (val>0)?(val<0.001):(-val<0.001)}")
         if [[ $PdBIUVT_CHECK -eq 0 ]]; then
