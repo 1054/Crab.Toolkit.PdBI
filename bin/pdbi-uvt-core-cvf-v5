@@ -268,7 +268,8 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         # Note that Velocity axis should have a opposite direction as Frequency axis, but Channel axis has an arbitrary direction.  
         # 
         # Check the input line name of each object, or each cvf range pair
-        if [[ "${#PdBIUVT_LINE_NAME[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_LINE_NAME[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_LINE_NAME[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_LINE_NAME+=("NONAME")
         fi
         TEMP_LINE_NAME="${PdBIUVT_LINE_NAME[$PdBIUVT_OBJI]}"
@@ -276,7 +277,8 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         ##echo $TEMP_LINE_NAME
         # 
         # Check the input redshift of each object
-        if [[ "${#PdBIUVT_zRED[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_zRED[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_zRED[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_zRED+=("0.0")
         fi
         TEMP_REDSHIFT="${PdBIUVT_zRED[$PdBIUVT_OBJI]}"
@@ -284,23 +286,28 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         ##echo $TEMP_LINE_NAME
         # 
         # Check the input restfreq of each object
-        if [[ "${#PdBIUVT_FLAB[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_FLAB[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_FLAB[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_FLAB+=("0.0")
         fi
         TEMP_REST_FREQ="${PdBIUVT_FLAB[$PdBIUVT_OBJI]}"
         # 
         # Check the input channel range of each object
         # Channel range is given by "-crange CMIN1 CMAX1 CMIN2 CMAX2 ..."
-        if [[ "${#PdBIUVT_CMIN[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_CMIN[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_CMIN[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_CMIN+=("0")
         fi
-        if [[ "${#PdBIUVT_CMAX[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_CMAX[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_CMAX[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_CMAX+=("0")
         fi
-        if [[ "${#PdBIUVT_CWID[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_CWID[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_CWID[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_CWID+=("0")
         fi
-        if [[ "${#PdBIUVT_CCEN[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_CCEN[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_CCEN[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_CCEN+=("0")
         fi
         TEMP_CMIN=${PdBIUVT_CMIN[$PdBIUVT_OBJI]}
