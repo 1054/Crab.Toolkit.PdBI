@@ -56,10 +56,18 @@ if [[ $(degree2radec 2>/dev/null | wc -l) -eq 0 ]]; then
 fi
 
 # 
-# CHECK degree2radec
+# CHECK CrabTableReadInfo
 # 
 if [[ $(CrabTableReadInfo 2>/dev/null | wc -l) -eq 0 ]]; then
     echo "Error! CrabTableReadInfo not found! It should be included in this software! Please contact dzliu. "
+    exit -1
+fi
+
+# 
+# CHECK degree2radec
+# 
+if [[ $(CrabFitsImageArithmetic 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! CrabFitsImageArithmetic not found! It should be included in 'https://github.com/1054/DeepFields.SuperDeblending'! Please contact dzliu. "
     exit -1
 fi
 
