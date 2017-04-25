@@ -423,6 +423,7 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         fi
         # 
         # Debug
+        echo "#DEBUG# Checkpoint"
         ##echo TEMP_VMIN=$TEMP_VMIN
         ##echo TEMP_VMAX=$TEMP_VMAX
         ##echo TEMP_VWID=$TEMP_VWID
