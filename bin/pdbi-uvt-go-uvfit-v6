@@ -296,7 +296,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         echo  'TASK\LOGICAL   "Subtract function"   SUBSF'$PdBIUVT_Obj_ID'$       '$PdBIUVT_RSUB                                                                          >> $PdBIUVT_TEMP_INIT
         # 
         # Final write to PdBIUVT_TEMP_INIT
-        if [[ $(bc <<< $i+1) -eq "$PdBIUVT_OBJ_NUMB" ]]; then
+        if [[ $(($i+1)) -eq "$PdBIUVT_OBJ_NUMB" ]]; then
             echo  '! '                                                                                                                                                    >> $PdBIUVT_TEMP_INIT
             echo  '! --- end repeat ---'                                                                                                                                  >> $PdBIUVT_TEMP_INIT
             echo  '! '                                                                                                                                                    >> $PdBIUVT_TEMP_INIT
@@ -405,7 +405,10 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # 
     # Run pdbi-uvt-go-uvfit-print-results
     # 
+    ls .uvt
+    echo "pdbi-uvt-go-uvfit-print-results-v6 \"${PdBIUVT_SAVE[tk]}.uvfit\""
     pdbi-uvt-go-uvfit-print-results-v6 "${PdBIUVT_SAVE[tk]}.uvfit"
+    ls .uvt
     # 
     # loop each object (according to the input radec pairs)
     # 

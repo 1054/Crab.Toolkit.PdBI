@@ -48,7 +48,7 @@ while [[ $# -gt 0 ]]; do
         exit 1
     fi
     # Check input file extension
-    if [[ x"$1" == x*.uvfit ]]; then
+    if [[ x"$1" == x*".uvfit" ]]; then
         Input_file=$(basename "$1") # | sed -e 's/\.uvfit$//g'
     else
         Input_file=$(basename "$1")".uvfit"
