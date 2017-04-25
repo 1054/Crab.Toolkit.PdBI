@@ -449,8 +449,8 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
             elif [[ "$TEMP_FCEN" != "0" && "$TEMP_VWID" != "0" ]]; then
                 TEMP_CCEN=$(convert_frequency_to_channel $TEMP_FCEN) # input must be MHz
                 TEMP_VCEN=$(convert_channel_to_velocity $TEMP_CCEN)
-                TEMP_VMIN=$(echo "($TEMP_VCEN)-0.5*($TEMP_VWID)" | bc -l)
-                TEMP_VMAX=$(echo "($TEMP_VCEN)+0.5*($TEMP_VWID)" | bc -l)
+                TEMP_VMIN=$(awk "BEGIN {print ($TEMP_VCEN)-0.5*($TEMP_VWID);}")
+                TEMP_VMAX=$(awk "BEGIN {print ($TEMP_VCEN)+0.5*($TEMP_VWID);}")
                 TEMP_CMIN=$(convert_velocity_to_channel $TEMP_VMIN)
                 TEMP_CMAX=$(convert_velocity_to_channel $TEMP_VMAX)
                 # Debug
