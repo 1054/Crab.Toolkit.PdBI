@@ -277,7 +277,14 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         fi
         
         if [[ ! -f "velo_bin_${velo_count}.lmv" ]]; then
-            echo "Error! Failed to create \"velo_bin_${velo_count}.uvt\"!"
+            echo "Error! Failed to create \"velo_bin_${velo_count}.lmv\"!"
+            echo "Please check \"velo_bin_${velo_count}.uvt.uv_map.log\"!"
+            echo "Current directory \"$(pwd -P)\"!"
+            exit
+        fi
+        
+        if [[ ! -f "velo_bin_${velo_count}.lmv.fits" ]]; then
+            echo "Error! Failed to create \"velo_bin_${velo_count}.lmv.fits\"!"
             echo "Please check \"velo_bin_${velo_count}.uvt.uv_map.log\"!"
             echo "Current directory \"$(pwd -P)\"!"
             exit
