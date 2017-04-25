@@ -317,16 +317,20 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         # 
         # Check the input velocity range of each object
         # Velocity range is given by "-vrange VMIN1 VMAX1 VMIN2 VMAX2 ..."
-        if [[ "${#PdBIUVT_VMIN[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_VMIN[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_VMIN[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_VMIN+=("0")
         fi
-        if [[ "${#PdBIUVT_VMAX[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_VMAX[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_VMAX[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_VMAX+=("0")
         fi
-        if [[ "${#PdBIUVT_VWID[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_VWID[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_VWID[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_VWID+=("0")
         fi
-        if [[ "${#PdBIUVT_VCEN[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_VCEN[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_VCEN[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_VCEN+=("0")
         fi
         TEMP_VMIN=${PdBIUVT_VMIN[$PdBIUVT_OBJI]}
