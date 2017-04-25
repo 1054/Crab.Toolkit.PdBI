@@ -90,11 +90,11 @@ fi
 # 
 # SOURCE pdbi-uvt-core-arg
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v6" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v6" "$@"
 else
     echo ""
-    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5\"!"
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v6\"!"
     echo ""
     exit 1
 fi
@@ -133,11 +133,11 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # 
     # SOURCE pdbi-uvt-core-cvf
     # 
-    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v5" ]]; then
-        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v5" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
+    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v6" ]]; then
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v6" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
     else
         echo ""
-        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v5\"!"
+        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v6\"!"
         echo ""
         exit 1
     fi
@@ -147,11 +147,11 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # 
     # SOURCE pdbi-uvt-core-rad
     # 
-    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v5" ]]; then
-        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v5" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
+    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v6" ]]; then
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v6" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
     else
         echo ""
-        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v5\"!"
+        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v6\"!"
         echo ""
         exit 1
     fi
@@ -243,11 +243,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     if [[ "$PdBIUVT_VELO_MIN" == "$PdBIUVT_VELO_MAX" && $(awk "BEGIN {if(($PdBIUVT_VELO_MIN)*($PdBIUVT_VELO_MIN)>1e-6) print 1; else print 0;}") == "0" ]]; then
         continuum_mode=1
     fi
-    if [[ $continuum_mode -eq 1 ]]; then
-        PdBIUVT_VELO_MAX="$velo_width"
-    fi
     
-    while [[ $(awk "BEGIN {if(($velo_start)<($PdBIUVT_VELO_MAX)) print 1; else print 0;}") -eq 1 ]]; do
+    while [[ $(awk "BEGIN {if(($velo_start)<($PdBIUVT_VELO_MAX)) print 1; else print 0;}") -eq 1 || $continuum_mode -eq 1 ]]; do
         velo_end=$(awk "BEGIN {print ($velo_start)+($velo_width)}")
         if [[ $(awk "BEGIN {if(($velo_end)>=($PdBIUVT_VELO_MAX)) print 1; else print 0;}") -eq 1 ]]; then
             velo_end="$PdBIUVT_VELO_MAX"
@@ -439,8 +436,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                         # run uvfit
                         if [[ $blob_uv_fit_separ -ne 1 ]]; then
                             # run uvfit simultaneously for all blobs (note that the blob_num should not be larger than 11, limited by GILDAS/MAPPING)
-                            echo "pdbi-uvt-go-uvfit-v5 -name \"../${PdBIUVT_NAME[tk]}\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit\" -radec ${blob_radec[@]} -vrange $velo_start $velo_end -parallel "
-                            pdbi-uvt-go-uvfit-v5 -name "../${PdBIUVT_NAME[tk]}" -out "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit" -radec ${blob_radec[@]} -vrange $velo_start $velo_end -parallel \
+                            echo "pdbi-uvt-go-uvfit-v6 -parallel -name \"../${PdBIUVT_NAME[tk]}\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit\" -radec ${blob_radec[@]} -vrange $velo_start $velo_end "
+                            pdbi-uvt-go-uvfit-v6 -parallel -name "../${PdBIUVT_NAME[tk]}" -out "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit" -radec ${blob_radec[@]} -vrange $velo_start $velo_end \
                                                                                    > "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log"
                             frange=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
                         fi
@@ -450,8 +447,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                             
                             if [[ $blob_uv_fit_separ -eq 1 ]]; then
                                 # run uvfit separately for each blob
-                                echo "pdbi-uvt-go-uvfit-v5 -name \"../${PdBIUVT_NAME[tk]}\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}\" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end -parallel"
-                                pdbi-uvt-go-uvfit-v5 -name "../${PdBIUVT_NAME[tk]}" -out "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end -parallel \
+                                echo "pdbi-uvt-go-uvfit-v6 -parallel -name \"../${PdBIUVT_NAME[tk]}\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}\" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end"
+                                pdbi-uvt-go-uvfit-v6 -parallel -name "../${PdBIUVT_NAME[tk]}" -out "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end \
                                                                                        > "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log"
                                 frange=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
                                 cp "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.result.obj_1.txt" \
@@ -496,6 +493,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         if [[ $(awk "BEGIN {if(($velo_end)>=($PdBIUVT_VELO_MAX)) print 1; else print 0;}") -eq 1 ]]; then
             break
         fi
+        
     done
     
     

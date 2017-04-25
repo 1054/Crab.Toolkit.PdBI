@@ -72,28 +72,32 @@ convert_channel_to_velocity () {
     if [ -z "$PdBIUVT_CHAN_REF" ]; then echo "Error! \$PdBIUVT_CHAN_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
     if [ -z "$PdBIUVT_VELO_BIN" ]; then echo "Error! \$PdBIUVT_VELO_BIN was not defined before running convert_channel_to_velocity!"; return 5; fi
     if [ -z "$PdBIUVT_VELO_REF" ]; then echo "Error! \$PdBIUVT_VELO_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
-    echo "($1-($PdBIUVT_CHAN_REF))*($PdBIUVT_VELO_BIN)+($PdBIUVT_VELO_REF)" | bc -l
+    ##echo "($1-($PdBIUVT_CHAN_REF))*($PdBIUVT_VELO_BIN)+($PdBIUVT_VELO_REF)" | bc -l
+    awk "BEGIN {print ($1-($PdBIUVT_CHAN_REF))*($PdBIUVT_VELO_BIN)+($PdBIUVT_VELO_REF);}"
 }
 convert_channel_to_frequency () {
     if [ -z "$1" ]; then echo "Error! Incorrect parameters for convert_channel_to_frequency!"; return 5; fi
     if [ -z "$PdBIUVT_CHAN_REF" ]; then echo "Error! \$PdBIUVT_CHAN_REF was not defined before running convert_channel_to_frequency!"; return 5; fi
     if [ -z "$PdBIUVT_FREQ_BIN" ]; then echo "Error! \$PdBIUVT_FREQ_BIN was not defined before running convert_channel_to_frequency!"; return 5; fi
     if [ -z "$PdBIUVT_FREQ_REF" ]; then echo "Error! \$PdBIUVT_FREQ_REF was not defined before running convert_channel_to_frequency!"; return 5; fi
-    echo "($1-($PdBIUVT_CHAN_REF))*($PdBIUVT_FREQ_BIN)+($PdBIUVT_FREQ_REF)" | bc -l
+    ##echo "($1-($PdBIUVT_CHAN_REF))*($PdBIUVT_FREQ_BIN)+($PdBIUVT_FREQ_REF)" | bc -l
+    awk "BEGIN {print ($1-($PdBIUVT_CHAN_REF))*($PdBIUVT_FREQ_BIN)+($PdBIUVT_FREQ_REF);}"
 }
 convert_velocity_to_channel () {
     if [ -z "$1" ]; then echo "Error! Incorrect parameters for convert_velocity_to_channel!"; return 5; fi
     if [ -z "$PdBIUVT_CHAN_REF" ]; then echo "Error! \$PdBIUVT_CHAN_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
     if [ -z "$PdBIUVT_VELO_BIN" ]; then echo "Error! \$PdBIUVT_VELO_BIN was not defined before running convert_channel_to_velocity!"; return 5; fi
     if [ -z "$PdBIUVT_VELO_REF" ]; then echo "Error! \$PdBIUVT_VELO_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
-    echo "($1-($PdBIUVT_VELO_REF))/($PdBIUVT_VELO_BIN)+($PdBIUVT_CHAN_REF)" | bc -l
+    ##echo "($1-($PdBIUVT_VELO_REF))/($PdBIUVT_VELO_BIN)+($PdBIUVT_CHAN_REF)" | bc -l
+    awk "BEGIN {print ($1-($PdBIUVT_VELO_REF))/($PdBIUVT_VELO_BIN)+($PdBIUVT_CHAN_REF);}"
 }
 convert_frequency_to_channel () {
     if [ -z "$1" ]; then echo "Error! Incorrect parameters for convert_velocity_to_channel!"; return 5; fi
     if [ -z "$PdBIUVT_CHAN_REF" ]; then echo "Error! \$PdBIUVT_CHAN_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
     if [ -z "$PdBIUVT_FREQ_BIN" ]; then echo "Error! \$PdBIUVT_FREQ_BIN was not defined before running convert_channel_to_velocity!"; return 5; fi
     if [ -z "$PdBIUVT_FREQ_REF" ]; then echo "Error! \$PdBIUVT_FREQ_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
-    echo "($1-($PdBIUVT_FREQ_REF))/($PdBIUVT_FREQ_BIN)+($PdBIUVT_CHAN_REF)" | bc -l
+    ##echo "($1-($PdBIUVT_FREQ_REF))/($PdBIUVT_FREQ_BIN)+($PdBIUVT_CHAN_REF)" | bc -l
+    awk "BEGIN {print ($1-($PdBIUVT_FREQ_REF))/($PdBIUVT_FREQ_BIN)+($PdBIUVT_CHAN_REF);}"
 }
 abs() { 
     if [ -z "$1" ]; then echo "Error! Incorrect parameters for abs!"; return 5; fi
@@ -264,7 +268,8 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         # Note that Velocity axis should have a opposite direction as Frequency axis, but Channel axis has an arbitrary direction.  
         # 
         # Check the input line name of each object, or each cvf range pair
-        if [[ "${#PdBIUVT_LINE_NAME[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_LINE_NAME[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_LINE_NAME[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_LINE_NAME+=("NONAME")
         fi
         TEMP_LINE_NAME="${PdBIUVT_LINE_NAME[$PdBIUVT_OBJI]}"
@@ -272,7 +277,8 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         ##echo $TEMP_LINE_NAME
         # 
         # Check the input redshift of each object
-        if [[ "${#PdBIUVT_zRED[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_zRED[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_zRED[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_zRED+=("0.0")
         fi
         TEMP_REDSHIFT="${PdBIUVT_zRED[$PdBIUVT_OBJI]}"
@@ -280,23 +286,28 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         ##echo $TEMP_LINE_NAME
         # 
         # Check the input restfreq of each object
-        if [[ "${#PdBIUVT_FLAB[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_FLAB[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_FLAB[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_FLAB+=("0.0")
         fi
         TEMP_REST_FREQ="${PdBIUVT_FLAB[$PdBIUVT_OBJI]}"
         # 
         # Check the input channel range of each object
         # Channel range is given by "-crange CMIN1 CMAX1 CMIN2 CMAX2 ..."
-        if [[ "${#PdBIUVT_CMIN[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_CMIN[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_CMIN[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_CMIN+=("0")
         fi
-        if [[ "${#PdBIUVT_CMAX[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_CMAX[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_CMAX[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_CMAX+=("0")
         fi
-        if [[ "${#PdBIUVT_CWID[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_CWID[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_CWID[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_CWID+=("0")
         fi
-        if [[ "${#PdBIUVT_CCEN[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_CCEN[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_CCEN[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_CCEN+=("0")
         fi
         TEMP_CMIN=${PdBIUVT_CMIN[$PdBIUVT_OBJI]}
@@ -306,16 +317,20 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         # 
         # Check the input velocity range of each object
         # Velocity range is given by "-vrange VMIN1 VMAX1 VMIN2 VMAX2 ..."
-        if [[ "${#PdBIUVT_VMIN[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_VMIN[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_VMIN[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_VMIN+=("0")
         fi
-        if [[ "${#PdBIUVT_VMAX[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_VMAX[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_VMAX[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_VMAX+=("0")
         fi
-        if [[ "${#PdBIUVT_VWID[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_VWID[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_VWID[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_VWID+=("0")
         fi
-        if [[ "${#PdBIUVT_VCEN[@]}"<=$PdBIUVT_OBJI ]]; then
+        ##if [[ "${#PdBIUVT_VCEN[@]}"<=$PdBIUVT_OBJI ]]; then
+        if [[ "${#PdBIUVT_VCEN[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_VCEN+=("0")
         fi
         TEMP_VMIN=${PdBIUVT_VMIN[$PdBIUVT_OBJI]}
@@ -339,7 +354,8 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         fi
         # 
         # determine line rest frequency from line name if provided
-        if echo "$TEMP_REST_FREQ>0" | bc -l | grep -q "0"; then
+        ##if echo "$TEMP_REST_FREQ>0" | bc -l | grep -q "0" #<buggy><20170425>#
+        if [[ $(awk "BEGIN {if (($TEMP_REST_FREQ)>0) print 1; else print 0;}") -eq 0 ]]; then
             if     [[ x"$TEMP_LINE_NAME" == x*"CO"* ]]; then
                 if [[ x"$TEMP_LINE_NAME" == x*"CO"*"1-0"* ]]; then TEMP_REST_FREQ="115.2712018"; fi
                 if [[ x"$TEMP_LINE_NAME" == x*"CO"*"2-1"* ]]; then TEMP_REST_FREQ="230.5380000"; fi
@@ -390,38 +406,43 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         # <added><20160726><dzliu>
         if [[ "${PdBIUVT_FCEN[$PdBIUVT_OBJI]}" == "0" ]]; then
             if [[ "$TEMP_REDSHIFT" != "0.0" && "$TEMP_REST_FREQ" != "0.0" ]]; then
-                PdBIUVT_FCEN[$PdBIUVT_OBJI]=$(echo "$TEMP_REST_FREQ/(1.0+($TEMP_REDSHIFT))" | bc -l)
+                PdBIUVT_FCEN[$PdBIUVT_OBJI]=$(awk "BEGIN {print ($TEMP_REST_FREQ)/(1.0+($TEMP_REDSHIFT));}")
             fi
         fi
         # 
         # Convert from GHz to MHz
-        TEMP_FMIN=$(echo ${PdBIUVT_FMIN[$PdBIUVT_OBJI]}*1000 | bc -l) # MHz
-        TEMP_FMAX=$(echo ${PdBIUVT_FMAX[$PdBIUVT_OBJI]}*1000 | bc -l) # MHz
-        TEMP_FWID=$(echo ${PdBIUVT_FWID[$PdBIUVT_OBJI]}*1000 | bc -l) # MHz
-        TEMP_FCEN=$(echo ${PdBIUVT_FCEN[$PdBIUVT_OBJI]}*1000 | bc -l) # MHz -- This can also be input by giving "-lineobsfreq" or by giving both "-linerestfreq" and "-redshift"
+        TEMP_FMIN=$(awk "BEGIN {print (${PdBIUVT_FMIN[$PdBIUVT_OBJI]})*1000;}") # MHz
+        TEMP_FMAX=$(awk "BEGIN {print (${PdBIUVT_FMAX[$PdBIUVT_OBJI]})*1000;}") # MHz
+        TEMP_FWID=$(awk "BEGIN {print (${PdBIUVT_FWID[$PdBIUVT_OBJI]})*1000;}") # MHz
+        TEMP_FCEN=$(awk "BEGIN {print (${PdBIUVT_FCEN[$PdBIUVT_OBJI]})*1000;}") # MHz -- This can also be input by giving "-lineobsfreq" or by giving both "-linerestfreq" and "-redshift"
+        ##echo "#DEBUG# Checkpoint"
         # 
         # If CMIN>CMAX, then swap
-        if echo "($TEMP_CMIN)>($TEMP_CMAX)" | bc -l | grep -q "1"; then
+        ##if echo "($TEMP_VMIN)>($TEMP_VMAX)" | bc -l | grep -q "1" #<buggy><20170425>#
+        if [[ $(awk "BEGIN {if (($TEMP_CMIN)>($TEMP_CMAX)) print 1; else print 0;}") -eq 1 ]]; then
             TEMP_CVAR="$TEMP_CMIN"
             TEMP_CMIN="$TEMP_CMAX"
             TEMP_CMAX="$TEMP_CVAR"
         fi
         # 
         # If VMIN>VMAX, then swap
-        if echo "($TEMP_VMIN)>($TEMP_VMAX)" | bc -l | grep -q "1"; then
+        ##if echo "($TEMP_VMIN)>($TEMP_VMAX)" | bc -l | grep -q "1" #<buggy><20170425>#
+        if [[ $(awk "BEGIN {if (($TEMP_VMIN)>($TEMP_VMAX)) print 1; else print 0;}") -eq 1 ]]; then
             TEMP_VVAR="$TEMP_VMIN"
             TEMP_VMIN="$TEMP_VMAX"
             TEMP_VMAX="$TEMP_VVAR"
         fi
         # 
         # If VMIN>VMAX, then swap
-        if echo "($TEMP_FMIN)>($TEMP_FMAX)" | bc -l | grep -q "1"; then
+        ##if echo "($TEMP_FMIN)>($TEMP_FMAX)" | bc -l | grep -q "1" #<buggy><20170425>#
+        if [[ $(awk "BEGIN {if (($TEMP_FMIN)>($TEMP_FMAX)) print 1; else print 0;}") -eq 1 ]]; then
             TEMP_FVAR="$TEMP_FMIN"
             TEMP_FMIN="$TEMP_FMAX"
             TEMP_FMAX="$TEMP_FVAR"
         fi
         # 
         # Debug
+        ##echo "#DEBUG# Checkpoint"
         ##echo TEMP_VMIN=$TEMP_VMIN
         ##echo TEMP_VMAX=$TEMP_VMAX
         ##echo TEMP_VWID=$TEMP_VWID
@@ -444,8 +465,8 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
             elif [[ "$TEMP_FCEN" != "0" && "$TEMP_VWID" != "0" ]]; then
                 TEMP_CCEN=$(convert_frequency_to_channel $TEMP_FCEN) # input must be MHz
                 TEMP_VCEN=$(convert_channel_to_velocity $TEMP_CCEN)
-                TEMP_VMIN=$(echo "($TEMP_VCEN)-0.5*($TEMP_VWID)" | bc -l)
-                TEMP_VMAX=$(echo "($TEMP_VCEN)+0.5*($TEMP_VWID)" | bc -l)
+                TEMP_VMIN=$(awk "BEGIN {print ($TEMP_VCEN)-0.5*($TEMP_VWID);}")
+                TEMP_VMAX=$(awk "BEGIN {print ($TEMP_VCEN)+0.5*($TEMP_VWID);}")
                 TEMP_CMIN=$(convert_velocity_to_channel $TEMP_VMIN)
                 TEMP_CMAX=$(convert_velocity_to_channel $TEMP_VMAX)
                 # Debug
@@ -468,28 +489,40 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         TEMP_FMAX=$(convert_channel_to_frequency $TEMP_CMAX)
         # 
         # <checkpoint>
+        #echo "#DEBUG# Checkpoint"
         ##echo "($TEMP_CMAX-($TEMP_CMIN))"
         ##echo "($TEMP_VMAX-($TEMP_VMIN))"
         ##echo "($TEMP_FMAX-($TEMP_FMIN))"
         # 
         # Compute channel range width and center
-        TEMP_CWID=$(echo "($TEMP_CMAX-($TEMP_CMIN))" | bc -l | tail -n 1 | sed 's/^\./0./')
+        ##TEMP_CWID=$(echo "($TEMP_CMAX-($TEMP_CMIN))" | bc -l | tail -n 1 | sed 's/^\./0./')
+        ##TEMP_CWID=$(abs "$TEMP_CWID")
+        ##TEMP_CWID=$(echo "$TEMP_CWID+1" | bc -l | tail -n 1)
+        ##TEMP_CCEN=$(echo "($TEMP_CMAX+($TEMP_CMIN))/2.0" | bc -l | tail -n 1)
+        TEMP_CWID=$(awk "BEGIN {print ($TEMP_CMAX-($TEMP_CMIN));}")
         TEMP_CWID=$(abs "$TEMP_CWID")
-        TEMP_CWID=$(echo "$TEMP_CWID+1" | bc -l | tail -n 1)
-        TEMP_CCEN=$(echo "($TEMP_CMAX+($TEMP_CMIN))/2.0" | bc -l | tail -n 1)
+        TEMP_CWID=$(awk "BEGIN {print ($TEMP_CWID)+1;}")
+        TEMP_CCEN=$(awk "BEGIN {print ($TEMP_CMAX+($TEMP_CMIN))/2.0;}")
         # 
         # Compute frequency range width and center
-        TEMP_FWID=$(echo "$TEMP_CWID*($PdBIUVT_FREQ_BIN)/1000" | bc -l | tail -n 1 | sed 's/^\./0./') # GHz
+        ##TEMP_FWID=$(echo "$TEMP_CWID*($PdBIUVT_FREQ_BIN)/1000" | bc -l | tail -n 1 | sed 's/^\./0./') # GHz
+        ##TEMP_FWID=$(abs "$TEMP_FWID" | sed 's/^\./0./') # GHz
+        ##TEMP_FCEN=$(echo "($TEMP_FMIN+($TEMP_FMAX))/2.0/1000" | bc -l | tail -n 1 | sed 's/^\./0./') # GHz
+        TEMP_FWID=$(awk "BEGIN {print $TEMP_CWID*($PdBIUVT_FREQ_BIN)/1000;}") # GHz
         TEMP_FWID=$(abs "$TEMP_FWID" | sed 's/^\./0./') # GHz
-        TEMP_FCEN=$(echo "($TEMP_FMIN+($TEMP_FMAX))/2.0/1000" | bc -l | tail -n 1 | sed 's/^\./0./') # GHz
+        TEMP_FCEN=$(awk "BEGIN {print ($TEMP_FMIN+($TEMP_FMAX))/2.0/1000;}") # GHz
         # 
         # Compute velocity range width
-        TEMP_VWID=$(echo "$TEMP_CWID*($PdBIUVT_VELO_BIN)" | bc -l | tail -n 1 | sed 's/^\./0./')
+        ##TEMP_VWID=$(echo "$TEMP_CWID*($PdBIUVT_VELO_BIN)" | bc -l | tail -n 1 | sed 's/^\./0./')
+        ##TEMP_VWID=$(abs "$TEMP_VWID")
+        ##TEMP_VCEN=$(echo "($TEMP_VMAX+($TEMP_VMIN))/2.0" | bc -l | tail -n 1)
+        TEMP_VWID=$(awk "BEGIN {print $TEMP_CWID*($PdBIUVT_VELO_BIN);}")
         TEMP_VWID=$(abs "$TEMP_VWID")
-        TEMP_VCEN=$(echo "($TEMP_VMAX+($TEMP_VMIN))/2.0" | bc -l | tail -n 1)
+        TEMP_VCEN=$(awk "BEGIN {print ($TEMP_VMAX+($TEMP_VMIN))/2.0;}")
         # 
         # Save values
-        if echo "($TEMP_CMIN)>($TEMP_CMAX)" | bc -l | grep -q "1"; then
+        ##if echo "($TEMP_CMIN)>($TEMP_CMAX)" | bc -l | grep -q "1" #<buggy><20170425>#
+        if [[ $(awk "BEGIN {if (($TEMP_CMIN)>($TEMP_CMAX)) print 1; else print 0;}") -eq 1 ]]; then
             PdBIUVT_CMIN[PdBIUVT_OBJI]="$TEMP_CMAX"
             PdBIUVT_CMAX[PdBIUVT_OBJI]="$TEMP_CMIN"
             PdBIUVT_CWID[PdBIUVT_OBJI]="$TEMP_CWID"
@@ -500,7 +533,8 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
             PdBIUVT_CWID[PdBIUVT_OBJI]="$TEMP_CWID"
             PdBIUVT_CCEN[PdBIUVT_OBJI]="$TEMP_CCEN"
         fi
-        if echo "($TEMP_VMIN)>($TEMP_VMAX)" | bc -l | grep -q "1"; then
+        ##if echo "($TEMP_VMIN)>($TEMP_VMAX)" | bc -l | grep -q "1" #<buggy><20170425>#
+        if [[ $(awk "BEGIN {if (($TEMP_VMIN)>($TEMP_VMAX)) print 1; else print 0;}") -eq 1 ]]; then
             PdBIUVT_VMIN[PdBIUVT_OBJI]="$TEMP_VMAX"
             PdBIUVT_VMAX[PdBIUVT_OBJI]="$TEMP_VMIN"
             PdBIUVT_VWID[PdBIUVT_OBJI]="$TEMP_VWID"
@@ -511,14 +545,15 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
             PdBIUVT_VWID[PdBIUVT_OBJI]="$TEMP_VWID"
             PdBIUVT_VCEN[PdBIUVT_OBJI]="$TEMP_VCEN"
         fi
-        if echo "($TEMP_FMIN)>($TEMP_FMAX)" | bc -l | grep -q "1"; then
-            PdBIUVT_FMIN[PdBIUVT_OBJI]=$(echo "$TEMP_FMAX/1000" | bc -l) # GHz
-            PdBIUVT_FMAX[PdBIUVT_OBJI]=$(echo "$TEMP_FMIN/1000" | bc -l) # GHz
+        ##if echo "($TEMP_FMIN)>($TEMP_FMAX)" | bc -l | grep -q "1" #<buggy><20170425>#
+        if [[ $(awk "BEGIN {if (($TEMP_FMIN)>($TEMP_FMAX)) print 1; else print 0;}") -eq 1 ]]; then
+            PdBIUVT_FMIN[PdBIUVT_OBJI]=$(awk "BEGIN {print ($TEMP_FMAX)/1000;}") # GHz
+            PdBIUVT_FMAX[PdBIUVT_OBJI]=$(awk "BEGIN {print ($TEMP_FMIN)/1000;}") # GHz
             PdBIUVT_FWID[PdBIUVT_OBJI]="$TEMP_FWID" # GHz
             PdBIUVT_FCEN[PdBIUVT_OBJI]="$TEMP_FCEN" # GHz
         else
-            PdBIUVT_FMIN[PdBIUVT_OBJI]=$(echo "$TEMP_FMIN/1000" | bc -l) # GHz
-            PdBIUVT_FMAX[PdBIUVT_OBJI]=$(echo "$TEMP_FMAX/1000" | bc -l) # GHz
+            PdBIUVT_FMIN[PdBIUVT_OBJI]=$(awk "BEGIN {print ($TEMP_FMIN)/1000;}") # GHz
+            PdBIUVT_FMAX[PdBIUVT_OBJI]=$(awk "BEGIN {print ($TEMP_FMAX)/1000;}") # GHz
             PdBIUVT_FWID[PdBIUVT_OBJI]="$TEMP_FWID" # GHz
             PdBIUVT_FCEN[PdBIUVT_OBJI]="$TEMP_FCEN" # GHz
         fi
@@ -532,8 +567,9 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
             printf "%s %16.10g %16s %10s\n"    "Selecting Velo. width:" $TEMP_VWID " "                                              "[km/s]"
             # 
             # Print info of redshift and line rest frequency
-            if echo "$TEMP_REST_FREQ>0" | bc -l | grep -q "1"; then
-                TEMP_REDSHIFT=$(echo "($TEMP_REST_FREQ)/($TEMP_FCEN)-1" | bc -l | tail -n 1 | sed 's/^\./0./' | sed 's/^[-]\./-0./') # sed 's/^\./0./' -- http://stackoverflow.com/questions/8402181/how-do-i-get-bc1-to-print-the-leading-zero
+            ##if echo "$TEMP_REST_FREQ>0" | bc -l | grep -q "1" #<buggy><20170425>#
+            if [[ $(awk "BEGIN {if (($TEMP_REST_FREQ)>0) print 1; else print 0;}") -eq 1 ]]; then
+                TEMP_REDSHIFT=$(awk "BEGIN {print ($TEMP_REST_FREQ)/($TEMP_FCEN)-1;}")
                 printf '%s %10.5f %16s %10s\n' "--> The line rest frequency:" $TEMP_REST_FREQ " " "[GHz]"
                 printf '%s %10.5f %16s %10s\n' "--> corresponds to redshift:" $TEMP_REDSHIFT " " " "
                 echo "--"

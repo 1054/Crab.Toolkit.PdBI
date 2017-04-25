@@ -1,0 +1,2 @@
+20170425 replaced all "bc -l" by "awk"
+         replaced all "<=" by "-le"
