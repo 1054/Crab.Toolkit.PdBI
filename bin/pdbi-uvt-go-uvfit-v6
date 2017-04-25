@@ -308,6 +308,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         fi
     done
     
+    ls .uvt
     
     
     # 
@@ -405,10 +406,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # 
     # Run pdbi-uvt-go-uvfit-print-results
     # 
-    ls .uvt
     echo "pdbi-uvt-go-uvfit-print-results-v6 \"${PdBIUVT_SAVE[tk]}.uvfit\""
     pdbi-uvt-go-uvfit-print-results-v6 "${PdBIUVT_SAVE[tk]}.uvfit"
-    ls .uvt
     # 
     # loop each object (according to the input radec pairs)
     # 
