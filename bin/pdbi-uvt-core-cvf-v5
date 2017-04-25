@@ -424,16 +424,16 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         # 
         # Debug
         echo "#DEBUG# Checkpoint"
-        ##echo TEMP_VMIN=$TEMP_VMIN
-        ##echo TEMP_VMAX=$TEMP_VMAX
-        ##echo TEMP_VWID=$TEMP_VWID
-        ##echo TEMP_VCEN=$TEMP_VCEN
-        ##echo TEMP_FMIN=$TEMP_FMIN
-        ##echo TEMP_FMAX=$TEMP_FMAX
-        ##echo TEMP_FWID=$TEMP_FWID
-        ##echo TEMP_FCEN=$TEMP_FCEN
-        ##echo TEMP_CMIN=$TEMP_CMIN
-        ##echo TEMP_CMAX=$TEMP_CMAX
+        echo TEMP_VMIN=$TEMP_VMIN
+        echo TEMP_VMAX=$TEMP_VMAX
+        echo TEMP_VWID=$TEMP_VWID
+        echo TEMP_VCEN=$TEMP_VCEN
+        echo TEMP_FMIN=$TEMP_FMIN
+        echo TEMP_FMAX=$TEMP_FMAX
+        echo TEMP_FWID=$TEMP_FWID
+        echo TEMP_FCEN=$TEMP_FCEN
+        echo TEMP_CMIN=$TEMP_CMIN
+        echo TEMP_CMAX=$TEMP_CMAX
         # 
         # If CMIN CMAX are invalid, then compute from VMIN VMAX or FMIN FMAX or lineobsfreq linewidth
         if [[ "$TEMP_CMIN" == "0" || "$TEMP_CMAX" == "0" ]]; then
