@@ -329,7 +329,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     if [[ -f "$PdBIUVT_TEMP_LOGT" ]];then
         mv "$PdBIUVT_TEMP_LOGT" "$PdBIUVT_TEMP_LOGT.backup"
     fi
-    ls .uvt
+    ##ls .uvt
     if [[ $PdBIUVT_PARALLELS -eq 0 ]]; then
         # do not do parallel, just wait for on-going uv_fit
         if ps aux | grep -v 'grep' | grep -q "logs/uv_fit.gildas"; then
@@ -373,7 +373,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             exit
         fi
     fi
-    ls .uvt
+    ##ls .uvt
     #echo "! GIDLAS mapping script"                  >  "${PdBIUVT_SAVE[tk]}.plotfit.map"
     #echo "let name ${PdBIUVT_SAVE[tk]}"             >> "${PdBIUVT_SAVE[tk]}.plotfit.map"
     #echo "go plotfit"                               >> "${PdBIUVT_SAVE[tk]}.plotfit.map"
@@ -382,6 +382,14 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     #echo "Finished GILDAS mapping uv_fit! Output to text file \"${PdBIUVT_SAVE[tk]}.log\" and binary file \"${PdBIUVT_SAVE[tk]}.uvfit\" (you can run \"mapping @${PdBIUVT_SAVE[tk]}.plotfit.map\" to plot the result)!"
     echo "--"
     #echo ""
+    
+    
+    # 
+    # Fix unwanted intermediate ".uvt" file, which seems to be created by GILDAS automatically
+    # 
+    if [[ -f ".uvt" ]]; then
+        rm ".uvt"
+    fi
     
     
     
