@@ -308,7 +308,6 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         fi
     done
     
-    ls .uvt
     
     
     # 
@@ -330,6 +329,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     if [[ -f "$PdBIUVT_TEMP_LOGT" ]];then
         mv "$PdBIUVT_TEMP_LOGT" "$PdBIUVT_TEMP_LOGT.backup"
     fi
+    ls .uvt
     if [[ $PdBIUVT_PARALLELS -eq 0 ]]; then
         # do not do parallel, just wait for on-going uv_fit
         if ps aux | grep -v 'grep' | grep -q "logs/uv_fit.gildas"; then
@@ -373,6 +373,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             exit
         fi
     fi
+    ls .uvt
     #echo "! GIDLAS mapping script"                  >  "${PdBIUVT_SAVE[tk]}.plotfit.map"
     #echo "let name ${PdBIUVT_SAVE[tk]}"             >> "${PdBIUVT_SAVE[tk]}.plotfit.map"
     #echo "go plotfit"                               >> "${PdBIUVT_SAVE[tk]}.plotfit.map"
