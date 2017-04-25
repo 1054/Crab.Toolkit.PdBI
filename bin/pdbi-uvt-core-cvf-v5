@@ -468,6 +468,7 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         TEMP_FMAX=$(convert_channel_to_frequency $TEMP_CMAX)
         # 
         # <checkpoint>
+        echo "#DEBUG# Checkpoint"
         ##echo "($TEMP_CMAX-($TEMP_CMIN))"
         ##echo "($TEMP_VMAX-($TEMP_VMIN))"
         ##echo "($TEMP_FMAX-($TEMP_FMIN))"
