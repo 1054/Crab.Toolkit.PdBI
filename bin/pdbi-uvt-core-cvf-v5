@@ -399,41 +399,44 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         TEMP_FMAX=$(echo ${PdBIUVT_FMAX[$PdBIUVT_OBJI]}*1000 | bc -l) # MHz
         TEMP_FWID=$(echo ${PdBIUVT_FWID[$PdBIUVT_OBJI]}*1000 | bc -l) # MHz
         TEMP_FCEN=$(echo ${PdBIUVT_FCEN[$PdBIUVT_OBJI]}*1000 | bc -l) # MHz -- This can also be input by giving "-lineobsfreq" or by giving both "-linerestfreq" and "-redshift"
-        echo "#DEBUG# Checkpoint"
+        ##echo "#DEBUG# Checkpoint"
         # 
         # If CMIN>CMAX, then swap
-        if echo "($TEMP_CMIN)>($TEMP_CMAX)" | bc -l | grep -q "1"; then
+        ##if echo "($TEMP_VMIN)>($TEMP_VMAX)" | bc -l | grep -q "1" #<buggy><20170425>#
+        if [[ $(awk "BEGIN {if (($TEMP_CMIN)>($TEMP_CMAX)) print 1; else print 0;}") -eq 1 ]]; then
             TEMP_CVAR="$TEMP_CMIN"
             TEMP_CMIN="$TEMP_CMAX"
             TEMP_CMAX="$TEMP_CVAR"
         fi
         # 
         # If VMIN>VMAX, then swap
-        if echo "($TEMP_VMIN)>($TEMP_VMAX)" | bc -l | grep -q "1"; then
+        ##if echo "($TEMP_VMIN)>($TEMP_VMAX)" | bc -l | grep -q "1" #<buggy><20170425>#
+        if [[ $(awk "BEGIN {if (($TEMP_VMIN)>($TEMP_VMAX)) print 1; else print 0;}") -eq 1 ]]; then
             TEMP_VVAR="$TEMP_VMIN"
             TEMP_VMIN="$TEMP_VMAX"
             TEMP_VMAX="$TEMP_VVAR"
         fi
         # 
         # If VMIN>VMAX, then swap
-        if echo "($TEMP_FMIN)>($TEMP_FMAX)" | bc -l | grep -q "1"; then
+        ##if echo "($TEMP_FMIN)>($TEMP_FMAX)" | bc -l | grep -q "1" #<buggy><20170425>#
+        if [[ $(awk "BEGIN {if (($TEMP_FMIN)>($TEMP_FMAX)) print 1; else print 0;}") -eq 1 ]]; then
             TEMP_FVAR="$TEMP_FMIN"
             TEMP_FMIN="$TEMP_FMAX"
             TEMP_FMAX="$TEMP_FVAR"
         fi
         # 
         # Debug
-        echo "#DEBUG# Checkpoint"
-        echo TEMP_VMIN=$TEMP_VMIN
-        echo TEMP_VMAX=$TEMP_VMAX
-        echo TEMP_VWID=$TEMP_VWID
-        echo TEMP_VCEN=$TEMP_VCEN
-        echo TEMP_FMIN=$TEMP_FMIN
-        echo TEMP_FMAX=$TEMP_FMAX
-        echo TEMP_FWID=$TEMP_FWID
-        echo TEMP_FCEN=$TEMP_FCEN
-        echo TEMP_CMIN=$TEMP_CMIN
-        echo TEMP_CMAX=$TEMP_CMAX
+        ##echo "#DEBUG# Checkpoint"
+        ##echo TEMP_VMIN=$TEMP_VMIN
+        ##echo TEMP_VMAX=$TEMP_VMAX
+        ##echo TEMP_VWID=$TEMP_VWID
+        ##echo TEMP_VCEN=$TEMP_VCEN
+        ##echo TEMP_FMIN=$TEMP_FMIN
+        ##echo TEMP_FMAX=$TEMP_FMAX
+        ##echo TEMP_FWID=$TEMP_FWID
+        ##echo TEMP_FCEN=$TEMP_FCEN
+        ##echo TEMP_CMIN=$TEMP_CMIN
+        ##echo TEMP_CMAX=$TEMP_CMAX
         # 
         # If CMIN CMAX are invalid, then compute from VMIN VMAX or FMIN FMAX or lineobsfreq linewidth
         if [[ "$TEMP_CMIN" == "0" || "$TEMP_CMAX" == "0" ]]; then
