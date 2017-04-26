@@ -28,10 +28,10 @@ function Is_Float_Number() {
             #echo "Error! \"$1\" is not a float number!"
             #seq  -f "*" -s '' $(echo "${#1}+7+2+23" | bc); echo
             #exit -1
-            return -1
+            return 200
         fi
     fi
-    return -1
+    return 200
 }
 
 uv_filename=$(echo $1 | sed -e 's/\.uvt$//g')
