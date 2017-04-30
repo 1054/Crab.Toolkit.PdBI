@@ -72,7 +72,9 @@ PRO CrabSpecQuickLook, InputFiles, Redshift=Redshift, $
             IF N_ELEMENTS(XSize) EQ 0 THEN XSize = 30.0
             IF N_ELEMENTS(YSize) EQ 0 THEN YSize = 12.0
             OpenPS, SaveEPS, XSize=XSize, YSize=YSize
-            DEVICE, SET_FONT=SET_FONT, /TT_FONT
+            IF N_ELEMENTS(SET_FONT) NE 0 THEN BEGIN
+                DEVICE, SET_FONT=SET_FONT, /TT_FONT
+            ENDIF
         ENDIF
         ; TVWindow
         IF N_ELEMENTS(TVWindow) EQ 0 THEN TVWindow=1 ELSE TVWindow=FIX(TVWindow)
@@ -159,10 +161,16 @@ PRO CrabSpecQuickLook, InputFiles, Redshift=Redshift, $
             IF N_ELEMENTS(XTickLen)  EQ 0 THEN XTickLen_Plot  = 0.02/!D.Y_SIZE*!D.X_SIZE
             IF N_ELEMENTS(YTickLen)  EQ 0 THEN YTickLen_Plot  = 0.02
         ENDELSE
+        ; Font use
+        IF N_ELEMENTS(SET_FONT) NE 0 THEN BEGIN
+            Use_Font=1 
+        ENDIF ELSE BEGIN
+            Use_Font=!NULL
+        ENDELSE
         ; Plot box
         PLOT, XArrayMinMax, YArrayMinMax, /NODATA, Position=Position, XTitle=XTitle, YTitle=YTitle, XTickFormat=XTickFormat, YTickFormat=YTickFormat, XTickInterval=XTickInterval, YTickInterval=YTickInterval, $
               CharSize=CharSize_Plot, CharThick=CharThick_Plot, Thick=Thick_Plot, XThick=XThick_Plot, YThick=YThick_Plot, XMargin=XMargin, YMargin=YMargin, $
-              Color=AxesColor, PSYM=10, Font=1, XRange=XRange, YRange=YRange, XStyle=XStyle, YStyle=YStyle, XTickLen=XTickLen_Plot, YTickLen=YTickLen_Plot
+              Color=AxesColor, PSYM=10, Font=Use_Font, XRange=XRange, YRange=YRange, XStyle=XStyle, YStyle=YStyle, XTickLen=XTickLen_Plot, YTickLen=YTickLen_Plot
         ; Plot spec
         IF NOT KEYWORD_SET(NoData) THEN BEGIN
             
