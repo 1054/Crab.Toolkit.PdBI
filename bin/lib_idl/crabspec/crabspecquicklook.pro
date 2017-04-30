@@ -93,6 +93,8 @@ PRO CrabSpecQuickLook, InputFiles, Redshift=Redshift, $
     ;; 
     ;; Read input files
     FOR file_id = 0, N_ELEMENTS(InputFileList)-1 DO BEGIN
+        XArray = []
+        YArray = []
         readcol, InputFileList[file_id], format='(d)', XArray, /SILENT
         readcol, InputFileList[file_id], format='(d,d)', XArray, YArray, /SILENT
         IF N_ELEMENTS(XArray) GT 0 THEN BEGIN
