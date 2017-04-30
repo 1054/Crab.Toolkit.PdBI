@@ -62,6 +62,9 @@ PRO CrabSpecQuickLook, InputFiles, Redshift=Redshift, $
         InputFileList = [InputFileList, TempFileList]
     ENDFOR
     ;; 
+    ;; resolve_routine
+    resolve_all
+    ;; 
     ;; Prepare Figure
     IF NOT KEYWORD_SET(Overplot) THEN BEGIN
         ; SaveEPS
