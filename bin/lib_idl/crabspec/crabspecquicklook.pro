@@ -71,10 +71,7 @@ PRO CrabSpecQuickLook, InputFiles, Redshift=Redshift, $
         IF KEYWORD_SET(SaveEPS) THEN BEGIN
             IF N_ELEMENTS(XSize) EQ 0 THEN XSize = 30.0
             IF N_ELEMENTS(YSize) EQ 0 THEN YSize = 12.0
-            OpenPS, SaveEPS, XSize=XSize, YSize=YSize
-            IF N_ELEMENTS(SET_FONT) NE 0 THEN BEGIN
-                DEVICE, SET_FONT=SET_FONT, /TT_FONT
-            ENDIF
+            OpenPS, SaveEPS, XSize=XSize, YSize=YSize, SET_FONT=SET_FONT
         ENDIF
         ; TVWindow
         IF N_ELEMENTS(TVWindow) EQ 0 THEN TVWindow=1 ELSE TVWindow=FIX(TVWindow)
@@ -218,13 +215,14 @@ PRO CrabSpecQuickLook, InputFiles, Redshift=Redshift, $
                 ;PRINT, CrabMinMax(YArray_Plot)
                 IF N_ELEMENTS(WHERE(YArray_Plot LT !Y.CRange[0],/NULL)) GT 0 THEN YArray_Plot[WHERE(YArray_Plot LT !Y.CRange[0],/NULL)] = !Y.CRange[0]
                 IF N_ELEMENTS(WHERE(YArray_Plot GT !Y.CRange[1],/NULL)) GT 0 THEN YArray_Plot[WHERE(YArray_Plot GT !Y.CRange[1],/NULL)] = !Y.CRange[1]
+                PRINT, 'OPLOT', ' XArray_Plot=', XArray_Plot, ' YArray_Plot=', YArray_Plot
                 OPLOT, XArray_Plot, YArray_Plot, PSYM=10, THICK=Thick_Plot, COLOR=Color_Plot
                 
                 ; Legend
                 Simplified_Lengend = STRMID(InputFileList[spec_id],STRPOS(STRUPCASE(InputFileList[spec_id]),'SPW'))
                 IF STRMATCH(Simplified_Lengend,'*.txt') THEN Simplified_Lengend = STRMID(Simplified_Lengend,0,STRPOS(Simplified_Lengend,'.txt')) ; remove filename suffix
                 XYOUTS, XArray_Plot[N_ELEMENTS(XArray_Plot)/2-1], YArray_Plot[N_ELEMENTS(YArray_Plot)/2-1]+(!Y.CRange[1]-!Y.CRange[0])*0.01, $
-                        Simplified_Lengend, CHARTHICK=CharThick_Plot, COLOR=Color_Plot, ALIGNMENT=0.5, FONT=1
+                        Simplified_Lengend, CHARTHICK=CharThick_Plot, COLOR=Color_Plot, ALIGNMENT=0.5, FONT=Use_Font
                 
             ENDFOR
         ENDIF
