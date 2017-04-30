@@ -165,8 +165,6 @@ PRO CrabSpecQuickLook, InputFiles, Redshift=Redshift, $
             Use_Font=!NULL
         ENDELSE
         ; Plot box
-        ;PRINT, 'PLOT', ' XArrayMinMax=', XArrayMinMax, ' YArrayMinMax=', YArrayMinMax
-        PRINT, 'PLOT', ' XRange=', XRange, ' YRange=', YRange
         PLOT, XArrayMinMax, YArrayMinMax, /NODATA, Position=Position, XTitle=XTitle, YTitle=YTitle, XTickFormat=XTickFormat, YTickFormat=YTickFormat, XTickInterval=XTickInterval, YTickInterval=YTickInterval, $
               CharSize=CharSize_Plot, CharThick=CharThick_Plot, Thick=Thick_Plot, XThick=XThick_Plot, YThick=YThick_Plot, XMargin=XMargin, YMargin=YMargin, $
               Color=AxesColor, PSYM=10, Font=Use_Font, XRange=XRange, YRange=YRange, XStyle=XStyle, YStyle=YStyle, XTickLen=XTickLen_Plot, YTickLen=YTickLen_Plot
@@ -216,7 +214,6 @@ PRO CrabSpecQuickLook, InputFiles, Redshift=Redshift, $
                 ;PRINT, CrabMinMax(YArray_Plot)
                 IF N_ELEMENTS(WHERE(YArray_Plot LT !Y.CRange[0],/NULL)) GT 0 THEN YArray_Plot[WHERE(YArray_Plot LT !Y.CRange[0],/NULL)] = !Y.CRange[0]
                 IF N_ELEMENTS(WHERE(YArray_Plot GT !Y.CRange[1],/NULL)) GT 0 THEN YArray_Plot[WHERE(YArray_Plot GT !Y.CRange[1],/NULL)] = !Y.CRange[1]
-                ;PRINT, 'OPLOT', ' XArray_Plot=', XArray_Plot[0], ' YArray_Plot=', YArray_Plot[0]
                 OPLOT, XArray_Plot, YArray_Plot, PSYM=10, THICK=Thick_Plot, COLOR=Color_Plot
                 
                 ; Legend
