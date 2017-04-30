@@ -113,6 +113,7 @@ PRO CrabSpecQuickLook, InputFiles, Redshift=Redshift, $
             MESSAGE, 'Error! Failed to read "'+InputFileList[file_id]+'"'
         ENDELSE
     ENDFOR
+    PRINT, 'Read '+STRTRIM(STRING(NSpectra),2)+' Spectra'
     ;; 
     ;; Plot 
     IF N_ELEMENTS(NSpectra) GT 0 THEN BEGIN
