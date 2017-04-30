@@ -168,6 +168,7 @@ PRO CrabSpecQuickLook, InputFiles, Redshift=Redshift, $
             Use_Font=!NULL
         ENDELSE
         ; Plot box
+        PRINT, 'PLOT', ' XArrayMinMax=', XArrayMinMax, ' YArrayMinMax=', YArrayMinMax
         PLOT, XArrayMinMax, YArrayMinMax, /NODATA, Position=Position, XTitle=XTitle, YTitle=YTitle, XTickFormat=XTickFormat, YTickFormat=YTickFormat, XTickInterval=XTickInterval, YTickInterval=YTickInterval, $
               CharSize=CharSize_Plot, CharThick=CharThick_Plot, Thick=Thick_Plot, XThick=XThick_Plot, YThick=YThick_Plot, XMargin=XMargin, YMargin=YMargin, $
               Color=AxesColor, PSYM=10, Font=Use_Font, XRange=XRange, YRange=YRange, XStyle=XStyle, YStyle=YStyle, XTickLen=XTickLen_Plot, YTickLen=YTickLen_Plot
