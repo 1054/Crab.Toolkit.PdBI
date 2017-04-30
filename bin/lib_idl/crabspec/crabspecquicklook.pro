@@ -5,7 +5,8 @@ PRO CrabSpecQuickLook, InputFiles, Redshift=Redshift, $
                        SaveEPS=SaveEPS, AxesColor=AxesColor, Color=Color, Thick=Thick, CharSize=CharSize, CharThick=CharThick, $
                        XTitle=XTitle, YTitle=YTitle, Title=Title, XSize=XSize, YSize=YSize, XRange=XRange, YRange=YRange, XStyle=XStyle, YStyle=YStyle, XMargin=XMargin, YMargin=YMargin, $
                        XThick=XThick, YThick=YThick, XTickFormat=XTickFormat, YTickFormat=YTickFormat, XTickInterval=XTickInterval, YTickInterval=YTickInterval, $
-                       Continue=Continue, Overplot=Overplot, Close=Close, Fill=Fill, Base=Base, NoData=NoData, Position=Position
+                       Continue=Continue, Overplot=Overplot, Close=Close, Fill=Fill, Base=Base, NoData=NoData, Position=Position, $
+                       SET_FONT=SET_FONT
     
     ;;
     ;; Read Command Line Arguments
@@ -68,7 +69,7 @@ PRO CrabSpecQuickLook, InputFiles, Redshift=Redshift, $
             IF N_ELEMENTS(XSize) EQ 0 THEN XSize = 30.0
             IF N_ELEMENTS(YSize) EQ 0 THEN YSize = 12.0
             OpenPS, SaveEPS, XSize=XSize, YSize=YSize
-            DEVICE, SET_FONT='NGC', /TT_FONT
+            DEVICE, SET_FONT=SET_FONT, /TT_FONT
         ENDIF
         ; TVWindow
         IF N_ELEMENTS(TVWindow) EQ 0 THEN TVWindow=1 ELSE TVWindow=FIX(TVWindow)
