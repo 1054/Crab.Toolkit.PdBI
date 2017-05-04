@@ -1,0 +1,144 @@
+#!/bin/bash
+# 
+# Input uvt which is imported from CASA uvfits
+# Output uvt which have better weighting and with flagged data trimmed
+# 
+# Last update:
+#    2017-05-04 
+# 
+# 
+
+
+
+# CHECK wcstools gethead
+if [[ $(type gethead 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! WCSTOOLS gethead not found! Exit!"
+    exit 1
+fi
+
+
+
+# 
+# Uage
+# 
+usage() {
+    echo "Usage: "
+    echo "  pdbi-uvt-go-uvcasa -name NAME.uvt [NAME_2.uvt [NAME_3.uvt]]"
+    echo ""
+}
+
+
+
+# 
+# SOURCE pdbi-uvt-core-arg
+# 
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" "$@"
+else
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5\"!"
+    echo ""
+    exit 1
+fi
+
+
+
+# 
+# Check input parameters -- uvt file name, ra dec
+# 
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]]; then
+    usage; exit
+fi
+
+
+
+# 
+# Loop input uv fits
+# 
+for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
+    # 
+    # if type is uvfits
+    # 
+    if [[ ${PdBIUVT_TYPE[i]} == "uvt" || ${PdBIUVT_TYPE[i]} == "UVT" ]]; then
+        # 
+        # Set default output file name
+        # 
+        if [[ ${#PdBIUVT_SAVE[@]} -le $i ]]; then
+            PdBIUVT_SAVE+=("${PdBIUVT_NAME[i]}-Corrected")
+        fi
+        if [[ x"${PdBIUVT_SAVE[i]}" == x || x"${PdBIUVT_SAVE[i]}" == x"tmp_pdbi_uvt" ]]; then 
+            PdBIUVT_SAVE[i]="${PdBIUVT_NAME[i]}-Corrected"
+            echo ""; echo "Warning! Output name was not given for the input uvfits \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\", setting to \"${PdBIUVT_SAVE[i]}.uvt\""; echo ""
+        fi
+        # 
+        # Remove suffix
+        # 
+        if [[ x"${PdBIUVT_SAVE[i]}" == x*".uvt" ]]; then
+            PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.uvt$//g')
+        fi
+        if [[ x"${PdBIUVT_SAVE[i]}" == x*".UVT" ]]; then
+            PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.UVT$//g')
+        fi
+        # 
+        # Backup existing output file
+        # 
+        if [[ -f "${PdBIUVT_SAVE[i]}.uvt" ]]; then
+            echo "Warning! Found existing \"${PdBIUVT_SAVE[i]}.uvt\"! Backup as \"${PdBIUVT_SAVE[i]}.uvt.backup\"!"
+            mv "${PdBIUVT_SAVE[i]}.uvt" "${PdBIUVT_SAVE[i]}.uvt.backup"
+        fi
+        # 
+        # Deal with the input uvfits file
+        # Output to mapping script
+        # "${PdBIUVT_SAVE[i]}.uvt.import.uvfits.script"
+        # 
+        PdBIUVT_EXE="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_casa.script"
+        PdBIUVT_LOG="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_casa.log"
+        PdBIUVT_INI="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_casa.init"
+        
+        echo  '! '                                                                                                                  >  "$PdBIUVT_INI"
+        echo  '! Task UV_CASA'                                                                                                      >> "$PdBIUVT_INI"
+        echo  '!'                                                                                                                   >> "$PdBIUVT_INI"
+        echo 'TASK\FILE       "Input multi-polarization UV Table"             INPUT$     "'${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}'"' >> "$PdBIUVT_INI"
+        echo 'TASK\FILE       "Output single polarization UV Table"          OUTPUT$     "'${PdBIUVT_SAVE[i]}.uvt'"'                >> "$PdBIUVT_INI"
+        echo 'TASK\CHARACTER  "Stokes parameter"                             STOKES$     NONE'                                      >> "$PdBIUVT_INI"
+        echo 'TASK\VALUES     "First and last values of each valid range"    RANGES$     20 -20'                                    >> "$PdBIUVT_INI"
+        echo 'TASK\CHARACTER  "Type of values"                                CTYPE$     CHANNEL'                                   >> "$PdBIUVT_INI"
+        echo 'TASK\REAL       "Rejection Threshold"                       THRESHOLD$     5.0'                                       >> "$PdBIUVT_INI"
+        echo 'TASK\INTEGER    "Blocking & Print factor"                       BLOCK$[2]  0 5000'                                    >> "$PdBIUVT_INI"
+        echo 'TASK\LOGICAL    "Keep anomalous rescale"                         KEEP$     NO'                                        >> "$PdBIUVT_INI"
+        echo 'TASK\LOGICAL    "Trim flagged data"                              TRIM$     YES'                                       >> "$PdBIUVT_INI"
+        echo 'TASK\INTEGER    "Weight column to test flag"                     WCOL$     0'                                         >> "$PdBIUVT_INI"
+        echo 'TASK\GO'
+        
+        echo  "run uv_casa $PdBIUVT_INI /NOWINDOW" > "$PdBIUVT_EXE"
+        
+        
+        echo "Running uv_casa from \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" to \"${PdBIUVT_SAVE[i]}.uvt\""
+        
+        echo "Running @$PdBIUVT_EXE in GILDAS mapping"
+        echo "@$PdBIUVT_EXE" | mapping -nw -nl > "$PdBIUVT_LOG"
+        
+        
+        echo "Successfully saved to ${PdBIUVT_SAVE[i]}.uvt!"
+        echo "--"
+        
+    fi
+    
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
