@@ -1,0 +1,113 @@
+#!/bin/bash
+# 
+# Aim:
+#    use supermongo 'astroSfig.sm' calc_FIR_lines
+# 
+# Last update:
+#    2017-05-05 Initialized
+# 
+
+
+
+# 
+# LANG
+# 
+LANG=C
+
+# 
+# CHECK Supermongo
+# 
+if [[ $(echo "calc 2*pi" | sm 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo Error! Supermongo was not found! Exit!
+    exit -1
+fi
+
+
+
+# 
+# Check input arguments
+# 
+Usage() {
+    echo "Usage: crab-FIR-line-guess 233.0 248.7"
+    exit -1
+}
+if [[ $# -eq 0 ]]; then
+    Usage
+    exit
+fi
+
+
+
+# 
+# Check data
+# 
+current_dir="$PWD"
+script_dir=$(perl -MCwd -e 'print Cwd::abs_path shift' $(dirname "${BASH_SOURCE[0]}"))
+
+if [[ ! -d "$script_dir/../data/FIR_mm_lines/" ]]; then
+    mkdir -p "$script_dir/../data/FIR_mm_lines/"
+    if [[ ! -d "$script_dir/../data/FIR_mm_lines/" ]]; then
+        echo "Error! Failed to create \"$script_dir/../data/FIR_mm_lines/\" directory!"
+        exit -1
+    fi
+fi
+cd "$script_dir/../data/FIR_mm_lines/"
+for (( loop_i = 0; loop_i < 200; loop_i+=1 )); do
+    loop_z=$(awk "BEGIN {printf \"%0.2f\n\", $loop_i/20.0}")
+    if [[ ! -f "z_$loop_z.txt" ]]; then
+        echo "load astroSfig.sm calc_FIR_lines $loop_z" | sm > "z_$loop_z.txt"
+    fi
+done
+
+
+# 
+# Read input arguments
+# 
+cd "$current_dir"
+
+if [[ ! -d "crab_FIR_line_guess" ]]; then
+    mkdir "crab_FIR_line_guess"
+    if [[ ! -d "crab_FIR_line_guess" ]]; then
+        echo "Error! Failed to create \"crab_FIR_line_guess\" directory!"
+        exit
+    fi
+fi
+
+cd "crab_FIR_line_guess"
+
+list_freq=($@)
+if [[ -f "list_freq.txt" ]]; then mv "list_freq.txt" "list_freq.txt.backup"; fi
+for (( loop_i = 0; loop_i < ${#list_freq[@]}; loop_i++ )); do
+    echo "${list_freq[loop_i]}" >> "list_freq.txt"
+done
+
+for (( loop_i = 0; loop_i < 200; loop_i+=1 )); do
+    loop_z=$(awk "BEGIN {printf \"%0.2f\n\", $loop_i/20.0}")
+    cp "$script_dir/../data/FIR_mm_lines/z_$loop_z.txt" .
+done
+
+cp "$script_dir/crab_FIR_line_guess.sm" .
+echo "macro read crab_FIR_line_guess.sm crab_FIR_line_guess" | sm | tee "results.txt"
+
+cd "../"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
