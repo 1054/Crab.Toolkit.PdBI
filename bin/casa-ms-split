@@ -421,6 +421,14 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 # 
                 SPLIT_SourceName=$(echo "$SPLIT_SOU" | sed -e 's/ /-/g' | sed -e 's/\"//g')
                 SPLIT_OutputName="split_${SPLIT_SourceName}"
+                
+                # 
+                # Add double quotes if it is pure number
+                # 
+                if echo "$SPLIT_SOU" | grep -q -E '^[0-9]+$'; then
+                    SPLIT_SOU="\"$SPLIT_SOU\""
+                fi
+                
                 # 
                 # Append spw info to the output name
                 # 
