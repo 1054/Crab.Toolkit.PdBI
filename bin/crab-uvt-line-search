@@ -336,7 +336,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         # perform blob search on both lmv_bscale and lmv_invert fits images <20170417><dzliu><edaddi>
         #lmv_types=(lmv_bscale)
         lmv_types=(lmv_bzero)
-        lmv_nblob=()
+        lmv_blobs=()
         if [[ $* == *"-do-negative"* ]]; then
             lmv_types+=(lmv_invert)
         fi
@@ -378,7 +378,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             
             # count blobs
             blob_num=$(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.log" | grep "^Computing xc = " | wc -l)
-            lmv_nblob+=($blob_num)
+            lmv_blobs+=($blob_num)
             
             # check blob txt, determine fit simultaneously or separately
             blob_uv_fit_separ=0
@@ -479,13 +479,10 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                     fi
                 fi
                 
-                echo "--"
-                
             else
                 
                 echo "Found existing \"velo_bin_${velo_count}.${lmv_type}.detect_blob.*\"!"
                 echo "Will skip blob detecting and continue!"
-                echo "--"
                 
             fi
             
@@ -494,12 +491,25 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         
         # clean files if -clean-files are given by the user
         if [[ $PdBIUVT_UVMERGE_KEEP_FILE -lt 0 ]]; then
-            echo "Cleaning files if non detection"
-            rm $(ls -1 velo_bin_${velo_count}.* | grep -v ".detect_blob.log")
+            echo "Cleaning files for non detection"
+            lmv_blobs_total=0
+            for (( i=0; i<${#lmv_types[@]}; i++ )); do
+                lmv_blobs_total=$(awk "BEGIN {print ($lmv_blobs_total)+(${lmv_blobs[i]});}")
+                if [[ ${lmv_blobs[i]} -eq 0 ]]; then
+                    echo $(ls -1 velo_bin_${velo_count}.${lmv_types[i]}.* | grep -v ".detect_blob.log")
+                    rm $(ls -1 velo_bin_${velo_count}.${lmv_types[i]}.* | grep -v ".detect_blob.log")
+                fi
+            done
+            if [[ $lmv_blobs_total -eq 0 ]]; then
+                echo $(ls -1 velo_bin_${velo_count}[._]* | grep -v ".detect_blob.log")
+                rm $(ls -1 velo_bin_${velo_count}[._]* | grep -v ".detect_blob.log")
+            fi
         fi
         
         
         cd "../"
+        
+        echo "--"
         
         velo_start=$(awk "BEGIN {print ($velo_start)+($velo_step)}")
         velo_count=$(($velo_count+1))
