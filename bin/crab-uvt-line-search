@@ -77,7 +77,7 @@ fi
 # Check input arguments
 # 
 Usage() {
-    echo "Usage: crab-uvt-line-search -name a.uvt -sigma 5.0 -bin 500 -map-size 300 -fov-size 45"
+    echo "Usage: crab-uvt-line-search -name a.uvt -sigma 5.0 -bin 500 -map-size 300 -fov-size 45 -clean-files"
     exit -1
 }
 if [[ $# -eq 0 ]]; then
@@ -336,6 +336,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         # perform blob search on both lmv_bscale and lmv_invert fits images <20170417><dzliu><edaddi>
         #lmv_types=(lmv_bscale)
         lmv_types=(lmv_bzero)
+        lmv_nblob=()
         if [[ $* == *"-do-negative"* ]]; then
             lmv_types+=(lmv_invert)
         fi
@@ -377,6 +378,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             
             # count blobs
             blob_num=$(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.log" | grep "^Computing xc = " | wc -l)
+            lmv_nblob+=($blob_num)
             
             # check blob txt, determine fit simultaneously or separately
             blob_uv_fit_separ=0
@@ -488,6 +490,14 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             fi
             
         done
+        
+        
+        # clean files if -clean-files are given by the user
+        if [[ $PdBIUVT_UVMERGE_KEEP_FILE -lt 0 ]]; then
+            echo "Cleaning files if non detection"
+            rm $(ls -1 velo_bin_${velo_count}.* | grep -v ".detect_blob.log")
+        fi
+        
         
         cd "../"
         
