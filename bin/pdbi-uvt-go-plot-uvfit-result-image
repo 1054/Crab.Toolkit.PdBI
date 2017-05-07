@@ -47,6 +47,7 @@ echo "read uv 'name'.uvt" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 #echo "go uvmap" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "read uv 'name'.uvt" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "read dirty 'name'.lmv" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "read beam 'name'.beam" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "go bit" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 # 
 #echo "let size 30" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
@@ -61,7 +62,8 @@ fi
 echo "let niter 1" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "clean" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 # 
-echo "write * 'name'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+#echo "write * 'name'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "write clean 'name'.lmv-clean" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "let type lmv-clean" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "go noise" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "let spacing noise" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
