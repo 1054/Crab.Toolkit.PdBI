@@ -180,8 +180,10 @@ while [[ "$#" -gt 0 ]]; do
 
          "-overwrite") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OVERWRITE="YES";; # argument with no value, no shift;
 
+           "-mapsize") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
           "-map_size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
           "-map-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
+           "-mapcell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_cell";;
           "-map_cell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_cell";;
           "-map-cell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_cell";;
 
@@ -279,6 +281,10 @@ while [[ "$#" -gt 0 ]]; do
               "-step") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="step";;
              "-sigma") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="sigma";;
              "-blend") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="blend";;
+               "-fov") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
+           "-fovsize") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
+          "-fov-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
+          "-fov_size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
             
       "-simultaneous") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run
           "-parallel") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run
@@ -320,6 +326,19 @@ while [[ "$#" -gt 0 ]]; do
             break
         fi
         PdBIUVT_SAVE+=("$1")
+    fi
+    
+    
+    
+    if [[ "$PdBIUVT_RPAR" == "fov_size" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        if echo "$1" | grep -q -v -e "^[0-9 .+-]*$"; then
+            echo ""; echo "Error! Input -fov_size has a wrong format! Please input only number value."; echo ""
+            return 2
+        fi
+        PdBIUVT_FOV_SIZE+=("$1")
     fi
     
     
