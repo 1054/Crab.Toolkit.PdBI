@@ -47,11 +47,13 @@ echo "let name \"$uv_filename\"" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "go uvmap" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "go bit" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 # 
-echo "let size 30" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+#echo "let size 30" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 # 
 if [[ $* == *"-size "* ]]; then
     msize=($(echo $* | perl -p -e 's/.* -size[ ]+([0-9.+-]+).*/\1/g'))
-    echo "let size $msize" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+    if [[ $(awk "BEGIN {if ($msize>0) print 1; else print 0;}") -eq 1 ]]; then
+        echo "let size $msize" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+    fi
 fi
 # 
 echo "let niter 1" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
