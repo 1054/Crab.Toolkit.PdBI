@@ -93,6 +93,9 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # Backup existing output file
         # 
         if [[ -f "${PdBIUVT_EPS}.eps" ]]; then
+            if [[ -f "${PdBIUVT_EPS}.eps.backup" ]]; then
+                \rm "${PdBIUVT_EPS}.eps.backup"
+            fi
             echo "Warning! Found existing \"${PdBIUVT_EPS}.eps\"! Backup as \"${PdBIUVT_EPS}.eps.backup\"!"
             mv "${PdBIUVT_EPS}.eps" "${PdBIUVT_EPS}.eps.backup"
         fi

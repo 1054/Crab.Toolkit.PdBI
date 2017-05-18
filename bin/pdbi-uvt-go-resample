@@ -132,6 +132,9 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     # Backup existing output file
     # 
     if [[ -f "${PdBIUVT_SAVE[tk]}.uvt" ]]; then
+            if [[ -f "${PdBIUVT_SAVE[tk]}.uvt.backup" ]]; then
+                \rm "${PdBIUVT_SAVE[tk]}.uvt.backup"
+            fi
         echo "Warning! Found existing \"${PdBIUVT_SAVE[tk]}.uvt\"! Backup as \"${PdBIUVT_SAVE[tk]}.uvt.backup\"!"
         mv "${PdBIUVT_SAVE[tk]}.uvt" "${PdBIUVT_SAVE[tk]}.uvt.backup"
     fi

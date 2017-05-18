@@ -93,6 +93,9 @@ fi
 # Backup existing output file
 # 
 if [[ -f "${PdBIUVT_SAVE[0]}.uvt" ]]; then
+    if [[ -f "${PdBIUVT_SAVE[0]}.uvt.backup" ]]; then
+        \rm "${PdBIUVT_SAVE[0]}.uvt.backup"
+    fi
     echo "Warning! Found existing \"${PdBIUVT_SAVE[0]}.uvt\"! Backup as \"${PdBIUVT_SAVE[0]}.uvt.backup\"!"
     mv "${PdBIUVT_SAVE[0]}.uvt" "${PdBIUVT_SAVE[0]}.uvt.backup"
 fi
