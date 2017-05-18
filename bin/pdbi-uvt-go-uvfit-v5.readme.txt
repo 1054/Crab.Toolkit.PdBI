@@ -1,0 +1,1 @@
+2017-05-18 Bug corrected! The code was re-using *.header.txt under current directory, even if the UVTable has been changed!

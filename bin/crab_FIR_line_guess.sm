@@ -19,19 +19,24 @@ crab_FIR_line_guess
             echo "Loading "$(z_file)
             verbose 0
             data $(z_file) read {line_name 1.s line_freq 3.f}
+            set sort_filter = (line_name!='HF(1-0)')
+            set sort_freq = line_freq if(sort_filter)
+            set sort_name = line_name if(sort_filter)
             verbose 1
             set diff_freq_all = 0.0
             declare sort_freq_all 0.f
             declare sort_name_all 0.s
             do i = 0, dimen(list_freq)-1 {
-                set diff_freq = abs(list_freq[$i]-line_freq)
-                set sort_freq = line_freq
-                set sort_name = line_name
+                set diff_freq = abs(list_freq[$i]-sort_freq)
                 sort {diff_freq sort_freq sort_name}
                 #print {diff_freq sort_freq sort_name}
                 set diff_freq_all = diff_freq_all + diff_freq[0]
                 set sort_freq_all = sort_freq_all concat sort_freq[0]
                 set sort_name_all = sort_name_all concat sort_name[0]
+                # remove matched freq from list
+                set sort_id = 1,dimen(sort_freq)-1
+                set sort_freq = sort_freq[sort_id]
+                set sort_name = sort_name[sort_id]
                 #if(diff_freq[0]<=0.5) {
                 #    #<TODO># use 0.5 GHz as the threshold
                 #    set list_diff = list_diff concat diff_freq[0]

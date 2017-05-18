@@ -151,10 +151,10 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
     # Read the fits header from the input uv table
     # 
     # Running GILDAS mapping to get uvtable header
-    # 
-    if [[ ! -f "${PdBIUVT_CVF_NAME}.${PdBIUVT_CVF_TYPE}.header.txt" ]]; then
+    # -- <BUG><20170518> Should not re-use the header.txt!
+    #if [[ ! -f "${PdBIUVT_CVF_NAME}.${PdBIUVT_CVF_TYPE}.header.txt" ]]; then
         echo "header ${PdBIUVT_CVF_NAME}.${PdBIUVT_CVF_TYPE}" | mapping -nw -nl | sed 's/[^[:print:]]//g' > "${PdBIUVT_CVF_NAME}.${PdBIUVT_CVF_TYPE}.header.txt"
-    fi
+    #fi
     if [[ ! -f "${PdBIUVT_CVF_NAME}.${PdBIUVT_CVF_TYPE}.header.txt" ]]; then
         echo ""; echo "Error! Failed to run \"echo \"header ${PdBIUVT_CVF_NAME}.${PdBIUVT_CVF_TYPE}\" | mapping\" > \"${PdBIUVT_CVF_NAME}.${PdBIUVT_CVF_TYPE}.header.txt\"! Please make sure mapping is working!"; echo ""
         exit 3

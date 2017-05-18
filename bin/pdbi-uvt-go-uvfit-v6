@@ -10,6 +10,7 @@
 #    2016-07-01 use perl -p -e to replace sed -E where regex \S \s are used
 #    2016-07-01 support simultaneous running now
 #    2017-03-17 now object-oriented
+#    2017-03-27 v6 now deleting an intermediate ".uvt" file. 
 # 
 
 
