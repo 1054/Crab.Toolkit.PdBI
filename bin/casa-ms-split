@@ -101,6 +101,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     # Check SOURCE table
     # 
     CASAMS_VIS=$(readlink -f "${CASA_INP_VIS[ivis]}")
+    CASAMS_VIS_NAME=$(basename "${CASA_INP_VIS[ivis]}")
     
     if [[ ! -d "${CASAMS_VIS}/SOURCE" ]]; then
         echo ""
@@ -120,7 +121,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     CASAMS_TableWidths=() # The channel number list for all spws, has a dimension of spw number. 
     CASAMS_TableFreqs=() # The list of the ref freq of each spw, in Hz
     CASAMS_TableSpws=() # The list of list of spw for each source, has a dimension of source number. 
-    CASAMS_ScriptName="$(basename ${CASAMS_VIS}).read.tables"
+    CASAMS_ScriptName="$CASAMS_VIS_NAME.read.tables"
     echo "#!/bin/python"                                                   >  "$CASAMS_ScriptName.py"
     echo "tb.open('${CASAMS_VIS}/SOURCE')"                                 >> "$CASAMS_ScriptName.py"
     echo "fo = open('$CASAMS_ScriptName.name.txt','wb')"                   >> "$CASAMS_ScriptName.py"
