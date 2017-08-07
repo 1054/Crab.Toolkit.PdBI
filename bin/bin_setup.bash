@@ -101,7 +101,19 @@ export CRAB_BIN_SETUP_PATH
 
 
 
-CRAB_BIN_SETUP_CLEAR_LIST+=("$CRAB_BIN_SETUP_PATH")
+# Prepare to clear existing current PATH
+if [[ $CRAB_BIN_SETUP_NO_OP_FLAG -eq 0 ]]; then
+    CRAB_BIN_SETUP_CLEAR_LIST+=("$CRAB_BIN_SETUP_PATH")
+fi
+
+
+
+# If no PATH to clear (i.e. nothing to append to PATH), then exit directly
+if [[ ${#CRAB_BIN_SETUP_CLEAR_LIST[@]} -eq 0 ]]; then
+    exit
+fi
+
+
 
 #
 # append PATH, move to the first if CRAB_BIN_SETUP_PATH is not at the first place. 
