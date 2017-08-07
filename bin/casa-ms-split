@@ -222,9 +222,9 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     echo "    \"${CASAMS_VIS}\"/SOURCE"
     echo "    \"${CASAMS_VIS}\"/SPECTRAL_WINDOW"
     echo "Running "
-    echo "    $CASA_COMMAND --nogui --nologfile -c \"$CASAMS_ScriptName.py\" > \"$CASAMS_ScriptName.log\" 2>&1"
+    echo "    $CASA_COMMAND --nogui --log2term -c \"$CASAMS_ScriptName.py\" > \"$CASAMS_ScriptName.log\" 2>&1"
     
-    $CASA_COMMAND --nogui --nologfile -c "$CASAMS_ScriptName.py" > "$CASAMS_ScriptName.log" 2>&1
+    $CASA_COMMAND --nogui --log2term -c "$CASAMS_ScriptName.py" > "$CASAMS_ScriptName.log" 2>&1
     
     echo "Finished casa!"
     
@@ -707,23 +707,23 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             done # end loop each stokes
         done # end loop each spw
         
-        echo "    * written to python script: $CASAMS_Script1                   PLEASE RUN: $CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script1')\""
-        echo "    * written to python script: $CASAMS_Script2                    PLEASE RUN: $CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script2')\""
-        echo "    * written to python script: $CASAMS_Script3            PLEASE RUN: $CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script3')\""
-        echo "    * written to python script: $CASAMS_Script4                   PLEASE RUN: $CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script4')\""
-        echo "    * written to python script: $CASAMS_Script5              PLEASE RUN: $CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script5')\""
+        echo "    * written to python script: $CASAMS_Script1                   PLEASE RUN: $CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script1')\""
+        echo "    * written to python script: $CASAMS_Script2                    PLEASE RUN: $CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script2')\""
+        echo "    * written to python script: $CASAMS_Script3            PLEASE RUN: $CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script3')\""
+        echo "    * written to python script: $CASAMS_Script4                   PLEASE RUN: $CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script4')\""
+        echo "    * written to python script: $CASAMS_Script5              PLEASE RUN: $CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script5')\""
         echo "    * written to shell script:  $CASAMS_Script6    PLEASE RUN: \"./$CASAMS_Script6\""
         
         echo ""                                                                     >> "run_casa_ms_split_all.bash" 
-        echo "$CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script1')\"" >> "run_casa_ms_split_all.bash"
-        echo "$CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script2')\"" >> "run_casa_ms_split_all.bash"
-        echo "$CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script3')\"" >> "run_casa_ms_split_all.bash"
-        echo "$CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script4')\"" >> "run_casa_ms_split_all.bash"
+        echo "$CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script1')\"" >> "run_casa_ms_split_all.bash"
+        echo "$CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script2')\"" >> "run_casa_ms_split_all.bash"
+        echo "$CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script3')\"" >> "run_casa_ms_split_all.bash"
+        echo "$CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script4')\"" >> "run_casa_ms_split_all.bash"
         echo "./$CASAMS_Script6"                                                    >> "run_casa_ms_split_all.bash"
         echo "    * written to a global script: run_casa_ms_split_all.bash   (all the above commands are in it)"
         
         echo ""                                                                     >> "run_casa_ms_split_all_step1.bash"
-        echo "$CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script1')\"" >> "run_casa_ms_split_all_step1.bash"
+        echo "$CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script1')\"" >> "run_casa_ms_split_all_step1.bash"
         
         #<DEBUG>#exit
         #<DEBUG># break
@@ -731,33 +731,33 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         for (( istep=0; istep<${#CASA_INP_STEPS[@]}; istep++ )); do
             if [[ "${CASA_INP_STEPS[istep]}" == "1" || "${CASA_INP_STEPS[istep]}" == "split" ]]; then
                 echo ""
-                echo "Running $CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script1')\""
+                echo "Running $CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script1')\""
                 echo ""
-                $CASA_COMMAND --nogui --nologfile -c "execfile('$CASAMS_Script1')"
+                $CASA_COMMAND --nogui --log2term -c "execfile('$CASAMS_Script1')"
             fi
             if [[ "${CASA_INP_STEPS[istep]}" == "2" || "${CASA_INP_STEPS[istep]}" == "cvel" ]]; then
                 echo ""
-                echo "Running $CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script2')\""
+                echo "Running $CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script2')\""
                 echo ""
-                $CASA_COMMAND --nogui --nologfile -c "execfile('$CASAMS_Script2')"
+                $CASA_COMMAND --nogui --log2term -c "execfile('$CASAMS_Script2')"
             fi
             if [[ "${CASA_INP_STEPS[istep]}" == "3" || "${CASA_INP_STEPS[istep]}" == "exportuvfits" ]]; then
                 echo ""
-                echo "Running $CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script3')\""
+                echo "Running $CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script3')\""
                 echo ""
-                $CASA_COMMAND --nogui --nologfile -c "execfile('$CASAMS_Script3')"
+                $CASA_COMMAND --nogui --log2term -c "execfile('$CASAMS_Script3')"
             fi
             if [[ "${CASA_INP_STEPS[istep]}" == "4" || "${CASA_INP_STEPS[istep]}" == "clean" ]]; then
                 echo ""
-                echo "Running $CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script4')\""
+                echo "Running $CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script4')\""
                 echo ""
-                $CASA_COMMAND --nogui --nologfile -c "execfile('$CASAMS_Script4')"
+                $CASA_COMMAND --nogui --log2term -c "execfile('$CASAMS_Script4')"
             fi
             if [[ "${CASA_INP_STEPS[istep]}" == "5" || "${CASA_INP_STEPS[istep]}" == "uvmodelfit" ]]; then
                 echo ""
-                echo "Running $CASA_COMMAND --nogui --nologfile -c \"execfile('$CASAMS_Script5')\""
+                echo "Running $CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script5')\""
                 echo ""
-                $CASA_COMMAND --nogui --nologfile -c "execfile('$CASAMS_Script5')"
+                $CASA_COMMAND --nogui --log2term -c "execfile('$CASAMS_Script5')"
             fi
             if [[ "${CASA_INP_STEPS[istep]}" == "6" || "${CASA_INP_STEPS[istep]}" == "gildas" ]]; then
                 echo ""

@@ -4,8 +4,9 @@
 #    This code will add the directory of this script into the PATH system variable. 
 # 
 # Usage:
-#    sources /some/path/to/bin_setup.bash -check command_1 command_2
-#    sources /some/path/to/bin_setup.bash -var LD_LIBRARY_PATH -path /my/lib 
+#    source /some/path/to/bin_setup.bash -check command_1 command_2
+#    source /some/path/to/bin_setup.bash -var LD_LIBRARY_PATH -path /my/lib 
+#    source /some/path/to/bin_setup.bash -var PATH -clear "/some/path/to/be/deleted/from/path" -noop -debug
 # 
 
 
@@ -18,18 +19,20 @@ CRAB_BIN_SETUP_CHECK_LIST=()
 CRAB_BIN_SETUP_INPUT_PATH=""
 CRAB_BIN_SETUP_PRINT_FLAG=0
 CRAB_BIN_SETUP_ORDER_FLAG=1 # 1 for prepend, 0 for append
+CRAB_BIN_SETUP_NO_OP_FLAG=0 # no operation for current path
 CRAB_BIN_SETUP_VARIABLE="PATH"
 for (( i=1; i<=$#; i++ )); do
     #echo "${!i}"
-    if echo "${!i}" | grep -q -i "^-debug"; then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_DEBUG_FLAG=1; continue; fi
-    if echo "${!i}" | grep -q -i "^-print"; then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_PRINT_FLAG=1; continue; fi
+    if echo "${!i}" | grep -q -i "^-debug";   then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_DEBUG_FLAG=1; continue; fi
+    if echo "${!i}" | grep -q -i "^-print";   then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_PRINT_FLAG=1; continue; fi
     if echo "${!i}" | grep -q -i "^-prepend"; then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_ORDER_FLAG=1; continue; fi
-    if echo "${!i}" | grep -q -i "^-append"; then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_ORDER_FLAG=0; continue; fi
-    if echo "${!i}" | grep -q -i "^-check"; then CRAB_BIN_SETUP_INPUT_FLAG="check"; continue; fi
-    if echo "${!i}" | grep -q -i "^-clear"; then CRAB_BIN_SETUP_INPUT_FLAG="clear"; continue; fi
-    if echo "${!i}" | grep -q -i "^-path";  then CRAB_BIN_SETUP_INPUT_FLAG="path"; continue; fi
-    if echo "${!i}" | grep -q -i "^-var";   then CRAB_BIN_SETUP_INPUT_FLAG="var"; continue; fi
-    if echo "${!i}" | grep -q -i "^-";      then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; continue; fi
+    if echo "${!i}" | grep -q -i "^-append";  then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_ORDER_FLAG=0; continue; fi
+    if echo "${!i}" | grep -q -i "^-noop";    then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_NO_OP_FLAG=1; continue; fi
+    if echo "${!i}" | grep -q -i "^-check";   then CRAB_BIN_SETUP_INPUT_FLAG="check"; continue; fi
+    if echo "${!i}" | grep -q -i "^-clear";   then CRAB_BIN_SETUP_INPUT_FLAG="clear"; continue; fi
+    if echo "${!i}" | grep -q -i "^-path";    then CRAB_BIN_SETUP_INPUT_FLAG="path"; continue; fi
+    if echo "${!i}" | grep -q -i "^-var";     then CRAB_BIN_SETUP_INPUT_FLAG="var"; continue; fi
+    if echo "${!i}" | grep -q -i "^-";        then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; continue; fi
     # 
     if [[ "$CRAB_BIN_SETUP_INPUT_FLAG" == "check" ]]; then CRAB_BIN_SETUP_CHECK_LIST+=("${!i}"); fi
     if [[ "$CRAB_BIN_SETUP_INPUT_FLAG" == "clear" ]]; then CRAB_BIN_SETUP_CLEAR_LIST+=("${!i}"); fi
@@ -48,31 +51,45 @@ fi
 
 
 # 
+# set dzreadlink to get full path but does not follow/resolve symbol links
+# 
+
+function dzreadlink() {
+    if [[ $# -gt 1 ]]; then if [[ "$1" == "-f" ]]; then shift; fi; fi
+    DIR="$1"; if [[ "$DIR" != *"/"* ]]; then DIR="./$DIR"; fi # 20170228: fixed bug: path without "/"
+    DIR=$(echo "${DIR%/*}") # 20160410: fixed bug: source SETUP just under the Softwares dir
+    if [[ -d "$DIR" ]]; then cd "$DIR" && echo "$(pwd -P)/$(basename ${1})"; 
+    else echo "$(pwd -P)/$(basename ${1})"; fi
+}
+
+
+# 
 # get current script directory as the CRAB_BIN_SETUP_PATH (if not given by the input argument -path)
 # 
 if [[ x"$CRAB_BIN_SETUP_INPUT_PATH" == x ]]; then
     CRAB_BIN_SETUP_INPUT_PATH=$(dirname "${BASH_SOURCE[0]}")
 fi
-if [[ $(type perl 2>/dev/null | wc -l) -eq 1 ]]; then
-    CRAB_BIN_SETUP_PATH=$(perl -MCwd -e 'print Cwd::abs_path shift' "$CRAB_BIN_SETUP_INPUT_PATH")
-else
-    if [[ $(uname) == *"Darwin"* ]]; then
-        if [[ $(type greadlink 2>/dev/null | wc -l) -eq 1 ]]; then
-            CRAB_BIN_SETUP_PATH=$(greadlink -f "$CRAB_BIN_SETUP_INPUT_PATH")
-        else
-            function greadlink() {
-                if [[ $# -gt 1 ]]; then if [[ "$1" == "-f" ]]; then shift; fi; fi
-                DIR="$1"; if [[ "$DIR" != *"/"* ]]; then DIR="./$DIR"; fi # 20170228: fixed bug: path without "/"
-                DIR=$(echo "${DIR%/*}") # 20160410: fixed bug: source SETUP just under the Softwares dir
-                if [[ -d "$DIR" ]]; then cd "$DIR" && echo "$(pwd -P)/$(basename ${1})"; 
-                else echo "$(pwd -P)/$(basename ${1})"; fi
-            }
-            CRAB_BIN_SETUP_PATH=$(greadlink -f "$CRAB_BIN_SETUP_INPUT_PATH")
-        fi
-    else
-        CRAB_BIN_SETUP_PATH=$(readlink -f "$CRAB_BIN_SETUP_INPUT_PATH")
-    fi
-fi
+#<20170807># if [[ $(type perl 2>/dev/null | wc -l) -eq 1 ]]; then
+#<20170807>#     CRAB_BIN_SETUP_PATH=$(perl -MCwd -e 'print Cwd::abs_path shift' "$CRAB_BIN_SETUP_INPUT_PATH")
+#<20170807># else
+#<20170807>#     if [[ $(uname) == *"Darwin"* ]]; then
+#<20170807>#         if [[ $(type greadlink 2>/dev/null | wc -l) -eq 1 ]]; then
+#<20170807>#             CRAB_BIN_SETUP_PATH=$(greadlink -f "$CRAB_BIN_SETUP_INPUT_PATH")
+#<20170807>#         else
+#<20170807>#             function greadlink() {
+#<20170807>#                 if [[ $# -gt 1 ]]; then if [[ "$1" == "-f" ]]; then shift; fi; fi
+#<20170807>#                 DIR="$1"; if [[ "$DIR" != *"/"* ]]; then DIR="./$DIR"; fi # 20170228: fixed bug: path without "/"
+#<20170807>#                 DIR=$(echo "${DIR%/*}") # 20160410: fixed bug: source SETUP just under the Softwares dir
+#<20170807>#                 if [[ -d "$DIR" ]]; then cd "$DIR" && echo "$(pwd -P)/$(basename ${1})"; 
+#<20170807>#                 else echo "$(pwd -P)/$(basename ${1})"; fi
+#<20170807>#             }
+#<20170807>#             CRAB_BIN_SETUP_PATH=$(greadlink -f "$CRAB_BIN_SETUP_INPUT_PATH")
+#<20170807>#         fi
+#<20170807>#     else
+#<20170807>#         CRAB_BIN_SETUP_PATH=$(readlink -f "$CRAB_BIN_SETUP_INPUT_PATH")
+#<20170807>#     fi
+#<20170807># fi
+CRAB_BIN_SETUP_PATH=$(dzreadlink "$CRAB_BIN_SETUP_INPUT_PATH")
 
 if [[ $CRAB_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
     echo "CRAB_BIN_SETUP_PATH=$CRAB_BIN_SETUP_PATH"
@@ -141,7 +158,7 @@ if [[ 1 == 1 ]]; then
         fi
         #echo "$CRAB_BIN_SETUP_PATH_TEXT" # paths not to be cleared
     done
-    # finally append current directory as the last system path item
+    # finally append current directory "." as the last system path item
     if [[ x"$CRAB_BIN_SETUP_PATH_TEXT" != x ]]; then
         declare $CRAB_BIN_SETUP_VARIABLE="$CRAB_BIN_SETUP_PATH_TEXT:."
     else
@@ -153,16 +170,18 @@ if [[ 1 == 1 ]]; then
     fi
 fi
 
-if [[ ":${!CRAB_BIN_SETUP_VARIABLE}:" != *":$CRAB_BIN_SETUP_PATH:"* ]]; then
-    if [[ $CRAB_BIN_SETUP_ORDER_FLAG -eq 1 ]]; then
-        declare $CRAB_BIN_SETUP_VARIABLE="$CRAB_BIN_SETUP_PATH:${!CRAB_BIN_SETUP_VARIABLE}"
-        if [[ $CRAB_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
-            echo "Prepending $CRAB_BIN_SETUP_VARIABLE=${!CRAB_BIN_SETUP_VARIABLE}"
-        fi
-    else
-        declare $CRAB_BIN_SETUP_VARIABLE="${!CRAB_BIN_SETUP_VARIABLE}:$CRAB_BIN_SETUP_PATH"
-        if [[ $CRAB_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
-            echo "Appending $CRAB_BIN_SETUP_VARIABLE=${!CRAB_BIN_SETUP_VARIABLE}"
+if [[ $CRAB_BIN_SETUP_NO_OP_FLAG -eq 0 ]]; then
+    if [[ ":${!CRAB_BIN_SETUP_VARIABLE}:" != *":$CRAB_BIN_SETUP_PATH:"* ]]; then
+        if [[ $CRAB_BIN_SETUP_ORDER_FLAG -eq 1 ]]; then
+            declare $CRAB_BIN_SETUP_VARIABLE="$CRAB_BIN_SETUP_PATH:${!CRAB_BIN_SETUP_VARIABLE}"
+            if [[ $CRAB_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
+                echo "Prepending $CRAB_BIN_SETUP_VARIABLE=${!CRAB_BIN_SETUP_VARIABLE}"
+            fi
+        else
+            declare $CRAB_BIN_SETUP_VARIABLE="${!CRAB_BIN_SETUP_VARIABLE}:$CRAB_BIN_SETUP_PATH"
+            if [[ $CRAB_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
+                echo "Appending $CRAB_BIN_SETUP_VARIABLE=${!CRAB_BIN_SETUP_VARIABLE}"
+            fi
         fi
     fi
 fi
