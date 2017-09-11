@@ -100,9 +100,9 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
             mv "${PdBIUVT_EPS}.eps" "${PdBIUVT_EPS}.eps.backup"
         fi
         
-        if [[ -f "${PdBIUVT_SAVE[i]}.lmv.fits" ]]; then
-            mv "${PdBIUVT_SAVE[i]}.lmv.fits" "${PdBIUVT_SAVE[i]}.lmv.fits.backup"
-        fi
+        #if [[ -f "${PdBIUVT_SAVE[i]}.lmv.fits" ]]; then
+        #    mv "${PdBIUVT_SAVE[i]}.lmv.fits" "${PdBIUVT_SAVE[i]}.lmv.fits.backup"
+        #fi
         
         if [[ -f "${PdBIUVT_EPS}.eps" ]]; then
             mv "${PdBIUVT_EPS}.eps" "${PdBIUVT_EPS}.eps.backup"
@@ -281,11 +281,11 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo "on error continue ; @$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG"
         
         PdBIUVT_REPEAT=0
-        while [[ ! -f "${PdBIUVT_EPS}.eps" || ! -f "${PdBIUVT_SAVE[i]}.lmv" || ! -f "${PdBIUVT_SAVE[i]}.lmv.fits" ]]; do
+        while [[ ! -f "${PdBIUVT_EPS}.eps" || ! -f "${PdBIUVT_NAME[i]}.lmv" || ! -f "${PdBIUVT_NAME[i]}.lmv.fits" ]]; do
             echo "Failed to get the uv_map result? Perhaps conflicting with other running mapping processes! We will try again!" 1>&2
             echo ls "${PdBIUVT_EPS}.eps"; ls "${PdBIUVT_EPS}.eps"
-            echo ls "${PdBIUVT_SAVE[i]}.lmv"; ls "${PdBIUVT_SAVE[i]}.lmv"
-            echo ls "${PdBIUVT_SAVE[i]}.lmv.fits"; ls "${PdBIUVT_SAVE[i]}.lmv.fits"
+            echo ls "${PdBIUVT_NAME[i]}.lmv"; ls "${PdBIUVT_NAME[i]}.lmv"
+            echo ls "${PdBIUVT_NAME[i]}.lmv.fits"; ls "${PdBIUVT_NAME[i]}.lmv.fits"
             sleep 1.5
             echo "@$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG"
             PdBIUVT_REPEAT=$(($PdBIUVT_REPEAT+1))

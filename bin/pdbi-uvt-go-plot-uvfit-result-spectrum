@@ -6,10 +6,15 @@
 if [[ $(type sm 2>/dev/null | wc -l) -eq 0 ]]; then
     echo "Error! Supermongo was not found in \$PATH!"
     exit
+else
+    if [[ $(echo "load crabPlot.sm" | sm | wc -l) -ne 0 ]]; then
+        echo "Error! We need Supermongo macro \"crabPlot.sm\" from \"https://github.com/1054/DeepFields.SuperDeblending/Softwares/Supermongo_macro/crabPlot.sm\"!"
+        exit
+    fi
 fi
 
 if [[ $# -lt 1 ]]; then
-    echo "Usage: pdbi-uvt-go-plot-uvfit-result-spectrum *.uv_fit.result.obj_1.txt"
+    echo "Usage: pdbi-uvt-go-plot-uvfit-result-spectrum *.uv_fit.result.obj_1.txt [-output output_name]"
     exit
 fi
 
@@ -66,6 +71,14 @@ echo ""                                                                 >> "pdbi
 echo "macro read pdbi_uvt_go_plot_uvfit_result_spectrum.sm go | sm"
 echo "macro read pdbi_uvt_go_plot_uvfit_result_spectrum.sm go" | sm
 
-
+# 
+# Final output
+if [[ $* == *"-output "* ]]; then
+    output=($(echo $* | perl -p -e 's/.* -output[ ]+([^ ]+).*/\1/g')) # must be in degrees
+    for i in sm pdf; do
+        mv "pdbi_uvt_go_plot_uvfit_result_spectrum.${i}" "${output}.${i}"
+        echo "Output to \"${output}.${i}\""
+    done
+fi
 
 

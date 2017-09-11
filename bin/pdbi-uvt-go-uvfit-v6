@@ -450,21 +450,35 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                                                                      $(awk "BEGIN {print (${PdBIUVT_OutY[j]})-($PdBIUVT_PosY);}") \
                                                                      >> "${PdBIUVT_SAVE[tk]}.coord.${PdBIUVT_OBJ_NAME[i]}.txt"
             done
+            
+            # plot map if supermongo from https://github.com/1054/DeepFields.SuperDeblending/ exists.
+            if [[ $(type sm 2>/dev/null | wc -l) -eq 1 ]]; then
+                if [[ $(echo "load crabPlot.sm" | sm | wc -l) -eq 0 ]]; then
+                    if [[ "${PdBIUVT_TYPE[tk]}" == "uvt" ]]; then
+                        pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset ${PdBIUVT_OutX} ${PdBIUVT_OutY} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image"
+                    fi
+                    if [[ ${#PdBIUVT_OutX[@]} -gt 1 ]]; then
+                        pdbi-uvt-go-plot-uvfit-result-spectrum "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.txt" -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.spectrum"
+                    fi
+                fi
+            fi
         fi
         
         # run "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
-        echo "! GIDLAS mapping script"                                         >  "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
-        echo "let name \"${PdBIUVT_SAVE[tk]}\""                                >> "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
-        echo "let UVFIT%ORDER $((i+1))"                                        >> "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
-        echo "go plotfit"                                                      >> "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
-        echo "hardcopy 'name'.plotfit.${PdBIUVT_OBJ_NAME[i]}.eps /overwrite"   >> "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
-        echo ""                                                                >> "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
-        # 
-        echo "@${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.map" | mapping -nw -nl > "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.log"
-        # 
-        if [[ -f "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.eps" && -f "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.log" ]]; then
-            rm "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.log"
-            #rm "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+        if [[ 1 -eq 0 ]]; then
+            echo "! GIDLAS mapping script"                                         >  "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+            echo "let name \"${PdBIUVT_SAVE[tk]}\""                                >> "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+            echo "let UVFIT%ORDER $((i+1))"                                        >> "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+            echo "go plotfit"                                                      >> "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+            echo "hardcopy 'name'.plotfit.${PdBIUVT_OBJ_NAME[i]}.eps /overwrite"   >> "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+            echo ""                                                                >> "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+            # 
+            echo "@${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.map" | mapping -nw -nl > "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.log"
+            # 
+            if [[ -f "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.eps" && -f "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.log" ]]; then
+                rm "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.log"
+                #rm "${PdBIUVT_SAVE[tk]}.plotfit.${PdBIUVT_OBJ_NAME[i]}.map"
+            fi
         fi
         
     done

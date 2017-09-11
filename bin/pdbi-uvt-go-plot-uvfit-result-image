@@ -6,10 +6,15 @@
 if [[ $(type sm 2>/dev/null | wc -l) -eq 0 ]]; then
     echo "Error! Supermongo was not found in \$PATH!"
     exit
+else
+    if [[ $(echo "load crabPlot.sm" | sm | wc -l) -ne 0 ]]; then
+        echo "Error! We need Supermongo macro \"crabPlot.sm\" from \"https://github.com/1054/DeepFields.SuperDeblending/Softwares/Supermongo_macro/crabPlot.sm\"!"
+        exit
+    fi
 fi
 
 if [[ $# -lt 1 ]]; then
-    echo "Usage: pdbi-uvt-go-plot-uvfit-result-image *.uvt -radec ra dec -offset xoff yoff"
+    echo "Usage: pdbi-uvt-go-plot-uvfit-result-image *.uvt -radec ra dec -offset xoff yoff [-output output_name]"
     exit
 fi
 
@@ -38,6 +43,9 @@ uv_filename=$(echo $1 | sed -e 's/\.uvt$//g')
 
 echo "! GILDAS MAPPING SCRIPT" > "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "let name \"$uv_filename\"" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "let map_size 1024" >> "pdbi_uvt_go_plot_uvfit_result_image.map" #<Added><20170909># 
+echo "go uvmap" >> "pdbi_uvt_go_plot_uvfit_result_image.map" #<Added><20170816># 
+echo "fits 'name'.lmv-dirty.fits from 'name'.lmv" >> "pdbi_uvt_go_plot_uvfit_result_image.map" #<Added><20170909># 
 echo "let type lmv" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "read uv 'name'.uvt" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 #echo "INPUT UV_MAP" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
@@ -63,6 +71,7 @@ echo "clean" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 # 
 #echo "write * 'name'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "write clean 'name'.lmv-clean" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "fits 'name'.lmv-clean.fits from 'name'.lmv-clean" >> "pdbi_uvt_go_plot_uvfit_result_image.map" #<Added><20170909># 
 echo "let type lmv-clean" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "go noise" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "let spacing noise" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
@@ -183,7 +192,7 @@ fi
 # Final output
 if [[ $* == *"-output "* ]]; then
     output=($(echo $* | perl -p -e 's/.* -output[ ]+([^ ]+).*/\1/g')) # must be in degrees
-    for i in map pdf eps; do
+    for i in map pdf; do
         mv "pdbi_uvt_go_plot_uvfit_result_image.${i}" "${output}.${i}"
         echo "Output to \"${output}.${i}\""
     done
