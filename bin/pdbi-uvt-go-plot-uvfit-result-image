@@ -65,6 +65,18 @@ if [[ $* == *"-size "* ]]; then
         echo "let size $msize" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
     fi
 fi
+if [[ $* == *"-fov "* ]]; then
+    msize=($(echo $* | perl -p -e 's/.* -fov[ ]+([0-9.+-]+).*/\1/g'))
+    if [[ $(awk "BEGIN {if ($msize>0) print 1; else print 0;}") -eq 1 ]]; then
+        echo "let size $msize" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+    fi
+fi
+if [[ $* == *"-FoV "* ]]; then
+    msize=($(echo $* | perl -p -e 's/.* -FoV[ ]+([0-9.+-]+).*/\1/g'))
+    if [[ $(awk "BEGIN {if ($msize>0) print 1; else print 0;}") -eq 1 ]]; then
+        echo "let size $msize" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+    fi
+fi
 # 
 echo "let niter 1" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "clean" >> "pdbi_uvt_go_plot_uvfit_result_image.map"

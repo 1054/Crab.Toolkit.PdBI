@@ -455,7 +455,15 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             if [[ $(type sm 2>/dev/null | wc -l) -eq 1 ]]; then
                 if [[ $(echo "load crabPlot.sm" | sm | wc -l) -eq 0 ]]; then
                     if [[ "${PdBIUVT_TYPE[tk]}" == "uvt" ]]; then
-                        pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset ${PdBIUVT_OutX} ${PdBIUVT_OutY} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image"
+                        if [[ ${#PdBIUVT_FOV_SIZE[@]} -gt 0 ]]; then
+                            if [[ ${#PdBIUVT_FOV_SIZE[@]} -gt $tk ]]; then
+                                pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset ${PdBIUVT_OutX} ${PdBIUVT_OutY} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image" -FoV "${PdBIUVT_FOV_SIZE[tk]}"
+                            else
+                                pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset ${PdBIUVT_OutX} ${PdBIUVT_OutY} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image" -FoV "${PdBIUVT_FOV_SIZE[${#PdBIUVT_FOV_SIZE[@]}-1]}"
+                            fi
+                        else
+                            pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset ${PdBIUVT_OutX} ${PdBIUVT_OutY} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image" -FoV "${PdBIUVT_FOV_SIZE[tk]}"
+                        fi
                     fi
                     if [[ ${#PdBIUVT_OutX[@]} -gt 1 ]]; then
                         pdbi-uvt-go-plot-uvfit-result-spectrum "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.txt" -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.spectrum"
