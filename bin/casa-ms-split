@@ -488,11 +488,12 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "width       =  ${SPLIT_WID}"                                   >> "$CASAMS_Script1"
                     echo "correlation = '${SPLIT_STK}'"                                  >> "$CASAMS_Script1"
                     echo "datacolumn  = '${CASAMS_TYP}'"                                 >> "$CASAMS_Script1"
-                    echo "combinespw  = F"                                               >> "$CASAMS_Script1"
-                    echo "keepflags   = F"                                               >> "$CASAMS_Script1"
+                    echo "uvrange     = '>0m'"                                           >> "$CASAMS_Script1" #<Added><20170929># 
+                    echo "combinespw  = False"                                           >> "$CASAMS_Script1"
+                    echo "keepflags   = False"                                           >> "$CASAMS_Script1"
                     if [[ ${#CASA_VERSION[@]} -eq 3 ]]; then
                     if [[ ${CASA_VERSION[0]} -ge 4 && ${CASA_VERSION[1]} -ge 6 ]]; then
-                    echo "keepmms     = F"                                               >> "$CASAMS_Script1"
+                    echo "keepmms     = False"                                           >> "$CASAMS_Script1"
                     fi
                     fi
                     echo "dirbackup(outputvis)"                                          >> "$CASAMS_Script1"
@@ -543,7 +544,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "field       = ''"                                              >> "$CASAMS_Script3"
                     echo "spw         = ''"                                              >> "$CASAMS_Script3"
                     echo "datacolumn  = '${CASAMS_TYP}'"                                 >> "$CASAMS_Script3"
-                    echo "multisource = F"                                               >> "$CASAMS_Script3"
+                    echo "multisource = False"                                           >> "$CASAMS_Script3"
                     echo "inp(exportuvfits)"                                             >> "$CASAMS_Script3"
                     echo "exportuvfits()"                                                >> "$CASAMS_Script3"
                     echo ""                                                              >> "$CASAMS_Script3"
@@ -566,7 +567,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "    field       = ''"                                                   >> "$CASAMS_Script3"
                     echo "    spw         = ''"                                                   >> "$CASAMS_Script3"
                     echo "    datacolumn  = '${CASAMS_TYP}'"                                      >> "$CASAMS_Script3"
-                    echo "    multisource = F"                                                    >> "$CASAMS_Script3"
+                    echo "    multisource = False"                                                >> "$CASAMS_Script3"
                     echo "    inp(exportuvfits)"                                                  >> "$CASAMS_Script3"
                     echo "    exportuvfits()"                                                     >> "$CASAMS_Script3"
                     echo "    "                                                                   >> "$CASAMS_Script3"
@@ -604,7 +605,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "imsize      = 512 #<TODO># "                              >> "$CASAMS_Script4" #<TODO># 
                     echo "cell        = '0.2arcsec' #<TODO># "                      >> "$CASAMS_Script4" #<TODO># 
                     echo "datacolumn  = '${CASAMS_TYP}'"                            >> "$CASAMS_Script4"
-                    echo "multisource = F"                                          >> "$CASAMS_Script4"
+                    echo "multisource = False"                                      >> "$CASAMS_Script4"
                     echo "inp(clean)"                                               >> "$CASAMS_Script4"
                     echo "clean()"                                                  >> "$CASAMS_Script4"
                     echo ""                                                         >> "$CASAMS_Script4"
@@ -632,7 +633,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "imsize      = 512 #<TODO># "                              >> "$CASAMS_Script4" #<TODO># 
                     echo "cell        = '0.2arcsec' #<TODO># "                      >> "$CASAMS_Script4" #<TODO># 
                     echo "datacolumn  = '${CASAMS_TYP}'"                            >> "$CASAMS_Script4"
-                    echo "multisource = F"                                          >> "$CASAMS_Script4"
+                    echo "multisource = False"                                      >> "$CASAMS_Script4"
                     echo "inp(clean)"                                               >> "$CASAMS_Script4"
                     echo "clean()"                                                  >> "$CASAMS_Script4"
                     echo ""                                                         >> "$CASAMS_Script4"
