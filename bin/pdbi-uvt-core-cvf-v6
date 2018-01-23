@@ -35,11 +35,14 @@ fi
 # 
 # Check Variables
 # 
-if [[ $# -ge 1 ]]; then
-    PdBIUVT_CVF_NAME="$1"
-else
-    return
-fi
+#20180123#if [[ $# -ge 1 ]]; then
+#20180123#    PdBIUVT_CVF_NAME="$1"
+#20180123#else
+#20180123#    return
+#20180123#fi
+#20180123#
+PdBIUVT_CVF_NAME=("${PdBIUVT_NAME[@]}") #20180123#
+#20180123#
 if [[ x"$PdBIUVT_CVF_NAME" == x*".uvt" ]]; then
     PdBIUVT_CVF_NAME=$(echo "$PdBIUVT_CVF_NAME" | sed -e 's/\.uvt$//g')
     PdBIUVT_CVF_TYPE="uvt"

@@ -13,7 +13,6 @@ source ../../SETUP.bash
 
 # go uvfit
 pdbi-uvt-go-uvfit -name split_z35_68_spw0_width128.uvt \
-                    -offset 0 0 \
                     -uvrange 10 2000 \
                     -subtract -residual output_residual \
                     -out output_uv_fit
@@ -32,6 +31,6 @@ fi
 echo "Done!"
 
 # clean up
-#rm output_* *.lmv* *.eps *.txt *.log *.noi *.beam *.map *.script *~ 2>/dev/null
+#rm output_* *.lmv* *.eps *.txt *.log *.noi *.beam *.map *.script *.backup *"~" 2>/dev/null
 
 
