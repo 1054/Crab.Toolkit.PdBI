@@ -58,8 +58,10 @@ function dzreadlink() {
     if [[ $# -gt 1 ]]; then if [[ "$1" == "-f" ]]; then shift; fi; fi
     DIR="$1"; if [[ "$DIR" != *"/"* ]]; then DIR="./$DIR"; fi # 20170228: fixed bug: path without "/"
     DIR=$(echo "${DIR%/*}") # 20160410: fixed bug: source SETUP just under the Softwares dir
-    if [[ -d "$DIR" ]]; then cd "$DIR" && echo "$(pwd -P)/$(basename ${1})"; 
-    else echo "$(pwd -P)/$(basename ${1})"; fi
+    # if [[ -d "$DIR" ]]; then cd "$DIR" && echo "$(pwd -P)/$(basename ${1})";  # 20171208: 'pwd -P' will resolve symbolic links!
+    # else echo "$(pwd -P)/$(basename ${1})"; fi # 20171208: 'pwd -P' will resolve symbolic links!
+    if [[ -d "$DIR" ]]; then cd "$DIR" && echo "$(pwd)/$(basename ${1})"; 
+    else echo "$(pwd)/$(basename ${1})"; fi
 }
 
 

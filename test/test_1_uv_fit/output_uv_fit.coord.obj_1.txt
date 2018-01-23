@@ -1,0 +1,3 @@
+#       x_input         y_input        x_output        y_output          x_diff          y_diff                
+#        arcsec          arcsec          arcsec          arcsec          arcsec          arcsec                
+      0.0000000       0.0000000       0.0000000       0.0000000       0.0000000       0.0000000

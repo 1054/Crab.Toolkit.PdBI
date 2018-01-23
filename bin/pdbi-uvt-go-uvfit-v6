@@ -20,7 +20,7 @@
 # 
 PdBIUVT_PrintUsage() {
     echo "Usage: "
-    echo "    pdbi-uvt-go-uvfit -name NAME.uvt -out OUTPUT_NAME [-varypos] [-radec RA DEC] [-cgauss] [-residual residual.uvt]"
+    echo "    pdbi-uvt-go-uvfit -name NAME.uvt -out OUTPUT_NAME [-varypos] [-radec RA DEC] [-cgauss] [-subtract -residual residual.uvt]"
     echo ""
     echo "Example:"
     echo "    pdbi-uvt-go-uvfit-v6 -name NAME.uvt -crange 1 10                                        # This will highlight channel range 1 to 10 in the resulting plot and compute the integrated flux"

@@ -1,0 +1,179 @@
+GILDAS Version: 01apr17 (01apr17 06:13 cest) (x86_64-darwin-gfortran-mp-5) executable tree
+W-SIC,  Session is not interactive, SIC EDIT and SIC MEMORY off
+
+ * Welcome to MAPPING   
+
+ * Loaded modules
+    sic (J.Pety, S.Bardeau, S.Guilloteau, E.Reynier)
+    greg (J.Pety, S.Bardeau, S.Guilloteau, E.Reynier)
+    mapping (J.Pety, S.Guilloteau, F.Gueth, N.Rodriguez-Fernandez)
+
+ * In charge:              J.Pety
+   Active developers:      N.Rodriguez-Fernandez, S.Guilloteau, F.Gueth
+   Main past contributors: K.Bouyoucef, R.Lucas
+
+ * MAPPING is an interactive program to image and deconvolve
+   (sub)mm interferometric data
+
+ * Questions? Comments? Bug reports? Mail to: gildas@iram.fr
+
+ * For help, type HELP, INPUT and/or INFO at the MAPPING prompt
+
+
+go uvmap
+I-GIO_RIH,  GDFBIG re-allocation      3
+W-GDF_UV_DOPPLER,  Header version: Image V2.1 System V2.2 Current V2.2 Goal V2.2
+W-GDF_UV_DOPPLER,  Header version: Image V2.1 System V2.2 Current V2.2 Goal V2.2
+W-GDF_COPY_HEADER,  Copying  2 Stokes
+W-GDF_COPY_HEADER,  Copying  2 Stokes
+W-GDF_COPY_HEADER,  Copying  2 Stokes
+W-GDF_READ_UVDATASET,  Producing a UVT order
+W-GDF_COPY_HEADER,  Copying  2 Stokes
+File :                                                               REAL*4
+Size        Reference Pixel           Value                  Increment
+        13   1.00000000000000       231000.000000000       5334.00000000000
+     69862   1.00000000000000       1.00000000000000       1.00000000000000
+Blanking value and tolerance      1.23455995E+38  -1.0000000
+Source name         z35_68
+Map unit            Jy
+Axis type           UV-DATA      RANDOM
+Coordinate system   EQUATORIAL          Velocity    Observatory
+Right Ascension     00:00:00.000        Declination         00:00:00.00
+Lii        0.000000000000000            Bii       0.000000000000000
+Equinox            2000.0000
+Projection type     AZIMUTHAL           Angle     0.000000000000000
+Axis 0     A0       10:00:19.610        Axis 0     D0       02:05:16.22
+Baselines              12.7     309.2
+Axis 1 Line Name                        Rest Frequency   231000.0000001000
+Resolution in Velocity   -6922.4805     in Frequency          5334.0000
+Offset in Velocity       1.29781270E-07 Doppler Velocity      0.0000000
+NO Beam information
+NO Noise level
+NO Proper motion
+Tel: ALMA           -67:45:11.6   -23:01:11.7 Alt. 5000.0   Diam 12.0
+UV Data    Channels:      1, Stokes: 2 HH VV       Visibilities:       69862
+Column            1 (Size 1) contains U           
+Column            2 (Size 1) contains V           
+Column            3 (Size 1) contains W           
+Column            4 (Size 1) contains DATE        
+Column            5 (Size 1) contains TIME        
+Column            6 (Size 1) contains IANT        
+Column            7 (Size 1) contains JANT        
+Summary of observations
+     1 Channels,  2 Stokes,   Rest Frequency    231000.000 MHz
+Has fine Doppler correction
+   Dates      Visibilities     Minimun    & Maximum Baselines
+                              (m)  (kWave)    (m)    (kWave)
+ 06-JAN-2016      46737      12.7     9.8     281.8   217.2
+ 10-JAN-2016      23125      14.5    11.2     309.2   238.3
+  49 Antennas,  in range    1  50
+   1   2   3   4   5   6   7   8  10  11  12  13  14  15  16  17  18  19  20  21
+  22  23  24  25  26  27  28  29  38  39  40  41  42  43  44  30  31  32  33  35
+  36  37  34   9  45  47  48  49  50
+ 
+Input file: Interferometer (15m)  split_z35_68_spw0_width128
+ 
+   Single field observation (69862 visibilities)
+ 
+   Observed rest frequency       231.0000000001 GHz
+   Half power primary beam       21.8 arcsec
+   Phase center RA and Dec       10:00:19.610 02:05:16.224
+   Field of view / Largest Scale 21.8 x 21.8 arcsec
+ 
+                                  Recommended             Used
+   Map size                    256 x 256  pixels      256 x 256
+   Map cell                    0.1731 x 0.1731  arcsec      0.1731 x 0.1731
+   Image Size                  44.3 x 44.3 arcsec      44.3 x 44.3
+ 
+   Already imaged
+   Already cleaned
+I-READ,  Read uv split_z35_68_spw0_width128.uvt
+W-GDF_UV_DOPPLER,  Header version: Image V2.1 System V2.2 Current V2.2 Goal V2.2
+W-GDF_COPY_HEADER,  Copying  2 Stokes
+W-GDF_COPY_HEADER,  Copying  2 Stokes
+W-GDF_COPY_HEADER,  Copying  2 Stokes
+W-GDF_READ_UVDATASET,  Producing a UVT order
+W-GDF_COPY_HEADER,  Copying  2 Stokes
+W-UV_MAP,  UV_CELL is obsolescent, use MAP_UVCELL instead
+I-UV_MAP,  Using NATURAL  weighting
+I-UVSORT,  Sorting UV table...
+I-UVSORT,  Successful completion
+I-UV_MAP,  Finished sorting      0.01
+I-UV_MAP,  Found telescope ALMA from data
+I-UV_MAP,  Current     Field of view / Largest Scale         44.3 x         44.3 "
+I-UV_MAP,  Current     Image size        44.3 x        44.3"
+I-UV_MAP,  Current     Map size 256 x 256
+I-UV_MAP,  Current     Pixel size    0.173 x    0.173 "
+I-UV_MAP,  Producing one beam every    1 channels, total      1     1
+I-UV_MAP,  Computing weights
+W-UV_MAP,  Using      1 blocks of        1
+I-UV_MAP,  Plane      1 Expected rms noise is    65.052 microJy/beam
+I-UV_MAP,  Finished maps CPU      0.05
+I-UV_MAP,  Expected rms noise is    65.052 microJy/beam
+I-UV_MAP,  Successful completion
+I-GDF_GILDAS_V2_TO_HD64,  Set hd64%nhb =      2 for Nteles =  1
+I-GDF_GILDAS_V2_TO_HD64,  Set hd64%nhb =      2 for Nteles =  1
+ 
+Input file: Interferometer (15m)  split_z35_68_spw0_width128
+ 
+   Single field observation (69862 visibilities)
+ 
+   Observed rest frequency       231.0000000001 GHz
+   Half power primary beam       21.8 arcsec
+   Phase center RA and Dec       10:00:19.610 02:05:16.224
+   Field of view / Largest Scale 21.8 x 21.8 arcsec
+ 
+                                  Recommended             Used
+   Map size                    256 x 256  pixels      256 x 256
+   Map cell                    0.1731 x 0.1731  arcsec      0.1731 x 0.1731
+   Image Size                  44.3 x 44.3 arcsec      44.3 x 44.3
+ 
+   Already imaged
+   Already cleaned
+I-READ,  Read beam split_z35_68_spw0_width128.beam
+I-CLEAN,  Beam is     1.39" by     1.16" at PA    86.10 deg.
+I-CLEAN,  Errors (    0.00)   (    0.00)      (    0.36)
+I-UVMAP,  Set type variable to lmv
+
+go noise
+Changing to new (or updated) file  split_z35_68_spw0_width128.lmv
+W-CLEAR,  CLEAR ALPHA is obsolete
+MAX_NOISE       =   1.6586989E-04            ! Real    LOCAL  3   
+NOISE           =   1.6586989E-04            ! Real    GLOBAL     
+
+examine map_size
+MAP_SIZE        is an integer Array     of dimensions  2
+            0            0
+
+examine map_cell
+MAP_CELL        is a real Array     of dimensions  2
+   0.000000       0.000000    
+
+examine size
+SIZE            is a double precision Array     of dimensions  2
+   0.00000000000000000       0.00000000000000000    
+
+examine noise
+NOISE           =   1.6586989E-04            ! Real    GLOBAL     
+
+fits
+
+go view
+Changing to new (or updated) file  split_z35_68_spw0_width128.lmv
+Contour levels are :
+ -6.6347956E-04 -4.9760967E-04 -3.3173978E-04 -1.6586989E-04  1.6586989E-04
+  3.3173978E-04  4.9760967E-04  6.6347956E-04  8.2934945E-04
+Contour levels are :
+ -6.6347956E-04 -4.9760967E-04 -3.3173978E-04 -1.6586989E-04  1.6586989E-04
+  3.3173978E-04  4.9760967E-04  6.6347956E-04  8.2934945E-04
+W-CLEAR,  CLEAR ALPHA is obsolete
+Changing to new (or updated) file  split_z35_68_spw0_width128.lmv
+Contour levels are :
+ -6.6347956E-04 -4.9760967E-04 -3.3173978E-04 -1.6586989E-04  1.6586989E-04
+  3.3173978E-04  4.9760967E-04  6.6347956E-04  8.2934945E-04
+Contour levels are :
+ -6.6347956E-04 -4.9760967E-04 -3.3173978E-04 -1.6586989E-04  1.6586989E-04
+  3.3173978E-04  4.9760967E-04  6.6347956E-04  8.2934945E-04
+I-HARDCOPY,  split_z35_68_spw0_width128.eps created
+W-DELETE,  Deleting Program defined Header DIRTY
+I-GDF_GILDAS_V2_TO_HD64,  Set hd64%nhb =      2 for Nteles =  1

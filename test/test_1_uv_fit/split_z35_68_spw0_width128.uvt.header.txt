@@ -1,0 +1,54 @@
+GILDAS Version: 01apr17 (01apr17 06:13 cest) (x86_64-darwin-gfortran-mp-5) executable tree
+W-SIC,  Session is not interactive, SIC EDIT and SIC MEMORY off
+
+ * Welcome to MAPPING   
+
+ * Loaded modules
+    sic (J.Pety, S.Bardeau, S.Guilloteau, E.Reynier)
+    greg (J.Pety, S.Bardeau, S.Guilloteau, E.Reynier)
+    mapping (J.Pety, S.Guilloteau, F.Gueth, N.Rodriguez-Fernandez)
+
+ * In charge:              J.Pety
+   Active developers:      N.Rodriguez-Fernandez, S.Guilloteau, F.Gueth
+   Main past contributors: K.Bouyoucef, R.Lucas
+
+ * MAPPING is an interactive program to image and deconvolve
+   (sub)mm interferometric data
+
+ * Questions? Comments? Bug reports? Mail to: gildas@iram.fr
+
+ * For help, type HELP, INPUT and/or INFO at the MAPPING prompt
+
+I-GIO_RIH,  GDFBIG re-allocation      3
+W-GDF_UV_DOPPLER,  Header version: Image V2.1 System V2.2 Current V2.2 Goal V2.2
+W-GDF_COPY_HEADER,  Copying  2 Stokes
+File : split_z35_68_spw0_width128.uvt                                REAL*4
+Size        Reference Pixel           Value                  Increment
+        13   1.00000000000000       231000.000000000       5334.00000000000
+     69862   1.00000000000000       1.00000000000000       1.00000000000000
+Blanking value and tolerance      1.23455995E+38  -1.0000000
+Source name         z35_68
+Map unit            Jy
+Axis type           UV-DATA      RANDOM
+Coordinate system   EQUATORIAL          Velocity    Observatory
+Right Ascension     00:00:00.000        Declination         00:00:00.00
+Lii        0.000000000000000            Bii       0.000000000000000
+Equinox            2000.0000
+Projection type     AZIMUTHAL           Angle     0.000000000000000
+Axis 0     A0       10:00:19.610        Axis 0     D0       02:05:16.22
+Baselines               0.0       0.0
+Axis 1 Line Name                        Rest Frequency   231000.0000001000
+Resolution in Velocity   -6922.4805     in Frequency          5334.0000
+Offset in Velocity       1.29781270E-07 Doppler Velocity      0.0000000
+NO Beam information
+NO Noise level
+NO Proper motion
+Tel: ALMA           -67:45:11.6   -23:01:11.7 Alt. 5000.0   Diam 12.0
+UV Data    Channels:      1, Stokes: 2 HH VV       Visibilities:       69862
+Column            1 (Size 1) contains U           
+Column            2 (Size 1) contains V           
+Column            3 (Size 1) contains W           
+Column            4 (Size 1) contains DATE        
+Column            5 (Size 1) contains TIME        
+Column            6 (Size 1) contains IANT        
+Column            7 (Size 1) contains JANT        
