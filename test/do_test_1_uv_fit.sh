@@ -13,15 +13,17 @@ source ../../SETUP.bash
 
 # go uvfit
 pdbi-uvt-go-uvfit -name split_z35_68_spw0_width128.uvt \
-                    -uvrange 10 2000 \
+                    -offset 10 10 -fixpos \
+                    -fixpos \
+                    -uvrange 10 200 \
                     -subtract -residual output_residual \
                     -out output_uv_fit
 
 # go uvmap the input image
-pdbi-uvt-go-uvmap -name split_z35_68_spw0_width128.uvt
+pdbi-uvt-go-uvmap -name split_z35_68_spw0_width128.uvt -uvrange 10 200
 
 # go uvmap the residual image
-pdbi-uvt-go-uvmap -name output_residual.uvt
+pdbi-uvt-go-uvmap -name output_residual.uvt -uvrange 10 200
 
 # open the images
 if [[ $(uname) == "Darwin" ]]; then
