@@ -17,7 +17,7 @@
 # 
 usage() {
     echo "Usage: "
-    echo "  pdbi-uvt-go-uvmap -name aaa.uvt -size 15 -map_size 512 -map_cell 0.2 -out aaa.eps -overwrite"
+    echo "  pdbi-uvt-go-uvmap -name aaa.uvt -size 15 -map_size 512 -map_cell 0.2 -show_header -out aaa.eps -overwrite"
     echo ""
 }
 
@@ -26,8 +26,8 @@ usage() {
 # 
 # SOURCE pdbi-uvt-core-arg
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v6" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v6" "$@"
 else
     echo ""
     echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5\"!"
@@ -176,20 +176,20 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo "say \"fits\""                                     >> "$PdBIUVT_EXE"
         echo "fits 'name'.lmv.fits from 'name'.lmv /overwrite"  >> "$PdBIUVT_EXE"
         
-        echo ""                             >> "$PdBIUVT_EXE"
-        echo "say \"\""                     >> "$PdBIUVT_EXE"
-        echo "say \"go view\""              >> "$PdBIUVT_EXE"
-        #echo "on error continue"           >> "$PdBIUVT_EXE"
-        echo "go view"                      >> "$PdBIUVT_EXE"
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"go view\""                                  >> "$PdBIUVT_EXE"
+        #echo "on error continue"                               >> "$PdBIUVT_EXE"
+        echo "go view"                                          >> "$PdBIUVT_EXE"
         
-        echo "let do_header no"             >> "$PdBIUVT_EXE"
-        echo "go nice"                      >> "$PdBIUVT_EXE"
+        echo "let do_header $PdBIUVT_SHOW_HEADER"               >> "$PdBIUVT_EXE"
+        echo "go nice"                                          >> "$PdBIUVT_EXE"
         
-        echo ""                                                  >> "$PdBIUVT_EXE"
-        echo "hardcopy \"${PdBIUVT_EPS}.eps\" /overwrite"        >> "$PdBIUVT_EXE"
-        echo "if (FILE(\"${PdBIUVT_EPS}.eps\")) then"            >> "$PdBIUVT_EXE"
-        echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_EPS}.eps\""       >> "$PdBIUVT_EXE"
-        echo "endif"                                             >> "$PdBIUVT_EXE"
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "hardcopy \"${PdBIUVT_EPS}.eps\" /overwrite"       >> "$PdBIUVT_EXE"
+        echo "if (FILE(\"${PdBIUVT_EPS}.eps\")) then"           >> "$PdBIUVT_EXE"
+        echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_EPS}.eps\""      >> "$PdBIUVT_EXE"
+        echo "endif"                                            >> "$PdBIUVT_EXE"
         #if [[ "$PdBIUVT_OVERWRITE" == "YES" ]]; then
         #    echo "hardcopy \"${PdBIUVT_EPS}.eps\" /overwrite"    >> "$PdBIUVT_EXE"
         #    echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_EPS}.eps\""   >> "$PdBIUVT_EXE"

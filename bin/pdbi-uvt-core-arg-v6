@@ -78,6 +78,7 @@ PdBIUVT_MAP_SIZE=()
 PdBIUVT_MAP_CELL=()
 # ----------------------- # other parameters
 PdBIUVT_FOV_SIZE=()
+PdBIUVT_SHOW_HEADER="NO"  # 
 # ----------------------- # fitting parameters
 PdBIUVT_OBJ_NUMB=0        # Number of objects to fit, according to the input RA Dec
 PdBIUVT_OBJ_NAME=()       # 
@@ -285,6 +286,14 @@ while [[ "$#" -gt 0 ]]; do
            "-fovsize") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
           "-fov-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
           "-fov_size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
+       "-show_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
+       "-show-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
+         "-do_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
+         "-do-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
+       "-hide_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
+       "-hide-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
+         "-no_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
+         "-no-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
             
       "-simultaneous") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run
           "-parallel") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run

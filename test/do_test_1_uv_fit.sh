@@ -13,26 +13,28 @@ source ../../SETUP.bash
 
 # go uvfit
 pdbi-uvt-go-uvfit -name split_z35_68_spw0_width128.uvt \
-                    -offset 10 10 -fixpos \
-                    -fixpos \
                     -uvrange 10 200 \
-                    -subtract -residual output_residual \
-                    -out output_uv_fit
+                    -residual output_residual \
+                    -out output_uv_fit \
+                    -fov 30
 
 # go uvmap the input image
-pdbi-uvt-go-uvmap -name split_z35_68_spw0_width128.uvt -uvrange 10 200
+pdbi-uvt-go-uvmap -name split_z35_68_spw0_width128.uvt -uvrange 10 200 -do-header
 
 # go uvmap the residual image
-pdbi-uvt-go-uvmap -name output_residual.uvt -uvrange 10 200
+pdbi-uvt-go-uvmap -name output_residual.uvt -uvrange 10 200 -do-header
 
 # open the images
 if [[ $(uname) == "Darwin" ]]; then
-open split_z35_68_spw0_width128.eps output_residual.eps
+echo "--------------------------------- fitted data table ---------------------------------"
+cat output_uv_fit.result.obj_1.txt
+echo ""
+open output_uv_fit.result.obj_1.image.pdf output_residual.eps
 fi
 
 echo "Done!"
 
 # clean up
-#rm output_* *.lmv* *.eps *.txt *.log *.noi *.beam *.map *.script *.backup *"~" 2>/dev/null
+#bash -c 'rm output_* *.lmv* *.eps *.txt *.log *.noi *.beam *.map *.script *.backup *"~" 2>/dev/null'
 
 

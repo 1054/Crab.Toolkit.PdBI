@@ -20,7 +20,7 @@
 # 
 PdBIUVT_PrintUsage() {
     echo "Usage: "
-    echo "    pdbi-uvt-go-uvfit -name NAME.uvt -out OUTPUT_NAME [-varypos] [-radec RA DEC] [-cgauss] [-subtract -residual residual.uvt]"
+    echo "    pdbi-uvt-go-uvfit -name NAME.uvt -out OUTPUT_NAME [-varypos] [-radec RA DEC] [-cgauss] [-residual residual.uvt]"
     echo ""
     echo "Example:"
     echo "    pdbi-uvt-go-uvfit-v6 -name NAME.uvt -crange 1 10                                        # This will highlight channel range 1 to 10 in the resulting plot and compute the integrated flux"
@@ -218,8 +218,17 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         # <20161022><dzliu> if subtract source model uv table, then run uv_fit still for all CRANGE
         PdBIUVT_TEMP_CHAN="$PdBIUVT_CHAN_MIN $PdBIUVT_CHAN_MAX"
     else
-        PdBIUVT_TEMP_RESI=""
+        # <20180123><dzliu><rosemary># if user provided -residual, then do subtraction. 
+        #PdBIUVT_TEMP_RESI=""
+        if [[ $tk -lt ${#PdBIUVT_RESI[@]}  ]]; then
+            PdBIUVT_TEMP_RESI="${PdBIUVT_RESI[tk]}"
+            PdBIUVT_RSUB="YES"
+        fi
+        if [[ x"$PdBIUVT_TEMP_RESI" != x*".uvt" ]]; then
+            PdBIUVT_TEMP_RESI="$PdBIUVT_TEMP_RESI.uvt"
+        fi
         PdBIUVT_TEMP_CHAN="$PdBIUVT_CHAN_MIN $PdBIUVT_CHAN_MAX"
+        
     fi
     # 
     # loop each object (according to the input radec pairs)
