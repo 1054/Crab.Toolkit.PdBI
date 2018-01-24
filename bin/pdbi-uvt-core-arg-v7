@@ -1,0 +1,803 @@
+#!/bin/bash
+# 
+# Aim:
+#     Process command line arguments for pdbi-uvt-go-*
+# 
+# Usage:
+#    source this script in other scripts to get the variables
+# 
+# Updates:
+#     2017-03-21 Use "return" instead of "exit".
+#     2017-03-29 Add "-add-offset" argument.
+#     2017-03-30 Allow multiple PdBIUVT_NAME
+#     2018-01-24 Allow user option -fixed-flux
+# 
+
+
+
+# 
+# LANG
+# 
+LANG=C
+
+
+
+# 
+# CHECK bc
+# 
+if [[ $(bc <<< 1+2 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo Error! gnu tool bc not found! Exit!
+    return 1
+fi
+
+# 
+# CHECK awk
+# 
+if [[ $(echo "Go" | awk "NR==1" 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo Error! gnu tool awk not found! Exit!
+    return 1
+fi
+
+# 
+# CHECK GILDAS mapping
+# 
+if [[ $(echo "say hello" | mapping 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! GILDAS mapping not found! Exit!"
+    return 1
+fi
+
+# 
+# CHECK radec2degree
+# 
+if [[ $(radec2degree 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! radec2degree not found! It should be included in this software! Please contact dzliu. "
+    return 1
+fi
+
+# 
+# CHECK degree2radec
+# 
+if [[ $(degree2radec 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! degree2radec not found! It should be included in this software! Please contact dzliu. "
+    return 1
+fi
+
+
+
+# 
+# Prepare variables
+# 
+# ----------------------- # files
+PdBIUVT_NAME=()
+PdBIUVT_TYPE=()           # the input file name extension, uvt, uvfits, lmv, etc.
+PdBIUVT_RESI=()           # the output residual uvtable after subtraction
+PdBIUVT_CONT=()           # any continuum uv table
+PdBIUVT_SAVE=()           # the output save files base name
+PdBIUVT_OVERWRITE="NO"    # 
+# ----------------------- # uvmap parameters
+PdBIUVT_MAP_SIZE=()
+PdBIUVT_MAP_CELL=()
+# ----------------------- # other parameters
+PdBIUVT_FOV_SIZE=()
+PdBIUVT_SHOW_HEADER="NO"  # 
+# ----------------------- # fitting parameters
+PdBIUVT_OBJ_NUMB=0        # Number of objects to fit, according to the input RA Dec
+PdBIUVT_OBJ_NAME=()       # 
+PdBIUVT_OBJ_POS=()        # RA Dec in degrees, 2*N dimension, where N is the number of objects to fit. 
+PdBIUVT_OBJ_FLUX=()       # Flux density, usually Jy/beam
+PdBIUVT_OBJ_SIZE=()       # Major and minor axis FWHM size in arcsec, 2*N dimension, where N is the number of objects to fit. 
+PdBIUVT_OBJ_ANGLE=()      # Position angle in degree
+PdBIUVT_OBJ_VARY_POS=()   # 1 to vary, 0 to be fixed. 
+PdBIUVT_OBJ_VARY_SIZE=()  # 1 to vary, 0 to be fixed. 
+PdBIUVT_OBJ_VARY_FLUX=()  # 1 to vary, 0 to be fixed. 
+PdBIUVT_OBJ_VARY_ANGLE=() # 1 to vary, 0 to be fixed. 
+PdBIUVT_OBJ_FUNC=()       # "POINT"
+PdBIUVT_RSUB="NO"         # whether subtract the fit component or not (if we set PdBIUVT_RESI, then PdBIUVT_RSUB="YES")
+# ----------------------- # spectrum info
+PdBIUVT_VMIN=()
+PdBIUVT_VMAX=()
+PdBIUVT_VWID=()           # 
+PdBIUVT_VCEN=()           # 
+PdBIUVT_CMIN=()
+PdBIUVT_CMAX=()
+PdBIUVT_CWID=()           # 
+PdBIUVT_CCEN=()           # 
+PdBIUVT_FMIN=()
+PdBIUVT_FMAX=()
+PdBIUVT_FWID=()           # 
+PdBIUVT_FCEN=()           # obs-frame line frequency
+PdBIUVT_zRED=()           # 
+PdBIUVT_FLAB=()           # laboratory rest-frame line frequency
+PdBIUVT_LINE_NAME=()      # 
+PdBIUVT_LINE_FREQ=()      # obs freq (obsolete)
+PdBIUVT_REST_FREQ=()      # rest freq (obsolete)
+PdBIUVT_CHAN_MIN=0        # 
+PdBIUVT_CHAN_MAX=0        # 
+PdBIUVT_CHAN_CEN=0        # 
+PdBIUVT_FREQ_MIN=0        # 
+PdBIUVT_FREQ_MAX=0        # 
+PdBIUVT_CHAN_REF=""
+PdBIUVT_VELO_BIN=""
+PdBIUVT_FREQ_BIN=""
+PdBIUVT_VELO_REF=""
+PdBIUVT_FREQ_REF=""
+# ------------------------# pointing info
+PdBIUVT_RANX_OBJT=()      # "09:59:38.101"
+PdBIUVT_DECX_OBJT=()      # "02:28:57.108"
+PdBIUVT_RAND_OBJT=()      # "150.000"
+PdBIUVT_DECD_OBJT=()      # "30.0000"
+PdBIUVT_RANX_CENT=""      # "09:59:38.101"
+PdBIUVT_DECX_CENT=""      # "02:28:57.108"
+PdBIUVT_RAND_CENT=""      # "150.000"
+PdBIUVT_DECD_CENT=""      # "30.0000"
+PdBIUVT_ADD_OFF_X=()      # the offset added to the input radec or offset
+PdBIUVT_ADD_OFF_Y=()      # the offset added to the input radec or offset
+# ------------------------# uv taper
+PdBIUVT_UVRANGE_MIN="0"
+PdBIUVT_UVRANGE_MAX="36000"
+# ------------------------# uv merge
+PdBIUVT_UVMERGE_WEIGHT=()
+PdBIUVT_UVMERGE_FACTOR=()
+PdBIUVT_UVMERGE_KEEP_FILE=0
+PdBIUVT_UVMERGE_CONT_MODE=0
+# ------------------------# uv compress
+PdBIUVT_UVCOMPRESS_NC=()  # channel number to compress
+# ------------------------# uv compress
+PdBIUVT_UVRESAMPLE_VW=()  # velocity width to resample
+# ----------------------- # uvt line search
+PdBIUVT_LINE_SEARCH_WIDTH=()
+PdBIUVT_LINE_SEARCH_STEP=()
+PdBIUVT_LINE_SEARCH_SIGMA=()
+PdBIUVT_LINE_SEARCH_BLEND=()
+# ------------------------# program control
+PdBIUVT_PARALLELS=0
+
+
+
+# 
+# Read command line arguments
+# 
+PdBIUVT_GOOD=1
+PdBIUVT_TSTR=""
+PdBIUVT_RPAR="none"
+while [[ "$#" -gt 0 ]]; do
+    
+    PdBIUVT_TSTR=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+    
+    case "$PdBIUVT_TSTR" in
+      
+              "-name") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="name";;
+             "-input") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="name";;
+               "-uvt") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="name";;
+
+              "-type") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="type";;
+
+               "-res") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="residual";;
+          "-residual") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="residual";;
+          
+              "-cont") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="continuum";;
+         "-continuum") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="continuum";;
+
+               "-out") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="save";;
+            "-output") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="save";;
+              "-save") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="save";;
+
+         "-overwrite") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OVERWRITE="YES";; # argument with no value, no shift;
+
+           "-mapsize") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
+          "-map_size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
+          "-map-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
+           "-mapcell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_cell";;
+          "-map_cell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_cell";;
+          "-map-cell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_cell";;
+
+          "-pointing") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="pointing";;
+      "-phase-center") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="pointing";;
+
+           "-uvrange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvrange";; # meter
+
+            "-crange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="crange";; # channel range pairs
+            "-vrange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="vrange";; # km/s
+            "-frange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="frange";; # GHz
+          "-redshift") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="redshift";;
+
+             "-radec") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="radec";;  # object coordinate pairs
+
+            "-offset") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="offset";;  # object offset pairs
+               "-off") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="offset";;
+            
+           "-add-off") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="additional-offset";; # object additional offset pairs
+        "-add-offset") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="additional-offset";; # object additional offset pairs
+
+             "-point") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("POINT");;
+             "-gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("E_GAUSS");;
+            "-egauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("E_GAUSS");;
+            "-cgauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("C_GAUSS");;
+           "-e_gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("E_GAUSS");;
+           "-c_gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("C_GAUSS");;
+
+               "-obj") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
+           "-objname") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
+          "-obj-name") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
+            "-object") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
+            "-source") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
+            "-target") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
+
+              "-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_SIZE";;
+          "-obj-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_SIZE";;
+
+              "-flux") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_FLUX";;
+          "-obj-flux") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_FLUX";;
+
+             "-angle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
+          "-posangle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
+         "-obj-angle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
+      "-obj-posangle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
+  
+              "-vary") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(1);; # does not accept input value
+           "-varypos") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(1);;
+      "-varyposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(1);;
+
+               "-fix") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);; # does not accept input value
+            "-fixpos") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);;
+       "-fixposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);;
+
+          "-varyflux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(1);; # does not accept input value
+         "-vary-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(1);;
+        "-variedflux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(1);; # does not accept input value
+       "-varied-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(1);;
+
+           "-fixflux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(0);; # does not accept input value
+          "-fix-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(0);;
+         "-fixedflux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(0);; # does not accept input value
+        "-fixed-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(0);;
+
+          "-varysize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);;
+       "-varyobjsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);;
+    "-varysourcesize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);;
+
+           "-fixsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(0);;
+        "-fixobjsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(0);;
+     "-fixsourcesize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(0);;
+
+         "-varyangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(1);;
+      "-varyposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(1);;
+   "-varyobjposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(1);;
+"-varysourceposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(1);;
+
+          "-fixangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(0);;
+       "-fixposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(0);;
+    "-fixobjposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(0);;
+ "-fixsourceposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(0);;
+
+          "-subtract") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_RSUB="YES";;
+
+         "-linewidth") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linewidth";; # km/s
+          "-linefreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="lineobsfreq";; # GHz
+       "-lineobsfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="lineobsfreq";; # GHz
+          "-restfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linerestfreq";;
+      "-linerestfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linerestfreq";;
+          "-linename") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linename";;
+        
+    "-continuum-mode") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_CONT_MODE=1;; # argument with no value, no shift;
+         "-cont-mode") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_CONT_MODE=1;; # argument with no value, no shift;
+         "-keep-file") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
+        "-keep-files") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
+          "-keepfile") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
+         "-keepfiles") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
+        "-clean-file") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
+       "-clean-files") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
+         "-cleanfile") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
+        "-cleanfiles") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
+            "-weight") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_weight";;
+         "-weighting") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_weight";;
+            "-factor") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_factor";;
+           "-scaling") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_factor";;
+  
+             "-width") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvcompress_nc";;
+              "-step") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="step";;
+             "-sigma") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="sigma";;
+             "-blend") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="blend";;
+               "-fov") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
+           "-fovsize") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
+          "-fov-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
+          "-fov_size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
+       "-show_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
+       "-show-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
+         "-do_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
+         "-do-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
+       "-hide_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
+       "-hide-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
+         "-no_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
+         "-no-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
+            
+      "-simultaneous") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run
+          "-parallel") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run
+
+    esac
+    
+    
+    
+    if [[ "$PdBIUVT_RPAR" == "name" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        PdBIUVT_NAME+=("$1")
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "type" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        PdBIUVT_TYPE+=("$1")
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "residual" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        PdBIUVT_RESI+=("$1")
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "continuum" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        PdBIUVT_CONT+=("$1")
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "save" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        PdBIUVT_SAVE+=("$1")
+    fi
+    
+    
+    
+    if [[ "$PdBIUVT_RPAR" == "fov_size" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        if echo "$1" | grep -q -v -e "^[0-9 .+-]*$"; then
+            echo ""; echo "Error! Input -fov_size has a wrong format! Please input only number value."; echo ""
+            return 2
+        fi
+        PdBIUVT_FOV_SIZE+=("$1")
+    fi
+    
+    
+    
+    if [[ "$PdBIUVT_RPAR" == "map_size" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        if echo "$1" | grep -q -v -e "^[0-9 .+-]*$"; then
+            echo ""; echo "Error! Input -map_size has a wrong format! Please input only number value."; echo ""
+            return 2
+        fi
+        PdBIUVT_MAP_SIZE+=("$1")
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "map_cell" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        if echo "$1" | grep -q -v -e "^[0-9 .+-]*$"; then
+            echo ""; echo "Error! Input -map_cell has a wrong format! Please input only number value."; echo ""
+            return 2
+        fi
+        PdBIUVT_MAP_CELL+=("$1")
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "pointing" ]];  then 
+        if [[ "$#" -lt 2 ]]; then
+            break
+        fi
+        if [[ "$1" == *":"*":"* ]]; then
+            PdBIUVT_RANX_CENT="$1"
+            PdBIUVT_RAND_CENT=$(radec2degree "$1" "$2" | cut -d ' ' -f 1)
+        else
+            PdBIUVT_RAND_CENT="$1"
+            PdBIUVT_RANX_CENT=$(degree2radec "$1" "$2" | cut -d ' ' -f 1)
+        fi
+        if [[ "$2" == *":"*":"* ]]; then
+            PdBIUVT_DECX_CENT="$2"
+            PdBIUVT_DECD_CENT=$(radec2degree "$1" "$2" | cut -d ' ' -f 2)
+        else
+            PdBIUVT_DECD_CENT="$2"
+            PdBIUVT_DECX_CENT=$(degree2radec "$1" "$2" | cut -d ' ' -f 2)
+        fi
+        shift # shift because we read a pair of values
+        PdBIUVT_RPAR="none" # set to none because for telescope pointing we only read one pair of values
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "crange" ]];  then 
+        if [[ "$#" -lt 2 ]]; then
+            break
+        fi
+        PdBIUVT_CMIN+=("$1")
+        PdBIUVT_CMAX+=("$2")
+        shift # shift because we read a pair of values
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "vrange" ]];  then 
+        if [[ "$#" -lt 2 ]]; then
+            break
+        fi
+        PdBIUVT_VMIN+=("$1")
+        PdBIUVT_VMAX+=("$2")
+        shift # shift because we read a pair of values
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "frange" ]];  then 
+        if [[ "$#" -lt 2 ]]; then
+            break
+        fi
+        if echo "$1" | grep -Eq '^[-+]?[0-9]+\.?[0-9]*$'; then
+            PdBIUVT_FMIN+=("$1")
+        else
+            echo "Error! Input frequency range value \"$1\" is not a float number! Exit!"
+            return 2
+        fi
+        if echo "$2" | grep -Eq '^[-+]?[0-9]+\.?[0-9]*$'; then
+            PdBIUVT_FMAX+=("$2")
+        else
+            echo "Error! Input frequency range value \"$2\" is not a float number! Exit!"
+            return 2
+        fi
+        shift # shift because we read a pair of values
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "uvrange" ]];  then 
+        if [[ "$#" -lt 2 ]]; then
+            break
+        fi
+        if echo "$1" | grep -Eq '^[-+]?[0-9]+\.?[0-9]*$'; then
+            PdBIUVT_UVRANGE_MIN="$1"
+        else
+            echo "Error! Input UV range value \"$1\" is not a float number! Exit!"
+            return 2
+        fi
+        if echo "$2" | grep -Eq '^[-+]?[0-9]+\.?[0-9]*$'; then
+            PdBIUVT_UVRANGE_MAX="$2"
+        else
+            echo "Error! Input UV range value \"$2\" is not a float number! Exit!"
+            return 2
+        fi
+        shift # shift because we read a pair of values
+        PdBIUVT_RPAR="none" # set to none because for telescope pointing we only read one pair of values
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "redshift" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        if echo "$1" | grep -q -v -E "^[0-9.+-]*$"; then
+            echo ""; echo "Error! Input -redshift has a wrong format! Please input only number value of the source redshift."; echo ""
+            return 2
+        fi
+        PdBIUVT_zRED+=("$1")
+    fi
+    
+    # 
+    # object-oriented below
+    # 
+    # -- radec
+    if [[ "$PdBIUVT_RPAR" == "radec" ]];  then 
+        if [[ "$#" -lt 2 ]]; then
+            break
+        fi
+        # filling in default values for previous objects
+        while [[ ${#PdBIUVT_OBJ_NAME[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_NAME+=("obj_$((${#PdBIUVT_OBJ_NAME[@]}+1))")
+        done
+        while [[ ${#PdBIUVT_OBJ_FUNC[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_FUNC+=("POINT")
+        done
+        while [[ ${#PdBIUVT_OBJ_FLUX[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_FLUX+=("1.0")
+        done
+        while [[ ${#PdBIUVT_OBJ_SIZE[@]} -lt $((2*$PdBIUVT_OBJ_NUMB)) ]]; do 
+            PdBIUVT_OBJ_SIZE+=("0.0")
+        done
+        while [[ ${#PdBIUVT_OBJ_ANGLE[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_ANGLE+=("0.0")
+        done
+        while [[ ${#PdBIUVT_OBJ_VARY_POS[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_VARY_POS+=(0)
+        done
+        while [[ ${#PdBIUVT_OBJ_VARY_FLUX[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_VARY_FLUX+=(1) # in default we vary flux
+        done
+        while [[ ${#PdBIUVT_OBJ_VARY_SIZE[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_VARY_SIZE+=(1) # in default we vary size
+        done
+        while [[ ${#PdBIUVT_OBJ_VARY_ANGLE[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_VARY_ANGLE+=(1) # in default we vary angle
+        done
+        
+        if [[ "$1" == *":"*":"* ]]; then
+            PdBIUVT_TEMP=$(radec2degree "$1" "$2" | cut -d ' ' -f 1)
+            PdBIUVT_RANX_OBJT+=("$1")
+            PdBIUVT_RAND_OBJT+=("$PdBIUVT_TEMP")
+        else
+            PdBIUVT_TEMP=$(degree2radec "$1" "$2" | cut -d ' ' -f 1)
+            PdBIUVT_RAND_OBJT+=("$1")
+            PdBIUVT_RANX_OBJT+=("$PdBIUVT_TEMP")
+        fi
+        if [[ "$2" == *":"*":"* ]]; then
+            PdBIUVT_TEMP=$(radec2degree "$1" "$2" | cut -d ' ' -f 2)
+            PdBIUVT_DECX_OBJT+=("$2")
+            PdBIUVT_DECD_OBJT+=("$PdBIUVT_TEMP")
+        else
+            PdBIUVT_TEMP=$(degree2radec "$1" "$2" | cut -d ' ' -f 2)
+            PdBIUVT_DECD_OBJT+=("$2")
+            PdBIUVT_DECX_OBJT+=("$PdBIUVT_TEMP")
+        fi
+        shift # shift because we read a pair of values, another shift will be done at the end of current loop
+        
+        PdBIUVT_OBJ_POS+=("" "")
+        PdBIUVT_OBJ_NUMB=$(bc <<< "$PdBIUVT_OBJ_NUMB+1")
+    fi
+    # -- obj offset
+    if [[ "$PdBIUVT_RPAR" == "offset" ]];  then 
+        if [[ "$#" -lt 2 ]]; then
+            break
+        fi
+        # filling in default values for previous objects
+        while [[ ${#PdBIUVT_OBJ_NAME[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_NAME+=("obj_$((${#PdBIUVT_OBJ_NAME[@]}+1))")
+        done
+        while [[ ${#PdBIUVT_OBJ_FUNC[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_FUNC+=("POINT")
+        done
+        while [[ ${#PdBIUVT_OBJ_FLUX[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_FLUX+=("1.0")
+        done
+        while [[ ${#PdBIUVT_OBJ_SIZE[@]} -lt $((2*$PdBIUVT_OBJ_NUMB)) ]]; do 
+            PdBIUVT_OBJ_SIZE+=("0.0")
+        done
+        while [[ ${#PdBIUVT_OBJ_ANGLE[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_ANGLE+=("0.0")
+        done
+        while [[ ${#PdBIUVT_OBJ_VARY_POS[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_VARY_POS+=(0)
+        done
+        while [[ ${#PdBIUVT_OBJ_VARY_FLUX[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_VARY_FLUX+=(1) # in default we vary size
+        done
+        while [[ ${#PdBIUVT_OBJ_VARY_SIZE[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_VARY_SIZE+=(1) # in default we vary size
+        done
+        while [[ ${#PdBIUVT_OBJ_VARY_ANGLE[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_VARY_ANGLE+=(1) # in default we vary angle
+        done
+        
+        PdBIUVT_OBJ_POS+=("$1" "$2")
+        shift # shift because we read a pair of values, another shift will be done at the end of current loop
+        
+        PdBIUVT_RANX_OBJT+=("")
+        PdBIUVT_DECX_OBJT+=("")
+        PdBIUVT_RAND_OBJT+=("")
+        PdBIUVT_DECD_OBJT+=("")
+        PdBIUVT_OBJ_NUMB=$(bc <<< "$PdBIUVT_OBJ_NUMB+1")
+    fi
+    # -- obj additional-offset
+    if [[ "$PdBIUVT_RPAR" == "additional-offset" ]];  then 
+        if [[ "$#" -lt 2 ]]; then
+            break
+        fi
+        # add additional offset to the last PdBIUVT_OBJ_POS or PdBIUVT_RAND_OBJT,PdBIUVT_DECD_OBJT
+        if [[ ! -z "${PdBIUVT_OBJ_POS[2*(PdBIUVT_OBJ_NUMB-1)+0]}" && ! -z "${PdBIUVT_OBJ_POS[2*(PdBIUVT_OBJ_NUMB-1)+1]}" ]]; then
+            #<DEBUG>#echo "****"
+            #<DEBUG>#echo ${PdBIUVT_OBJ_POS[2*(PdBIUVT_OBJ_NUMB-1)+0]}"+($1)"
+            PdBIUVT_OBJ_POS[2*(PdBIUVT_OBJ_NUMB-1)+0]=$(awk "BEGIN {print (${PdBIUVT_OBJ_POS[2*(PdBIUVT_OBJ_NUMB-1)+0]})+($1);}")
+            PdBIUVT_OBJ_POS[2*(PdBIUVT_OBJ_NUMB-1)+1]=$(awk "BEGIN {print (${PdBIUVT_OBJ_POS[2*(PdBIUVT_OBJ_NUMB-1)+1]})+($2);}")
+            #<DEBUG>#echo ${PdBIUVT_OBJ_POS[2*(PdBIUVT_OBJ_NUMB-1)+0]}
+            #<DEBUG>#echo "****"
+        elif [[ ! -z "${PdBIUVT_RAND_OBJT[PdBIUVT_OBJ_NUMB-1]}" && ! -z "${PdBIUVT_DECD_OBJT[PdBIUVT_OBJ_NUMB-1]}" ]]; then
+            PdBIUVT_RAND_OBJT[PdBIUVT_OBJ_NUMB-1]=$(awk "BEGIN {pi=atan2(0,-1); printf \"%0.10f\n\", (${PdBIUVT_RAND_OBJT[PdBIUVT_OBJ_NUMB-1]})+(($1)/3600.0)/cos(${PdBIUVT_DECD_OBJT[PdBIUVT_OBJ_NUMB-1]}/180*pi);}")
+            PdBIUVT_DECD_OBJT[PdBIUVT_OBJ_NUMB-1]=$(awk "BEGIN {pi=atan2(0,-1); printf \"%0.10f\n\", (${PdBIUVT_DECD_OBJT[PdBIUVT_OBJ_NUMB-1]})+(($2)/3600.0);}")
+            PdBIUVT_TEMP=($(degree2radec "${PdBIUVT_RAND_OBJT[PdBIUVT_OBJ_NUMB-1]}" "${PdBIUVT_DECD_OBJT[PdBIUVT_OBJ_NUMB-1]}" | cut -d ' ' -f 1,2))
+            #<DEBUG>#echo "****"
+            #<DEBUG>#echo ${PdBIUVT_TEMP[@]}
+            #<DEBUG>#echo "****"
+            PdBIUVT_RANX_OBJT[PdBIUVT_OBJ_NUMB-1]=${PdBIUVT_TEMP[0]}
+            PdBIUVT_DECX_OBJT[PdBIUVT_OBJ_NUMB-1]=${PdBIUVT_TEMP[1]}
+        fi
+        shift
+    fi
+    # -- obj name
+    if [[ "$PdBIUVT_RPAR" == "OBJ_NAME" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_OBJ_NAME+=("$1")
+    fi
+    # -- obj size
+    if [[ "$PdBIUVT_RPAR" == "OBJ_FLUX" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        if echo "$1" | grep -q -v -E '^[0-9 ".+-Ee]*$'; then
+            echo ""; echo "Error! Input -objflux $1 has a wrong format! Please input only number value of the object flux."; echo ""
+            return 2
+        fi
+        PdBIUVT_OBJ_FLUX+=($(echo "$1"))
+    fi
+    # -- obj size
+    if [[ "$PdBIUVT_RPAR" == "OBJ_SIZE" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        if echo "$1" | grep -q -v -E '^[0-9 ".+-Ee]*$'; then # objsize allows input a pair of number, for major and minor axis size. 
+            echo ""; echo "Error! Input -objsize $1 has a wrong format! Please input only number value of the object size."; echo ""
+            return 2
+        fi
+        PdBIUVT_OBJ_SIZE+=($(echo "$1"))
+        PdBIUVT_SIZE+=($(echo "$1")) # for compatible purpose, or for go uvmap
+    fi
+    # -- obj angle
+    if [[ "$PdBIUVT_RPAR" == "OBJ_ANGLE" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        if echo "$1" | grep -q -v -E "^[0-9.+-Ee]*$"; then
+            echo ""; echo "Error! Input -objposangle has a wrong format! Please input only number value of the object pos angle."; echo ""
+            return 2
+        fi
+        PdBIUVT_OBJ_ANGLE+=("$1")
+    fi
+    
+    
+    if [[ "$PdBIUVT_RPAR" == "linewidth" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        if echo "$1" | grep -q -v -E "^[0-9.+-Ee]*$"; then
+            echo ""; echo "Error! Input -linewidth has a wrong format! Please input only number value of the expected observing line width in unit of km/s."; echo ""
+            return 2
+        fi
+        PdBIUVT_VWID+=("$1")
+    fi
+    if [[ "$PdBIUVT_RPAR" == "lineobsfreq" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        if echo "$1" | grep -q -v -E "^[0-9.+-Ee]*$"; then
+            echo ""; echo "Error! Input -lineobsfreq has a wrong format! Please input only number value of the expected line observing frequency in unit of GHz."; echo ""
+            return 2
+        fi
+        PdBIUVT_FCEN+=("$1")
+    fi
+    if [[ "$PdBIUVT_RPAR" == "linerestfreq" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        if echo "$1" | grep -q -v -E "^[0-9.+-Ee]*$"; then
+            echo ""; echo "Error! Input -linerestfreq has a wrong format! Please input only number value of the expected line observing frequency in unit of GHz."; echo ""
+            return 2
+        fi
+        PdBIUVT_FLAB+=("$1")
+    fi
+    if [[ "$PdBIUVT_RPAR" == "linename" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_LINE_NAME+=("$1")
+    fi
+    
+    
+    # -- uvmerge
+    if [[ "$PdBIUVT_RPAR" == "uvmerge_weight" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_UVMERGE_WEIGHT+=("$1")
+    fi
+    if [[ "$PdBIUVT_RPAR" == "uvmerge_factor" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_UVMERGE_FACTOR+=("$1")
+    fi
+    
+    
+    # -- uvcompress/uvresample/uvtlinesearch
+    if [[ "$PdBIUVT_RPAR" == "uvcompress_nc" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_UVCOMPRESS_NC+=("$1")
+        PdBIUVT_UVRESAMPLE_VW+=("$1")
+        PdBIUVT_LINE_SEARCH_WIDTH+=("$1")
+    fi
+    
+    # -- uvtlinesearch
+    if [[ "$PdBIUVT_RPAR" == "step" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_LINE_SEARCH_STEP+=("$1")
+    fi
+    
+    # -- uvtlinesearch
+    if [[ "$PdBIUVT_RPAR" == "sigma" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_LINE_SEARCH_SIGMA+=("$1")
+    fi
+    
+    # -- uvtlinesearch
+    if [[ "$PdBIUVT_RPAR" == "blend" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_LINE_SEARCH_BLEND+=("$1")
+    fi
+    
+    
+    shift
+    
+done
+
+
+
+# 
+# Done input arguments
+# 
+
+
+
+# 
+# Check input uv table name
+# 
+if [[ "${#PdBIUVT_NAME[@]}" == x ]]; then
+    echo ""; echo "Error! UV table name was not given! Exit!"; echo ""
+    PdBIUVT_GOOD=0
+    return 3
+fi
+# 
+# Remove the suffix of the input uvtable name, and test whether the file exists
+# 
+for (( PdBIUVT_ITER = 0; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ )); do
+    if [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".uvt" ]]; then
+        PdBIUVT_TYPE[PdBIUVT_ITER]="uvt"
+        PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]uvt$//g')
+    elif [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".UVT" ]]; then
+        PdBIUVT_TYPE[PdBIUVT_ITER]="UVT"
+        PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]UVT$//g')
+    elif [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".fits" ]]; then
+        PdBIUVT_TYPE[PdBIUVT_ITER]="fits"
+        PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]fits$//g')
+    elif [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".FITS" ]]; then
+        PdBIUVT_TYPE[PdBIUVT_ITER]="FITS"
+        PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]FITS$//g')
+    elif [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".uvfits" ]]; then
+        PdBIUVT_TYPE[PdBIUVT_ITER]="uvfits"
+        PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]uvfits$//g')
+    elif [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".UVFITS" ]]; then
+        PdBIUVT_TYPE[PdBIUVT_ITER]="UVFITS"
+        PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]UVFITS$//g')
+    elif [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".30m" ]]; then
+        PdBIUVT_TYPE[PdBIUVT_ITER]="30m"
+        PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]30m$//g')
+    elif [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".jcmt" ]]; then
+        PdBIUVT_TYPE[PdBIUVT_ITER]="jcmt"
+        PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]jcmt$//g')
+    else
+        PdBIUVT_TYPE[PdBIUVT_ITER]="uvt"
+    fi
+    # check whether the file exists
+    if [[ ! -f "${PdBIUVT_NAME[PdBIUVT_ITER]}.${PdBIUVT_TYPE[PdBIUVT_ITER]}" ]]; then
+        echo ""; echo "Error! \"${PdBIUVT_NAME[PdBIUVT_ITER]}.${PdBIUVT_TYPE[PdBIUVT_ITER]}\" was not found! Exit!"; echo ""
+        PdBIUVT_GOOD=0
+        exit 3
+    fi
+done
+
+
+
+# 
+# Check input parameters -- if not passed then print usage and exit
+# 
+if [[ $PdBIUVT_GOOD -eq 0 ]]; then
+    echo ""; echo "Error! Input arguments are incorrect! Please have a check and try again! Exit!"; echo ""
+    return 3
+fi
+
+
+
+# 
+# Call pdbi-uvt-core-rad
+# 
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v7" ]]; then
+    # source bash argument "$*" must be quoted to keep white space values. 
+    # source bash argument "$@" is the correct one when passing multiple times.
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v7" "$@"
+else
+    echo ""
+    echo "Error! Could not find \"$(dirname "${BASH_SOURCE[0]}")/pdbi-uvt-core-rad-v7\"!"
+    echo ""
+    return 1
+fi
+
+
+return
+
+
+
