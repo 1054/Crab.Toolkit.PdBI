@@ -212,7 +212,7 @@ if [[ x"${PdBIUVT_RAD_TYPE}" == x"uvt" || x"${PdBIUVT_RAD_TYPE}" == x"UVT" ]]; t
             PdBIUVT_OBJ_VARY_SIZE+=(1) # in default we vary size
         done
         while [[ ${#PdBIUVT_OBJ_VARY_FLUX[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
-            PdBIUVT_OBJ_VARY_FLUX+=(1) # in default we vary size
+            PdBIUVT_OBJ_VARY_FLUX+=(1) # in default we vary flux
         done
         while [[ ${#PdBIUVT_OBJ_VARY_ANGLE[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
             PdBIUVT_OBJ_VARY_ANGLE+=(1) # in default we vary angle
