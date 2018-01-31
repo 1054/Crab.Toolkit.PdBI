@@ -1,4 +1,0 @@
-let SIC%TEE .TRUE.
-let name split_z35_68_spw0_width128
-run uv_fit output_uv_fit.uv_fit.init /NOWINDOW
-
