@@ -66,6 +66,13 @@ if [[ $* == *"-center "* ]]; then
 fi
 # 
 echo "go uvmap" >> "pdbi_uvt_go_plot_uvfit_result_image.map" #<Added><20170816># 
+# 
+echo "!define header UVT_HEADER 'name'.uvt read" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "define real PHASE_CENTER_RA"
+echo "define real PHASE_CENTER_DEC"
+echo "let PHASE_CENTER_RA = SETUP%INT%A0%RAD"
+echo "let PHASE_CENTER_DEC = SETUP%INT%D0%RAD"
+# 
 echo "fits 'name'.lmv-dirty.fits from 'name'.lmv /overwrite" >> "pdbi_uvt_go_plot_uvfit_result_image.map" #<Added><20170909># 
 echo "let type lmv" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "read uv 'name'.uvt" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
@@ -117,8 +124,6 @@ echo "let do_header no" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 fi
 # 
 echo "go nice" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-# 
-echo "define header UVT_HEADER 'name'.uvt read" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "define real OBJ_RA_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "define real OBJ_DEC_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "define real OBJ_BOX_SIZE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
@@ -153,11 +158,13 @@ if [[ $* == *"-radec "* ]]; then
         echo "ra_radian = $ra_radian"
         echo "dec_radian = $dec_radian"
         echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "LET OBJ_DEC_OFF = '($dec_radian - UVT_HEADER%D0)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "LET OBJ_RA_OFF = '($ra_radian - UVT_HEADER%A0) * COS(UVT_HEADER%D0)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        #echo "LET OBJ_DEC_OFF = '($dec_radian - UVT_HEADER%D0)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        #echo "LET OBJ_RA_OFF = '($ra_radian - UVT_HEADER%A0) * COS(UVT_HEADER%D0)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_DEC_OFF = '($dec_radian - PHASE_CENTER_DEC)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_RA_OFF = '($ra_radian - PHASE_CENTER_RA) * COS(PHASE_CENTER_DEC)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "LET OBJ_BOX_SIZE = '2.0 / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "EXAM UVT_HEADER%A0" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "EXAM UVT_HEADER%D0" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "EXAM PHASE_CENTER_RA" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "EXAM PHASE_CENTER_DEC" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_RA_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_DEC_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_BOX_SIZE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
