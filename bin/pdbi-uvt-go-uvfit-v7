@@ -223,6 +223,10 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         ## fi
         # <20161022><dzliu> if subtract source model uv table, then run uv_fit still for all CRANGE
         PdBIUVT_TEMP_CHAN="$PdBIUVT_CHAN_MIN $PdBIUVT_CHAN_MAX"
+        # <20180208><dzliu> can also apply to selected channels
+        if [[ $tk -lt ${#PdBIUVT_CMIN[@]} ]] && [[ $tk -lt ${#PdBIUVT_CMAX[@]} ]]; then
+            PdBIUVT_TEMP_CHAN="${PdBIUVT_CMIN[tk]} ${PdBIUVT_CMAX[tk]}"
+        fi
     else
         # <20180123><dzliu><rosemary># if user provided -residual, then do subtraction. 
         #PdBIUVT_TEMP_RESI=""
@@ -234,6 +238,10 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             PdBIUVT_TEMP_RESI="$PdBIUVT_TEMP_RESI.uvt"
         fi
         PdBIUVT_TEMP_CHAN="$PdBIUVT_CHAN_MIN $PdBIUVT_CHAN_MAX"
+        # <20180208><dzliu> can also apply to selected channels
+        if [[ $tk -lt ${#PdBIUVT_CMIN[@]} ]] && [[ $tk -lt ${#PdBIUVT_CMAX[@]} ]]; then
+            PdBIUVT_TEMP_CHAN="${PdBIUVT_CMIN[tk]} ${PdBIUVT_CMAX[tk]}"
+        fi
         
     fi
     # 
