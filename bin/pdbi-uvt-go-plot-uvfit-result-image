@@ -156,6 +156,8 @@ if [[ $* == *"-radec "* ]]; then
         echo "LET OBJ_DEC_OFF = '($dec_radian - UVT_HEADER%D0)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "LET OBJ_RA_OFF = '($ra_radian - UVT_HEADER%A0) * COS(UVT_HEADER%D0)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "LET OBJ_BOX_SIZE = '2.0 / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "EXAM UVT_HEADER%A0" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "EXAM UVT_HEADER%D0" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_RA_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_DEC_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_BOX_SIZE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
