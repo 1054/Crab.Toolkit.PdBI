@@ -68,10 +68,10 @@ fi
 echo "go uvmap" >> "pdbi_uvt_go_plot_uvfit_result_image.map" #<Added><20170816># 
 # 
 echo "!define header UVT_HEADER 'name'.uvt read" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-echo "define real PHASE_CENTER_RA"
-echo "define real PHASE_CENTER_DEC"
-echo "let PHASE_CENTER_RA = SETUP%INT%A0%RAD"
-echo "let PHASE_CENTER_DEC = SETUP%INT%D0%RAD"
+echo "define real PHASE_CENTER_RA" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "define real PHASE_CENTER_DEC" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "let PHASE_CENTER_RA = SETUP%INT%A0%RAD" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "let PHASE_CENTER_DEC = SETUP%INT%D0%RAD" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 # 
 echo "fits 'name'.lmv-dirty.fits from 'name'.lmv /overwrite" >> "pdbi_uvt_go_plot_uvfit_result_image.map" #<Added><20170909># 
 echo "let type lmv" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
