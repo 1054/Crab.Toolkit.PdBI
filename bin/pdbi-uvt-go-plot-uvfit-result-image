@@ -173,8 +173,6 @@ if [[ $* == *"-radec "* ]]; then
         echo "EXAM OBJ_DEC_RAD" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_RA_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_DEC_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "EXAM OBJ_RA_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "EXAM OBJ_DEC_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_BOX_SIZE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "PENCIL /COLOUR BLACK /WEIGHT 5" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "DRAW RELOCATE 'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
