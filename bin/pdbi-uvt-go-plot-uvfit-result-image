@@ -44,6 +44,27 @@ uv_filename=$(echo $1 | sed -e 's/\.uvt$//g')
 echo "! GILDAS MAPPING SCRIPT" > "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "let name \"$uv_filename\"" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "let map_size 1024" >> "pdbi_uvt_go_plot_uvfit_result_image.map" #<Added><20170909># 
+# 
+# 2018-02-08 
+if [[ $* == *"-center "* ]]; then
+    mcenter=($(echo $* | perl -p -e 's/.* -center +([0-9.+-Ee:]+) +([0-9.+-Ee:]+).*/\1 \2/g'))
+    if [[ ${#mcenter[@]} -eq 2 ]]; then
+        if [[ ${mcenter[0]} == *":"* || ${mcenter[1]} == *":"* ]]; then
+            mcenter_sexagement=(${mcenter[@]})
+        else
+            mcenter_sexagement=($(degree2radec ${mcenter[0]} ${mcenter[1]}))
+        fi
+        if [[ ${#mcenter_sexagement[@]} -eq 2 ]]; then
+            echo "let map_ra ${mcenter_sexagement[0]}" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+            echo "let map_dec ${mcenter_sexagement[1]}" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+            echo "let uv_shift yes" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        else
+            echo "Error! Failed to parse -center ${mcenter[0]} ${mcenter[1]}! Please provide map center RA Dec in sexagesimal!"
+            exit 1
+        fi
+    fi
+fi
+# 
 echo "go uvmap" >> "pdbi_uvt_go_plot_uvfit_result_image.map" #<Added><20170816># 
 echo "fits 'name'.lmv-dirty.fits from 'name'.lmv /overwrite" >> "pdbi_uvt_go_plot_uvfit_result_image.map" #<Added><20170909># 
 echo "let type lmv" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
