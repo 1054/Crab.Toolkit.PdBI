@@ -1,0 +1,13 @@
+pwd
+
+wget -c https://casa.nrao.edu/download/distro/linux/release/el7/casa-release-5.1.2-4.el7.tar.gz
+
+tar -xzf casa-release-5.1.2-4.el7.tar.gz
+
+
+
+
+
+
+
+
