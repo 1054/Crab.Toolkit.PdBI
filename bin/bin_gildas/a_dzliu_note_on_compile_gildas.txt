@@ -1,0 +1,26 @@
+wget -c www.iram.fr/~gildas/dist/daily/gildas-src-06feb18.tar.gz
+wget -c www.iram.fr/~gildas/dist/daily/gildas-doc-06feb18.tar.gz
+
+tar -xzf gildas-src-06feb18.tar.gz
+
+cd gildas-src-06feb18
+
+bash
+
+sudo port uninstall gdk-pixbuf
+sudo port clean gdk-pixbuf
+sudo port install gdk-pixbuf2 @2.36.4
+sudo port provides /opt/local/lib/libgdk_pixbuf-2.0.0.dylib
+sudo port install cfitsio +gcc5
+
+source admin/gildas-env.sh -c gfortran-mp-4.8
+
+make
+
+make install
+
+
+
+
+
+
