@@ -97,7 +97,7 @@ for (( i=0; i<${#Input_files[@]}; i++ )); do
     echo "" >> "$PdBIUVT_SAVE.result.map"
     echo "let name $PdBIUVT_SAVE" >> "$PdBIUVT_SAVE.result.map"
     echo "define image f 'name'.uvfit read /global" >> "$PdBIUVT_SAVE.result.map" # see -- /Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_plotfit.map
-    echo "!define header UVT_HEADER 'name'.uvfit read" >> "$PdBIUVT_SAVE.result.map" # see -- pdbi-uvt-go-plot-uvfit-result-image
+    echo "define header UVT_HEADER 'name'.uvfit read" >> "$PdBIUVT_SAVE.result.map" # see -- pdbi-uvt-go-plot-uvfit-result-image
     echo "" >> "$PdBIUVT_SAVE.result.map"
     echo "IF (.NOT.EXIST(ilength)) define integer ilength" >> "$PdBIUVT_SAVE.result.map"
     echo "IF (.NOT.EXIST(nlength)) define integer nlength" >> "$PdBIUVT_SAVE.result.map"
