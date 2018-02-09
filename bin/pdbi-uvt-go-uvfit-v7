@@ -11,6 +11,8 @@
 #    2016-07-01 support simultaneous running now
 #    2017-03-17 now object-oriented
 #    2017-03-27 v6 now deleting an intermediate ".uvt" file. 
+#    2018-02-00 -residual issue
+#    2018-02-08 pdbi-uvt-go-uvfit-print-results-v6 --> pdbi-uvt-go-uvfit-print-results-v7 (more columns, velwidth, ra_hms, dec_dms)
 # 
 
 
@@ -442,8 +444,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # 
     # Run pdbi-uvt-go-uvfit-print-results
     # 
-    echo "pdbi-uvt-go-uvfit-print-results-v6 \"${PdBIUVT_SAVE[tk]}.uvfit\""
-    pdbi-uvt-go-uvfit-print-results-v6 "${PdBIUVT_SAVE[tk]}.uvfit"
+    echo "pdbi-uvt-go-uvfit-print-results-v7 \"${PdBIUVT_SAVE[tk]}.uvfit\""
+    pdbi-uvt-go-uvfit-print-results-v7 "${PdBIUVT_SAVE[tk]}.uvfit"
     # 
     # loop each object (according to the input radec pairs)
     # 
@@ -452,7 +454,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         #echo "${PdBIUVT_OBJ_NAME[i]}"
         echo "Checking \"${PdBIUVT_SAVE[tk]}.result.obj_$((i+1)).txt\""
         if [[ ! -f "${PdBIUVT_SAVE[tk]}.result.obj_$((i+1)).txt" ]]; then
-            echo "Error! Failed to run \"pdbi-uvt-go-uvfit-print-results-v6\" \"${PdBIUVT_SAVE[tk]}.uvfit\"!"
+            echo "Error! Failed to run \"pdbi-uvt-go-uvfit-print-results-v7\" \"${PdBIUVT_SAVE[tk]}.uvfit\"!"
             exit 1
         else
             if [[ "${PdBIUVT_OBJ_NAME[i]}" != "obj_$((i+1))" ]]; then
