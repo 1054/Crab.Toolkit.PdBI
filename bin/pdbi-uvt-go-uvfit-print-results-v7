@@ -195,8 +195,8 @@ for (( i=0; i<${#Input_files[@]}; i++ )); do
     echo "    let rf_dec f%dec/pi*180+rf_y/3600" >> "$PdBIUVT_SAVE.result.map"
     echo "    endif" >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_velo f[ichan,4]" >> "$PdBIUVT_SAVE.result.map"
-    echo "    @ l-sec2sex.map rf_ra_hms 'rf_ra/180.0*pi''" >> "$PdBIUVT_SAVE.result.map" # see -- '/Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_setup.map'
-    echo "    @ l-sec2sex.map rf_dec_dms 'rf_dec/180.0*pi''" >> "$PdBIUVT_SAVE.result.map" # see -- '/Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_setup.map'
+    echo "    @ l-rad2ra.map rf_ra_hms 'rf_ra/180.0*pi''" >> "$PdBIUVT_SAVE.result.map" # see -- '/Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_setup.map'
+    echo "    @ l-rad2dec.map rf_dec_dms 'rf_dec/180.0*pi''" >> "$PdBIUVT_SAVE.result.map" # see -- '/Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_setup.map'
     echo "    let rf_width 'abs(UVT_HEADER%VELRES)'" >> "$PdBIUVT_SAVE.result.map"
     echo "    say rf_x rf_x_err rf_y rf_y_err rf_freq rf_flux rf_flux_err rf_major rf_major_err rf_minor rf_minor_err rf_PA rf_PA_err rf_ra rf_dec rf_ra_hms rf_dec_dms rf_velo rf_width /format F12.3 F12.3 F12.3 F12.3 F12.3 ES15.5 ES15.5 F12.3 F12.3 F12.3 F12.3 F12.3 F12.3 F15.7 F15.7 A16 A16 F12.3 F12.3" >> "$PdBIUVT_SAVE.result.map"   # G19.7 ES19.7 E19.7 -- https://www.cs.mtu.edu/~shene/COURSES/cs201/NOTES/chap05/format.html
     echo "  next ichan" >> "$PdBIUVT_SAVE.result.map"
