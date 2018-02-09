@@ -1,49 +1,26 @@
 #!/bin/bash
 #
-export GAG_ROOT_DIR=$(dirname ${BASH_SOURCE[0]})/gildas-exe-06feb18
-export GAG_EXEC_SYSTEM=$(ls -1 $GAG_ROOT_DIR | grep gfortran)
+export GAG_TOP_DIR=$(dirname ${BASH_SOURCE[0]})
+export GAG_SUB_DIR="gildas-exe-01apr17"
+export GAG_ROOT_DIR=$(perl -MCwd -e 'print Cwd::abs_path shift' "$GAG_TOP_DIR/$GAG_SUB_DIR")
+export GAG_EXEC_SYSTEM=$(ls -1 "$GAG_TOP_DIR/$GAG_SUB_DIR/" | grep gfortran)
+source "$GAG_TOP_DIR/bin/bin_setup.bash" -path "$GAG_TOP_DIR/$GAG_SUB_DIR/$GAG_EXEC_SYSTEM/bin" -check astro class mapping -clear '*gildas-exe-*' -debug
+source "$GAG_TOP_DIR/$GAG_SUB_DIR/etc/bash_profile" # > /dev/null
 
-#
-# PATH
-# <20170313>
+type astro class mapping
 
-TEMP_PATH_DROP="$GAG_ROOT_DIR"
-if [[ "$PATH" == *"$TEMP_PATH_DROP"* ]]; then
-    # split system path variable into a list
-    Old_IFS=$IFS
-    IFS=$":" TEMP_PATH_LIST=($PATH)
-    IFS=$Old_IFS
-    #echo ${TEMP_PATH_LIST[@]} "(${#TEMP_PATH_LIST[@]})"
-    TEMP_PATH_POOL=()
-    TEMP_PATH_TEXT=""
-    # loop each system path item and remove duplicated and the specified path to drop
-    for (( i=0; i<${#TEMP_PATH_LIST[@]}; i++ )); do
-        # check duplication
-        for (( j=0; j<${#TEMP_PATH_POOL[@]}; j++ )); do
-            if [[ "${TEMP_PATH_LIST[i]}" == "${TEMP_PATH_POOL[j]}" ]]; then
-                TEMP_PATH_LIST[i]="."
-            fi
-        done
-        # append to path
-        if [[ "${TEMP_PATH_LIST[i]}" != *"$TEMP_PATH_DROP"* && "${TEMP_PATH_LIST[i]}" != "." ]]; then
-            if [[ ${#TEMP_PATH_POOL[@]} -eq 0 ]]; then
-                TEMP_PATH_TEXT="${TEMP_PATH_LIST[i]}"
-                TEMP_PATH_POOL+=("${TEMP_PATH_LIST[i]}")
-            else
-                TEMP_PATH_TEXT="$TEMP_PATH_TEXT:${TEMP_PATH_LIST[i]}"
-                TEMP_PATH_POOL+=("${TEMP_PATH_LIST[i]}")
-            fi
-            #echo "$TEMP_PATH_TEXT"
-        fi
-    done
-    # finally append current directory as the last system path item
-    if [[ x"$TEMP_PATH_TEXT" != x ]]; then
-        export PATH="$TEMP_PATH_TEXT:."
-    fi
-    #echo "PATH = $PATH"
+if [[ x"$GAG_ROOT_DIR" == x ]]; then
+    echo "Error! Failed to source \"$GAG_TOP_DIR/$GAG_SUB_DIR/etc/bash_profile\"!"
+    return
 fi
-if [[ $PATH != *"$GAG_ROOT_DIR"* ]]; then
-    source "$GAG_ROOT_DIR/etc/bash_profile" # > /dev/null
+
+
+
+
+# 
+# Print version info if in interactive shell
+if [[ $- =~ "i" ]]; then
+    mapping -v
 fi
 
 
