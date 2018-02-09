@@ -147,8 +147,8 @@ for (( i=0; i<${#Input_files[@]}; i++ )); do
     echo "  say \"$PdBIUVT_SAVE.result.obj_\"'iobj'\".txt\"" >> "$PdBIUVT_SAVE.result.map"
     echo "  sic output" >> "$PdBIUVT_SAVE.result.map"
     echo "  sic output \"$PdBIUVT_SAVE.result.obj_\"'iobj'\".txt\" new" >> "$PdBIUVT_SAVE.result.map"
-    echo "  say # \"x\" \"x_err\" \"y\" \"y_err\" \"freq\" \"flux\" \"flux_err\" \"major\" \"major_err\" \"minor\" \"minor_err\" \"PA\" \"PA_err\" \"RA\" \"Dec\" \"RA_hms\" \"Dec_dms\" \"velocity\" \"velwidth\" /format A1 A11 A12 A12 A12 A12 A15 A15 A12 A12 A12 A12 A12 A12 A15 A15 A16 A16 A12 A12" >> "$PdBIUVT_SAVE.result.map"
-    echo "  say # arcsec arcsec arcsec arcsec GHz mJy mJy arcsec arcsec arcsec arcsec degree degree degree degree \"---\" \"---\" \"km/s\" \"km/s\" /format A1 A11 A12 A12 A12 A12 A15 A15 A12 A12 A12 A12 A12 A12 A15 A15 A16 A16 A12 A12" >> "$PdBIUVT_SAVE.result.map"
+    echo "  say # \"x\" \"x_err\" \"y\" \"y_err\" \"freq\" \"flux\" \"flux_err\" \"SNR\" \"major\" \"major_err\" \"minor\" \"minor_err\" \"PA\" \"PA_err\" \"RA\" \"Dec\" \"RA_hms\" \"Dec_dms\" \"velocity\" \"velwidth\" /format A1 A11 A12 A12 A12 A12 A15 A15 A12 A12 A12 A12 A12 A12 A12 A15 A15 A16 A16 A12 A12" >> "$PdBIUVT_SAVE.result.map"
+    echo "  say # arcsec arcsec arcsec arcsec GHz mJy mJy \"---\" arcsec arcsec arcsec arcsec degree degree degree degree \"---\" \"---\" \"km/s\" \"km/s\" /format A1 A11 A12 A12 A12 A12 A15 A15 A12 A12 A12 A12 A12 A12 A12 A15 A15 A16 A16 A12 A12" >> "$PdBIUVT_SAVE.result.map"
     echo "  for ichan 1 to nchan" >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_freq    -(f[ichan,4]-f%veloff)*f%restfre/299792.458+f%restfre" >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_1         f[ichan,'01+(iobj-1)*ilength']" >> "$PdBIUVT_SAVE.result.map"
@@ -198,7 +198,7 @@ for (( i=0; i<${#Input_files[@]}; i++ )); do
     echo "    @ l-rad2ra.map rf_ra_hms 'rf_ra/180.0*pi'" >> "$PdBIUVT_SAVE.result.map" # see -- '/Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_setup.map'
     echo "    @ l-rad2dec.map rf_dec_dms 'rf_dec/180.0*pi'" >> "$PdBIUVT_SAVE.result.map" # see -- '/Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_setup.map'
     echo "    let rf_width 'abs(UVT_HEADER%VELRES)'" >> "$PdBIUVT_SAVE.result.map"
-    echo "    say rf_x rf_x_err rf_y rf_y_err rf_freq rf_flux rf_flux_err rf_major rf_major_err rf_minor rf_minor_err rf_PA rf_PA_err rf_ra rf_dec rf_ra_hms rf_dec_dms rf_velo rf_width /format F12.3 F12.3 F12.3 F12.3 F12.3 ES15.5 ES15.5 F12.3 F12.3 F12.3 F12.3 F12.3 F12.3 F15.7 F15.7 A16 A16 F12.3 F12.3" >> "$PdBIUVT_SAVE.result.map"   # G19.7 ES19.7 E19.7 -- https://www.cs.mtu.edu/~shene/COURSES/cs201/NOTES/chap05/format.html
+    echo "    say rf_x rf_x_err rf_y rf_y_err rf_freq rf_flux rf_flux_err rf_snr rf_major rf_major_err rf_minor rf_minor_err rf_PA rf_PA_err rf_ra rf_dec rf_ra_hms rf_dec_dms rf_velo rf_width /format F12.3 F12.3 F12.3 F12.3 F12.3 ES15.5 ES15.5 F12.1 F12.3 F12.3 F12.3 F12.3 F12.3 F12.3 F15.7 F15.7 A16 A16 F12.3 F12.3" >> "$PdBIUVT_SAVE.result.map"   # G19.7 ES19.7 E19.7 -- https://www.cs.mtu.edu/~shene/COURSES/cs201/NOTES/chap05/format.html
     echo "  next ichan" >> "$PdBIUVT_SAVE.result.map"
     #echo "  say \"\"" >> "$PdBIUVT_SAVE.result.map"
     echo "  sic output" >> "$PdBIUVT_SAVE.result.map"
