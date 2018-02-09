@@ -1,0 +1,10 @@
+#!/bin/bash
+# 
+
+wget -c "http://www.iram.fr/~gildas/dist/daily/gildas-src-07feb18.tar.gz"
+tar -xzf gildas-src-07feb18.tar.gz
+cd gildas-src-07feb18
+source admin/gildas-env.sh
+make
+make install
+
