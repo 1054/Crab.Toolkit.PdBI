@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 export GAG_TOP_DIR=$(dirname ${BASH_SOURCE[0]})
-export GAG_SUB_DIR="gildas-exe-01apr17"
+export GAG_SUB_DIR="gildas-exe-07feb18"
 export GAG_ROOT_DIR=$(perl -MCwd -e 'print Cwd::abs_path shift' "$GAG_TOP_DIR/$GAG_SUB_DIR")
 export GAG_EXEC_SYSTEM=$(ls -1 "$GAG_TOP_DIR/$GAG_SUB_DIR/" | grep gfortran)
 source "$GAG_TOP_DIR/bin/bin_setup.bash" -path "$GAG_TOP_DIR/$GAG_SUB_DIR/$GAG_EXEC_SYSTEM/bin" -check astro class mapping -clear '*gildas-exe-*' -debug

@@ -1,7 +1,7 @@
 #!/usr/bin/env fish
 #
 set -gx GAG_TOP_DIR (dirname (status -f))
-set -gx GAG_SUB_DIR "gildas-exe-01apr17"
+set -gx GAG_SUB_DIR "gildas-exe-07feb18"
 set -gx GAG_EXEC_SYSTEM (ls -1 "$GAG_TOP_DIR/$GAG_SUB_DIR/" | grep gfortran)
 
 set -gx PATH (string split ":" (bash -c "source '$GAG_TOP_DIR/bin/bin_setup.bash' -path '$GAG_TOP_DIR/$GAG_SUB_DIR/$GAG_EXEC_SYSTEM/bin' -clear '*gildas-exe-*' -print | tail -n 1"))
