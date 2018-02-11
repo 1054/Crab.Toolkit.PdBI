@@ -1,12 +1,29 @@
 #!/bin/bash
 # 
-# Input the pdbi-uvt-go-uvfit output log file, 
+# Input the pdbi-uvt-go-uvfit output uvfit file, 
 # Output formatted data table: Source, reduced_chi2, flux, ferr, xoff, xerr, ...
 # 
 # Last update:
 #    2017-02-22 created. 
 #    2017-03-30 v5 - delete PdBIUVT_EXE after successful run
 #    2018-02-08 pdbi-uvt-go-uvfit-print-results-v6 --> pdbi-uvt-go-uvfit-print-results-v7 (more columns, velwidth, ra_hms, dec_dms)
+# 
+# 
+# Notes:
+#    GILDAS/MAPPING UV_FIT program outputs a formatted uvfit file. The formats are written in 'uv_fit.f90' in the GILDAS source code package, 
+#    subroutine outfit(nc,ic,ncol,y,rms,vit,nbpar,par,epar)
+#      use gildas_def
+#      use uvfit_data
+#      !---------------------------------------------------------------------
+#      ! Store the fitted parameters into the output table Y
+#      !
+#      ! Format of table is, for each channel:
+#      ! 1-4  RMS of fit, number of functions, number of parameters, velocity
+#      ! then for each function, 3+mpin*2 columns:
+#      !        Function number, type of function, number of parameters
+#      !        then 6 times (parameter, error)
+#      !---------------------------------------------------------------------
+# 
 # 
 
 # 
@@ -174,7 +191,7 @@ for (( i=0; i<${#Input_files[@]}; i++ )); do
     echo "    let rf_flux      rf_flux*1e3        ! to mJy" >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_flux_err  rf_flux_err*1e3    ! to mJy" >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_snr       rf_flux/rf_flux_err" >> "$PdBIUVT_SAVE.result.map"
-    echo "    if (rf_snr.LT.0) let rf_snr 0" >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_snr.LT.0)           let rf_snr 0" >> "$PdBIUVT_SAVE.result.map"
     echo "    if (rf_major.LE.1E-10)     let rf_major 0" >> "$PdBIUVT_SAVE.result.map"
     echo "    if (rf_major.GE.1E+10)     let rf_major 0" >> "$PdBIUVT_SAVE.result.map"
     echo "    if (rf_major_err.LE.1E-10) let rf_major_err 0" >> "$PdBIUVT_SAVE.result.map"
@@ -187,16 +204,23 @@ for (( i=0; i<${#Input_files[@]}; i++ )); do
     echo "    if (rf_PA.GE.1E+10)        let rf_PA 0" >> "$PdBIUVT_SAVE.result.map"
     echo "    if (rf_PA_err.LE.1E-10)    let rf_PA_err 0" >> "$PdBIUVT_SAVE.result.map"
     echo "    if (rf_PA_err.GE.1E+10)    let rf_PA_err 0" >> "$PdBIUVT_SAVE.result.map"
-    echo "    if (f%a0.GT.0) then" >> "$PdBIUVT_SAVE.result.map" #<fixed><20170414># 
-    echo "    let rf_ra f%a0/pi*180+rf_x/3600/cos(f%d0)" >> "$PdBIUVT_SAVE.result.map"
-    echo "    let rf_dec f%d0/pi*180+rf_y/3600" >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_x.LE.-1E+10.OR.rf_y.GE.-1E+10) then" >> "$PdBIUVT_SAVE.result.map"
+    echo "      let rf_ra -99" >> "$PdBIUVT_SAVE.result.map"
+    echo "      let rf_dec -99" >> "$PdBIUVT_SAVE.result.map"
+    echo "      let rf_ra_hms \"-99:-99:-99\"" >> "$PdBIUVT_SAVE.result.map"
+    echo "      let rf_dec_dms \"-99:-99:-99\"" >> "$PdBIUVT_SAVE.result.map"
     echo "    else" >> "$PdBIUVT_SAVE.result.map"
-    echo "    let rf_ra f%ra/pi*180+rf_x/3600/cos(f%dec)" >> "$PdBIUVT_SAVE.result.map"
-    echo "    let rf_dec f%dec/pi*180+rf_y/3600" >> "$PdBIUVT_SAVE.result.map"
+    echo "      if (f%a0.GT.0) then" >> "$PdBIUVT_SAVE.result.map" #<fixed><20170414># 
+    echo "        let rf_ra f%a0/pi*180+rf_x/3600/cos(f%d0)" >> "$PdBIUVT_SAVE.result.map"
+    echo "        let rf_dec f%d0/pi*180+rf_y/3600" >> "$PdBIUVT_SAVE.result.map"
+    echo "      else" >> "$PdBIUVT_SAVE.result.map"
+    echo "        let rf_ra f%ra/pi*180+rf_x/3600/cos(f%dec)" >> "$PdBIUVT_SAVE.result.map"
+    echo "        let rf_dec f%dec/pi*180+rf_y/3600" >> "$PdBIUVT_SAVE.result.map"
+    echo "      endif" >> "$PdBIUVT_SAVE.result.map"
+    echo "      @ l-rad2ra.map rf_ra_hms 'rf_ra/180.0*pi'" >> "$PdBIUVT_SAVE.result.map" # see -- '/Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_setup.map'
+    echo "      @ l-rad2dec.map rf_dec_dms 'rf_dec/180.0*pi'" >> "$PdBIUVT_SAVE.result.map" # see -- '/Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_setup.map'
     echo "    endif" >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_velo f[ichan,4]" >> "$PdBIUVT_SAVE.result.map"
-    echo "    @ l-rad2ra.map rf_ra_hms 'rf_ra/180.0*pi'" >> "$PdBIUVT_SAVE.result.map" # see -- '/Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_setup.map'
-    echo "    @ l-rad2dec.map rf_dec_dms 'rf_dec/180.0*pi'" >> "$PdBIUVT_SAVE.result.map" # see -- '/Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_setup.map'
     echo "    let rf_width 'abs(UVT_HEADER%VELRES)'" >> "$PdBIUVT_SAVE.result.map"
     echo "    say rf_x rf_x_err rf_y rf_y_err rf_freq rf_flux rf_flux_err rf_snr rf_major rf_major_err rf_minor rf_minor_err rf_PA rf_PA_err rf_ra rf_dec rf_ra_hms rf_dec_dms rf_velo rf_width /format F12.3 F12.3 F12.3 F12.3 F12.3 ES15.5 ES15.5 F12.1 F12.3 F12.3 F12.3 F12.3 F12.3 F12.3 F15.7 F15.7 A16 A16 F12.3 F12.3" >> "$PdBIUVT_SAVE.result.map"   # G19.7 ES19.7 E19.7 -- https://www.cs.mtu.edu/~shene/COURSES/cs201/NOTES/chap05/format.html
     echo "  next ichan" >> "$PdBIUVT_SAVE.result.map"
