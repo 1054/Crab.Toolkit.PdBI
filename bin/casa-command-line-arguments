@@ -51,7 +51,7 @@ function Is_File() {
     #20180211 seq -f "*" does not work for GNU seq!
     #ii_separator=$(seq  -f "*" -s '' $(echo "${#1}+24" | bc))
     ii_separator=$(printf "%$(echo ${#1}+24 | bc)s" | tr " " "*")
-    if [[ $# -ge 1 ]]; then if [[ -f "$1" ]] && [[ -L "$1" ]]; then return 0; else echo "$ii_separator"; echo; echo "Error! \"$1\" was not found!"; echo "$ii_separator"; echo; exit -1; return -1; fi; fi; return -1
+    if [[ $# -ge 1 ]]; then if [[ -f "$1" ]] && [[ -L "$1" ]]; then return 0; else echo; echo "$ii_separator"; echo "Error! \"$1\" was not found!"; echo "$ii_separator"; echo; exit -1; return -1; fi; fi; return -1
 }
 # Is_Float_Number
 function Is_Float_Number() {
@@ -63,14 +63,14 @@ checkDirExistence() {
     #20180211 seq -f "*" does not work for GNU seq!
     #ii_separator=$(seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc))
     ii_separator=$(printf "%$(echo 7+1+${#1}+1+16 | bc)s" | tr " " "*")
-    if [[ $# -ge 1 ]]; then if [[ ! -d "$1" ]] && [[ ! -L "$1" ]]; then echo "$ii_separator"; echo; echo "Error! \"$1\" does not exist!"; echo "$ii_separator"; echo; exit -1; return -1; else return 0; fi; fi
+    if [[ $# -ge 1 ]]; then if [[ ! -d "$1" ]] && [[ ! -L "$1" ]]; then echo; echo "$ii_separator"; echo "Error! \"$1\" does not exist!"; echo "$ii_separator"; echo; exit -1; return -1; else return 0; fi; fi
 }
 # checkFileExistence
 checkFileExistence() {
     #20180211 seq -f "*" does not work for GNU seq!
     #ii_separator=$(seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc))
     ii_separator=$(printf "%$(echo 7+1+${#1}+1+16 | bc)s" | tr " " "*")
-    if [[ $# -ge 1 ]]; then if [[ ! -f "$1" ]] && [[ ! -L "$1" ]]; then echo "$ii_separator"; echo; echo "Error! \"$1\" does not exist!"; echo "$ii_separator"; echo; exit -1; return -1; else return 0; fi; fi
+    if [[ $# -ge 1 ]]; then if [[ ! -f "$1" ]] && [[ ! -L "$1" ]]; then echo; echo "$ii_separator"; echo "Error! \"$1\" does not exist!"; echo "$ii_separator"; echo; exit -1; return -1; else return 0; fi; fi
 }
 
 # 
