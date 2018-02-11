@@ -7,6 +7,7 @@
 #    
 # Updates:
 #    20170209 created
+#    20180211 also check [[ ! -L "$1" ]] in 'Is_File()' 'checkDirExistence()' 'checkFileExistence()' functions.
 # 
 # 
 # 
@@ -47,7 +48,7 @@ if [[ $(uname) == *"Darwin"* ]]; then
 fi
 # Is_File
 function Is_File() {
-    if [[ $# -ge 1 ]]; then if [[ -f "$1" ]]; then return 0; else seq  -f "*" -s '' $(echo "${#1}+24" | bc); echo; echo "Error! \"$1\" was not found!"; seq  -f "*" -s '' $(echo "${#1}+24" | bc); echo; exit -1; return -1; fi; fi; return -1
+    if [[ $# -ge 1 ]]; then if [[ -f "$1" ]] && [[ -L "$1" ]]; then return 0; else seq  -f "*" -s '' $(echo "${#1}+24" | bc); echo; echo "Error! \"$1\" was not found!"; seq  -f "*" -s '' $(echo "${#1}+24" | bc); echo; exit -1; return -1; fi; fi; return -1
 }
 # Is_Float_Number
 function Is_Float_Number() {
@@ -56,11 +57,11 @@ function Is_Float_Number() {
 }
 # checkDirExistence
 checkDirExistence() {
-    if [[ $# -ge 1 ]]; then if [[ ! -d "$1" ]]; then seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; echo "Error! \"$1\" does not exist!"; seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; exit -1; return -1; else return 0; fi; fi
+    if [[ $# -ge 1 ]]; then if [[ ! -d "$1" ]] && [[ ! -L "$1" ]]; then seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; echo "Error! \"$1\" does not exist!"; seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; exit -1; return -1; else return 0; fi; fi
 }
 # checkFileExistence
 checkFileExistence() {
-    if [[ $# -ge 1 ]]; then if [[ ! -f "$1" ]]; then seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; echo "Error! \"$1\" does not exist!"; seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; exit -1; return -1; else return 0; fi; fi
+    if [[ $# -ge 1 ]]; then if [[ ! -f "$1" ]] && [[ ! -L "$1" ]]; then seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; echo "Error! \"$1\" does not exist!"; seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; exit -1; return -1; else return 0; fi; fi
 }
 
 # 
