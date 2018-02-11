@@ -471,6 +471,24 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "        print('Backed up \"%s\" as \"%s\".'%(dirpath, dirback))" >> "$CASAMS_Script1"
                     echo ""                                                                >> "$CASAMS_Script1"
                     
+                    
+                    echo "import os, sys"                                                  >> "$CASAMS_Script2"
+                    echo ""                                                                >> "$CASAMS_Script2"
+                    echo "# Prepare backup subroutine"                                     >> "$CASAMS_Script2"
+                    echo "def dirbackup(dirpath):"                                         >> "$CASAMS_Script2"
+                    echo "    if os.path.isdir(dirpath):"                                  >> "$CASAMS_Script2"
+                    echo "        if os.path.dirname(dirpath)!='':"                        >> "$CASAMS_Script2"
+                    echo "            dirback = os.path.dirname(dirpath)+os.sep+\\"        >> "$CASAMS_Script2"
+                    echo "                      'backup_'+os.dir.basename(dirpath)"        >> "$CASAMS_Script2"
+                    echo "        else:"                                                   >> "$CASAMS_Script2"
+                    echo "            dirback = 'backup_'+dirpath"                         >> "$CASAMS_Script2"
+                    echo "        if os.path.isdir(dirback):"                              >> "$CASAMS_Script2"
+                    echo "            os.system('rm -rf \"%s\"'%(dirback))"                >> "$CASAMS_Script2"
+                    echo "        os.system('mv \"%s\" \"%s\"'%(dirpath, dirback))"        >> "$CASAMS_Script2"
+                    echo "        print('Backed up \"%s\" as \"%s\".'%(dirpath, dirback))" >> "$CASAMS_Script2"
+                    echo ""                                                                >> "$CASAMS_Script2"
+                    
+                    
                     echo "import os, sys" >> "$CASAMS_Script4"
                 fi
                 # 
