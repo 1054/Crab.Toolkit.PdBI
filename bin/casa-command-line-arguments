@@ -7,7 +7,7 @@
 #    
 # Updates:
 #    20170209 created
-#    20180211 also check [[ ! -L "$1" ]] in 'Is_File()' 'checkDirExistence()' 'checkFileExistence()' functions.
+#    20180211 also check [[ ! -L "$1" ]] in 'Is_File()' 'checkDirExistence()' 'checkFileExistence()' functions, and '[[ -L "$DIR" ]]' in 'readlink()' function.
 # 
 # 
 # 
