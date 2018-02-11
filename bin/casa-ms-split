@@ -530,6 +530,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "width       =  1"                                         >> "$CASAMS_Script2"
                     echo "outframe    = 'LSRK'"                                     >> "$CASAMS_Script2"
                     echo "restfreq    = '${SPLIT_FEQ}Hz'"                           >> "$CASAMS_Script2"
+                    echo "dirbackup(outputvis)"                                     >> "$CASAMS_Script2"
                     echo "inp(cvel)"                                                >> "$CASAMS_Script2"
                     echo "cvel()"                                                   >> "$CASAMS_Script2"
                     echo ""                                                         >> "$CASAMS_Script2"
