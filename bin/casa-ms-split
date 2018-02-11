@@ -523,7 +523,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     # 
                     if [[ x"${SPLIT_FEQ}" != x ]]; then
                     echo ""                                                         >> "$CASAMS_Script2"
-                    echo "vis         = '${SPLIT_OutputName}.ms''"                  >> "$CASAMS_Script2"
+                    echo "vis         = '${SPLIT_OutputName}.ms'"                   >> "$CASAMS_Script2"
                     echo "outputvis   = '${SPLIT_OutputName}_cvel.ms'"              >> "$CASAMS_Script2"
                     echo "field       = ''"                                         >> "$CASAMS_Script2"
                     echo "spw         = ''"                                         >> "$CASAMS_Script2"
