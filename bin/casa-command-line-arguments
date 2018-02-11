@@ -48,7 +48,10 @@ if [[ $(uname) == *"Darwin"* ]]; then
 fi
 # Is_File
 function Is_File() {
-    if [[ $# -ge 1 ]]; then if [[ -f "$1" ]] && [[ -L "$1" ]]; then return 0; else seq  -f "*" -s '' $(echo "${#1}+24" | bc); echo; echo "Error! \"$1\" was not found!"; seq  -f "*" -s '' $(echo "${#1}+24" | bc); echo; exit -1; return -1; fi; fi; return -1
+    #20180211 seq -f "*" does not work for GNU seq!
+    #ii_separator=$(seq  -f "*" -s '' $(echo "${#1}+24" | bc))
+    ii_separator=$(printf "%$(echo ${#1}+24 | bc)s" | tr " " "*")
+    if [[ $# -ge 1 ]]; then if [[ -f "$1" ]] && [[ -L "$1" ]]; then return 0; else echo "$ii_separator"; echo; echo "Error! \"$1\" was not found!"; echo "$ii_separator"; echo; exit -1; return -1; fi; fi; return -1
 }
 # Is_Float_Number
 function Is_Float_Number() {
@@ -57,11 +60,17 @@ function Is_Float_Number() {
 }
 # checkDirExistence
 checkDirExistence() {
-    if [[ $# -ge 1 ]]; then if [[ ! -d "$1" ]] && [[ ! -L "$1" ]]; then seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; echo "Error! \"$1\" does not exist!"; seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; exit -1; return -1; else return 0; fi; fi
+    #20180211 seq -f "*" does not work for GNU seq!
+    #ii_separator=$(seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc))
+    ii_separator=$(printf "%$(echo 7+1+${#1}+1+16 | bc)s" | tr " " "*")
+    if [[ $# -ge 1 ]]; then if [[ ! -d "$1" ]] && [[ ! -L "$1" ]]; then echo "$ii_separator"; echo; echo "Error! \"$1\" does not exist!"; echo "$ii_separator"; echo; exit -1; return -1; else return 0; fi; fi
 }
 # checkFileExistence
 checkFileExistence() {
-    if [[ $# -ge 1 ]]; then if [[ ! -f "$1" ]] && [[ ! -L "$1" ]]; then seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; echo "Error! \"$1\" does not exist!"; seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc); echo; exit -1; return -1; else return 0; fi; fi
+    #20180211 seq -f "*" does not work for GNU seq!
+    #ii_separator=$(seq  -f "*" -s '' $(echo "7+1+${#1}+1+16" | bc))
+    ii_separator=$(printf "%$(echo 7+1+${#1}+1+16 | bc)s" | tr " " "*")
+    if [[ $# -ge 1 ]]; then if [[ ! -f "$1" ]] && [[ ! -L "$1" ]]; then echo "$ii_separator"; echo; echo "Error! \"$1\" does not exist!"; echo "$ii_separator"; echo; exit -1; return -1; else return 0; fi; fi
 }
 
 # 
