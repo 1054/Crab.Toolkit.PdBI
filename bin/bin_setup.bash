@@ -21,23 +21,23 @@ CRAB_BIN_SETUP_PRINT_FLAG=0
 CRAB_BIN_SETUP_ORDER_FLAG=1 # 1 for prepend, 0 for append
 CRAB_BIN_SETUP_NO_OP_FLAG=0 # no operation for current path
 CRAB_BIN_SETUP_VARIABLE="PATH"
-for (( i=1; i<=$#; i++ )); do
-    #echo "${!i}"
-    if echo "${!i}" | grep -q -i "^-debug";   then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_DEBUG_FLAG=1; continue; fi
-    if echo "${!i}" | grep -q -i "^-print";   then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_PRINT_FLAG=1; continue; fi
-    if echo "${!i}" | grep -q -i "^-prepend"; then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_ORDER_FLAG=1; continue; fi
-    if echo "${!i}" | grep -q -i "^-append";  then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_ORDER_FLAG=0; continue; fi
-    if echo "${!i}" | grep -q -i "^-noop";    then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_NO_OP_FLAG=1; continue; fi
-    if echo "${!i}" | grep -q -i "^-check";   then CRAB_BIN_SETUP_INPUT_FLAG="check"; continue; fi
-    if echo "${!i}" | grep -q -i "^-clear";   then CRAB_BIN_SETUP_INPUT_FLAG="clear"; continue; fi
-    if echo "${!i}" | grep -q -i "^-path";    then CRAB_BIN_SETUP_INPUT_FLAG="path"; continue; fi
-    if echo "${!i}" | grep -q -i "^-var";     then CRAB_BIN_SETUP_INPUT_FLAG="var"; continue; fi
-    if echo "${!i}" | grep -q -i "^-";        then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; continue; fi
+for (( CRAB_BIN_SETUP_I=1; CRAB_BIN_SETUP_I<=$#; CRAB_BIN_SETUP_I++ )); do
+    #echo "${!CRAB_BIN_SETUP_I}"
+    if echo "${!CRAB_BIN_SETUP_I}" | grep -q -CRAB_BIN_SETUP_I "^-debug";   then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_DEBUG_FLAG=1; continue; fi
+    if echo "${!CRAB_BIN_SETUP_I}" | grep -q -i "^-print";   then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_PRINT_FLAG=1; continue; fi
+    if echo "${!CRAB_BIN_SETUP_I}" | grep -q -i "^-prepend"; then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_ORDER_FLAG=1; continue; fi
+    if echo "${!CRAB_BIN_SETUP_I}" | grep -q -i "^-append";  then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_ORDER_FLAG=0; continue; fi
+    if echo "${!CRAB_BIN_SETUP_I}" | grep -q -i "^-noop";    then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_NO_OP_FLAG=1; continue; fi
+    if echo "${!CRAB_BIN_SETUP_I}" | grep -q -i "^-check";   then CRAB_BIN_SETUP_INPUT_FLAG="check"; continue; fi
+    if echo "${!CRAB_BIN_SETUP_I}" | grep -q -i "^-clear";   then CRAB_BIN_SETUP_INPUT_FLAG="clear"; continue; fi
+    if echo "${!CRAB_BIN_SETUP_I}" | grep -q -i "^-path";    then CRAB_BIN_SETUP_INPUT_FLAG="path"; continue; fi
+    if echo "${!CRAB_BIN_SETUP_I}" | grep -q -i "^-var";     then CRAB_BIN_SETUP_INPUT_FLAG="var"; continue; fi
+    if echo "${!CRAB_BIN_SETUP_I}" | grep -q -i "^-";        then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; continue; fi
     # 
-    if [[ "$CRAB_BIN_SETUP_INPUT_FLAG" == "check" ]]; then CRAB_BIN_SETUP_CHECK_LIST+=("${!i}"); fi
-    if [[ "$CRAB_BIN_SETUP_INPUT_FLAG" == "clear" ]]; then CRAB_BIN_SETUP_CLEAR_LIST+=("${!i}"); fi
-    if [[ "$CRAB_BIN_SETUP_INPUT_FLAG" == "path"  ]]; then CRAB_BIN_SETUP_INPUT_PATH="${!i}"; fi
-    if [[ "$CRAB_BIN_SETUP_INPUT_FLAG" == "var"   ]]; then CRAB_BIN_SETUP_VARIABLE="${!i}"; fi
+    if [[ "$CRAB_BIN_SETUP_INPUT_FLAG" == "check" ]]; then CRAB_BIN_SETUP_CHECK_LIST+=("${!CRAB_BIN_SETUP_I}"); fi
+    if [[ "$CRAB_BIN_SETUP_INPUT_FLAG" == "clear" ]]; then CRAB_BIN_SETUP_CLEAR_LIST+=("${!CRAB_BIN_SETUP_I}"); fi
+    if [[ "$CRAB_BIN_SETUP_INPUT_FLAG" == "path"  ]]; then CRAB_BIN_SETUP_INPUT_PATH="${!CRAB_BIN_SETUP_I}"; fi
+    if [[ "$CRAB_BIN_SETUP_INPUT_FLAG" == "var"   ]]; then CRAB_BIN_SETUP_VARIABLE="${!CRAB_BIN_SETUP_I}"; fi
 done
 
 
@@ -128,13 +128,13 @@ if [[ 1 == 1 ]]; then
     IFS=$":" CRAB_BIN_SETUP_PATH_LIST=(${!CRAB_BIN_SETUP_VARIABLE})
     IFS=$Old_IFS
     # remove empty item
-    i=0
-    while [[ $i -lt ${#CRAB_BIN_SETUP_PATH_LIST[@]} && ${#CRAB_BIN_SETUP_PATH_LIST[@]} -gt 0 ]]; do
-        #echo "Debug: Checking CRAB_BIN_SETUP_PATH_LIST[$i]: \"${CRAB_BIN_SETUP_PATH_LIST[i]}\""
-        if [[ -z "${CRAB_BIN_SETUP_PATH_LIST[i]}" ]]; then
-            CRAB_BIN_SETUP_PATH_LIST=(${CRAB_BIN_SETUP_PATH_LIST[@]:0:$i} ${CRAB_BIN_SETUP_PATH_LIST[@]:$(($i+1))})
+    CRAB_BIN_SETUP_I=0
+    while [[ $CRAB_BIN_SETUP_I -lt ${#CRAB_BIN_SETUP_PATH_LIST[@]} && ${#CRAB_BIN_SETUP_PATH_LIST[@]} -gt 0 ]]; do
+        #echo "Debug: Checking CRAB_BIN_SETUP_PATH_LIST[$CRAB_BIN_SETUP_I]: \"${CRAB_BIN_SETUP_PATH_LIST[CRAB_BIN_SETUP_I]}\""
+        if [[ -z "${CRAB_BIN_SETUP_PATH_LIST[CRAB_BIN_SETUP_I]}" ]]; then
+            CRAB_BIN_SETUP_PATH_LIST=(${CRAB_BIN_SETUP_PATH_LIST[@]:0:$CRAB_BIN_SETUP_I} ${CRAB_BIN_SETUP_PATH_LIST[@]:$(($CRAB_BIN_SETUP_I+1))})
         else
-            i=$((i+1))
+            CRAB_BIN_SETUP_I=$((CRAB_BIN_SETUP_I+1))
         fi
     done
     if [[ $CRAB_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
@@ -144,30 +144,30 @@ if [[ 1 == 1 ]]; then
     CRAB_BIN_SETUP_PATH_POOL=()
     CRAB_BIN_SETUP_PATH_TEXT=""
     # loop each system path item and remove duplicated and the specified path to drop
-    for (( i=0; i<${#CRAB_BIN_SETUP_PATH_LIST[@]}; i++ )); do
+    for (( CRAB_BIN_SETUP_I=0; CRAB_BIN_SETUP_I<${#CRAB_BIN_SETUP_PATH_LIST[@]}; CRAB_BIN_SETUP_I++ )); do
         # check duplication
-        for (( j=0; j<${#CRAB_BIN_SETUP_PATH_POOL[@]}; j++ )); do
-            if [[ "${CRAB_BIN_SETUP_PATH_LIST[i]}" == "${CRAB_BIN_SETUP_PATH_POOL[j]}" ]]; then
-                CRAB_BIN_SETUP_PATH_LIST[i]="."
+        for (( CRAB_BIN_SETUP_J=0; CRAB_BIN_SETUP_J<${#CRAB_BIN_SETUP_PATH_POOL[@]}; CRAB_BIN_SETUP_J++ )); do
+            if [[ "${CRAB_BIN_SETUP_PATH_LIST[CRAB_BIN_SETUP_I]}" == "${CRAB_BIN_SETUP_PATH_POOL[CRAB_BIN_SETUP_J]}" ]]; then
+                CRAB_BIN_SETUP_PATH_LIST[CRAB_BIN_SETUP_I]="."
             fi
         done
         # clear path items
         CRAB_BIN_SETUP_CLEAR_LIST_FLAG=0
-        for (( j=0; j<${#CRAB_BIN_SETUP_CLEAR_LIST[@]}; j++ )); do
-            if [[ "${CRAB_BIN_SETUP_PATH_LIST[i]}" == ${CRAB_BIN_SETUP_CLEAR_LIST[j]} ]]; then
+        for (( CRAB_BIN_SETUP_J=0; CRAB_BIN_SETUP_J<${#CRAB_BIN_SETUP_CLEAR_LIST[@]}; CRAB_BIN_SETUP_J++ )); do
+            if [[ "${CRAB_BIN_SETUP_PATH_LIST[CRAB_BIN_SETUP_I]}" == ${CRAB_BIN_SETUP_CLEAR_LIST[CRAB_BIN_SETUP_J]} ]]; then
                 if [[ $CRAB_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
-                    echo "Clearing \"${CRAB_BIN_SETUP_CLEAR_LIST[j]}\""
+                    echo "Clearing \"${CRAB_BIN_SETUP_CLEAR_LIST[CRAB_BIN_SETUP_J]}\""
                 fi
                 CRAB_BIN_SETUP_CLEAR_LIST_FLAG=1; break
             fi
         done
-        if [[ $CRAB_BIN_SETUP_CLEAR_LIST_FLAG -eq 0 && "${CRAB_BIN_SETUP_PATH_LIST[i]}" != "." && ! -z "${CRAB_BIN_SETUP_PATH_LIST[i]}" ]]; then
+        if [[ $CRAB_BIN_SETUP_CLEAR_LIST_FLAG -eq 0 && "${CRAB_BIN_SETUP_PATH_LIST[CRAB_BIN_SETUP_I]}" != "." && ! -z "${CRAB_BIN_SETUP_PATH_LIST[CRAB_BIN_SETUP_I]}" ]]; then
             if [[ ${#CRAB_BIN_SETUP_PATH_POOL[@]} -eq 0 ]]; then
-                CRAB_BIN_SETUP_PATH_TEXT="${CRAB_BIN_SETUP_PATH_LIST[i]}"
-                CRAB_BIN_SETUP_PATH_POOL+=("${CRAB_BIN_SETUP_PATH_LIST[i]}")
+                CRAB_BIN_SETUP_PATH_TEXT="${CRAB_BIN_SETUP_PATH_LIST[CRAB_BIN_SETUP_I]}"
+                CRAB_BIN_SETUP_PATH_POOL+=("${CRAB_BIN_SETUP_PATH_LIST[CRAB_BIN_SETUP_I]}")
             else
-                CRAB_BIN_SETUP_PATH_TEXT="$CRAB_BIN_SETUP_PATH_TEXT:${CRAB_BIN_SETUP_PATH_LIST[i]}"
-                CRAB_BIN_SETUP_PATH_POOL+=("${CRAB_BIN_SETUP_PATH_LIST[i]}")
+                CRAB_BIN_SETUP_PATH_TEXT="$CRAB_BIN_SETUP_PATH_TEXT:${CRAB_BIN_SETUP_PATH_LIST[CRAB_BIN_SETUP_I]}"
+                CRAB_BIN_SETUP_PATH_POOL+=("${CRAB_BIN_SETUP_PATH_LIST[CRAB_BIN_SETUP_I]}")
             fi
         fi
         #echo "$CRAB_BIN_SETUP_PATH_TEXT" # paths not to be cleared
@@ -217,14 +217,22 @@ export $CRAB_BIN_SETUP_VARIABLE
 # -- 20160427 only for interactive shell
 # -- http://stackoverflow.com/questions/12440287/scp-doesnt-work-when-echo-in-bashrc
 #CRAB_BIN_SETUP_CHECK_LIST=("$@")
-#if [[ $- =~ "i" ]]; then 
-    for (( i=0; i<${#CRAB_BIN_SETUP_CHECK_LIST[@]}; i++ )); do
+#if [[ $- =~ "CRAB_BIN_SETUP_I" ]]; then 
+    for (( CRAB_BIN_SETUP_I=0; CRAB_BIN_SETUP_I<${#CRAB_BIN_SETUP_CHECK_LIST[@]}; CRAB_BIN_SETUP_I++ )); do
         if [[ $CRAB_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
-            echo "Checking ${CRAB_BIN_SETUP_CHECK_LIST[i]}"
+            echo "Checking ${CRAB_BIN_SETUP_CHECK_LIST[CRAB_BIN_SETUP_I]}"
         fi
-        type ${CRAB_BIN_SETUP_CHECK_LIST[i]}
+        type ${CRAB_BIN_SETUP_CHECK_LIST[CRAB_BIN_SETUP_I]}
     done
 #fi
+
+
+
+# 
+# unset variables
+# 
+unset CRAB_BIN_SETUP_I
+unset CRAB_BIN_SETUP_J
 
 
 
