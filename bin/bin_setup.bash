@@ -23,7 +23,7 @@ CRAB_BIN_SETUP_NO_OP_FLAG=0 # no operation for current path
 CRAB_BIN_SETUP_VARIABLE="PATH"
 for (( CRAB_BIN_SETUP_I=1; CRAB_BIN_SETUP_I<=$#; CRAB_BIN_SETUP_I++ )); do
     #echo "${!CRAB_BIN_SETUP_I}"
-    if echo "${!CRAB_BIN_SETUP_I}" | grep -q -CRAB_BIN_SETUP_I "^-debug";   then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_DEBUG_FLAG=1; continue; fi
+    if echo "${!CRAB_BIN_SETUP_I}" | grep -q -i "^-debug";   then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_DEBUG_FLAG=1; continue; fi
     if echo "${!CRAB_BIN_SETUP_I}" | grep -q -i "^-print";   then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_PRINT_FLAG=1; continue; fi
     if echo "${!CRAB_BIN_SETUP_I}" | grep -q -i "^-prepend"; then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_ORDER_FLAG=1; continue; fi
     if echo "${!CRAB_BIN_SETUP_I}" | grep -q -i "^-append";  then CRAB_BIN_SETUP_INPUT_FLAG="n/a"; CRAB_BIN_SETUP_ORDER_FLAG=0; continue; fi
