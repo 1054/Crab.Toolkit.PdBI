@@ -23,6 +23,13 @@
 #      !        Function number, type of function, number of parameters
 #      !        then 6 times (parameter, error)
 #      !---------------------------------------------------------------------
+#    Also note that the GIDLAS/MAPPING RMS is (according to 'uv_fit.f90')
+#      np2 = 2*np ! np is the number of data points
+#      fsumsq  = denorm(np2, fvec) ! fvec is the fitted model (http://www.lahey.com/docs/lgf13help/slatec/DNLS1E.htm), denorm() computes the Euclidean norm (https://en.wikipedia.org/wiki/Norm_(mathematics)#Euclidean_norm)
+#      rms = fsumsq*dsqrt(np2*1d0)
+#    Thus, RMS actually is 
+#      rms = sum(X**2) * sqrt(np2) --- which is buggy??
+#      
 # 
 # 
 
