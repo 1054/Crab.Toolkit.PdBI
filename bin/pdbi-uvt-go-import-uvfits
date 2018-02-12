@@ -119,7 +119,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
             #list_of_spw_id=($(awk '/Spectral Windows:/ {f=1; next} /Sources:/ {f=0} f' "calibrated.ms.listobs.txt" | grep -v "SpwID" | sed -e 's/^ *//g' | tr -s ' ' | cut -d ' ' -f 1))
             #list_of_spw_nchan=($(awk '/Spectral Windows:/ {f=1; next} /Sources:/ {f=0} f' "calibrated.ms.listobs.txt" | grep -v "SpwID" | sed -e 's/^ *//g' | tr -s ' ' | cut -d ' ' -f 3))
             #list_of_spw_nchan=($(awk '/Spectral Windows:/ {f=1; next} /Sources:/ {f=0} f' "calibrated.ms.listobs.txt" | grep -v "SpwID" | sed -e 's/^ *//g' | tr -s ' ' | cut -d ' ' -f 3))
-            PdBIUVT_CRVAL4=$(awk "BEGIN {printf \"%0.9e\", ${PdBIUVT_FREQ_REF[i]} * 1e6;}") # convert MHz to Hz
+            PdBIUVT_CRVAL4=$(awk "BEGIN {printf \"%0.10e\", ${PdBIUVT_FREQ_REF[i]} * 1e6;}") # convert MHz to Hz
             echo "sethead \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" CRVAL4=$PdBIUVT_CRVAL4" >> "$PdBIUVT_SETHEAD"
                   sethead  "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}"  CRVAL4=$PdBIUVT_CRVAL4
             cat "$PdBIUVT_SETHEAD"

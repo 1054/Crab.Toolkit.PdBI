@@ -202,7 +202,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     echo "    fo = open('$CASAMS_ScriptName.chan.freq.spw%d.txt'%(i),'wb')">> "$CASAMS_ScriptName.py"
     echo "    list_all_chk = tb.getcell('CHAN_FREQ',i)"                    >> "$CASAMS_ScriptName.py"
     echo "    for j in range(len(list_all_chk)): "                         >> "$CASAMS_ScriptName.py"
-    echo "        fo.write('%g\n'%(list_all_chk[j]))"                      >> "$CASAMS_ScriptName.py"
+    echo "        fo.write('%0.10g\n'%(list_all_chk[j]))"                  >> "$CASAMS_ScriptName.py"
     echo "    fo.close()"                                                  >> "$CASAMS_ScriptName.py"
     echo ""                                                                >> "$CASAMS_ScriptName.py"
     echo "tb.close()"                                                      >> "$CASAMS_ScriptName.py"
@@ -372,6 +372,16 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             #<alternative>#     CASAMS_WID+=("${CASAMS_WID[${#CASAMS_WID[@]}-1]}")
             #<alternative># fi
             #<alternative># SPLIT_WID="${CASAMS_WID[ispw]}"
+            
+            # read Freq_Ref_Ch0_MHz
+            if [[ ! -f "$CASAMS_ScriptName.chan.freq.spw${SPLIT_SPW}.txt" ]]; then
+                echo ""
+                echo "Error! Failed to read \"$CASAMS_ScriptName.chan.freq.spw${SPLIT_SPW}.txt\" file, which is produced by reading the \"${CASAMS_VIS}\"/SPECTRAL_WINDOW/table.* files! Please make sure the measurement set is complete!"
+                echo ""
+                exit
+            else
+                IFS=$'\n' read -d '' -r -a CASAMS_TableSpwChanFreqs < "$CASAMS_ScriptName.chan.freq.spw${SPLIT_SPW}.txt"
+            fi
             
             # determine the width
             if [[ $ispw -lt ${#CASAMS_WID[@]} ]]; then 
@@ -706,6 +716,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "fi"                                                                                               >> "$CASAMS_Script6"
                     echo "for (( i=0; i<\${#uvfits_list[@]}; i++ )); do"                                                    >> "$CASAMS_Script6"
                     echo "    pdbi-uvt-go-import-uvfits -name \"\${uvfits_list[i]}\" \\"                                    >> "$CASAMS_Script6"
+                    echo "                              -Ch0-MHz ${CASAMS_TableSpwChanFreqs[0]} \\" >> "$CASAMS_Script6"
                     echo "                              -out \"\$(echo \${uvfits_list[i]} | sed -e 's/\.uvfits/\.uvt/g')\"" >> "$CASAMS_Script6"
                     echo "    pdbi-uvt-go-splitpolar -name \"\$(echo \${uvfits_list[i]} | sed -e 's/\.uvfits/\.uvt/g')\" \\" >> "$CASAMS_Script6"
                     echo "                           -out \"\$(echo \${uvfits_list[i]} | sed -e 's/\.uvfits/_SP\.uvt/g')\"" >> "$CASAMS_Script6"
