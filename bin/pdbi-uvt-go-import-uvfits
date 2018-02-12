@@ -101,9 +101,9 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         PdBIUVT_GETHEAD="${PdBIUVT_SAVE[i]}.uvt.import.uvfits.gethead"
         PdBIUVT_SETHEAD="${PdBIUVT_SAVE[i]}.uvt.import.uvfits.sethead"
         
-        echo "" >  "$PdBIUVT_EXE"
-        echo "" >  "$PdBIUVT_GETHEAD"
-        echo "" >  "$PdBIUVT_SETHEAD"
+        echo "! GILDAS script" >  "$PdBIUVT_EXE"
+        echo "# gethead" >  "$PdBIUVT_GETHEAD"
+        echo "# sethead" >  "$PdBIUVT_SETHEAD"
         
         echo "Checking \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" frequencies"
         PdBIUVT_CRVAL4=$(gethead "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}" "CRVAL4")
