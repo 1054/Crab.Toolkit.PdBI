@@ -5,6 +5,7 @@
 # 
 # Last update:
 #    2017-03-30 using "pdbi-uvt-core-arg-v5"
+#    2018-02-12 using "pdbi-uvt-core-arg-v8"
 # 
 # 
 
@@ -27,11 +28,11 @@ usage() {
 # 
 # SOURCE pdbi-uvt-core-arg
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" "$@"
 else
     echo ""
-    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5\"!"
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8\"!"
     echo ""
     exit 1
 fi
@@ -206,7 +207,7 @@ for (( i=1; i<${#PdBIUVT_NAME[@]}; i++ )); do
                 echo "Deleted \"${PdBIUVT_SAVE[0]}.$i.uvt\""
                 rm "${PdBIUVT_SAVE[0]}.$i.uvt"
             fi
-            if [[ $PdBIUVT_UVMERGE_KEEP_FILE -lt 0 ]]; then
+            if [[ $PdBIUVT_UVMERGE_KEEP_FILE -le 0 ]]; then
                 echo "Deleted \"${PdBIUVT_SAVE[0]}.$i.log\""
                 rm "${PdBIUVT_SAVE[0]}.$i.log"
                 echo "Deleted \"${PdBIUVT_SAVE[0]}.$i.map\""

@@ -9,21 +9,21 @@ source ../../SETUP.bash
 
 
 
-pdbi-uvt-go-uvfit-v4 -name "NAME" \
+pdbi-uvt-go-uvfit    -name "NAME" \
                      -radec 150.039 2.319 -fixpos -size 1.0 -fixsize -cgauss -add-offset 0.15 -0.25 \
                      -offset -2.0 -2.0 -fixpos -size 1.0 -fixsize -cgauss -add-offset 0.15 -0.25 \
                      -out "OUTPUT_NAME"
 
 
 
-pdbi-uvt-go-uvfit-v5 -name "NAME" \
+pdbi-uvt-go-uvfit    -name "NAME" \
                      -radec 150.039 2.319 -fixpos -size 1.0 -fixsize -cgauss -add-offset 0.15 -0.25 \
                      -offset -2.0 -2.0 -fixpos -size 1.0 -fixsize -cgauss -add-offset 0.15 -0.25 \
                      -out "OUTPUT_NAME"
 
 
 
-pdbi-uvt-go-shift-v5 -name "NAME" "NAME_1" "NAME_2" -radec 150.039 2.319
+pdbi-uvt-go-shift    -name "NAME" "NAME_1" "NAME_2" -radec 150.039 2.319
 
 
 

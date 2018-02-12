@@ -1,0 +1,39 @@
+#!/bin/bash
+# 
+# plot spectrum using python
+
+
+if [[ $(type python 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! Python was not found in \$PATH!"
+    exit
+else
+    if [[ $(echo "import matplotlib" | python | wc -l) -ne 0 ]]; then
+        echo "Error! We need \"matplotlib\" (https://matplotlib.org/) Python package(s)!"
+        exit
+    fi
+    if [[ $(echo "import numpy" | python | wc -l) -ne 0 ]]; then
+        echo "Error! We need \"numpy\" (http://numpy.org/) Python package(s)!"
+        exit
+    fi
+    if [[ $(echo "import astropy" | python | wc -l) -ne 0 ]]; then
+        echo "Error! We need \"astropy\" (http://astropy.org/) Python package(s)!"
+        exit
+    fi
+fi
+
+
+if [[ ! -f $(dirname "${BASH_SOURCE[0]}")"/pdbi_uvt_go_plot_uvfit_result_spectrum_with_python.py" ]]; then
+    echo "Error! \""$(dirname "${BASH_SOURCE[0]}")"/pdbi_uvt_go_plot_uvfit_result_spectrum_with_python.py\" was not found! Please make sure you have downloaded this code completely from \"https://github.com/1054/Crab.Toolkit.PdBI\"!"
+    exit
+fi
+
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: pdbi-uvt-go-plot-uvfit-result-spectrum-with-python *.uv_fit.result.obj_1.txt [-output output_name]"
+    exit
+fi
+
+
+$(dirname "${BASH_SOURCE[0]}")"/pdbi_uvt_go_plot_uvfit_result_spectrum_with_python.py" $@
+
+

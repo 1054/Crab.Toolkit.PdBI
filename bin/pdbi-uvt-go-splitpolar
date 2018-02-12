@@ -9,6 +9,7 @@
 #    2017-02-19 rewritten, beautified, used "pdbi-uvt-core-arg"
 #    2017-03-30 using "pdbi-uvt-core-arg-v4"
 #    2017-03-30 using "pdbi-uvt-core-arg-v5"
+#    2018-02-12 using "pdbi-uvt-core-arg-v8"
 # 
 # 
 
@@ -28,11 +29,11 @@ usage() {
 # 
 # SOURCE pdbi-uvt-core-arg
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" "$@"
 else
     echo ""
-    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5\"!"
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8\"!"
     echo ""
     exit 1
 fi

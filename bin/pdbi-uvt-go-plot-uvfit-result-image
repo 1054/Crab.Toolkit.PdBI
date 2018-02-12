@@ -1,17 +1,7 @@
 #!/bin/bash
 # 
-# plot image using supermongo
+# plot image using GILDAS GREG
 
-
-if [[ $(type sm 2>/dev/null | wc -l) -eq 0 ]]; then
-    echo "Error! Supermongo was not found in \$PATH!"
-    exit
-else
-    if [[ $(echo "load crabPlot.sm" | sm | wc -l) -ne 0 ]]; then
-        echo "Error! We need Supermongo macro \"crabPlot.sm\" from \"https://github.com/1054/DeepFields.SuperDeblending/Softwares/Supermongo_macro/crabPlot.sm\"!"
-        exit
-    fi
-fi
 
 if [[ $# -lt 1 ]]; then
     echo "Usage: pdbi-uvt-go-plot-uvfit-result-image *.uvt -radec ra dec -offset xoff yoff [-output output_name]"

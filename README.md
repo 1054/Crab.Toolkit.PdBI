@@ -1,9 +1,99 @@
 # Crab.Toolkit.PdBI
-Crab Toolkit for PdBI Data Reduction
+Crab Toolkit for NOEMA(PdBI)/ALMA Data Reduction and Analysis
 
-This toolkit contains several commands that can be directly executed under Terminal. 
+This toolkit contains several useful code to easily deal with NOEMA(PdBI)/ALMA UV table/UV FITS data. 
 
-Examples are given below. 
+'pdbi-uvt-go-*' commands can process UV table data in a batch mode by calling the [GILDAS MAPPING](https://www.iram.fr/IRAMFR/GILDAS/) software without doing this manually in the [GILDAS MAPPING](https://www.iram.fr/IRAMFR/GILDAS/) software environment. 
+
+'pdbi-uvt-go-splitpolar' can average two polarization (stokes). For example, 
+```
+mkdir -p test/test_1_splitpolar
+cd test/test_1_splitpolar
+cp ../uv_table_data/split_z35_68_spw0_width128.uvt NAME.uvt
+pdbi-uvt-go-splitpolar -name NAME.uvt -out OUTPUTNAME
+```
+
+'pdbi-uvt-go-merge' can merge two UV tables. For example, 
+```
+mkdir -p test/test_2_uvmerge
+cd test/test_2_uvmerge
+cp ../uv_table_data/split_z35_68_spw0_width128.uvt NAME_1.uvt
+cp ../uv_table_data/split_z35_68_spw1_width128.uvt NAME_2.uvt
+pdbi-uvt-go-merge -name NAME_1.uvt NAME_2.uvt -out OUTPUTNAME
+# we can also specify relative weighting, e.g., 
+pdbi-uvt-go-merge -name NAME_1.uvt NAME_2.uvt -out OUTPUTNAME -weighting 5.0 12.0
+```
+
+'pdbi-uvt-go-average' can average UV table channels and make a single channel UV table, which is just continuum data. For example, 
+```
+mkdir -p test/test_3_uvaverage
+cd test/test_3_uvaverage
+cp ../uv_table_data/split_VUDS0510807732_spw1_width10_SP.uvt NAME.uvt
+pdbi-uvt-go-average -name NAME.uvt -out OUTPUTNAME
+# we can specify channel range '-crange MM NN', or velocity range '-vrange MM NN', or frequency range '-frange MM NN'.
+pdbi-uvt-go-average -name NAME.uvt -crange 2 5 -out OUTPUTNAME
+pdbi-uvt-go-average -name NAME.uvt -vrange -400 400 -out OUTPUTNAME
+```
+
+'pdbi-uvt-go-compress' (TODO)
+
+'pdbi-uvt-go-resample' (TODO)
+
+'pdbi-uvt-go-shift' (TODO)
+
+'pdbi-uvt-go-subtract' (TODO)
+
+'pdbi-uvt-go-uvmap' (TODO)
+
+##### 'pdbi-uvt-go-uvfit' #####
+'pdbi-uvt-go-uvfit' can do uv_fit easily with a large flexibility! Here are some examples:
+```
+mkdir -p test/test_uv_fit
+cd test/test_uv_fit
+cp ../uv_table_data/split_VUDS0510807732_spw1_width10_SP.uvt NAME.uvt
+
+# fit point source model at the phase center, allow source position to vary.
+pdbi-uvt-go-uvfit -name NAME.uvt \
+                  -out OUTPUTNAME \
+
+# fit point source model at a fixed position of (0,0) arcsec offset from the phase center.
+pdbi-uvt-go-uvfit -name NAME.uvt \
+                  -offset 0 0 -fixpos \
+                  -out OUTPUTNAME
+
+# fit point source model at a fixed position of (0,0) arcsec offset from the phase center.
+pdbi-uvt-go-uvfit -name NAME.uvt \
+                  -offset 0 0 -fixpos \
+                  -out OUTPUTNAME
+
+# fit circular Gaussian source model at a fixed position of RA Dec 150.0351 2.01330 (only support J2000), in default we allow size to vary, unless you specify -size NNN -fixsize.
+pdbi-uvt-go-uvfit -name NAME.uvt \
+                  -radec 150.0351 2.01330 -fixpos -cgauss \
+                  -out OUTPUTNAME
+
+# fit an elliptical Gaussian source model at a fixed position of RA Dec 150.0351 2.01330, fix major and minor FWHM size 0.9 0.7 arcsec and position angle 90 degree.
+pdbi-uvt-go-uvfit -name NAME.uvt \
+                  -radec 150.0351 2.01330 -fixpos -size 0.9 0.7 -fixsize -angle 90 -fixangle -egauss \
+                  -out OUTPUTNAME
+
+# we can specify a field of view with "-FoV", so that the code will output "OUTPUTNAME.result.obj_*.image.pdf". 
+pdbi-uvt-go-uvfit -name NAME.uvt \
+                  -radec 150.0351 2.01330 -fixpos -size 0.9 0.7 -fixsize -angle 90 -fixangle -egauss \
+                  -FoV 10 \
+                  -out OUTPUTNAME
+
+# we can input multiple sources, then the output will be "OUTPUTNAME.result.obj_*.txt" and ""
+pdbi-uvt-go-uvfit -name NAME.uvt \
+                  -radec 150.0351 2.01330 -fixpos -size 0.9 0.7 -fixsize -angle 90 -fixangle -egauss \
+                  -offset 3.0 3.0 -fixpos \
+                  -offset -6.0 6.0 -fixpos \
+                  -FoV 10 \
+                  -out OUTPUTNAME
+```
+
+Note that for running 'pdbi-uvt-go-uvfit' in a current best mode, you might want to install supermongo ... --> 2018-02-12 no need, now we have python code for plotting the spectrum! 
+
+Note that GILDAS MAPPING has a different definition of angle versus position angle, our code should already be taking care of that. So your input -angle is just the position angle starting from +North direction and increases counter-clockwise. 
 
 
 
@@ -25,7 +115,7 @@ Then this shell script will call CASA to run split(), cvel(), exportuvfits(), cl
 
 
 
-## Deal with GILDAS UV table ##
+## Deal with GILDAS UV table (older manual, before 2018-02-12) ##
 
 First split polarization:
 ```
