@@ -33,11 +33,11 @@ usage() {
 # 
 # SOURCE pdbi-uvt-core-arg
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v7" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v7" "$@"
 else
     echo ""
-    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5\"!"
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v7\"!"
     echo ""
     exit 1
 fi
@@ -102,6 +102,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         PdBIUVT_SETHEAD="${PdBIUVT_SAVE[i]}.uvt.import.uvfits.sethead"
         
         echo "" >  "$PdBIUVT_EXE"
+        echo "" >  "$PdBIUVT_SETHEAD"
         
         echo "Checking \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" frequencies"
         PdBIUVT_CRVAL4=$(gethead "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}" "CRVAL4")
@@ -112,13 +113,26 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         cat "$PdBIUVT_GETHEAD"
         # 
         # 
-        # Check whether ($PdBIUVT_CRVAL4) equals ($PdBIUVT_RESTFREQ)
+        # Read user input -ref-freq (or -freq-ref, or -Ch0-MHz), which is the ref channel obs-frame frequency in unit of MHz.
+        # 
+        if [[ $i -lt ${#PdBIUVT_FREQ_REF[@]}  ]]; then
+            #list_of_spw_id=($(awk '/Spectral Windows:/ {f=1; next} /Sources:/ {f=0} f' "calibrated.ms.listobs.txt" | grep -v "SpwID" | sed -e 's/^ *//g' | tr -s ' ' | cut -d ' ' -f 1))
+            #list_of_spw_nchan=($(awk '/Spectral Windows:/ {f=1; next} /Sources:/ {f=0} f' "calibrated.ms.listobs.txt" | grep -v "SpwID" | sed -e 's/^ *//g' | tr -s ' ' | cut -d ' ' -f 3))
+            #list_of_spw_nchan=($(awk '/Spectral Windows:/ {f=1; next} /Sources:/ {f=0} f' "calibrated.ms.listobs.txt" | grep -v "SpwID" | sed -e 's/^ *//g' | tr -s ' ' | cut -d ' ' -f 3))
+            PdBIUVT_CRVAL4=$(awk "BEGIN {printf \"%0.9e\", ${PdBIUVT_FREQ_REF[i]} * 1e6;}") # convert MHz to Hz
+            echo "sethead \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" CRVAL4=$PdBIUVT_CRVAL4" >> "$PdBIUVT_SETHEAD"
+                  sethead  "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}"  CRVAL4=$PdBIUVT_CRVAL4
+            cat "$PdBIUVT_SETHEAD"
+        fi
+        # 
+        # 
+        # Check whether ($PdBIUVT_CRVAL4) equals ($PdBIUVT_RESTFREQ), if not, then we set RESTFREQ = CRVAL4
         # note that for float number comparison, we choose a 0.001 fractional precesion. 
         # 
         #echo "BEGIN {val=(($PdBIUVT_CRVAL4)-($PdBIUVT_RESTFREQ))/((($PdBIUVT_CRVAL4)+($PdBIUVT_RESTFREQ))/2.0); print (val>0)?(val<0.001):(-val<0.001)}"
         PdBIUVT_CHECK=$(awk "BEGIN {val=(($PdBIUVT_CRVAL4)-($PdBIUVT_RESTFREQ))/((($PdBIUVT_CRVAL4)+($PdBIUVT_RESTFREQ))/2.0); print (val>0)?(val<0.001):(-val<0.001)}")
         if [[ $PdBIUVT_CHECK -eq 0 ]]; then
-            echo "sethead \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" RESTFREQ=$PdBIUVT_CRVAL4" > "$PdBIUVT_SETHEAD"
+            echo "sethead \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" RESTFREQ=$PdBIUVT_CRVAL4" >> "$PdBIUVT_SETHEAD"
                   sethead  "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}"  RESTFREQ=$PdBIUVT_CRVAL4
             cat "$PdBIUVT_SETHEAD"
         fi

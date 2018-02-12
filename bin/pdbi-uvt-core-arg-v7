@@ -11,6 +11,7 @@
 #     2017-03-29 Add "-add-offset" argument.
 #     2017-03-30 Allow multiple PdBIUVT_NAME
 #     2018-01-24 Allow user option -fixed-flux
+#     2018-02-11 Added option "-Ch0-MHz"
 # 
 
 
@@ -116,11 +117,11 @@ PdBIUVT_CHAN_MAX=0        #
 PdBIUVT_CHAN_CEN=0        # 
 PdBIUVT_FREQ_MIN=0        # 
 PdBIUVT_FREQ_MAX=0        # 
-PdBIUVT_CHAN_REF=""
-PdBIUVT_VELO_BIN=""
-PdBIUVT_FREQ_BIN=""
-PdBIUVT_VELO_REF=""
-PdBIUVT_FREQ_REF=""
+PdBIUVT_CHAN_REF=()       # used by 'pdbi-uvt-core-cvf-*'
+PdBIUVT_VELO_BIN=()       # used by 'pdbi-uvt-core-cvf-*'
+PdBIUVT_FREQ_BIN=()       # used by 'pdbi-uvt-core-cvf-*'
+PdBIUVT_VELO_REF=()       # used by 'pdbi-uvt-core-cvf-*'
+PdBIUVT_FREQ_REF=()       # used by 'pdbi-uvt-core-cvf-*' and 'pdbi-uvt-go-import-uvfits', MHz
 # ------------------------# pointing info
 PdBIUVT_RANX_OBJT=()      # "09:59:38.101"
 PdBIUVT_DECX_OBJT=()      # "02:28:57.108"
@@ -200,6 +201,10 @@ while [[ "$#" -gt 0 ]]; do
             "-vrange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="vrange";; # km/s
             "-frange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="frange";; # GHz
           "-redshift") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="redshift";;
+
+          "-freq-ref") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="freq_ref";; # MHz
+          "-ref-freq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="freq_ref";; # MHz
+           "-ch0-mhz") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="freq_ref";; # MHz
 
              "-radec") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="radec";;  # object coordinate pairs
 
@@ -478,6 +483,17 @@ while [[ "$#" -gt 0 ]]; do
             return 2
         fi
         PdBIUVT_zRED+=("$1")
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "freq_ref" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        if echo "$1" | grep -q -v -E "^[0-9Ee.+-]*$"; then
+            echo ""; echo "Error! Input -freq-ref (or -Ch0-MHz) has a wrong format! Please input only number value as the first channel obs-frame frequency (MHz)!"; echo ""
+            return 2
+        fi
+        PdBIUVT_FREQ_REF+=("$1")
     fi
     
     # 
