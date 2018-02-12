@@ -64,11 +64,7 @@ elif [[ x"$PdBIUVT_RAD_NAME" == x*".UVT" ]]; then
     PdBIUVT_RAD_NAME=$(echo "$PdBIUVT_RAD_NAME" | sed -e 's/\.UVT$//g')
     PdBIUVT_RAD_TYPE="UVT"
 else
-    PdBIUVT_RAD_TYPE="uvt"
-fi
-if [[ ! -f "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}" ]]; then
-    echo "Error! The input uv table \"${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}\" was not found!"
-    exit 3
+    PdBIUVT_RAD_TYPE="unknown"
 fi
 
 
@@ -77,6 +73,13 @@ fi
 # If input is uvt type
 # 
 if [[ x"${PdBIUVT_RAD_TYPE}" == x"uvt" || x"${PdBIUVT_RAD_TYPE}" == x"UVT" ]]; then
+    # 
+    # Check whether file exists
+    # 
+    if [[ ! -f "${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}" ]]; then
+        echo "Error! The input uv table \"${PdBIUVT_RAD_NAME}.${PdBIUVT_RAD_TYPE}\" was not found!"
+        exit 3
+    fi
     # 
     # Get Pointing information from input uvt header
     # 

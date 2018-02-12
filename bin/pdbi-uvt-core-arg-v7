@@ -743,7 +743,7 @@ done
 # Check input uv table name
 # 
 if [[ "${#PdBIUVT_NAME[@]}" == x ]]; then
-    echo ""; echo "Error! UV table name was not given! Exit!"; echo ""
+    echo ""; echo "Error! UV table name was not given! Please set \"-name\" if needed! Exit!"; echo ""
     PdBIUVT_GOOD=0
     return 3
 fi
