@@ -70,8 +70,6 @@ elif [[ x"$PdBIUVT_RAD_NAME" == x*".uvfits" ]]; then
 elif [[ x"$PdBIUVT_RAD_NAME" == x*".UVFITS" ]]; then
     PdBIUVT_RAD_NAME=$(echo "$PdBIUVT_RAD_NAME" | sed -e 's/\.UVFITS$//g')
     PdBIUVT_RAD_TYPE="UVFITS"
-else
-    PdBIUVT_RAD_TYPE="uvt"
 fi
 
 
