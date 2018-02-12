@@ -751,6 +751,9 @@ fi
 # Remove the suffix of the input uvtable name, and test whether the file exists
 # 
 for (( PdBIUVT_ITER = 0; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ )); do
+    if [[ $PdBIUVT_ITER -ge ${#PdBIUVT_TYPE[@]} ]]; then
+        PdBIUVT_TYPE+=("unknown")
+    fi
     if [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".uvt" ]]; then
         PdBIUVT_TYPE[PdBIUVT_ITER]="uvt"
         PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]uvt$//g')
