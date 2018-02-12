@@ -102,13 +102,16 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         PdBIUVT_SETHEAD="${PdBIUVT_SAVE[i]}.uvt.import.uvfits.sethead"
         
         echo "" >  "$PdBIUVT_EXE"
+        echo "" >  "$PdBIUVT_GETHEAD"
         echo "" >  "$PdBIUVT_SETHEAD"
         
         echo "Checking \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" frequencies"
         PdBIUVT_CRVAL4=$(gethead "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}" "CRVAL4")
+        PdBIUVT_CRPIX4=$(gethead "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}" "CRPIX4")
         PdBIUVT_RESTFREQ=$(gethead "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}" "RESTFREQ")
         if [[ x"$PdBIUVT_RESTFREQ" == x ]]; then PdBIUVT_RESTFREQ="0"; fi #<added><20170304><dzliu># 
-        echo "CRVAL4   = $PdBIUVT_CRVAL4" > "$PdBIUVT_GETHEAD"
+        echo "CRVAL4   = $PdBIUVT_CRVAL4"   >> "$PdBIUVT_GETHEAD"
+        echo "CRPIX4   = $PdBIUVT_CRPIX4"   >> "$PdBIUVT_GETHEAD"
         echo "RESTFREQ = $PdBIUVT_RESTFREQ" >> "$PdBIUVT_GETHEAD"
         cat "$PdBIUVT_GETHEAD"
         # 

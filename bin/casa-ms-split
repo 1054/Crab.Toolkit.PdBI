@@ -8,6 +8,9 @@
 #    2016-06-27 automatically read SOURCE table, check input source, or loop all sources
 #    2017-02-21 largely modified, using casa-command-line-arguments now.
 #    2017-03-05 split each mosaic if there are multiple mosaic pointing for a same source name. 
+#    2018-02-11 split -width 128 will lead to wrong CRVAL4 and RESTFREQ! This is due to some kind of bug in CASA 4.5.3 'exportuvfits()' function! 
+#               The solution is to use a higher version, e.g., 4.7.2. 
+#               If must use CASA 4.5.3, then I can only recommend to use CASA to split the original width data cube, then exportuvfits, then do rebinning with GILDAS!
 # 
 
 
@@ -704,7 +707,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "fi"                                                                                               >> "$CASAMS_Script6"
                     echo "for (( i=0; i<\${#uvfits_list[@]}; i++ )); do"                                                    >> "$CASAMS_Script6"
                     echo "    pdbi-uvt-go-import-uvfits -name \"\${uvfits_list[i]}\" \\"                                    >> "$CASAMS_Script6"
-                    echo "                              -Ch0-MHz ${CASAMS_TableSpwChanFreqs[0]} \\"                         >> "$CASAMS_Script6"
+                    #<TODO><20180211>#echo "                              -Ch0-MHz ${CASAMS_TableSpwChanFreqs[0]} \\"                         >> "$CASAMS_Script6"
                     echo "                              -out \"\$(echo \${uvfits_list[i]} | sed -e 's/\.uvfits/\.uvt/g')\"" >> "$CASAMS_Script6"
                     echo "    pdbi-uvt-go-splitpolar -name \"\$(echo \${uvfits_list[i]} | sed -e 's/\.uvfits/\.uvt/g')\" \\" >> "$CASAMS_Script6"
                     echo "                           -out \"\$(echo \${uvfits_list[i]} | sed -e 's/\.uvfits/_SP\.uvt/g')\"" >> "$CASAMS_Script6"
@@ -717,7 +720,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "fi"                                                                                               >> "$CASAMS_Script6"
                     echo "for (( i=0; i<\${#uvfits_list[@]}; i++ )); do"                                                    >> "$CASAMS_Script6"
                     echo "    pdbi-uvt-go-import-uvfits -name \"\${uvfits_list[i]}\" \\"                                    >> "$CASAMS_Script6"
-                    echo "                              -Ch0-MHz ${CASAMS_TableSpwChanFreqs[0]} \\"                         >> "$CASAMS_Script6"
+                    #<TODO><20180211>#echo "                              -Ch0-MHz ${CASAMS_TableSpwChanFreqs[0]} \\"                         >> "$CASAMS_Script6"
                     echo "                              -out \"\$(echo \${uvfits_list[i]} | sed -e 's/\.uvfits/\.uvt/g')\"" >> "$CASAMS_Script6"
                     echo "    pdbi-uvt-go-splitpolar -name \"\$(echo \${uvfits_list[i]} | sed -e 's/\.uvfits/\.uvt/g')\" \\" >> "$CASAMS_Script6"
                     echo "                           -out \"\$(echo \${uvfits_list[i]} | sed -e 's/\.uvfits/_SP\.uvt/g')\"" >> "$CASAMS_Script6"
