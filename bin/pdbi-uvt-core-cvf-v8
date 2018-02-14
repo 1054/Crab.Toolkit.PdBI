@@ -36,15 +36,13 @@ fi
 # 
 # Check Variables
 # 
-#20180123#if [[ $# -ge 1 ]]; then
-#20180123#    PdBIUVT_CVF_NAME="$1"
-#20180123#else
-#20180123#    return
-#20180123#fi
-#20180123#
-PdBIUVT_CVF_NAME=("${PdBIUVT_NAME[@]}") #20180123#
-PdBIUVT_CVF_TYPE=("${PdBIUVT_TYPE[@]}") #20180211#
-#20180123#
+if [[ $# -ge 1 ]]; then
+    PdBIUVT_CVF_NAME="$1" #20180123#
+else
+    PdBIUVT_CVF_NAME=("${PdBIUVT_NAME[@]}") #20180123#
+    PdBIUVT_CVF_TYPE=("${PdBIUVT_TYPE[@]}") #20180211#
+fi
+
 if [[ x"$PdBIUVT_CVF_NAME" == x*".uvt" ]]; then
     PdBIUVT_CVF_NAME=$(echo "$PdBIUVT_CVF_NAME" | sed -e 's/\.uvt$//g')
     PdBIUVT_CVF_TYPE="uvt"
@@ -58,7 +56,11 @@ elif [[ x"$PdBIUVT_CVF_NAME" == x*".UVFITS" ]]; then
     PdBIUVT_CVF_NAME=$(echo "$PdBIUVT_CVF_NAME" | sed -e 's/\.UVFITS$//g')
     PdBIUVT_CVF_TYPE="UVFITS"
 fi
-#20180211#
+
+
+
+
+
 
 
 
