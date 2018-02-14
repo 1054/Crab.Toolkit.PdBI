@@ -445,8 +445,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                         if [[ $blob_uv_fit_separ -ne 1 ]]; then
                             # run uvfit simultaneously for all blobs (note that the blob_num should not be larger than 11, limited by GILDAS/MAPPING)
                             ln -fsT "../${PdBIUVT_NAME[tk]}" $(basename "${PdBIUVT_NAME[tk]}")".uvt"
-                            echo "pdbi-uvt-go-uvfit -parallel -name \""$(basename "${PdBIUVT_NAME[tk]}")".uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit\" -radec ${blob_radec[@]} -vrange ${blob_vrange[@]} > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log\""
-                                  pdbi-uvt-go-uvfit -parallel -name    $(basename "${PdBIUVT_NAME[tk]}")".uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit"  -radec ${blob_radec[@]} -vrange ${blob_vrange[@]} >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log"
+                            echo "pdbi-uvt-go-uvfit -parallel -name \""$(basename "${PdBIUVT_NAME[tk]}")".uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit\" -radec ${blob_radec[@]} -vrange ${blob_vrange[@]} -FoV $fov_size > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log\""
+                                  pdbi-uvt-go-uvfit -parallel -name    $(basename "${PdBIUVT_NAME[tk]}")".uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit"  -radec ${blob_radec[@]} -vrange ${blob_vrange[@]} -FoV $fov_size >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log"
                             frange=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
                         fi
                         
@@ -456,26 +456,26 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                             if [[ $blob_uv_fit_separ -eq 1 ]]; then
                                 # run uvfit separately for each blob
                                 ln -fsT "../${PdBIUVT_NAME[tk]}" $(basename "${PdBIUVT_NAME[tk]}")".uvt"
-                                echo "pdbi-uvt-go-uvfit -parallel -name \""$(basename "${PdBIUVT_NAME[tk]}")".uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}\" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log\""
-                                      pdbi-uvt-go-uvfit -parallel -name    $(basename "${PdBIUVT_NAME[tk]}")".uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}"  -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log"
+                                echo "pdbi-uvt-go-uvfit -parallel -name \""$(basename "${PdBIUVT_NAME[tk]}")".uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}\" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end -FoV $fov_size > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log\""
+                                      pdbi-uvt-go-uvfit -parallel -name    $(basename "${PdBIUVT_NAME[tk]}")".uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}"  -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end -FoV $fov_size >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log"
                                 frange=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
                                 cp "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.result.obj_1.txt" \
                                    "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt"
                             fi
                             
-                            echo "pdbi-uvt-go-plot-uvfit-result-spectrum \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt\" -frange ${frange[@]}"
-                                  pdbi-uvt-go-plot-uvfit-result-spectrum  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt" -frange ${frange[@]} \
-                                                                        > "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotfit.obj_${iobj}.log"
-                            cp pdbi_uvt_go_plot_uvfit_result_spectrum.sm  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotfit.obj_${iobj}.sm"
-                            cp pdbi_uvt_go_plot_uvfit_result_spectrum.eps "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotfit.obj_${iobj}.eps"
-                            cp pdbi_uvt_go_plot_uvfit_result_spectrum.pdf "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotfit.obj_${iobj}.pdf"
+                            #echo "pdbi-uvt-go-plot-uvfit-result-spectrum \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt\" -frange ${frange[@]}"
+                            #      pdbi-uvt-go-plot-uvfit-result-spectrum  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt" -frange ${frange[@]} \
+                            #                                            > "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotfit.obj_${iobj}.log"
+                            #cp pdbi_uvt_go_plot_uvfit_result_spectrum.sm  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotfit.obj_${iobj}.sm"
+                            #cp pdbi_uvt_go_plot_uvfit_result_spectrum.eps "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotfit.obj_${iobj}.eps"
+                            #cp pdbi_uvt_go_plot_uvfit_result_spectrum.pdf "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotfit.obj_${iobj}.pdf"
                             
-                            echo "pdbi-uvt-go-plot-uvfit-result-image \"velo_bin_${velo_count}.uvt\" -size $fov_size -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]}"
-                                  pdbi-uvt-go-plot-uvfit-result-image  "velo_bin_${velo_count}.uvt"  -size $fov_size -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} \
-                                                                     > "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotmap.obj_${iobj}.log"
-                            cp pdbi_uvt_go_plot_uvfit_result_image.map "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotmap.obj_${iobj}.map"
-                            cp pdbi_uvt_go_plot_uvfit_result_image.eps "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotmap.obj_${iobj}.eps"
-                            cp pdbi_uvt_go_plot_uvfit_result_image.pdf "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotmap.obj_${iobj}.pdf"
+                            #echo "pdbi-uvt-go-plot-uvfit-result-image \"velo_bin_${velo_count}.uvt\" -size $fov_size -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]}"
+                            #      pdbi-uvt-go-plot-uvfit-result-image  "velo_bin_${velo_count}.uvt"  -size $fov_size -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} \
+                            #                                         > "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotmap.obj_${iobj}.log"
+                            #cp pdbi_uvt_go_plot_uvfit_result_image.map "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotmap.obj_${iobj}.map"
+                            #cp pdbi_uvt_go_plot_uvfit_result_image.eps "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotmap.obj_${iobj}.eps"
+                            #cp pdbi_uvt_go_plot_uvfit_result_image.pdf "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotmap.obj_${iobj}.pdf"
                             
                         done
                         
