@@ -38,6 +38,7 @@ fi
 # 
 if [[ $# -ge 1 ]]; then
     PdBIUVT_CVF_NAME="$1" #20180123#
+    PdBIUVT_CVF_TYPE=""
 else
     PdBIUVT_CVF_NAME=("${PdBIUVT_NAME[@]}") #20180123#
     PdBIUVT_CVF_TYPE=("${PdBIUVT_TYPE[@]}") #20180211#

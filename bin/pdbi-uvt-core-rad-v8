@@ -52,6 +52,7 @@ fi
 # 
 if [[ $# -ge 1 ]]; then
     PdBIUVT_RAD_NAME="$1" #20180123#
+    PdBIUVT_RAD_TYPE=""
 else
     PdBIUVT_RAD_NAME=("${PdBIUVT_NAME[@]}") #20180123#
     PdBIUVT_RAD_TYPE=("${PdBIUVT_TYPE[@]}") #20180211#
@@ -69,6 +70,10 @@ elif [[ x"$PdBIUVT_RAD_NAME" == x*".uvfits" ]]; then
 elif [[ x"$PdBIUVT_RAD_NAME" == x*".UVFITS" ]]; then
     PdBIUVT_RAD_NAME=$(echo "$PdBIUVT_RAD_NAME" | sed -e 's/\.UVFITS$//g')
     PdBIUVT_RAD_TYPE="UVFITS"
+fi
+
+if [[ x"$PdBIUVT_RAD_TYPE" == x"" ]]; then
+    PdBIUVT_RAD_TYPE="uvt"
 fi
 
 
