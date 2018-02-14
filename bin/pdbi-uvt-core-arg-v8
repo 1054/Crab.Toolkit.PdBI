@@ -13,6 +13,7 @@
 #     2018-01-24 Allow user option -fixed-flux
 #     2018-02-11 Added option "-Ch0-MHz"
 #     2018-02-12 Copied from v7, now using 'pdbi-uvt-core-rad-v8'
+#     2018-02-14 Added PdBIUVT_UVMAP_SPACING
 # 
 
 
@@ -145,7 +146,8 @@ PdBIUVT_UVMERGE_CONT_MODE=0
 # ------------------------# uv compress
 PdBIUVT_UVCOMPRESS_NC=()  # channel number to compress
 # ------------------------# uv map
-PdBIUVT_UVMAP_CONTOURS=() # contours in unit of 'noise'
+PdBIUVT_UVMAP_CONTOURS=() # contours in unit of 'noise' (TODO: 20180214)
+PdBIUVT_UVMAP_SPACING=()  # spacing in unit of 'noise'
 # ------------------------# uv compress
 PdBIUVT_UVRESAMPLE_VW=()  # velocity width to resample
 # ----------------------- # uvt line search
@@ -209,8 +211,10 @@ while [[ "$#" -gt 0 ]]; do
           "-ref-freq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="freq_ref";; # MHz
            "-ch0-mhz") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="freq_ref";; # MHz
           
-           "-contour") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_contours";; # in unit of 'noise'
-          "-contours") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_contours";; # in unit of 'noise'
+           "-contour") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_contours";; # (TODO: 20180214)
+          "-contours") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_contours";; # (TODO: 20180214)
+           "-spacing") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_spacing";; # in unit of 'noise'
+   "-contour-spacing") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_spacing";; # in unit of 'noise'
 
              "-radec") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="radec";;  # object coordinate pairs
 
@@ -506,11 +510,14 @@ while [[ "$#" -gt 0 ]]; do
         if [[ "$#" -lt 1 ]]; then
             break
         fi
-        #if echo "$1" | grep -q -v -E "^[0-9Enoise.+-]*$"; then
-        #    echo ""; echo "Error! Input -contours has a wrong format! Please input only number values for the contours (in unit of noise of the map)!"; echo ""
-        #    return 2
-        #fi
         PdBIUVT_UVMAP_CONTOURS+=("$1")
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "uvmap_spacing" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        PdBIUVT_UVMAP_SPACING+=("$1")
     fi
     
     
