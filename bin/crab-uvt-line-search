@@ -6,6 +6,7 @@
 # 
 # Last update:
 #    2017-04-09 Initialized
+#    2018-02-14 switch to v8
 # 
 
 
@@ -90,11 +91,11 @@ fi
 # 
 # SOURCE pdbi-uvt-core-arg
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v6" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v6" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" "$@"
 else
     echo ""
-    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v6\"!"
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8\"!"
     echo ""
     exit 1
 fi
@@ -133,11 +134,11 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # 
     # SOURCE pdbi-uvt-core-cvf
     # 
-    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v6" ]]; then
-        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v6" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
+    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v8" ]]; then
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v8" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
     else
         echo ""
-        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v6\"!"
+        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v8\"!"
         echo ""
         exit 1
     fi
@@ -147,11 +148,11 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # 
     # SOURCE pdbi-uvt-core-rad
     # 
-    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v6" ]]; then
-        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v6" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
+    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v8" ]]; then
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v8" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
     else
         echo ""
-        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v6\"!"
+        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v8\"!"
         echo ""
         exit 1
     fi
@@ -443,8 +444,9 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                         # run uvfit
                         if [[ $blob_uv_fit_separ -ne 1 ]]; then
                             # run uvfit simultaneously for all blobs (note that the blob_num should not be larger than 11, limited by GILDAS/MAPPING)
-                            echo "pdbi-uvt-go-uvfit-v6 -parallel -name \"../${PdBIUVT_NAME[tk]}\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit\" -radec ${blob_radec[@]} -vrange ${blob_vrange[@]} > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log\""
-                                  pdbi-uvt-go-uvfit-v6 -parallel -name  "../${PdBIUVT_NAME[tk]}"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit"  -radec ${blob_radec[@]} -vrange ${blob_vrange[@]} >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log"
+                            ln -fsT "../${PdBIUVT_NAME[tk]}" $(basename "${PdBIUVT_NAME[tk]}")".uvt"
+                            echo "pdbi-uvt-go-uvfit -parallel -name \""$(basename "${PdBIUVT_NAME[tk]}")".uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit\" -radec ${blob_radec[@]} -vrange ${blob_vrange[@]} > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log\""
+                                  pdbi-uvt-go-uvfit -parallel -name    $(basename "${PdBIUVT_NAME[tk]}")".uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit"  -radec ${blob_radec[@]} -vrange ${blob_vrange[@]} >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log"
                             frange=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
                         fi
                         
@@ -453,8 +455,9 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                             
                             if [[ $blob_uv_fit_separ -eq 1 ]]; then
                                 # run uvfit separately for each blob
-                                echo "pdbi-uvt-go-uvfit-v6 -parallel -name \"../${PdBIUVT_NAME[tk]}\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}\" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log\""
-                                      pdbi-uvt-go-uvfit-v6 -parallel -name  "../${PdBIUVT_NAME[tk]}"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}"  -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log"
+                                ln -fsT "../${PdBIUVT_NAME[tk]}" $(basename "${PdBIUVT_NAME[tk]}")".uvt"
+                                echo "pdbi-uvt-go-uvfit -parallel -name \""$(basename "${PdBIUVT_NAME[tk]}")".uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}\" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log\""
+                                      pdbi-uvt-go-uvfit -parallel -name    $(basename "${PdBIUVT_NAME[tk]}")".uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}"  -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -vrange $velo_start $velo_end >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log"
                                 frange=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
                                 cp "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.result.obj_1.txt" \
                                    "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt"
