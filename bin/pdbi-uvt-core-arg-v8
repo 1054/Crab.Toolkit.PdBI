@@ -14,6 +14,7 @@
 #     2018-02-11 Added option "-Ch0-MHz"
 #     2018-02-12 Copied from v7, now using 'pdbi-uvt-core-rad-v8'
 #     2018-02-14 Added PdBIUVT_UVMAP_SPACING
+#     2018-02-14 Fixed the problem of inputting symbol link file "[[ ! -f "${PdBIUVT_NAME[PdBIUVT_ITER]}.${PdBIUVT_TYPE[PdBIUVT_ITER]}" ]] && [[ ! -L "${PdBIUVT_NAME[PdBIUVT_ITER]}.${PdBIUVT_TYPE[PdBIUVT_ITER]}" ]]"
 # 
 
 
@@ -807,7 +808,7 @@ for (( PdBIUVT_ITER = 0; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ ))
         PdBIUVT_TYPE[PdBIUVT_ITER]="uvt"
     fi
     # check whether the file exists
-    if [[ ! -f "${PdBIUVT_NAME[PdBIUVT_ITER]}.${PdBIUVT_TYPE[PdBIUVT_ITER]}" ]]; then
+    if [[ ! -f "${PdBIUVT_NAME[PdBIUVT_ITER]}.${PdBIUVT_TYPE[PdBIUVT_ITER]}" ]] && [[ ! -L "${PdBIUVT_NAME[PdBIUVT_ITER]}.${PdBIUVT_TYPE[PdBIUVT_ITER]}" ]]; then
         echo ""; echo "Error! \"${PdBIUVT_NAME[PdBIUVT_ITER]}.${PdBIUVT_TYPE[PdBIUVT_ITER]}\" was not found! Exit!"; echo ""
         PdBIUVT_GOOD=0
         exit 3
