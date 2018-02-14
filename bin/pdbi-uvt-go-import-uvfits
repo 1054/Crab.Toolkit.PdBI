@@ -125,6 +125,8 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
             PdBIUVT_CRVAL4=$(awk "BEGIN {printf \"%0.10e\", ${PdBIUVT_FREQ_REF[i]} * 1e6;}") # convert MHz to Hz
             echo "sethead \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" CRVAL4=$PdBIUVT_CRVAL4" >> "$PdBIUVT_SETHEAD"
                   sethead  "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}"  CRVAL4=$PdBIUVT_CRVAL4
+            echo "sethead \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" CRPIX4=1" >> "$PdBIUVT_SETHEAD"
+                  sethead  "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}"  CRPIX4=1
             cat "$PdBIUVT_SETHEAD"
         fi
         # 
@@ -137,7 +139,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         if [[ $PdBIUVT_CHECK -eq 0 ]]; then
             echo "sethead \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" RESTFREQ=$PdBIUVT_CRVAL4" >> "$PdBIUVT_SETHEAD"
                   sethead  "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}"  RESTFREQ=$PdBIUVT_CRVAL4
-            cat "$PdBIUVT_SETHEAD"
+            cat "$PdBIUVT_SETHEAD" | tail -n 1
         fi
         
         

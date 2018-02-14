@@ -7,6 +7,7 @@
 #    2017-02-19 rewritten, beautified, used "pdbi-uvt-core-arg"
 #    2017-03-30 using "pdbi-uvt-core-arg-v5"
 #    2017-04-09 Now output "*.lmv.fits"
+#    2018-02-14 Now using "pdbi-uvt-core-arg-v8"
 # 
 # 
 
@@ -17,7 +18,7 @@
 # 
 usage() {
     echo "Usage: "
-    echo "  pdbi-uvt-go-uvmap -name aaa.uvt -size 15 -map_size 512 -map_cell 0.2 -show_header -out aaa.eps -overwrite"
+    echo "  pdbi-uvt-go-uvmap -name aaa.uvt -size 15 -map_size 512 -map_cell 0.2 -show_header [-contour -3 3 4 5 6 7 8 9 10] -out aaa.eps -overwrite"
     echo ""
 }
 
@@ -26,11 +27,11 @@ usage() {
 # 
 # SOURCE pdbi-uvt-core-arg
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v6" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v6" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" "$@"
 else
     echo ""
-    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5\"!"
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8\"!"
     echo ""
     exit 1
 fi
@@ -84,9 +85,9 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         PdBIUVT_LOG="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_map.log"
         PdBIUVT_INI="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.uv_map.init" #<TODO>
         PdBIUVT_EPS="${PdBIUVT_SAVE[i]}"
-        if [[ ${#PdBIUVT_SIZE[@]} -gt 0 ]]; then 
-            if [[ $(awk "BEGIN {if (${PdBIUVT_SIZE[0]}>0) print 1; else print 0;}") -eq 1 ]]; then
-                PdBIUVT_EPS="${PdBIUVT_EPS}_FoV_"$(printf "%.0f" ${PdBIUVT_SIZE[0]})"_arcsec"
+        if [[ ${#PdBIUVT_SIZE[@]} -gt $i ]]; then 
+            if [[ $(awk "BEGIN {if (${PdBIUVT_SIZE[$i]}>0) print 1; else print 0;}") -eq 1 ]]; then
+                PdBIUVT_EPS="${PdBIUVT_EPS}_FoV_"$(printf "%.0f" ${PdBIUVT_SIZE[$i]})"_arcsec"
             fi
         fi
         # 
@@ -120,17 +121,21 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         #echo "write dirty 'name'.lmv"           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
         #echo "write beam 'name'.beam"           >> "$PdBIUVT_EXE" # -- see *-exe-*/pro/p_uvmap.map
         
-        echo "! GILDAS MAPPING SCRIPT"         >  "$PdBIUVT_EXE"
-        echo ""                                >> "$PdBIUVT_EXE"
-        echo "let name \"${PdBIUVT_NAME[i]}\"" >> "$PdBIUVT_EXE"
+        echo "! GILDAS MAPPING SCRIPT"                          >  "$PdBIUVT_EXE"
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "let name \"${PdBIUVT_NAME[i]}\""                  >> "$PdBIUVT_EXE"
         
-        if [[ ${#PdBIUVT_SIZE[@]} -gt 0 ]]; then 
-            if [[ $(awk "BEGIN {if (${PdBIUVT_SIZE[0]}>0) print 1; else print 0;}") -eq 1 ]]; then
-                echo "let size ${PdBIUVT_SIZE[0]}" >> "$PdBIUVT_EXE"
-            fi
+        if [[ ${#PdBIUVT_SIZE[@]} -gt $i ]]; then 
+            echo "let size ${PdBIUVT_SIZE[$i]}"                 >> "$PdBIUVT_EXE"
         fi
-        if [[ ${#PdBIUVT_MAP_SIZE[@]} -gt 0 ]]; then echo "let map_size ${PdBIUVT_MAP_SIZE[0]}"  >> "$PdBIUVT_EXE"; fi
-        if [[ ${#PdBIUVT_MAP_CELL[@]} -gt 0 ]]; then echo "let map_cell ${PdBIUVT_MAP_CELL[0]}"  >> "$PdBIUVT_EXE"; fi
+        if [[ ${#PdBIUVT_MAP_SIZE[@]} -gt $i ]]; then 
+            echo "let map_size ${PdBIUVT_MAP_SIZE[$i]}"         >> "$PdBIUVT_EXE"
+        else
+            echo "let map_size 1024"                            >> "$PdBIUVT_EXE"
+        fi
+        if [[ ${#PdBIUVT_MAP_CELL[@]} -gt $i ]]; then 
+            echo "let map_cell ${PdBIUVT_MAP_CELL[$i]}"         >> "$PdBIUVT_EXE"
+        fi
         
         if [[ $PdBIUVT_PARALLELS -eq 1 ]]; then
             echo "let type lmv"                                 >> "$PdBIUVT_EXE"
@@ -149,7 +154,11 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo "go noise"                                         >> "$PdBIUVT_EXE"
         
         echo ""                                                 >> "$PdBIUVT_EXE"
-        echo "let spacing noise"                                >> "$PdBIUVT_EXE"
+        if [[ ${#PdBIUVT_UVMAP_SPACING[@]} -gt $i ]]; then
+            echo "let spacing ${PdBIUVT_UVMAP_SPACING[$i]}"     >> "$PdBIUVT_EXE"
+        else
+            echo "let spacing noise"                            >> "$PdBIUVT_EXE"
+        fi
         
         echo ""                                                 >> "$PdBIUVT_EXE"
         echo "say \"\""                                         >> "$PdBIUVT_EXE"

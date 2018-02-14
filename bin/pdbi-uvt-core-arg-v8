@@ -144,6 +144,8 @@ PdBIUVT_UVMERGE_KEEP_FILE=0
 PdBIUVT_UVMERGE_CONT_MODE=0
 # ------------------------# uv compress
 PdBIUVT_UVCOMPRESS_NC=()  # channel number to compress
+# ------------------------# uv map
+PdBIUVT_UVMAP_CONTOURS=() # contours in unit of 'noise'
 # ------------------------# uv compress
 PdBIUVT_UVRESAMPLE_VW=()  # velocity width to resample
 # ----------------------- # uvt line search
@@ -164,7 +166,7 @@ PdBIUVT_TSTR=""
 PdBIUVT_RPAR="none"
 while [[ "$#" -gt 0 ]]; do
     
-    PdBIUVT_TSTR=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+    PdBIUVT_TSTR=$(echo "$1" | sed -e 's/^--/-/g' | sed -e 's/_/-/g' | tr '[:upper:]' '[:lower:]')
     
     case "$PdBIUVT_TSTR" in
       
@@ -206,6 +208,9 @@ while [[ "$#" -gt 0 ]]; do
           "-freq-ref") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="freq_ref";; # MHz
           "-ref-freq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="freq_ref";; # MHz
            "-ch0-mhz") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="freq_ref";; # MHz
+          
+           "-contour") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_contours";; # in unit of 'noise'
+          "-contours") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_contours";; # in unit of 'noise'
 
              "-radec") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="radec";;  # object coordinate pairs
 
@@ -491,11 +496,23 @@ while [[ "$#" -gt 0 ]]; do
             break
         fi
         if echo "$1" | grep -q -v -E "^[0-9Ee.+-]*$"; then
-            echo ""; echo "Error! Input -freq-ref (or -Ch0-MHz) has a wrong format! Please input only number value as the first channel obs-frame frequency (MHz)!"; echo ""
+            echo ""; echo "Error! Input -freq-ref (or -Ch0-MHz) has a wrong format! Please input only number value for the first channel obs-frame frequency (MHz)!"; echo ""
             return 2
         fi
         PdBIUVT_FREQ_REF+=("$1")
     fi
+    
+    if [[ "$PdBIUVT_RPAR" == "uvmap_contours" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        #if echo "$1" | grep -q -v -E "^[0-9Enoise.+-]*$"; then
+        #    echo ""; echo "Error! Input -contours has a wrong format! Please input only number values for the contours (in unit of noise of the map)!"; echo ""
+        #    return 2
+        #fi
+        PdBIUVT_UVMAP_CONTOURS+=("$1")
+    fi
+    
     
     # 
     # object-oriented below
