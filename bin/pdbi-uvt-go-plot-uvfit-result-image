@@ -81,7 +81,7 @@ echo "read uv 'name'.uvt" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 #echo "go uvmap" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "read dirty 'name'.lmv" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "read beam 'name'.beam" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-echo "go bit" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "!go bit" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 # 
 #echo "let size 30" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 # 
@@ -112,7 +112,28 @@ echo "write clean 'name'.lmv-clean" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "fits 'name'.lmv-clean.fits from 'name'.lmv-clean /overwrite" >> "pdbi_uvt_go_plot_uvfit_result_image.map" #<Added><20170909># 
 echo "let type lmv-clean" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "go noise" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-echo "let spacing noise" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+# 
+if [[ $* == *"-spacing "* ]]; then
+    #spacing=($(echo $* | perl -p -e 's/.* -spacing[ ]+([0-9.+-:]+)[ ]+([0-9.+-:]+).*/\1 \2/g')) # must be in degrees
+    spacing_arg=0
+    spacing=()
+    for (( i=1; i<=$#; i++ )); do
+        if [[ "${!i}" == "-spacing" ]]; then spacing_arg=1; continue; fi
+        if [[ $spacing_arg -eq 1 ]]; then
+            spacing_str=$(echo "${!i}" | sed -e 's/://g')
+            if Is_Float_Number "$spacing_str"; then
+                spacing+=("${!i}")
+            else
+                spacing_arg=0
+            fi
+        fi
+    done
+    echo "Setting spacing ${spacing}*noise"
+    echo "let spacing ${spacing}*noise" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+else
+    echo "let spacing noise" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+fi
+# 
 #echo "lut rainbow3" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "let do_bit yes" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "let do_contour yes" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
@@ -198,13 +219,16 @@ if [[ $* == *"-offset "* ]]; then
         fi
     done
     echo "Setting offset ${offset[@]}"
+    ioffset=0
     while [[ ${#offset[@]} -ge 2 ]]; do
         ra_offset=${offset[0]}
         dec_offset=${offset[1]}
         offset=(${offset[@]:2})
-        echo "ra_offset = $ra_offset"
-        echo "dec_offset = $dec_offset"
         echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "say \"ra_offset = $ra_offset\" ! arcsec" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "say \"dec_offset = $dec_offset\" ! arcsec" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "@ find_window_position 'mod($ioffset,NX_BOX)+1' 'int($ioffset/NX_BOX)+1' ! see p_plotfit.map find_window_position" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "LET OBJ_DEC_OFF = '($dec_offset) / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "LET OBJ_RA_OFF = '($ra_offset) / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "LET OBJ_BOX_SIZE = '2.0 / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
@@ -218,6 +242,7 @@ if [[ $* == *"-offset "* ]]; then
         echo "DRAW LINE     'OBJ_RA_OFF+OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "DRAW LINE     'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "PENCIL 0" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        ioffset=$((ioffset+1))
     done
 fi
 # 
