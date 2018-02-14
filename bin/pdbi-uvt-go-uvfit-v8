@@ -514,17 +514,28 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             echo "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
             echo "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.txt"
             if [[ "${PdBIUVT_TYPE[tk]}" == "uvt" ]] || [[ "${PdBIUVT_TYPE[tk]}" == "UVT" ]]; then
+                # 
+                # determine contour spacing
+                if [[ ${#PdBIUVT_UVMAP_SPACING[@]} -gt 0 ]]; then
+                    UVMAP_SPACING=("-spacing" "${PdBIUVT_UVMAP_SPACING[0]}")
+                else
+                    UVMAP_SPACING=()
+                fi
+                # 
+                # plot image
                 if [[ ${#PdBIUVT_FOV_SIZE[@]} -gt 0 ]]; then
                     echo 
                     echo pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" "-offset" ${PdBIUVT_OutX} ${PdBIUVT_OutY}
                     if [[ ${#PdBIUVT_FOV_SIZE[@]} -gt $tk ]]; then
-                        pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset ${PdBIUVT_OutX} ${PdBIUVT_OutY} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image" -FoV "${PdBIUVT_FOV_SIZE[tk]}"
+                        pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset ${PdBIUVT_OutX} ${PdBIUVT_OutY} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image" -FoV "${PdBIUVT_FOV_SIZE[tk]}" ${UVMAP_SPACING[@]}
                     else
-                        pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset ${PdBIUVT_OutX} ${PdBIUVT_OutY} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image" -FoV "${PdBIUVT_FOV_SIZE[${#PdBIUVT_FOV_SIZE[@]}-1]}"
+                        pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset ${PdBIUVT_OutX} ${PdBIUVT_OutY} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image" -FoV "${PdBIUVT_FOV_SIZE[${#PdBIUVT_FOV_SIZE[@]}-1]}" ${UVMAP_SPACING[@]}
                     fi
                 else
-                    pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset ${PdBIUVT_OutX} ${PdBIUVT_OutY} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image" -FoV 10
+                    pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset ${PdBIUVT_OutX} ${PdBIUVT_OutY} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image" -FoV 10 ${UVMAP_SPACING[@]}
                 fi
+                # 
+                # plot spectrum if there are more than one channels
                 if [[ ${#PdBIUVT_OutX[@]} -gt 1 ]]; then
                     if [[ $(echo "load crabPlot.sm" | sm | wc -l) -eq 0 ]] && [[ 1 -eq 0 ]]; then
                         pdbi-uvt-go-plot-uvfit-result-spectrum "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.txt" -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.spectrum"
