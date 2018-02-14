@@ -58,6 +58,10 @@ elif [[ x"$PdBIUVT_CVF_NAME" == x*".UVFITS" ]]; then
     PdBIUVT_CVF_TYPE="UVFITS"
 fi
 
+if [[ x"$PdBIUVT_CVF_TYPE" == x"" ]]; then
+    PdBIUVT_CVF_TYPE="uvt"
+fi
+
 
 
 
