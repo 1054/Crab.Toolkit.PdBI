@@ -1,0 +1,137 @@
+#!/bin/bash
+# 
+# Input uvfits
+# Output uvt
+# 
+# Last update:
+#    2018-02-15 Initialized
+# 
+# 
+
+
+
+# CHECK wcstools gethead
+if [[ $(type mapping 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! GILDAS MAPPING was not found! Exit!"
+    exit 1
+fi
+
+
+
+# 
+# Uage
+# 
+usage() {
+    echo "Usage: "
+    echo "  pdbi-uvt-go-import-uvfits-another-method -name NAME.uvfits [NAME_2.uvfits [NAME_3.fits]] [-out OUTPUTNAME.uvt]"
+    echo ""
+}
+
+
+
+# 
+# SOURCE pdbi-uvt-core-arg
+# 
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" "$@"
+else
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8\"!"
+    echo ""
+    exit 1
+fi
+
+
+
+# 
+# Check input parameters -- uvt file name, ra dec
+# 
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]]; then
+    usage; exit
+fi
+
+
+
+# 
+# Loop input uv fits
+# 
+for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
+    # 
+    # if type is uvfits
+    # 
+    if [[ ${PdBIUVT_TYPE[i]} == "uvfits" || ${PdBIUVT_TYPE[i]} == "UVFITS" || ${PdBIUVT_TYPE[i]} == "fits" || ${PdBIUVT_TYPE[i]} == "FITS" ]]; then
+        # 
+        # Set default output file name
+        # 
+        if [[ ${#PdBIUVT_SAVE[@]} -le $i ]]; then
+            PdBIUVT_SAVE+=("${PdBIUVT_NAME[i]}")
+        fi
+        if [[ x"${PdBIUVT_SAVE[i]}" == x || x"${PdBIUVT_SAVE[i]}" == x"tmp_pdbi_uvt" ]]; then 
+            PdBIUVT_SAVE[i]="${PdBIUVT_NAME[i]}"
+            echo ""; echo "Warning! Output name was not given for the input uvfits \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\", setting to \"${PdBIUVT_SAVE[i]}.uvt\""; echo ""
+        fi
+        # 
+        # Remove suffix
+        # 
+        if [[ x"${PdBIUVT_SAVE[i]}" == x*".uvt" ]]; then
+            PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.uvt$//g')
+        fi
+        if [[ x"${PdBIUVT_SAVE[i]}" == x*".UVT" ]]; then
+            PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.UVT$//g')
+        fi
+        # 
+        # Backup existing output file
+        # 
+        if [[ -f "${PdBIUVT_SAVE[i]}.uvt" ]]; then
+            if [[ -f "${PdBIUVT_SAVE[i]}.uvt.backup" ]]; then
+                \rm "${PdBIUVT_SAVE[i]}.uvt.backup"
+            fi
+            echo "Warning! Found existing \"${PdBIUVT_SAVE[i]}.uvt\"! Backup as \"${PdBIUVT_SAVE[i]}.uvt.backup\"!"
+            mv "${PdBIUVT_SAVE[i]}.uvt" "${PdBIUVT_SAVE[i]}.uvt.backup"
+        fi
+        # 
+        # Deal with the input uvfits file
+        # Output to mapping script
+        # "${PdBIUVT_SAVE[i]}.uvt.import.uvfits.script"
+        # 
+        PdBIUVT_EXE="${PdBIUVT_SAVE[i]}.uvt.import.uvfits.script"
+        PdBIUVT_LOG="${PdBIUVT_SAVE[i]}.uvt.import.uvfits.log"
+        PdBIUVT_INI="${PdBIUVT_SAVE[i]}.uvt.import.uvfits.init"
+        PdBIUVT_GETHEAD="${PdBIUVT_SAVE[i]}.uvt.import.uvfits.gethead"
+        PdBIUVT_SETHEAD="${PdBIUVT_SAVE[i]}.uvt.import.uvfits.sethead"
+        
+        echo "! GILDAS script" >  "$PdBIUVT_EXE"
+        
+        echo "Converting \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" to \"${PdBIUVT_SAVE[i]}.uvt\""
+        echo "! According to https://www.iram.fr/IRAMFR/ARC/documents/filler/casa-gildas.pdf" >> "$PdBIUVT_EXE"
+        echo "!@ fits_to_uvt \"${PdBIUVT_NAME[i]}\" \"${PdBIUVT_SAVE[i]}\" FREQUENCY NNN(MHz) VELOCITY NNN(km/s) LINE TTT" >> "$PdBIUVT_EXE"
+        echo "@ fits_to_uvt \"${PdBIUVT_NAME[i]}\" \"${PdBIUVT_SAVE[i]}\"" >> "$PdBIUVT_EXE"
+        
+        
+        echo "Running @$PdBIUVT_EXE in GILDAS mapping"
+        echo "@$PdBIUVT_EXE" | mapping -nw -nl > "$PdBIUVT_LOG"
+        
+        
+        echo "Successfully saved to ${PdBIUVT_SAVE[i]}.uvt!"
+        echo "--"
+        
+    fi
+    
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
