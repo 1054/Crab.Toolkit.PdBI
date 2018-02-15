@@ -497,6 +497,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             PdBIUVT_OutX=($(cat "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.txt" | sed -e 's/^ *//g' | tr -s ' ' | grep -v "^#" | cut -d ' ' -f 1))
             PdBIUVT_OutY=($(cat "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.txt" | sed -e 's/^ *//g' | tr -s ' ' | grep -v "^#" | cut -d ' ' -f 3))
             PdBIUVT_OutXY=($(cat "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.txt" | sed -e 's/^ *//g' | tr -s ' ' | grep -v "^#" | cut -d ' ' -f 1,3))
+            PdBIUVT_OutSNR=($(cat "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.txt" | sed -e 's/^ *//g' | tr -s ' ' | grep -v "^#" | cut -d ' ' -f 8))
             if [[ -f "${PdBIUVT_SAVE[tk]}.coord.${PdBIUVT_OBJ_NAME[i]}.txt" ]]; then
                 #echo "Warning! Found previous \"${PdBIUVT_SAVE[tk]}.coord.${PdBIUVT_OBJ_NAME[i]}.txt\"! Backup as \"${PdBIUVT_SAVE[tk]}.coord.${PdBIUVT_OBJ_NAME[i]}.txt.backup\"!"
                 mv "${PdBIUVT_SAVE[tk]}.coord.${PdBIUVT_OBJ_NAME[i]}.txt" "${PdBIUVT_SAVE[tk]}.coord.${PdBIUVT_OBJ_NAME[i]}.txt~"
@@ -523,19 +524,33 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                     UVMAP_SPACING=()
                 fi
                 # 
+                # determine FoV by maximum 'PdBIUVT_OutXY', if 'PdBIUVT_OutXY > PLOT_DEFAULT_FoV', but only consider SNR>0 fits
+                PLOT_DEFAULT_FoV=10 # arcsec, default FoV
+                for (( iOutXY = 0; iOutXY < ${#PdBIUVT_OutXY[@]}; iOutXY++ )); do
+                    if [[ "${PdBIUVT_OutSNR[iOutXY]}" != "NaN" ]]; then
+                        if [[ $(awk "BEGIN {if (($PdBIUVT_OutSNR)>0) print 1; else print 0;}") -eq 1 ]]; then
+                            if [[ $(awk "BEGIN {if (2.0*(${PdBIUVT_OutXY[iOutXY]})*2.0*(${PdBIUVT_OutXY[iOutXY]}) > ($PLOT_DEFAULT_FoV)*($PLOT_DEFAULT_FoV)) print 1; else print 0;}") -eq 1 ]]; then
+                                PLOT_DEFAULT_FoV=$(awk "BEGIN {if ((${PdBIUVT_OutXY[iOutXY]})>=0) print (2.0*(${PdBIUVT_OutXY[iOutXY]})); else print (-2.0*(${PdBIUVT_OutXY[iOutXY]}));}")
+                                # note that 'PdBIUVT_OutXY' are the offset of fitted objects, while FoV is the length of field of view, so we need '2.0*PdBIUVT_OutXY'. 
+                            fi
+                        fi
+                    fi
+                done
+                PLOT_DEFAULT_FoV=$(awk "BEGIN {print (($PLOT_DEFAULT_FoV)*1.2);}") # arcsec, default FoV, 10*1.2 = 12 arcsec.
+                # 
                 # plot image
                 if [[ ${#PdBIUVT_FOV_SIZE[@]} -gt 0 ]]; then
                     echo 
-                    echo pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset ${PdBIUVT_OutXY[@]} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image"
+                    echo pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset-per-channel ${PdBIUVT_OutXY[@]} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image"
                     if [[ ${#PdBIUVT_FOV_SIZE[@]} -gt $tk ]]; then
-                        pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset ${PdBIUVT_OutXY[@]} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image" -FoV "${PdBIUVT_FOV_SIZE[tk]}" ${UVMAP_SPACING[@]} > "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image.log"
+                        pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset-per-channel ${PdBIUVT_OutXY[@]} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image" -FoV "${PdBIUVT_FOV_SIZE[tk]}" ${UVMAP_SPACING[@]} > "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image.log"
                     else
-                        pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset ${PdBIUVT_OutXY[@]} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image" -FoV "${PdBIUVT_FOV_SIZE[${#PdBIUVT_FOV_SIZE[@]}-1]}" ${UVMAP_SPACING[@]} > "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image.log"
+                        pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset-per-channel ${PdBIUVT_OutXY[@]} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image" -FoV "${PdBIUVT_FOV_SIZE[${#PdBIUVT_FOV_SIZE[@]}-1]}" ${UVMAP_SPACING[@]} > "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image.log"
                     fi
                 else
                     echo 
-                    echo pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset ${PdBIUVT_OutXY[@]} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image" -FoV 10 ${UVMAP_SPACING[@]}
-                    pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset ${PdBIUVT_OutXY[@]} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image" -FoV 10 ${UVMAP_SPACING[@]} > "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image.log"
+                    echo pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset-per-channel ${PdBIUVT_OutXY[@]} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image" -FoV $PLOT_DEFAULT_FoV ${UVMAP_SPACING[@]}
+                    pdbi-uvt-go-plot-uvfit-result-image "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" -offset-per-channel ${PdBIUVT_OutXY[@]} -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image" -FoV $PLOT_DEFAULT_FoV ${UVMAP_SPACING[@]} > "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.image.log"
                 fi
                 # 
                 # plot spectrum if there are more than one channels

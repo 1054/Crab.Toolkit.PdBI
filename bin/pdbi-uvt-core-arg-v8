@@ -151,6 +151,8 @@ PdBIUVT_UVMAP_CONTOURS=() # contours in unit of 'noise' (TODO: 20180214)
 PdBIUVT_UVMAP_SPACING=()  # spacing in unit of 'noise'
 # ------------------------# uv compress
 PdBIUVT_UVRESAMPLE_VW=()  # velocity width to resample
+# ------------------------# uv ctime
+PdBIUVT_TIME_INTERVAL=()  # time interval in unit of TODO
 # ----------------------- # uvt line search
 PdBIUVT_LINE_SEARCH_WIDTH=()
 PdBIUVT_LINE_SEARCH_STEP=()
@@ -218,6 +220,9 @@ while [[ "$#" -gt 0 ]]; do
            "-spacing") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_spacing";; # in unit of 'noise'
    "-contour-spacing") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_spacing";; # in unit of 'noise'
      "-uvmap-spacing") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_spacing";; # in unit of 'noise'
+
+             "-ctime") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uv_ctime";; # 
+     "-time-interval") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uv_ctime";; # 
 
              "-radec") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="radec";;  # object coordinate pairs
 
@@ -521,6 +526,13 @@ while [[ "$#" -gt 0 ]]; do
             break
         fi
         PdBIUVT_UVMAP_SPACING+=("$1")
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "uv_ctime" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        PdBIUVT_TIME_INTERVAL+=("$1")
     fi
     
     

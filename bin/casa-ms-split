@@ -331,10 +331,15 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         # 
         if [[ $isou -lt ${#CASA_INP_SPW[@]} ]]; then
             CASAMS_SPW=(${CASA_INP_SPW[isou]})
-            if [[ $isou -eq 0 ]]; then echo "Setting spw according to the user input (${#CASAMS_SPW[@]} spws)"; fi
+            if [[ $isou -eq 0 ]]; then echo "Setting spw according to the user input (${#CASAMS_SPW[@]} spws) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
         else
-            CASAMS_SPW=(${CASAMS_TableSpws[@]})
-            if [[ $isou -eq 0 ]]; then echo "Setting spw according to the SPECTRAL_WINDOW table (${#CASAMS_SPW[@]} spws)"; fi
+            if [[ ${#CASA_INP_SPW[@]} -gt 0 ]]; then
+                CASAMS_SPW=(${CASA_INP_SPW[$((${#CASA_INP_SPW[@]}-1))]})
+                if [[ $isou -eq 0 ]]; then echo "Setting spw according to the user input (${#CASAMS_SPW[@]} spws) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
+            else
+                CASAMS_SPW=(${CASAMS_TableSpws[@]})
+                if [[ $isou -eq 0 ]]; then echo "Setting spw according to the SPECTRAL_WINDOW table (${#CASAMS_SPW[@]} spws) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
+            fi
         fi
         
         # 
@@ -342,10 +347,15 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         # 
         if [[ $isou -lt ${#CASA_INP_WIDTH[@]} ]]; then
             CASAMS_WID=(${CASA_INP_WIDTH[isou]})
-            if [[ $isou -eq 0 ]]; then echo "Setting width according to the user input (${CASAMS_WID[@]})"; fi
+            if [[ $isou -eq 0 ]]; then echo "Setting width according to the user input (${CASAMS_WID[@]}) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
         else
-            CASAMS_WID=(${CASAMS_TableWidths[@]})
-            if [[ $isou -eq 0 ]]; then echo "Setting width according to the SPECTRAL_WINDOW table (${CASAMS_WID[@]})"; fi
+            if [[ ${#CASA_INP_WIDTH[@]} -gt 0 ]]; then
+                CASAMS_WID=(${CASA_INP_WIDTH[$((${#CASA_INP_WIDTH[@]}-1))]})
+                if [[ $isou -eq 0 ]]; then echo "Setting width according to the user input (${CASAMS_WID[@]}) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
+            else
+                CASAMS_WID=(${CASAMS_TableWidths[@]})
+                if [[ $isou -eq 0 ]]; then echo "Setting width according to the SPECTRAL_WINDOW table (${CASAMS_WID[@]}) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
+            fi
         fi
         
         # 
@@ -353,10 +363,15 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         # 
         if [[ $isou -lt ${#CASA_INP_STOKES[@]} ]]; then
             CASAMS_STK=(${CASA_INP_STOKES[isou]})
-            if [[ $isou -eq 0 ]]; then echo "Setting stokes according to the user input (${#CASAMS_STK[@]} stokes)"; fi
+            if [[ $isou -eq 0 ]]; then echo "Setting stokes according to the user input (${#CASAMS_STK[@]} stokes) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
         else
-            CASAMS_STK=("")
-            if [[ $isou -eq 0 ]]; then echo "Setting stokes to all"; fi
+            if [[ ${#CASA_INP_STOKES[@]} -gt 0 ]]; then
+                CASAMS_STK=(${CASA_INP_STOKES[$((${#CASA_INP_STOKES[@]}-1))]})
+                if [[ $isou -eq 0 ]]; then echo "Setting stokes according to the user input (${#CASAMS_STK[@]} stokes) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
+            else
+                CASAMS_STK=("")
+                if [[ $isou -eq 0 ]]; then echo "Setting stokes to all for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
+            fi
         fi
         
         # 
@@ -395,6 +410,9 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             
             # if the width is 0, set it to the full width (i.e. a single-channel continuum)
             if [[ x"$SPLIT_WID" == x"0" ]]; then
+                SPLIT_WID=${CASAMS_TableWidths[ispw]}
+            fi
+            if [[ $(awk "BEGIN {if($SPLIT_WID > ${CASAMS_TableWidths[ispw]}) print 1; else print 0;}") -eq 1 ]]; then
                 SPLIT_WID=${CASAMS_TableWidths[ispw]}
             fi
             

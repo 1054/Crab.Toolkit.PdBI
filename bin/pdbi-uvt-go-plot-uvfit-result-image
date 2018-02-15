@@ -4,7 +4,15 @@
 
 
 if [[ $# -lt 1 ]]; then
-    echo "Usage: pdbi-uvt-go-plot-uvfit-result-image *.uvt -radec ra dec -offset xoff yoff [-output output_name]"
+    echo "Usage: "
+    echo "    pdbi-uvt-go-plot-uvfit-result-image aaa.uvt -radec ra dec -offset xoff yoff [-output output_name]"
+    echo ""
+    echo "Notes: "
+    echo "    (1) If you input multiple \"-offset\" values, then that means multiple objects. "
+    echo "        If the data has multiple channels, then all input objects will be highlighted by a black square in each channel map."
+    echo "        If you want to highlight one object but different positions for channel maps, "
+    echo "        then please set \"-offset-per-channel\" with all position pairs ordered by channel number (x1,y1,x2,y2,x3,y3,...)."
+    echo ""
     exit
 fi
 
@@ -142,12 +150,16 @@ if [[ $* == *"-noheader"* ]]; then
 echo "let do_header no" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 fi
 # 
+echo "PENCIL /COLOUR BLACK /WEIGHT 2" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "go nice" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+# 
 echo "define real OBJ_RA_RAD" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "define real OBJ_DEC_RAD" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "define real OBJ_RA_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "define real OBJ_DEC_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "define real OBJ_BOX_SIZE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "define integer OBJ_PANEL_X" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "define integer OBJ_PANEL_Y" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 # 
 if [[ $* == *"-radec "* ]]; then
     #radec=($(echo $* | perl -p -e 's/.* -radec[ ]+([0-9.+-:]+)[ ]+([0-9.+-:]+).*/\1 \2/g')) # must be in degrees
@@ -179,13 +191,20 @@ if [[ $* == *"-radec "* ]]; then
         echo "ra_radian = $ra_radian"
         echo "dec_radian = $dec_radian"
         echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "FOR radec_in_panel_x 1 TO NX_BOX" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "FOR radec_in_panel_y 1 TO NY_BOX" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "SAY \"find_window_position \"'radec_in_panel_x'\" \"'radec_in_panel_y'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "@ find_window_position 'radec_in_panel_x' 'NY_BOX-radec_in_panel_y+1' ! see p_plotfit.map find_window_position ! IMPORTANT <20180215> I verified that the first panel is at bottom-right, but the first channel is at top-left!" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         #echo "LET OBJ_DEC_OFF = '($dec_radian - UVT_HEADER%D0)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         #echo "LET OBJ_RA_OFF = '($ra_radian - UVT_HEADER%A0) * COS(UVT_HEADER%D0)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "LET OBJ_RA_RAD = $ra_radian" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "LET OBJ_DEC_RAD = $dec_radian" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "LET OBJ_RA_OFF = '($ra_radian - PHASE_CENTER_RA) * COS(PHASE_CENTER_DEC)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "LET OBJ_DEC_OFF = '($dec_radian - PHASE_CENTER_DEC)'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "LET OBJ_BOX_SIZE = '2.0 / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_BOX_SIZE = 2.0 ! draw box with size 2 arcsec" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "IF (OBJ_BOX_SIZE.LT.(SIZE[1]/15.0)) LET OBJ_BOX_SIZE = (SIZE[1]/15) ! prevent box size to be too small" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "IF (OBJ_BOX_SIZE.LT.(SIZE[2]/15.0)) LET OBJ_BOX_SIZE = (SIZE[2]/15) ! prevent box size to be too small" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_BOX_SIZE = 'OBJ_BOX_SIZE / 3600.0 / 180.0 * 3.14159265358979' ! convert box size to radian" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM PHASE_CENTER_RA" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM PHASE_CENTER_DEC" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_RA_RAD" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
@@ -193,49 +212,112 @@ if [[ $* == *"-radec "* ]]; then
         echo "EXAM OBJ_RA_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_DEC_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_BOX_SIZE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "PENCIL /COLOUR BLACK /WEIGHT 5" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "PENCIL /COLOUR BLACK /WEIGHT 3 ! draw box with line thickness 3" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "DRAW RELOCATE 'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "DRAW LINE     'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF+OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "DRAW LINE     'OBJ_RA_OFF+OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF+OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "DRAW LINE     'OBJ_RA_OFF+OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "DRAW LINE     'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "PENCIL 0" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "NEXT" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "NEXT" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
     done
 fi
 # 
-if [[ $* == *"-offset "* ]]; then
-    #offset=($(echo $* | perl -p -e 's/.* -offset[ ]+([0-9.+-:]+)[ ]+([0-9.+-:]+).*/\1 \2/g')) # must be in degrees
-    offset_arg=0
-    offset=()
+if [[ $* == *"-offset "* ]] || [[ $* == *"-offset-per-object "* ]]; then
+    #offset_per_object=($(echo $* | perl -p -e 's/.* -offset[ ]+([0-9.+-:]+)[ ]+([0-9.+-:]+).*/\1 \2/g')) # must be in degrees
+    offset_per_object_arg=0
+    offset_per_object=()
     for (( i=1; i<=$#; i++ )); do
-        if [[ "${!i}" == "-offset" ]]; then offset_arg=1; continue; fi
-        if [[ $offset_arg -eq 1 ]]; then
-            offset_str=$(echo "${!i}" | sed -e 's/://g')
-            if Is_Float_Number "$offset_str"; then
-                offset+=("${!i}")
+        if [[ "${!i}" == "-offset" ]] || [[ "${!i}" == "-offset-per-object" ]]; then offset_per_object_arg=1; continue; fi
+        if [[ $offset_per_object_arg -eq 1 ]]; then
+            offset_per_object_str=$(echo "${!i}" | sed -e 's/://g')
+            if Is_Float_Number "$offset_per_object_str"; then
+                offset_per_object+=("${!i}")
             else
-                offset_arg=0
+                offset_per_object_arg=0
             fi
         fi
     done
-    echo "Setting offset ${offset[@]}"
+    echo "Setting offsets per object: ${offset_per_object[@]}"
     ioffset=0
-    while [[ ${#offset[@]} -ge 2 ]]; do
-        ra_offset=${offset[0]}
-        dec_offset=${offset[1]}
-        offset=(${offset[@]:2})
+    while [[ ${#offset_per_object[@]} -ge 2 ]]; do
+        ra_offset_per_object=${offset_per_object[0]}
+        dec_offset_per_object=${offset_per_object[1]}
+        offset_per_object=(${offset_per_object[@]:2})
         echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "say \"ra_offset = $ra_offset\" ! arcsec" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "say \"dec_offset = $dec_offset\" ! arcsec" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "say \"ra_offset_per_object = $ra_offset_per_object\" ! arcsec" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "say \"dec_offset_per_object = $dec_offset_per_object\" ! arcsec" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "@ find_window_position 'mod($ioffset,NX_BOX)+1' 'int($ioffset/NX_BOX)+1' ! see p_plotfit.map find_window_position" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "LET OBJ_DEC_OFF = '($dec_offset) / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "LET OBJ_RA_OFF = '($ra_offset) / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "LET OBJ_BOX_SIZE = '2.0 / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "FOR offset_in_panel_x 1 TO NX_BOX" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "FOR offset_in_panel_y 1 TO NY_BOX" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "SAY \"find_window_position \"'offset_in_panel_x'\" \"'offset_in_panel_y'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "@ find_window_position 'offset_in_panel_x' 'NY_BOX-offset_in_panel_y+1' ! see p_plotfit.map find_window_position ! IMPORTANT <20180215> I verified that the first panel is at bottom-right, but the first channel is at top-left!" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_DEC_OFF = '($dec_offset_per_object) / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_RA_OFF = '($ra_offset_per_object) / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_BOX_SIZE = 2.0 ! draw box with size 2 arcsec" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "IF (OBJ_BOX_SIZE.LT.(SIZE[1]/15.0)) LET OBJ_BOX_SIZE = (SIZE[1]/15) ! prevent box size to be too small" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "IF (OBJ_BOX_SIZE.LT.(SIZE[2]/15.0)) LET OBJ_BOX_SIZE = (SIZE[2]/15) ! prevent box size to be too small" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_BOX_SIZE = 'OBJ_BOX_SIZE / 3600.0 / 180.0 * 3.14159265358979' ! convert box size to radian" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_RA_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_DEC_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_BOX_SIZE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "PENCIL /COLOUR BLACK /WEIGHT 5" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "PENCIL /COLOUR BLACK /WEIGHT 3 ! draw box with line thickness 3" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DRAW RELOCATE 'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DRAW LINE     'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF+OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DRAW LINE     'OBJ_RA_OFF+OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF+OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DRAW LINE     'OBJ_RA_OFF+OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "DRAW LINE     'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "PENCIL 0" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "NEXT" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "NEXT" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        ioffset=$((ioffset+1))
+    done
+fi
+# 
+if [[ $* == *"-offset-per-channel "* ]]; then
+    #offset_per_channel=($(echo $* | perl -p -e 's/.* -offset-per-channel[ ]+([0-9.+-:]+)[ ]+([0-9.+-:]+).*/\1 \2/g')) # must be in degrees
+    offset_per_channel_arg=0
+    offset_per_channel=()
+    for (( i=1; i<=$#; i++ )); do
+        if [[ "${!i}" == "-offset-per-channel" ]]; then offset_per_channel_arg=1; continue; fi
+        if [[ $offset_per_channel_arg -eq 1 ]]; then
+            offset_per_channel_str=$(echo "${!i}" | sed -e 's/://g')
+            if Is_Float_Number "$offset_per_channel_str"; then
+                offset_per_channel+=("${!i}")
+            else
+                offset_per_channel_arg=0
+            fi
+        fi
+    done
+    echo "Setting offsets per channel: ${offset_per_channel[@]}"
+    ioffset=0
+    while [[ ${#offset_per_channel[@]} -ge 2 ]]; do
+        ra_offset_per_channel=${offset_per_channel[0]}
+        dec_offset_per_channel=${offset_per_channel[1]}
+        offset_per_channel=(${offset_per_channel[@]:2})
+        echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "say \"-----------------------------------------------------\"" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "say \"ra_offset_per_channel = $ra_offset_per_channel\" ! arcsec" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "say \"dec_offset_per_channel = $dec_offset_per_channel\" ! arcsec" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_PANEL_X = mod($ioffset,NX_BOX)+1" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_PANEL_Y = int($ioffset/NX_BOX)+1" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "FOR /WHILE (OBJ_PANEL_Y.GT.NY_BOX)" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_PANEL_Y = OBJ_PANEL_Y - NY_BOX" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "NEXT" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "SAY \"find_window_position \"'OBJ_PANEL_X'\" \"'OBJ_PANEL_Y'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "@ find_window_position 'OBJ_PANEL_X' 'NY_BOX-OBJ_PANEL_Y+1' ! see p_plotfit.map find_window_position ! IMPORTANT <20180215> I verified that the first panel is at bottom-right, but the first channel is at top-left!" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_DEC_OFF = '($dec_offset_per_channel) / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_RA_OFF = '($ra_offset_per_channel) / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_BOX_SIZE = 2.0 ! draw box with size 2 arcsec" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "IF (OBJ_BOX_SIZE.LT.(SIZE[1]/15.0)) LET OBJ_BOX_SIZE = (SIZE[1]/15) ! prevent box size to be too small" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "IF (OBJ_BOX_SIZE.LT.(SIZE[2]/15.0)) LET OBJ_BOX_SIZE = (SIZE[2]/15) ! prevent box size to be too small" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_BOX_SIZE = 'OBJ_BOX_SIZE / 3600.0 / 180.0 * 3.14159265358979' ! convert box size to radian" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "EXAM OBJ_RA_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "EXAM OBJ_DEC_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "EXAM OBJ_BOX_SIZE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "PENCIL /COLOUR BLACK /WEIGHT 3 ! draw box with line thickness 3" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "DRAW RELOCATE 'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF-OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "DRAW LINE     'OBJ_RA_OFF-OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF+OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "DRAW LINE     'OBJ_RA_OFF+OBJ_BOX_SIZE/2' 'OBJ_DEC_OFF+OBJ_BOX_SIZE/2' /USER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
@@ -244,10 +326,28 @@ if [[ $* == *"-offset "* ]]; then
         echo "PENCIL 0" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         ioffset=$((ioffset+1))
     done
+    echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+    echo "say \"-----------------------------------------------------\"" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+    echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 fi
 # 
 #echo "LET DO_HEADER NO" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 #echo "LET DO_NICE YES" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+# 
+#<20180215># also print FoV on the figure
+if [[ $* != *"-noheader"* ]]; then
+echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "! print FoV" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "let aspect_ratio no ! see p_plotfit.map procedure fitheader" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "@ header_position ! see p_plotfit.map procedure fitheader" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "@ window_xy 1 1 1 ! see p_plotfit.map procedure fitheader" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "set expand 0.8 ! see p_plotfit.map procedure fitheader" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "PENCIL /COLOUR BLACK /WEIGHT 2" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "draw text .5 -9 \"\\\\iFoV:\\\\i \"'SIZE[1]'\" x \"'SIZE[2]'\" arcsec\" 6 /box 7" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+#echo "@ plot_position ! see p_plotfit.map" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+fi
 # 
 echo "" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "hardcopy pdbi_uvt_go_plot_uvfit_result_image.eps /OVERWRITE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
