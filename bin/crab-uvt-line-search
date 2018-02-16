@@ -170,7 +170,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # SOURCE pdbi-uvt-core-cvf
     # 
     if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v8" ]]; then
-        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v8" "${uvt_name}.uvt"
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v8" "${uvt_name}.uvt" > "${uvt_name}.uvt.source_cvf.log"
     else
         echo ""
         echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v8\"!"
@@ -184,7 +184,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # SOURCE pdbi-uvt-core-rad
     # 
     if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v8" ]]; then
-        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v8" "${uvt_name}.uvt"
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v8" "${uvt_name}.uvt" > "${uvt_name}.uvt.source_rad.log"
     else
         echo ""
         echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v8\"!"
@@ -358,6 +358,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                 echo "ln -fsT \"../${uvt_name}.uvt\" \"velo_bin_${velo_count}.uvt\""
                 ln -fsT "../${uvt_name}.uvt" "velo_bin_${velo_count}.uvt"
             else
+                echo "ln -fsT \"../${uvt_name}_contsub.uvt\" \"${uvt_name}_contsub.uvt\""
+                ln -fsT "../${uvt_name}_contsub.uvt" "${uvt_name}_contsub.uvt"
                 echo "pdbi-uvt-go-average -name \"${uvt_name}_contsub.uvt\" -out \"velo_bin_${velo_count}.uvt\" -vrange $velo_start $velo_end"
                 pdbi-uvt-go-average -name "${uvt_name}_contsub.uvt" -out "velo_bin_${velo_count}.uvt" -vrange "$velo_start" "$velo_end" \
                                                                        > "velo_bin_${velo_count}.uv_average.log"
@@ -650,6 +652,19 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # 
     cd "../"
     
+    
+    
+    # 
+    # clean files if -clean-files are given by the user
+    # 
+    if [[ $PdBIUVT_UVMERGE_KEEP_FILE -lt 0 ]]; then
+        if [[ -f "${uvt_name}.uvt.source_cvf.log" ]]; then
+            rm "${uvt_name}.uvt.source_cvf.log"
+        fi
+        if [[ -f "${uvt_name}.uvt.source_rad.log" ]]; then
+            rm "${uvt_name}.uvt.source_rad.log"
+        fi
+    fi
     
     
 done
