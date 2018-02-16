@@ -356,13 +356,13 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                 #echo "cp \"${uvt_name}.uvt\" \"velo_bin_${velo_count}.uvt\""
                 #cp "${uvt_name}.uvt" "velo_bin_${velo_count}.uvt"
                 echo "ln -fsT \"../${uvt_name}.uvt\" \"velo_bin_${velo_count}.uvt\""
-                ln -fsT "../${uvt_name}.uvt" "velo_bin_${velo_count}.uvt"
+                      ln -fsT  "../${uvt_name}.uvt"   "velo_bin_${velo_count}.uvt"
             else
                 echo "ln -fsT \"../${uvt_name}_contsub.uvt\" \"${uvt_name}_contsub.uvt\""
-                ln -fsT "../${uvt_name}_contsub.uvt" "${uvt_name}_contsub.uvt"
-                echo "pdbi-uvt-go-average -name \"${uvt_name}_contsub.uvt\" -out \"velo_bin_${velo_count}.uvt\" -vrange $velo_start $velo_end"
-                pdbi-uvt-go-average -name "${uvt_name}_contsub.uvt" -out "velo_bin_${velo_count}.uvt" -vrange "$velo_start" "$velo_end" \
-                                                                       > "velo_bin_${velo_count}.uv_average.log"
+                      ln -fsT  "../${uvt_name}_contsub.uvt"   "${uvt_name}_contsub.uvt"
+                echo "pdbi-uvt-go-average -name \"${uvt_name}_contsub.uvt\" -out \"velo_bin_${velo_count}.uvt\" -vrange \"$velo_start\" \"$velo_end\""
+                      pdbi-uvt-go-average -name  "${uvt_name}_contsub.uvt"  -out  "velo_bin_${velo_count}.uvt"  -vrange  "$velo_start"   "$velo_end" \
+                                                                               >  "velo_bin_${velo_count}.uv_average.log"
             fi
         fi
         
@@ -370,8 +370,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         
         if [[ ! -f "velo_bin_${velo_count}.lmv" || ! -f "velo_bin_${velo_count}.lmv.fits" || ! -f "velo_bin_${velo_count}.uvt.uv_map.log" ]]; then
             echo "pdbi-uvt-go-uvmap -name \"velo_bin_${velo_count}.uvt\" -size $fov_size -map_size $map_size"
-            pdbi-uvt-go-uvmap -name "velo_bin_${velo_count}.uvt" -size $fov_size -map_size $map_size | sed -e 's/[^[[:print:]]]//g' \
-                                  > "velo_bin_${velo_count}.uvt.uv_map.log.log"
+                  pdbi-uvt-go-uvmap -name  "velo_bin_${velo_count}.uvt"  -size $fov_size -map_size $map_size | sed -e 's/[^[[:print:]]]//g' \
+                                        >  "velo_bin_${velo_count}.uvt.uv_map.log.log"
         fi
         
         if [[ ! -f "velo_bin_${velo_count}.lmv" ]]; then
@@ -538,19 +538,12 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                         # run uvfit
                         if [[ $blob_uv_fit_separ -ne 1 ]]; then
                             # run uvfit simultaneously for all blobs (note that the blob_num should not be larger than 11, limited by GILDAS/MAPPING)
-                            if [[ $continuum_mode -eq 0 ]]; then
-                                echo "ln -fsT \"../${uvt_name}_contsub.uvt\" \"${uvt_name}_contsub.uvt\""
-                                      ln -fsT  "../${uvt_name}_contsub.uvt"   "${uvt_name}_contsub.uvt"
-                                echo "pdbi-uvt-go-uvfit -parallel -name \"${uvt_name}_contsub.uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit\" -radec ${blob_radec[@]} -FoV $fov_size -uvmap-spacing 3 > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log\""
-                                      pdbi-uvt-go-uvfit -parallel -name  "${uvt_name}_contsub.uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit"  -radec ${blob_radec[@]} -FoV $fov_size -uvmap-spacing 3 >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log"
-                                #<20180214># removed "-vrange ${blob_vrange[@]} "
-                                #<20180214># frange=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
-                            else
-                                echo "ln -fsT \"../${uvt_name}.uvt\" \"${uvt_name}.uvt\""
-                                      ln -fsT  "../${uvt_name}.uvt"   "${uvt_name}.uvt"
-                                echo "pdbi-uvt-go-uvfit -parallel -name \"${uvt_name}.uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit\" -radec ${blob_radec[@]} -FoV $fov_size -uvmap-spacing 3 > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log\""
-                                      pdbi-uvt-go-uvfit -parallel -name  "${uvt_name}.uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit"  -radec ${blob_radec[@]} -FoV $fov_size -uvmap-spacing 3 >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log"
-                            fi
+                            echo "ln -fsT \"../${uvt_name}.uvt\" \"${uvt_name}.uvt\""
+                                  ln -fsT  "../${uvt_name}.uvt"   "${uvt_name}.uvt"
+                            echo "pdbi-uvt-go-uvfit -parallel -name \"${uvt_name}.uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit\" -radec ${blob_radec[@]} -FoV $fov_size -uvmap-spacing 3 > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log\""
+                                  pdbi-uvt-go-uvfit -parallel -name  "${uvt_name}.uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit"  -radec ${blob_radec[@]} -FoV $fov_size -uvmap-spacing 3 >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log"
+                            #<20180214># removed "-vrange ${blob_vrange[@]} "
+                            #<20180214># frange=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
                         fi
                         
                         # plot uvfit
@@ -558,21 +551,14 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                             
                             if [[ $blob_uv_fit_separ -eq 1 ]]; then
                                 # run uvfit separately for each blob
-                                if [[ $continuum_mode -eq 0 ]]; then
-                                    ln -fsT "../${uvt_name}_contsub.uvt" "${uvt_name}_contsub.uvt"
-                                    echo "pdbi-uvt-go-uvfit -parallel -name \"${uvt_name}_contsub.uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}\" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -FoV $fov_size -uvmap-spacing 3 > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log\""
-                                          pdbi-uvt-go-uvfit -parallel -name  "${uvt_name}_contsub.uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}"  -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -FoV $fov_size -uvmap-spacing 3 >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log"
-                                    #<20180214># removed "-vrange ${blob_vrange[@]} "
-                                    #<20180214># frange=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
-                                    cp "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.result.obj_1.txt" \
-                                       "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt"
-                                else
-                                    ln -fsT "../${uvt_name}.uvt" "${uvt_name}.uvt"
-                                    echo "pdbi-uvt-go-uvfit -parallel -name \"${uvt_name}.uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}\" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -FoV $fov_size -uvmap-spacing 3 > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log\""
-                                          pdbi-uvt-go-uvfit -parallel -name  "${uvt_name}.uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}"  -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -FoV $fov_size -uvmap-spacing 3 >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log"
-                                    cp "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.result.obj_1.txt" \
-                                       "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt"
-                                fi
+                                echo "ln -fsT \"../${uvt_name}.uvt\" \"${uvt_name}.uvt\""
+                                      ln -fsT  "../${uvt_name}.uvt"   "${uvt_name}.uvt"
+                                echo "pdbi-uvt-go-uvfit -parallel -name \"${uvt_name}.uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}\" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -FoV $fov_size -uvmap-spacing 3 > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log\""
+                                      pdbi-uvt-go-uvfit -parallel -name  "${uvt_name}.uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}"  -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -FoV $fov_size -uvmap-spacing 3 >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log"
+                                #<20180214># removed "-vrange ${blob_vrange[@]} "
+                                #<20180214># frange=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
+                                cp "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.result.obj_1.txt" \
+                                   "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt"
                             else
                                 cp "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt" \
                                    "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.result.obj_1.txt"
@@ -624,13 +610,16 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             for (( i=0; i<${#lmv_types[@]}; i++ )); do
                 lmv_blobs_total=$(awk "BEGIN {print ($lmv_blobs_total)+(${lmv_blobs[i]});}")
                 if [[ ${lmv_blobs[i]} -eq 0 ]]; then
-                    echo $(ls -1 velo_bin_${velo_count}.${lmv_types[i]}.* | grep -v ".detect_blob.log")
+                    echo rm $(ls -1 velo_bin_${velo_count}.${lmv_types[i]}.* | grep -v ".detect_blob.log")
                     rm $(ls -1 velo_bin_${velo_count}.${lmv_types[i]}.* | grep -v ".detect_blob.log")
                 fi
             done
             if [[ $lmv_blobs_total -eq 0 ]]; then
-                echo $(ls -1 velo_bin_${velo_count}[._]* | grep -v ".detect_blob.log")
+                echo rm $(ls -1 velo_bin_${velo_count}[._]* | grep -v ".detect_blob.log")
                 rm $(ls -1 velo_bin_${velo_count}[._]* | grep -v ".detect_blob.log")
+            else
+                echo rm $(ls -1 velo_bin_${velo_count}[._]* | grep -v ".uv_fit.")
+                rm $(ls -1 velo_bin_${velo_count}[._]* | grep -v ".uv_fit.")
             fi
         fi
         
@@ -644,6 +633,20 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         fi
         
     done
+    
+    
+    
+    # 
+    # clean files if -clean-files are given by the user
+    # 
+    if [[ $PdBIUVT_UVMERGE_KEEP_FILE -lt 0 ]]; then
+        if [[ $(find . -name "pdbi_uvt_go_plot_*" | wc -l) -gt 0 ]]; then
+            rm $(find . -name "pdbi_uvt_go_plot_*")
+        fi
+        if [[ -f "ds9.reg" ]]; then
+            rm "ds9.reg"
+        fi
+    fi
     
     
     
@@ -663,6 +666,12 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         fi
         if [[ -f "${uvt_name}.uvt.source_rad.log" ]]; then
             rm "${uvt_name}.uvt.source_rad.log"
+        fi
+        if [[ -f "${uvt_name}_contsub.*" ]]; then
+            rm "${uvt_name}_contsub.*"
+        fi
+        if [[ -f "${uvt_name}_continuum.*" ]]; then
+            rm "${uvt_name}_continuum.*"
         fi
     fi
     

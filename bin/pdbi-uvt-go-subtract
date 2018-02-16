@@ -6,6 +6,7 @@
 # Last update:
 #    2017-03-30 using "pdbi-uvt-core-arg-v4"
 #    2017-03-30 using "pdbi-uvt-core-arg-v5"
+#    2018-02-16 using "pdbi-uvt-core-arg-v8", cleaning more files
 # 
 # 
 
@@ -25,11 +26,11 @@ usage() {
 # 
 # SOURCE pdbi-uvt-core-arg
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" "$@"
 else
     echo ""
-    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v5\"!"
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8\"!"
     echo ""
     exit 1
 fi
@@ -111,6 +112,12 @@ if [[ -f "${PdBIUVT_SAVE[0]}.uvt" ]]; then
     echo "Successufully saved to \"${PdBIUVT_SAVE[0]}.uvt\"!"
     if [[ -f "$PdBIUVT_LOG" ]]; then
         rm "$PdBIUVT_LOG"
+    fi
+    if [[ -f "$PdBIUVT_EXE" ]]; then
+        rm "$PdBIUVT_EXE"
+    fi
+    if [[ -f "$PdBIUVT_INI" ]]; then
+        rm "$PdBIUVT_INI"
     fi
 else
     echo "Error! Failed to run GILDAS MAPPING UV_SUBTRACT and output \"${PdBIUVT_SAVE[0]}.uvt\"!"
