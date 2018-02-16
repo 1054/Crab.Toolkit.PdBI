@@ -212,7 +212,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     if [[ $continuum_mode -eq 0 ]]; then
         echo ""
         echo "pdbi-uvt-go-average -name \"${uvt_name}.uvt\" -out \"${uvt_name}_continuum.uvt\""
-        pdbi-uvt-go-average -name "${uvt_name}.uvt" -out "${uvt_name}_continuum.uvt"
+        pdbi-uvt-go-average -name "${uvt_name}.uvt" -out "${uvt_name}_continuum.uvt" > "${uvt_name}_continuum.uvt.uv_average_to_continuum.log"
     else
         ln -fsT "${uvt_name}.uvt" "${uvt_name}_continuum.uvt"
     fi
@@ -225,7 +225,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     if [[ $continuum_mode -eq 0 ]]; then
         echo ""
         echo "pdbi-uvt-go-subtract -name \"${uvt_name}.uvt\" \"${uvt_name}_continuum.uvt\" -out \"${uvt_name}_contsub.uvt\""
-        pdbi-uvt-go-subtract -name "${uvt_name}.uvt" "${uvt_name}_continuum.uvt" -out "${uvt_name}_contsub.uvt"
+        pdbi-uvt-go-subtract -name "${uvt_name}.uvt" "${uvt_name}_continuum.uvt" -out "${uvt_name}_contsub.uvt" > "${uvt_name}_continuum.uvt.uv_subtract_to_contsub.log"
     fi
     
     
