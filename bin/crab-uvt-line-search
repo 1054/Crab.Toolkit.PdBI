@@ -130,12 +130,47 @@ default_deblend_level="10"
 for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     
     
+    # 
+    # First check UVTable file type
+    # 
+    if [[ "${PdBIUVT_TYPE[tk]}" != "uvt" ]] || [[ "${PdBIUVT_TYPE[tk]}" != "UVT" ]]; then
+        echo ""
+        echo ""
+        echo ""
+        echo "Error! The input \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\" seems not an UVTable file with extension \"uvt\"! Skip!"
+        echo ""
+        echo ""
+        echo ""
+        sleep 60
+        continue
+    fi
+    
+    echo ""
+    echo "***************************************"
+    echo "* Hello! Welcome!                     *"
+    echo "* Begin time: "$(date +"%Y-%m-%d %H:%M:%S %Z")" *"
+    #    "* Begin time: 2018-02-16 06:54:57 CET *"
+    echo "***************************************"
+    
+    
+    # 
+    # Then make a link if the UVTable file is not under current directory
+    # 
+    uvt_name=$(basename "${PdBIUVT_NAME[tk]}")
+    if [[ "${PdBIUVT_NAME[tk]}" == *"/"* ]] || [[ "${PdBIUVT_TYPE[tk]}" != "uvt" ]]; then
+        ln -fsT "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" "${uvt_name}.uvt"
+    fi
+    echo ""
+    echo "uvt_name = $uvt_name"
+    
+    
+    
     
     # 
     # SOURCE pdbi-uvt-core-cvf
     # 
     if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v8" ]]; then
-        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v8" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v8" "${uvt_name}.uvt"
     else
         echo ""
         echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v8\"!"
@@ -149,7 +184,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # SOURCE pdbi-uvt-core-rad
     # 
     if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v8" ]]; then
-        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v8" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v8" "${uvt_name}.uvt"
     else
         echo ""
         echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v8\"!"
@@ -160,10 +195,48 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     
     
     # 
+    # Determine if this is a continuum uvt or a data cube uvt with multiple channels
+    # 
+    continuum_mode=0
+    if [[ "$PdBIUVT_VELO_MIN" == "$PdBIUVT_VELO_MAX" && $(awk "BEGIN {if(($PdBIUVT_VELO_MIN)*($PdBIUVT_VELO_MIN)>1e-6) print 1; else print 0;}") == "0" ]]; then
+        continuum_mode=1
+    fi
+    echo ""
+    echo "continuum_mode = $continuum_mode"
+    
+    
+    
+    # 
+    # If the UVTable data is a data cube, then average to make a continuum
+    # 
+    if [[ $continuum_mode -eq 0 ]]; then
+        echo ""
+        echo "pdbi-uvt-go-average -name \"${uvt_name}.uvt\" -out \"${uvt_name}_continuum.uvt\""
+        pdbi-uvt-go-average -name "${uvt_name}.uvt" -out "${uvt_name}_continuum.uvt"
+    else
+        ln -fsT "${uvt_name}.uvt" "${uvt_name}_continuum.uvt"
+    fi
+    
+    
+    
+    # 
+    # Then subtract the continuum
+    # 
+    if [[ $continuum_mode -eq 0 ]]; then
+        echo ""
+        echo "pdbi-uvt-go-subtract -name \"${uvt_name}.uvt\" \"${uvt_name}_continuum.uvt\" -out \"${uvt_name}_contsub.uvt\""
+        pdbi-uvt-go-subtract -name "${uvt_name}.uvt" "${uvt_name}_continuum.uvt" -out "${uvt_name}_contsub.uvt"
+    fi
+    
+    
+    
+    # 
     # Check Telescope pointing information
     # 
     if [[ x"$PdBIUVT_RAND_CENT" == x"" || x"$PdBIUVT_DECD_CENT" == x"" ]]; then
-        echo ""; echo "Error! Could not find telescope pointing information in the uv table file! Please input telescope pointing like \"-pointing 12:36:20 62:20:00\"!"; echo ""
+        echo ""
+        echo "Error! Could not find telescope pointing information in the uv table file! Please input telescope pointing like \"-pointing 12:36:20 62:20:00\"!"
+        echo ""
         exit 4
     fi
     
@@ -173,19 +246,33 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # Set default output directory
     # 
     if [[ ${#PdBIUVT_SAVE[@]} -le $tk ]]; then
-        PdBIUVT_SAVE+=($(basename "${PdBIUVT_NAME[tk]}")"_crab_uvt_line_search")
+        PdBIUVT_SAVE+=("${uvt_name}_crab_uvt_line_search")
+        echo ""
         echo "Warning! Output directory name was not defined, we will set it as \"${PdBIUVT_SAVE[tk]}\"!"
     fi
     if [[ x"${PdBIUVT_SAVE[tk]}" == x || x"${PdBIUVT_SAVE[tk]}" == x"tmp_pdbi_uvt" || x"${PdBIUVT_SAVE[tk]}" == x"tmp_pdbi_uvt_run_uv_fit" ]]; then
-        PdBIUVT_SAVE[tk]=$(basename "${PdBIUVT_NAME[tk]}")"_crab_uvt_line_search"
+        PdBIUVT_SAVE[tk]="${uvt_name}_crab_uvt_line_search"
+        echo ""
         echo "Warning! Output directory name was not defined, we will set it as \"${PdBIUVT_SAVE[tk]}\"!"
     fi
-    if [[ ! -d "${PdBIUVT_SAVE[tk]}" ]]; then
-        mkdir "${PdBIUVT_SAVE[tk]}"
+    output_dir="${PdBIUVT_SAVE[tk]}"
+    echo ""
+    echo "output_dir = $output_dir"
+    if [[ ! -d "${output_dir}" ]]; then
+        echo ""
+        echo "mkdir \"${output_dir}\""
+        mkdir "${output_dir}"
     fi
+    # TODO: Backup existing output file
+    
+    
+    
     # 
-    # Backup existing output file
+    # cd into output directory
     # 
+    echo ""
+    echo "cd \"${output_dir}/\""
+    cd "${output_dir}/"
     
     
     
@@ -193,14 +280,18 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # Print message
     # 
     echo ""
-    echo "*********"
-    echo "* hello *"
-    echo "*********"
-    echo "PdBIUVT_SAVE[tk] = ${PdBIUVT_SAVE[tk]}"
     echo "PdBIUVT_VELO_MIN = $PdBIUVT_VELO_MIN"
     echo "PdBIUVT_VELO_MAX = $PdBIUVT_VELO_MAX"
+    echo "PdBIUVT_FREQ_MAX = $PdBIUVT_FREQ_MAX"
+    echo "PdBIUVT_FREQ_MIN = $PdBIUVT_FREQ_MIN"
+    echo ""
     echo "--"
     
+    
+    
+    # 
+    # Compute velocity bins
+    # 
     velo_count=1
     velo_start="$PdBIUVT_VELO_MIN"
     #velo_width="300.0"
@@ -239,40 +330,39 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         deblend_level="$default_deblend_level"
     fi
     
-    # patch for continuum uvt
-    continuum_mode=0
-    if [[ "$PdBIUVT_VELO_MIN" == "$PdBIUVT_VELO_MAX" && $(awk "BEGIN {if(($PdBIUVT_VELO_MIN)*($PdBIUVT_VELO_MIN)>1e-6) print 1; else print 0;}") == "0" ]]; then
-        continuum_mode=1
-    fi
     
+    # 
+    # count velocity bins, but be careful about whether the uvtable data is continuum data (single channel) or line data cube (multiple channels)
+    # 
     while [[ $(awk "BEGIN {if(($velo_start)<($PdBIUVT_VELO_MAX)) print 1; else print 0;}") -eq 1 || $continuum_mode -eq 1 ]]; do
+        
         velo_end=$(awk "BEGIN {print ($velo_start)+($velo_width)}")
         if [[ $(awk "BEGIN {if(($velo_end)>=($PdBIUVT_VELO_MAX)) print 1; else print 0;}") -eq 1 ]]; then
             velo_end="$PdBIUVT_VELO_MAX"
         fi
         
-        if [[ $(ls -1f "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}."* 2>/dev/null | wc -l) -ne 0 ]]; then
-            if [[ $(grep "Exit code" "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}."*".log" 2>/dev/null | wc -l) -ne 0 ]]; then
+        if [[ $(ls -1f "velo_bin_${velo_count}."* 2>/dev/null | wc -l) -ne 0 ]]; then
+            if [[ $(grep "Exit code" "velo_bin_${velo_count}."*".log" 2>/dev/null | wc -l) -ne 0 ]]; then
                 echo "Found \"Exit code\" in log files, will remove old results!"
-                echo "rm" "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}."* 2>/dev/null
-                rm "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}."* 2>/dev/null
+                echo "rm" "velo_bin_${velo_count}."* 2>/dev/null
+                rm "velo_bin_${velo_count}."* 2>/dev/null
             fi
         fi
         
         # run uv_average to average every velo_width km/s bin
-        if [[ ! -f "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt" ]]; then
+        if [[ ! -f "velo_bin_${velo_count}.uvt" ]]; then
             # patch for continuum uvt
             if [[ $continuum_mode -eq 1 ]]; then
-                echo "cp \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\" \"${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt\""
-                cp "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt"
+                #echo "cp \"${uvt_name}.uvt\" \"velo_bin_${velo_count}.uvt\""
+                #cp "${uvt_name}.uvt" "velo_bin_${velo_count}.uvt"
+                echo "ln -fsT \"../${uvt_name}.uvt\" \"velo_bin_${velo_count}.uvt\""
+                ln -fsT "../${uvt_name}.uvt" "velo_bin_${velo_count}.uvt"
             else
-                echo "pdbi-uvt-go-average -name \"${PdBIUVT_NAME[tk]}\" -out \"${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt\" -vrange $velo_start $velo_end"
-                pdbi-uvt-go-average -name "${PdBIUVT_NAME[tk]}" -out "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uvt" -vrange "$velo_start" "$velo_end" \
-                                                                   > "${PdBIUVT_SAVE[tk]}/velo_bin_${velo_count}.uv_average.log"
+                echo "pdbi-uvt-go-average -name \"${uvt_name}_contsub.uvt\" -out \"velo_bin_${velo_count}.uvt\" -vrange $velo_start $velo_end"
+                pdbi-uvt-go-average -name "${uvt_name}_contsub.uvt" -out "velo_bin_${velo_count}.uvt" -vrange "$velo_start" "$velo_end" \
+                                                                       > "velo_bin_${velo_count}.uv_average.log"
             fi
         fi
-        
-        cd "${PdBIUVT_SAVE[tk]}/"
         
         #rm "velo_bin_${velo_count}.lmv"* "velo_bin_${velo_count}.lmv_bscale.detect_blob"* 2>/dev/null
         
@@ -371,10 +461,12 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                 blob_overwrite=1
             fi
             if [[ ! -f "velo_bin_${velo_count}.${lmv_type}.detect_blob.log" ]]; then
+                echo "************"
                 echo "Error! Failed to run \"CrabBlobDetector\" and output \"velo_bin_${velo_count}.${lmv_type}.detect_blob.log\"!"
                 echo "Please check \"velo_bin_${velo_count}.${lmv_type}.detect_blob.log\"!"
                 echo "Current directory \"$(pwd -P)\"!"
-                exit
+                echo "************"
+                exit 1
             fi
             
             # count blobs
@@ -444,11 +536,19 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                         # run uvfit
                         if [[ $blob_uv_fit_separ -ne 1 ]]; then
                             # run uvfit simultaneously for all blobs (note that the blob_num should not be larger than 11, limited by GILDAS/MAPPING)
-                            ln -fsT "../${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" $(basename "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}")
-                            echo "pdbi-uvt-go-uvfit -parallel -name \""$(basename "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}")"\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit\" -radec ${blob_radec[@]} -FoV $fov_size -uvmap-spacing 3 > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log\""
-                                  pdbi-uvt-go-uvfit -parallel -name    $(basename "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}")    -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit"  -radec ${blob_radec[@]} -FoV $fov_size -uvmap-spacing 3 >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log"
-                            #<20180214># removed "-vrange ${blob_vrange[@]} "
-                            #<20180214># frange=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
+                            if [[ $continuum_mode -eq 0 ]]; then
+                                echo "ln -fsT \"../${uvt_name}_contsub.uvt\" \"${uvt_name}_contsub.uvt\""
+                                      ln -fsT  "../${uvt_name}_contsub.uvt"   "${uvt_name}_contsub.uvt"
+                                echo "pdbi-uvt-go-uvfit -parallel -name \"${uvt_name}_contsub.uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit\" -radec ${blob_radec[@]} -FoV $fov_size -uvmap-spacing 3 > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log\""
+                                      pdbi-uvt-go-uvfit -parallel -name  "${uvt_name}_contsub.uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit"  -radec ${blob_radec[@]} -FoV $fov_size -uvmap-spacing 3 >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log"
+                                #<20180214># removed "-vrange ${blob_vrange[@]} "
+                                #<20180214># frange=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
+                            else
+                                echo "ln -fsT \"../${uvt_name}.uvt\" \"${uvt_name}.uvt\""
+                                      ln -fsT  "../${uvt_name}.uvt"   "${uvt_name}.uvt"
+                                echo "pdbi-uvt-go-uvfit -parallel -name \"${uvt_name}.uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit\" -radec ${blob_radec[@]} -FoV $fov_size -uvmap-spacing 3 > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log\""
+                                      pdbi-uvt-go-uvfit -parallel -name  "${uvt_name}.uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit"  -radec ${blob_radec[@]} -FoV $fov_size -uvmap-spacing 3 >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log"
+                            fi
                         fi
                         
                         # plot uvfit
@@ -456,21 +556,36 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                             
                             if [[ $blob_uv_fit_separ -eq 1 ]]; then
                                 # run uvfit separately for each blob
-                                ln -fsT "../${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" $(basename "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}")
-                                echo "pdbi-uvt-go-uvfit -parallel -name \""$(basename "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}")"\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}\" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -FoV $fov_size -uvmap-spacing 3 > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log\""
-                                      pdbi-uvt-go-uvfit -parallel -name    $(basename "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}")    -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}"  -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -FoV $fov_size -uvmap-spacing 3 >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log"
-                                frange=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
-                                cp "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.result.obj_1.txt" \
-                                   "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt"
+                                if [[ $continuum_mode -eq 0 ]]; then
+                                    ln -fsT "../${uvt_name}_contsub.uvt" "${uvt_name}_contsub.uvt"
+                                    echo "pdbi-uvt-go-uvfit -parallel -name \"${uvt_name}_contsub.uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}\" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -FoV $fov_size -uvmap-spacing 3 > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log\""
+                                          pdbi-uvt-go-uvfit -parallel -name  "${uvt_name}_contsub.uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}"  -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -FoV $fov_size -uvmap-spacing 3 >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log"
+                                    #<20180214># removed "-vrange ${blob_vrange[@]} "
+                                    #<20180214># frange=($(cat "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
+                                    cp "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.result.obj_1.txt" \
+                                       "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt"
+                                else
+                                    ln -fsT "../${uvt_name}.uvt" "${uvt_name}.uvt"
+                                    echo "pdbi-uvt-go-uvfit -parallel -name \"${uvt_name}.uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}\" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -FoV $fov_size -uvmap-spacing 3 > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log\""
+                                          pdbi-uvt-go-uvfit -parallel -name  "${uvt_name}.uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}"  -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -FoV $fov_size -uvmap-spacing 3 >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log"
+                                    cp "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.result.obj_1.txt" \
+                                       "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt"
+                                fi
+                            else
+                                cp "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt" \
+                                   "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.result.obj_1.txt"
                             fi
                             
-                            export PdBIUVT_VMIN=($velo_start)
-                            export PdBIUVT_VMAX=($velo_end)
-                            export PdBIUVT_CMIN=()
-                            export PdBIUVT_CMAX=()
-                            export PdBIUVT_FMIN=()
-                            export PdBIUVT_FMAX=()
-                            frange=($(source $(dirname "${BASH_SOURCE[0]}")/pdbi-uvt-core-cvf-v8 $(basename "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}") | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
+                            #export PdBIUVT_VMIN=($velo_start)
+                            #export PdBIUVT_VMAX=($velo_end)
+                            #export PdBIUVT_CMIN=()
+                            #export PdBIUVT_CMAX=()
+                            #export PdBIUVT_FMIN=()
+                            #export PdBIUVT_FMAX=()
+                            #france=($(source ...))
+                            
+                            frange=($(cat "velo_bin_${velo_count}.uv_average.log" | grep "Selecting Freq. range:" | perl -p -e 's/Selecting Freq. range:[ ]+([0-9.+-]+)[ ]+([0-9.+-]+).*/\1 \2/g'))
+                            
                             echo "pdbi-uvt-go-plot-uvfit-result-spectrum \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt\" -frange ${frange[@]}"
                                   pdbi-uvt-go-plot-uvfit-result-spectrum  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.result.obj_${iobj}.txt" -frange ${frange[@]} \
                                                                         > "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.plotfit.obj_${iobj}.log"
@@ -518,8 +633,6 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         fi
         
         
-        cd "../"
-        
         echo "--"
         
         velo_start=$(awk "BEGIN {print ($velo_start)+($velo_step)}")
@@ -532,12 +645,23 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     
     
     
+    # 
+    # cd back
+    # 
+    cd "../"
+    
+    
     
 done
 
 
 
-
+echo ""
+echo "*************************************"
+echo "* All done! Thank you!              *"
+echo "* End time: "$(date +"%Y-%m-%d %H:%M:%S %Z")" *"
+#    "* End time: 2018-02-16 06:56:11 CET *"
+echo "*************************************"
 
 
 
