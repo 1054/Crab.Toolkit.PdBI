@@ -646,6 +646,9 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         if [[ -f "ds9.reg" ]]; then
             rm "ds9.reg"
         fi
+        if [[ -f "${uvt_name}.uvt" ]] || [[ -L "${uvt_name}.uvt" ]]; then
+            rm "${uvt_name}."*
+        fi
     fi
     
     
@@ -667,11 +670,11 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         if [[ -f "${uvt_name}.uvt.source_rad.log" ]]; then
             rm "${uvt_name}.uvt.source_rad.log"
         fi
-        if [[ -f "${uvt_name}_contsub.*" ]]; then
-            rm "${uvt_name}_contsub.*"
+        if [[ -f "${uvt_name}_contsub.uvt" ]]; then
+            rm "${uvt_name}_contsub."*
         fi
-        if [[ -f "${uvt_name}_continuum.*" ]]; then
-            rm "${uvt_name}_continuum.*"
+        if [[ -f "${uvt_name}_continuum.uvt" ]]; then
+            rm "${uvt_name}_continuum."*
         fi
     fi
     
