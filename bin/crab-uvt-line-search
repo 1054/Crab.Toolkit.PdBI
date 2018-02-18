@@ -121,6 +121,7 @@ default_map_size="300" # pixel, 512 is 60 arcsec
 default_fov_size="45" # arcsec
 default_sigma_threshold="4.4" #<TODO># 
 default_deblend_level="10"
+default_max_number="5"
 
 
 
@@ -329,6 +330,11 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     else
         deblend_level="$default_deblend_level"
     fi
+    if [[ ${#PdBIUVT_LINE_SEARCH_MAXNUM[@]} -gt $tk ]]; then
+        max_number="${PdBIUVT_LINE_SEARCH_MAXNUM[$tk]}"
+    else
+        max_number="$default_max_number"
+    fi
     
     
     # 
@@ -456,8 +462,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                 # now try to find 4.5-sigma peaks in each velo_bin_*.lmv.fits image
                 detect_threshold=$(awk "BEGIN {print ($sigma_threshold*($data_noise));}")
                 echo "detect_threshold = $detect_threshold Jy"
-                echo "CrabBlobDetector \"velo_bin_${velo_count}.${lmv_type}.fits\" -detect-threshold $detect_threshold  -deblend-level $deblend_level"
-                CrabBlobDetector "velo_bin_${velo_count}.${lmv_type}.fits" -detect-threshold "$detect_threshold"  -deblend-level "$deblend_level" \
+                echo "CrabBlobDetector \"velo_bin_${velo_count}.${lmv_type}.fits\" -detect-threshold $detect_threshold  -deblend-level $deblend_level -number-limit $max_number" 
+                CrabBlobDetector "velo_bin_${velo_count}.${lmv_type}.fits" -detect-threshold "$detect_threshold"  -deblend-level "$deblend_level" -number-limit "$max_number"  \
                            > "velo_bin_${velo_count}.${lmv_type}.detect_blob.log" 2>&1
                 cp "ds9.reg" "velo_bin_${velo_count}.${lmv_type}.detect_blob.ds9.reg"
                 blob_overwrite=1

@@ -158,6 +158,7 @@ PdBIUVT_LINE_SEARCH_WIDTH=()
 PdBIUVT_LINE_SEARCH_STEP=()
 PdBIUVT_LINE_SEARCH_SIGMA=()
 PdBIUVT_LINE_SEARCH_BLEND=()
+PdBIUVT_LINE_SEARCH_MAXNUM=()
 # ------------------------# program control
 PdBIUVT_PARALLELS=0
 
@@ -321,6 +322,7 @@ while [[ "$#" -gt 0 ]]; do
               "-step") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="step";;
              "-sigma") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="sigma";;
              "-blend") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="blend";;
+            "-maxnum") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="maxnum";;
                "-fov") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
            "-fovsize") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
           "-fov-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
@@ -764,6 +766,12 @@ while [[ "$#" -gt 0 ]]; do
     if [[ "$PdBIUVT_RPAR" == "blend" ]];  then 
         if [[ "$#" -lt 1 ]]; then break; fi
         PdBIUVT_LINE_SEARCH_BLEND+=("$1")
+    fi
+    
+    # -- uvtlinesearch
+    if [[ "$PdBIUVT_RPAR" == "maxnum" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_LINE_SEARCH_MAXNUM+=("$1")
     fi
     
     
