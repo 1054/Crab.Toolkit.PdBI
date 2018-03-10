@@ -44,7 +44,7 @@ fi
 
 source "${CASA_SETUP_BINSETS}" -var PATH -path "${CASA_SETUP_DIRPATH}/bin" -append -clear '*casa-release-*' '*casapy-*' '*/CASA/Portable/*' -debug
 
-source "${CASA_SETUP_BINSETS}" -var LD_LIBRARY_PATH -path "${CASA_SETUP_DIRPATH}/lib" -append -clear '*casa-release-*' '*casapy-*' '*/CASA/Portable/*' -debug
+source "${CASA_SETUP_BINSETS}" -var LD_LIBRARY_PATH -path "${CASA_SETUP_DIRPATH}/lib" -prepend -clear '*casa-release-*' '*casapy-*' '*/CASA/Portable/*' -debug
 
 source "${CASA_SETUP_BINSETS}" -var CASALD_LIBRARY_PATH -path "${CASA_SETUP_DIRPATH}/lib" -prepend -clear '*casa-release-*' '*casapy-*' '*/CASA/Portable/*' -debug
 
