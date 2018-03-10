@@ -1,3 +1,12 @@
+https://casa.nrao.edu/download/distro/linux/release/el5/casa-release-4.5.2-el5.tar.gz # 11-Feb-2016
+https://casa.nrao.edu/download/distro/linux/release/el5/casa-release-4.5.1-el5.tar.gz # 02-Feb-2016
+https://casa.nrao.edu/download/distro/linux/release/el5/casa-release-4.5.0-el5.tar.gz # 29-Oct-2015
+https://casa.nrao.edu/download/distro/linux/release/el5/casa-release-4.4.0-el5.tar.gz # 16-Jun-2015
+https://casa.nrao.edu/download/distro/linux/release/el5/casa-release-4.3.1-el5.tar.gz # 04-Mar-2015
+https://casa.nrao.edu/download/distro/linux/release/el5/casa-release-4.3.1-pipe-el5.tar.gz # 27-Jul-2015
+https://casa.nrao.edu/download/distro/linux/release/el5/casa-release-4.3.0-el5.tar.gz # 07-Jan-2015
+
+
 2015-03
 https://svn.cv.nrao.edu/casa/distro/linux/release/el6/casa-release-4.3.1-el6.tar.gz
 https://almascience.eso.org/arcdistribution/casa-distro/linux/release/casa-release-4.3.1-el6.tar.gz
