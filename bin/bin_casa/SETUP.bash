@@ -31,7 +31,7 @@ fi
 echo "CASA_SETUP_VERSION = ${CASA_SETUP_VERSION[@]}"
 CASA_SETUP_DIRNAME="${CASA_SETUP_DIRPREF}*"$(IFS=.; echo "${CASA_SETUP_VERSION[*]}")"${CASA_SETUP_ARCHIVE}"
 echo "CASA_SETUP_DIRNAME = ${CASA_SETUP_DIRNAME}"
-CASA_SETUP_DIRLIST=($(find "${CASA_SETUP_DIRROOT}" -maxdepth 1 -mindepth 1 -type d -name "${CASA_SETUP_DIRNAME}" | sort -V))
+CASA_SETUP_DIRLIST=($(find -L "${CASA_SETUP_DIRROOT}" -maxdepth 1 -mindepth 1 -type d -name "${CASA_SETUP_DIRNAME}" | sort -V))
 if [[ ${#CASA_SETUP_DIRLIST[@]} -eq 0 ]]; then
     echo "Error! Could not find \"${CASA_SETUP_DIRROOT}/${CASA_SETUP_DIRNAME}\"!"
     source "${CASA_SETUP_BINSETS}" -var PATH -path "${CASA_SETUP_DIRPATH}/bin" -noop -clear '*casa-release-*' '*casapy-*' '*/CASA/Portable/*' -debug
