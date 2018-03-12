@@ -82,14 +82,14 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     echo  "@$PdBIUVT_TEMP_EXEC | mapping -nw -nl > $PdBIUVT_TEMP_LOGT"
     echo  "@$PdBIUVT_TEMP_EXEC" | mapping -nw -nl > "$PdBIUVT_TEMP_LOGT"
     
-    if [[ -f "${PdBIUVT_SAVE[tk]}.uvt" ]]; then
-        echo "Successufully saved to \"${PdBIUVT_SAVE[tk]}.uvt\"!"
+    if grep -q "successfully" "$PdBIUVT_TEMP_LOGT"; then
+        echo "Successufully processed \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"!"
         echo "--"
         if [[ -f "$PdBIUVT_TEMP_LOGT" ]]; then
             rm "$PdBIUVT_TEMP_LOGT"
         fi
     else
-        echo "Error! Failed to run GILDAS MAPPING UV_NOISE and output \"${PdBIUVT_SAVE[tk]}.uvt\"!"
+        echo "Error! Failed to run GILDAS MAPPING UV_NOISE and process \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"!"
         echo "Please check \"$PdBIUVT_TEMP_LOGT\"!"
         exit 1
     fi
