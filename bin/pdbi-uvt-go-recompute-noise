@@ -87,6 +87,8 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
         echo "--"
         if [[ -f "$PdBIUVT_TEMP_LOGT" ]]; then
             rm "$PdBIUVT_TEMP_LOGT"
+            rm "$PdBIUVT_TEMP_INIT"
+            rm "$PdBIUVT_TEMP_EXEC"
         fi
     else
         echo "Error! Failed to run GILDAS MAPPING UV_NOISE and process \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"!"
