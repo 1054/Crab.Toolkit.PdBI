@@ -852,15 +852,17 @@ fi
 # 
 # Call pdbi-uvt-core-rad
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v8" ]]; then
-    # source bash argument "$*" must be quoted to keep white space values. 
-    # source bash argument "$@" is the correct one when passing multiple times.
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v8" "$@"
-else
-    echo ""
-    echo "Error! Could not find \"$(dirname "${BASH_SOURCE[0]}")/pdbi-uvt-core-rad-v8\"!"
-    echo ""
-    return 1
+if [[ $# -gt 0 ]]; then
+    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v8" ]]; then
+        # source bash argument "$*" must be quoted to keep white space values. 
+        # source bash argument "$@" is the correct one when passing multiple times.
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v8" "$@"
+    else
+        echo ""
+        echo "Error! Could not find \"$(dirname "${BASH_SOURCE[0]}")/pdbi-uvt-core-rad-v8\"!"
+        echo ""
+        return 1
+    fi
 fi
 
 
