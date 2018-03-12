@@ -5,6 +5,8 @@ export GAG_SUB_DIR="gildas-exe-07feb18"
 export GAG_ROOT_DIR=$(perl -MCwd -e 'print Cwd::abs_path shift' "$GAG_TOP_DIR/$GAG_SUB_DIR")
 export GAG_EXEC_SYSTEM=$(ls -1 "$GAG_TOP_DIR/$GAG_SUB_DIR/" | grep gfortran)
 source "$GAG_TOP_DIR/bin/bin_setup.bash" -path "$GAG_TOP_DIR/$GAG_SUB_DIR/$GAG_EXEC_SYSTEM/bin" -check astro class mapping -clear '*gildas-exe-*' -debug
+source "$GAG_TOP_DIR/bin/bin_setup.bash" -var LD_LIBRARY_PATH -path "$GAG_TOP_DIR/$GAG_SUB_DIR/$GAG_EXEC_SYSTEM/lib" -prepend -clear '*gildas-exe-*' -debug
+source "$GAG_TOP_DIR/bin/bin_setup.bash" -var LD_LIBRARY_PATH -path "/lib64" -prepend -debug
 source "$GAG_TOP_DIR/$GAG_SUB_DIR/etc/bash_profile" # > /dev/null
 
 type astro class mapping
