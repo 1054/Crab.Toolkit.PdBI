@@ -1,0 +1,111 @@
+#!/bin/bash
+# 
+# Input uvtablefile
+# Run the task UV_NOISE
+# 
+# Last update:
+#    2018-03-12 
+# 
+# 
+
+
+
+# 
+# Uage
+# 
+usage() {
+    echo "Usage: "
+    echo "  pdbi-uvt-go-recompute-noise -name UV_TABLE_NAME"
+    echo ""
+    echo "  Run the task UV_NOISE."
+    echo ""
+}
+
+
+
+# 
+# SOURCE pdbi-uvt-core-arg
+# 
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" "$@"
+else
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8\"!"
+    echo ""
+    exit 1
+fi
+
+
+
+# 
+# Check input parameters -- uvt file name, velocity width ("-width") or line width ("-linewidth")
+# 
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]]; then
+    usage; exit
+fi
+
+
+
+# 
+# Loop input uv tables
+# 
+for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
+    
+    
+    
+    # 
+    # if type is uvtable
+    # 
+    if [[ ${PdBIUVT_TYPE[tk]} != "uvt" && ${PdBIUVT_TYPE[tk]} != "UVT" ]]; then
+        continue
+    fi
+    
+    
+    
+    # 
+    # prepare gildas/mapping init and script and run
+    # 
+    # 
+    PdBIUVT_TEMP_INIT="${PdBIUVT_NAME[tk]}.uvt.uv_noise.init"
+    PdBIUVT_TEMP_EXEC="${PdBIUVT_NAME[tk]}.uvt.uv_noise.map"
+    PdBIUVT_TEMP_LOGT="${PdBIUVT_NAME[tk]}.uvt.uv_noise.log"
+    echo  '! '                                                                                                            > $PdBIUVT_TEMP_INIT
+    echo  '! Task UV_NOISE'                                                                                              >> $PdBIUVT_TEMP_INIT
+    echo  '!'                                                                                                            >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "Input UV Table"                UVDATA$     "'${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}'"'       >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\VALUES    "First and last chans"          RANGES$      '0 0                                              >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "Type of values"                 CTYPE$      "'CHANNEL'"'                                      >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\INTEGER   "Print interval"                 PRINT$      '10000                                            >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\LOGICAL   "Keep anomalous rescale"          KEEP$      'YES                                              >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\GO'                                                                                                      >> $PdBIUVT_TEMP_INIT
+    echo  "run uv_noise $PdBIUVT_TEMP_INIT /NOWINDOW" > $PdBIUVT_TEMP_EXEC
+    echo  "@$PdBIUVT_TEMP_EXEC | mapping -nw -nl > $PdBIUVT_TEMP_LOGT"
+    echo  "@$PdBIUVT_TEMP_EXEC" | mapping -nw -nl > "$PdBIUVT_TEMP_LOGT"
+    
+    if [[ -f "${PdBIUVT_SAVE[tk]}.uvt" ]]; then
+        echo "Successufully saved to \"${PdBIUVT_SAVE[tk]}.uvt\"!"
+        echo "--"
+        if [[ -f "$PdBIUVT_TEMP_LOGT" ]]; then
+            rm "$PdBIUVT_TEMP_LOGT"
+        fi
+    else
+        echo "Error! Failed to run GILDAS MAPPING UV_NOISE and output \"${PdBIUVT_SAVE[tk]}.uvt\"!"
+        echo "Please check \"$PdBIUVT_TEMP_LOGT\"!"
+        exit 1
+    fi
+    
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
