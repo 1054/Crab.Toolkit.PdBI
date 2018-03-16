@@ -612,6 +612,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "spw         = ''"                                              >> "$CASAMS_Script3"
                     echo "datacolumn  = '${CASAMS_TYP}'"                                 >> "$CASAMS_Script3"
                     echo "multisource = False"                                           >> "$CASAMS_Script3"
+                    echo "combinespw  = False"                                           >> "$CASAMS_Script3"
                     echo "inp(exportuvfits)"                                             >> "$CASAMS_Script3"
                     echo "exportuvfits()"                                                >> "$CASAMS_Script3"
                     echo ""                                                              >> "$CASAMS_Script3"
