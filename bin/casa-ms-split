@@ -425,6 +425,15 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 fi
             fi
             
+            # determine the timebin <20180316> <TODO> only support a single value
+            SPLIT_TIMEBIN="0s"
+            if [[ ${#CASA_INP_SPLIT_TIMEBIN[@]} -gt 0 ]]; then
+                SPLIT_TIMEBIN="${CASA_INP_SPLIT_TIMEBIN[0]}"
+                if echo "${SPLIT_TIMEBIN}" | grep -q '^[0-9]*$'; then
+                    SPLIT_TIMEBIN="${SPLIT_TIMEBIN}s" # append "s" (second) as the unit if the input is a pure number
+                fi
+            fi
+            
             
             # 
             # print progress
@@ -538,6 +547,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "correlation = '${SPLIT_STK}'"                                  >> "$CASAMS_Script1"
                     echo "datacolumn  = '${CASAMS_TYP}'"                                 >> "$CASAMS_Script1"
                     echo "uvrange     = '>0m'"                                           >> "$CASAMS_Script1" #<Added><20170929># 
+                    echo "timebin     = '${SPLIT_TIMEBIN}'"                              >> "$CASAMS_Script1" #<Added><20180316># 
                     echo "combinespw  = False"                                           >> "$CASAMS_Script1"
                     echo "keepflags   = False"                                           >> "$CASAMS_Script1"
                     if [[ ${#CASA_VERSION[@]} -eq 3 ]]; then
