@@ -26,11 +26,11 @@ usage() {
 # 
 # SOURCE pdbi-uvt-core-arg
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v6" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v6" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" "$@"
 else
     echo ""
-    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v6\"!"
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8\"!"
     echo ""
     exit 1
 fi
@@ -78,7 +78,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # 
         if [[ -f "${PdBIUVT_SAVE[i]}.uvt" ]]; then
             if [[ -f "${PdBIUVT_SAVE[i]}.uvt.backup" ]]; then
-                \rm "${PdBIUVT_SAVE[i]}.uvt.backup"
+                rm "${PdBIUVT_SAVE[i]}.uvt.backup"
             fi
             echo "Warning! Found existing \"${PdBIUVT_SAVE[i]}.uvt\"! Backup as \"${PdBIUVT_SAVE[i]}.uvt.backup\"!"
             mv "${PdBIUVT_SAVE[i]}.uvt" "${PdBIUVT_SAVE[i]}.uvt.backup"
@@ -141,6 +141,12 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
             echo "--"
             if [[ -f "$PdBIUVT_TEMP_LOGT" ]]; then
                 rm "$PdBIUVT_TEMP_LOGT"
+            fi
+            if [[ -f "$PdBIUVT_TEMP_INIT" ]]; then
+                rm "$PdBIUVT_TEMP_INIT"
+            fi
+            if [[ -f "$PdBIUVT_TEMP_EXEC" ]]; then
+                rm "$PdBIUVT_TEMP_EXEC"
             fi
         else
             echo "Error! Failed to run GILDAS MAPPING UV_SUBTRACT and output \"${PdBIUVT_SAVE[i]}.uvt\"!"
