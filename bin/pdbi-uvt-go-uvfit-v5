@@ -382,6 +382,14 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     #echo ""
     
     
+    # 
+    # Fix unwanted intermediate ".uvt" file, which seems to be created by GILDAS automatically
+    # 
+    if [[ -f ".uvt" ]]; then
+        rm ".uvt"
+    fi
+    
+    
     
     # 
     # Check ${PdBIUVT_SAVE[tk]}.uvfit
