@@ -7,6 +7,7 @@
 #    2017-02-22 created. 
 #    2017-03-30 v5 - delete PdBIUVT_EXE after successful run
 #    2018-03-18 v5.update - copied some from v8, but kept the output columns, i.e., without velo_width, ra_hms, dec_dms, etc.
+#    2018-03-21 found a solution to identify bad channel: use the rf_2 which is the number of fitted functions
 # 
 
 # 
@@ -171,7 +172,7 @@ for (( i=0; i<${#Input_files[@]}; i++ )); do
     echo "    let rf_flux_err  rf_flux_err*1e3    ! to mJy"     >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_snr       rf_flux/rf_flux_err"             >> "$PdBIUVT_SAVE.result.map"
     echo "    if (rf_snr.LT.0) let rf_snr 0"                    >> "$PdBIUVT_SAVE.result.map"
-    echo "    if (rf_2.GT.0.AND.rf_7.GE.4) then"                              >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_2.GT.0.AND.rf_7.GE.4) then"                >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_major     f[ichan,'14+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_major_err f[ichan,'15+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
     echo "    if (rf_major.LE.1E-7)     let rf_major 0"         >> "$PdBIUVT_SAVE.result.map"
@@ -203,6 +204,15 @@ for (( i=0; i<${#Input_files[@]}; i++ )); do
     echo "    else"                                             >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_PA        0.0"                             >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_PA_err    -99"                             >> "$PdBIUVT_SAVE.result.map"
+    echo "    endif"                                            >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_2.LE.0) then"                              >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_x 0.0"                                     >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_y 0.0"                                     >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_x_err -99"                                 >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_y_err -99"                                 >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_flux 0.0"                                  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_flux_err -99"                              >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_freq -99"                                  >> "$PdBIUVT_SAVE.result.map"
     echo "    endif"                                            >> "$PdBIUVT_SAVE.result.map"
     echo "    if (rf_2.LE.0.OR.rf_x.LE.-1E+7.OR.rf_x.GE.+1E+7.OR.rf_y.LE.-1E+7.OR.rf_y.GE.+1E+7) then" >> "$PdBIUVT_SAVE.result.map"
     echo "      let rf_ra -99" >> "$PdBIUVT_SAVE.result.map"
