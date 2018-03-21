@@ -243,7 +243,7 @@ for (( i=0; i<${#Input_files[@]}; i++ )); do
     echo "    let rf_flux_err -99"                              >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_freq -99"                                  >> "$PdBIUVT_SAVE.result.map"
     echo "    endif"                                            >> "$PdBIUVT_SAVE.result.map"
-    echo "    if (rf_func_num.GT.0) then"                       >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_func_num.GT.0.OR.1.EQ.1) then"             >> "$PdBIUVT_SAVE.result.map"
     echo "      if (rf_x.LE.-1E+7.OR.rf_x.GE.+1E+7.OR.rf_y.LE.-1E+7.OR.rf_y.GE.+1E+7) then" >> "$PdBIUVT_SAVE.result.map"
     echo "        let rf_ra -99" >> "$PdBIUVT_SAVE.result.map"
     echo "        let rf_dec -99" >> "$PdBIUVT_SAVE.result.map"
