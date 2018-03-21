@@ -234,7 +234,7 @@ for (( i=0; i<${#Input_files[@]}; i++ )); do
     echo "    let rf_PA        0.0"                             >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_PA_err    -99"                             >> "$PdBIUVT_SAVE.result.map"
     echo "    endif"                                            >> "$PdBIUVT_SAVE.result.map"
-    echo "    if (rf_func_num.LE.0) then"                              >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_func_num.LE.0) then"                       >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_x 0.0"                                     >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_y 0.0"                                     >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_x_err -99"                                 >> "$PdBIUVT_SAVE.result.map"
@@ -243,23 +243,25 @@ for (( i=0; i<${#Input_files[@]}; i++ )); do
     echo "    let rf_flux_err -99"                              >> "$PdBIUVT_SAVE.result.map"
     echo "    let rf_freq -99"                                  >> "$PdBIUVT_SAVE.result.map"
     echo "    endif"                                            >> "$PdBIUVT_SAVE.result.map"
-    echo "    if (rf_func_num.LE.0.OR.rf_x.LE.-1E+7.OR.rf_x.GE.+1E+7.OR.rf_y.LE.-1E+7.OR.rf_y.GE.+1E+7) then" >> "$PdBIUVT_SAVE.result.map"
-    echo "      let rf_ra -99" >> "$PdBIUVT_SAVE.result.map"
-    echo "      let rf_dec -99" >> "$PdBIUVT_SAVE.result.map"
-    echo "      let rf_ra_hms \"-99:-99:-99\"" >> "$PdBIUVT_SAVE.result.map"
-    echo "      let rf_dec_dms \"-99:-99:-99\"" >> "$PdBIUVT_SAVE.result.map"
-    echo "      say rf_x \" \" rf_x_err \" \" rf_y \" \" rf_y_err \" \" rf_freq \" \" rf_flux \" \" rf_flux_err \" \" rf_snr \" \" rf_major \" \" rf_major_err \" \" rf_minor \" \" rf_minor_err \" \" rf_PA \" \" rf_PA_err \" \" rf_ra \" \" rf_dec \" \" rf_ra_hms \" \" rf_dec_dms \" \" rf_velo \" \" rf_width /format ES12.4 A1 ES12.4 A1 ES12.4 A1 ES12.4 A1 F12.4 A1 ES15.5 A1 ES15.5 A1 F12.1 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F15.7 A1 F15.7 A1 A16 A1 A16 A1 F12.4 A1 F12.4" >> "$PdBIUVT_SAVE.result.map"   # G19.7 ES19.7 E19.7 -- https://www.cs.mtu.edu/~shene/COURSES/cs201/NOTES/chap05/format.html
-    echo "    else" >> "$PdBIUVT_SAVE.result.map"
-    echo "      if (f%a0.GT.0) then" >> "$PdBIUVT_SAVE.result.map" #<fixed><20170414># 
-    echo "        let rf_ra f%a0/pi*180+rf_x/3600/cos(f%d0)" >> "$PdBIUVT_SAVE.result.map"
-    echo "        let rf_dec f%d0/pi*180+rf_y/3600" >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_func_num.GT.0) then"                       >> "$PdBIUVT_SAVE.result.map"
+    echo "      if (rf_x.LE.-1E+7.OR.rf_x.GE.+1E+7.OR.rf_y.LE.-1E+7.OR.rf_y.GE.+1E+7) then" >> "$PdBIUVT_SAVE.result.map"
+    echo "        let rf_ra -99" >> "$PdBIUVT_SAVE.result.map"
+    echo "        let rf_dec -99" >> "$PdBIUVT_SAVE.result.map"
+    echo "        let rf_ra_hms \"-99:-99:-99\"" >> "$PdBIUVT_SAVE.result.map"
+    echo "        let rf_dec_dms \"-99:-99:-99\"" >> "$PdBIUVT_SAVE.result.map"
+    echo "        say rf_x \" \" rf_x_err \" \" rf_y \" \" rf_y_err \" \" rf_freq \" \" rf_flux \" \" rf_flux_err \" \" rf_snr \" \" rf_major \" \" rf_major_err \" \" rf_minor \" \" rf_minor_err \" \" rf_PA \" \" rf_PA_err \" \" rf_ra \" \" rf_dec \" \" rf_ra_hms \" \" rf_dec_dms \" \" rf_velo \" \" rf_width /format ES12.4 A1 ES12.4 A1 ES12.4 A1 ES12.4 A1 F12.4 A1 ES15.5 A1 ES15.5 A1 F12.1 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F15.7 A1 F15.7 A1 A16 A1 A16 A1 F12.4 A1 F12.4" >> "$PdBIUVT_SAVE.result.map"   # G19.7 ES19.7 E19.7 -- https://www.cs.mtu.edu/~shene/COURSES/cs201/NOTES/chap05/format.html
     echo "      else" >> "$PdBIUVT_SAVE.result.map"
-    echo "        let rf_ra f%ra/pi*180+rf_x/3600/cos(f%dec)" >> "$PdBIUVT_SAVE.result.map"
-    echo "        let rf_dec f%dec/pi*180+rf_y/3600" >> "$PdBIUVT_SAVE.result.map"
+    echo "        if (f%a0.GT.0) then" >> "$PdBIUVT_SAVE.result.map" #<fixed><20170414># 
+    echo "          let rf_ra f%a0/pi*180+rf_x/3600/cos(f%d0)" >> "$PdBIUVT_SAVE.result.map"
+    echo "          let rf_dec f%d0/pi*180+rf_y/3600" >> "$PdBIUVT_SAVE.result.map"
+    echo "        else" >> "$PdBIUVT_SAVE.result.map"
+    echo "          let rf_ra f%ra/pi*180+rf_x/3600/cos(f%dec)" >> "$PdBIUVT_SAVE.result.map"
+    echo "          let rf_dec f%dec/pi*180+rf_y/3600" >> "$PdBIUVT_SAVE.result.map"
+    echo "        endif" >> "$PdBIUVT_SAVE.result.map"
+    echo "        @ l-rad2ra.map rf_ra_hms 'rf_ra/180.0*pi'" >> "$PdBIUVT_SAVE.result.map" # see -- '/Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_setup.map'
+    echo "        @ l-rad2dec.map rf_dec_dms 'rf_dec/180.0*pi'" >> "$PdBIUVT_SAVE.result.map" # see -- '/Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_setup.map'
+    echo "        say rf_x \" \" rf_x_err \" \" rf_y \" \" rf_y_err \" \" rf_freq \" \" rf_flux \" \" rf_flux_err \" \" rf_snr \" \" rf_major \" \" rf_major_err \" \" rf_minor \" \" rf_minor_err \" \" rf_PA \" \" rf_PA_err \" \" rf_ra \" \" rf_dec \" \" rf_ra_hms \" \" rf_dec_dms \" \" rf_velo \" \" rf_width /format F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 ES15.5 A1 ES15.5 A1 F12.1 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F15.7 A1 F15.7 A1 A16 A1 A16 A1 F12.4 A1 F12.4" >> "$PdBIUVT_SAVE.result.map"   # G19.7 ES19.7 E19.7 -- https://www.cs.mtu.edu/~shene/COURSES/cs201/NOTES/chap05/format.html
     echo "      endif" >> "$PdBIUVT_SAVE.result.map"
-    echo "      @ l-rad2ra.map rf_ra_hms 'rf_ra/180.0*pi'" >> "$PdBIUVT_SAVE.result.map" # see -- '/Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_setup.map'
-    echo "      @ l-rad2dec.map rf_dec_dms 'rf_dec/180.0*pi'" >> "$PdBIUVT_SAVE.result.map" # see -- '/Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_setup.map'
-    echo "      say rf_x \" \" rf_x_err \" \" rf_y \" \" rf_y_err \" \" rf_freq \" \" rf_flux \" \" rf_flux_err \" \" rf_snr \" \" rf_major \" \" rf_major_err \" \" rf_minor \" \" rf_minor_err \" \" rf_PA \" \" rf_PA_err \" \" rf_ra \" \" rf_dec \" \" rf_ra_hms \" \" rf_dec_dms \" \" rf_velo \" \" rf_width /format F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 ES15.5 A1 ES15.5 A1 F12.1 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F15.7 A1 F15.7 A1 A16 A1 A16 A1 F12.4 A1 F12.4" >> "$PdBIUVT_SAVE.result.map"   # G19.7 ES19.7 E19.7 -- https://www.cs.mtu.edu/~shene/COURSES/cs201/NOTES/chap05/format.html
     echo "    endif" >> "$PdBIUVT_SAVE.result.map"
     echo "  next ichan" >> "$PdBIUVT_SAVE.result.map"
     #echo "  say \"\"" >> "$PdBIUVT_SAVE.result.map"
