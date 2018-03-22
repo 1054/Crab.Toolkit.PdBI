@@ -304,25 +304,30 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     echo "            # then read flagged channels and write to file"                                  >> "$CASAMS_ScriptName.py"
     echo "            fo1 = open('$CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb),'wb')"         >> "$CASAMS_ScriptName.py"
     echo "            fo2 = open('$CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb),'wb')"      >> "$CASAMS_ScriptName.py"
-    echo "            loop_row = [tb2.nrows()-1, int((tb2.nrows()-1)/2), 0]"                           >> "$CASAMS_ScriptName.py"
+    echo "            loop_row = []"                                                                   >> "$CASAMS_ScriptName.py"
+    echo "            if tb2.nrows()>1: loop_row.append(tb2.nrows()-1)"                                >> "$CASAMS_ScriptName.py"
+    echo "            if tb2.nrows()>4: loop_row.append(int((tb2.nrows()-1)/4.0*3))"                   >> "$CASAMS_ScriptName.py"
+    echo "            if tb2.nrows()>2: loop_row.append(int((tb2.nrows()-1)/2.0))"                     >> "$CASAMS_ScriptName.py"
+    echo "            if tb2.nrows()>4: loop_row.append(int((tb2.nrows()-1)/4.0*1))"                   >> "$CASAMS_ScriptName.py"
+    echo "            loop_row.append(0)"                                                              >> "$CASAMS_ScriptName.py"
     echo "            for k in loop_row:"                                                              >> "$CASAMS_ScriptName.py"
-    echo "                vis_flag = tb2.getcell('FLAG', k)"                                        >> "$CASAMS_ScriptName.py"
-    echo "                for j in range(len(vis_flag[0])):"                                        >> "$CASAMS_ScriptName.py"
-    echo "                    if vis_flag[0][j] or vis_flag[1][j]:"                                 >> "$CASAMS_ScriptName.py" # note that each vis_flag has two correlations (stokes) RR LL
-    echo "                        if j == 0:"                                                       >> "$CASAMS_ScriptName.py"
-    echo "                            fo1.write('%d'%(j))"                                          >> "$CASAMS_ScriptName.py"
-    echo "                        else:"                                                            >> "$CASAMS_ScriptName.py"
-    echo "                            fo1.write(';%d'%(j))"                                         >> "$CASAMS_ScriptName.py" # NOTE ’;’ to separate channel selections, see https://casa.nrao.edu/docs/taskref/exportuvfits-task.html
-    echo "                    else:"                                                                >> "$CASAMS_ScriptName.py"
-    echo "                        if j == 0:"                                                       >> "$CASAMS_ScriptName.py"
-    echo "                            fo2.write('%d'%(j))"                                          >> "$CASAMS_ScriptName.py"
-    echo "                        else:"                                                            >> "$CASAMS_ScriptName.py"
-    echo "                            fo2.write(';%d'%(j))"                                         >> "$CASAMS_ScriptName.py" # NOTE ’;’ to separate channel selections, see https://casa.nrao.edu/docs/taskref/exportuvfits-task.html
-    echo "                fo1.write('\n')"                                                          >> "$CASAMS_ScriptName.py"
-    echo "                fo2.write('\n')"                                                          >> "$CASAMS_ScriptName.py"
-    echo "            fo1.close()"                                                                  >> "$CASAMS_ScriptName.py"
-    echo "            fo2.close()"                                                                  >> "$CASAMS_ScriptName.py"
-    echo "        tb2.close()"                                                                      >> "$CASAMS_ScriptName.py"  # see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1
+    echo "                vis_flag = tb2.getcell('FLAG', k)"                                           >> "$CASAMS_ScriptName.py"
+    echo "                for j in range(len(vis_flag[0])):"                                           >> "$CASAMS_ScriptName.py"
+    echo "                    if vis_flag[0][j] or vis_flag[1][j]:"                                    >> "$CASAMS_ScriptName.py" # note that each vis_flag has two correlations (stokes) RR LL
+    echo "                        if j == 0:"                                                          >> "$CASAMS_ScriptName.py"
+    echo "                            fo1.write('%d'%(j))"                                             >> "$CASAMS_ScriptName.py"
+    echo "                        else:"                                                               >> "$CASAMS_ScriptName.py"
+    echo "                            fo1.write(';%d'%(j))"                                            >> "$CASAMS_ScriptName.py" # NOTE ’;’ to separate channel selections, see https://casa.nrao.edu/docs/taskref/exportuvfits-task.html
+    echo "                    else:"                                                                   >> "$CASAMS_ScriptName.py"
+    echo "                        if j == 0:"                                                          >> "$CASAMS_ScriptName.py"
+    echo "                            fo2.write('%d'%(j))"                                             >> "$CASAMS_ScriptName.py"
+    echo "                        else:"                                                               >> "$CASAMS_ScriptName.py"
+    echo "                            fo2.write(';%d'%(j))"                                            >> "$CASAMS_ScriptName.py" # NOTE ’;’ to separate channel selections, see https://casa.nrao.edu/docs/taskref/exportuvfits-task.html
+    echo "                fo1.write('\n')"                                                             >> "$CASAMS_ScriptName.py"
+    echo "                fo2.write('\n')"                                                             >> "$CASAMS_ScriptName.py"
+    echo "            fo1.close()"                                                                     >> "$CASAMS_ScriptName.py"
+    echo "            fo2.close()"                                                                     >> "$CASAMS_ScriptName.py"
+    echo "        tb2.close()"                                                                         >> "$CASAMS_ScriptName.py"  # see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1
     #<old-method-20180322>#echo "loop_row = 0"                                                                 >> "$CASAMS_ScriptName.py"
     #<old-method-20180322>#echo "while loop_row < tb.nrows():"                                                 >> "$CASAMS_ScriptName.py"
     #<old-method-20180322>#echo "    if tb.getcell('FLAG_ROW',loop_row) == 0:"                                 >> "$CASAMS_ScriptName.py"
