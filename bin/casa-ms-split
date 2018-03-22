@@ -279,6 +279,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     echo "else: "                                                                       >> "$CASAMS_ScriptName.py"
     echo "    fo.write('data\n')"                                                       >> "$CASAMS_ScriptName.py"
     echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+    if [[ $CASA_INP_SPLIT_TRIMCHAN -eq 1 ]]; then
     echo "#"                                                                            >> "$CASAMS_ScriptName.py"
     echo "# loop each visibility data row"                                              >> "$CASAMS_ScriptName.py"
     echo "# try to find which channels are valid and which are flagged"                 >> "$CASAMS_ScriptName.py"
@@ -328,6 +329,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     echo "            fo1.close()"                                                                     >> "$CASAMS_ScriptName.py"
     echo "            fo2.close()"                                                                     >> "$CASAMS_ScriptName.py"
     echo "        tb2.close()"                                                                         >> "$CASAMS_ScriptName.py"  # see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1
+    fi
     #<old-method-20180322>#echo "loop_row = 0"                                                                 >> "$CASAMS_ScriptName.py"
     #<old-method-20180322>#echo "while loop_row < tb.nrows():"                                                 >> "$CASAMS_ScriptName.py"
     #<old-method-20180322>#echo "    if tb.getcell('FLAG_ROW',loop_row) == 0:"                                 >> "$CASAMS_ScriptName.py"
