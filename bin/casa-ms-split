@@ -287,7 +287,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     echo "        # then read flagged channels and write to file"                                  >> "$CASAMS_ScriptName.py"
     echo "        fo1 = open('$CASAMS_ScriptName.chan.flagged.spw%d.txt'%(spw_numb),'wb')"         >> "$CASAMS_ScriptName.py"
     echo "        fo2 = open('$CASAMS_ScriptName.chan.nonflagged.spw%d.txt'%(spw_numb),'wb')"      >> "$CASAMS_ScriptName.py"
-    echo "        loop_row = [0, tb2.nrows()-1]"                                                   >> "$CASAMS_ScriptName.py"
+    echo "        loop_row = [tb2.nrows()-1, int((tb2.nrows()-1)/2), 0]"                           >> "$CASAMS_ScriptName.py"
     echo "        for k in loop_row:"                                                              >> "$CASAMS_ScriptName.py"
     echo "            vis_flag = tb2.getcell('FLAG', k)"                                        >> "$CASAMS_ScriptName.py"
     echo "            for j in range(len(vis_flag)):"                                           >> "$CASAMS_ScriptName.py"
