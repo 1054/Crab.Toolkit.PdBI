@@ -103,6 +103,7 @@ CASA_INP_DECD=()
 CASA_INP_CONCAT_FREQTOL=() # freqtolerance for concat()
 CASA_INP_CONCAT_DIRTOL=() # freqtolerance for concat()
 CASA_INP_SPLIT_TIMEBIN=() # bin times, string type
+CASA_INP_SPLIT_TRIMCHAN=0 # trim flagged channel or not
 CASA_CMD_TYPE="n/a"
 
 if [[ $CASA_INP_DEBUG -eq 1 ]]; then
@@ -147,6 +148,7 @@ while [[ "$#" -gt 0 ]]; do
        "-freqtol") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="concat-freqtol";;
         "-dirtol") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="concat-dirtol";;
        "-timebin") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="split-timebin";;
+    "-trim-chan"*) CASA_CMD_TEXT="$1";        CASA_CMD_TYPE="split-trimchan";;
            "-out") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="output";;
         "-output") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="output";;
        "-outfile") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="output";;
@@ -173,6 +175,7 @@ while [[ "$#" -gt 0 ]]; do
  "concat-freqtol") if [[ $# -gt 0 ]]; then CASA_INP_CONCAT_FREQTOL+=("$1"); fi;;
   "concat-dirtol") if [[ $# -gt 0 ]]; then CASA_INP_CONCAT_DIRTOL+=("$1"); fi;;
   "split-timebin") if [[ $# -gt 0 ]]; then CASA_INP_SPLIT_TIMEBIN+=("$1"); fi;;
+ "split-trimchan")                         CASA_INP_SPLIT_TRIMCHAN=1;;
          "output") if [[ $# -gt 0 ]]; then CASA_INP_OUTPUT+=("$1"); fi;;
       "overwrite") if [[ $# -gt 0 ]]; then CASA_INP_OVERWRITE+=("$1"); fi;;
             "yes")                         CASA_INP_YES=1;;
