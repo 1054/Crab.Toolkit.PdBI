@@ -130,8 +130,9 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     # 
     # Check SOURCE and SPECTRAL_WINDOW table with casa
     # 
-    CASAMS_TableSources=() # The list of sources in MS
-    CASAMS_TableFields=() # The list of fields in MS, same dimension as source list. 
+    CASAMS_TableFieldNames=() # The list of field names in MS FIELD table
+    CASAMS_TableSources=() # The list of sources in MS SOURCE table
+    CASAMS_TableFields=() # The list of fields in MS SOURCE table, same dimension as source list. 
     CASAMS_TableWidths=() # The channel number list for all spws, has a dimension of spw number. 
     CASAMS_TableFreqs=() # The list of the ref freq of each spw, in Hz
     CASAMS_TableSpws=() # The list of list of spw for each source, has a dimension of source number. 
@@ -390,22 +391,30 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     # 
     # Read data tables
     # 
-    if [[ ! -f "$CASAMS_ScriptName.name.txt" ]]; then
+    if [[ ! -f "$CASAMS_ScriptName.field.names.txt" ]]; then
         echo ""
         echo "Error! Failed to read \"${CASAMS_VIS}\"/SOURCE/table.* files! Please make sure the measurement set is complete!"
         echo ""
         exit
     else
-        IFS=$'\n' read -d '' -r -a CASAMS_TableSources < "$CASAMS_ScriptName.name.txt"
+        IFS=$'\n' read -d '' -r -a CASAMS_TableFieldNames < "$CASAMS_ScriptName.field.names.txt"
     fi
-    if [[ ! -f "$CASAMS_ScriptName.field.txt" ]]; then
-        echo ""
-        echo "Error! Failed to read \"${CASAMS_VIS}\"/SOURCE/table.* files! Please make sure the measurement set is complete!"
-        echo ""
-        exit
-    else
-        IFS=$'\n' read -d '' -r -a CASAMS_TableFields < "$CASAMS_ScriptName.field.txt"
-    fi
+    #if [[ ! -f "$CASAMS_ScriptName.name.txt" ]]; then
+    #    echo ""
+    #    echo "Error! Failed to read \"${CASAMS_VIS}\"/SOURCE/table.* files! Please make sure the measurement set is complete!"
+    #    echo ""
+    #    exit
+    #else
+    #    IFS=$'\n' read -d '' -r -a CASAMS_TableSources < "$CASAMS_ScriptName.name.txt"
+    #fi
+    #if [[ ! -f "$CASAMS_ScriptName.field.txt" ]]; then
+    #    echo ""
+    #    echo "Error! Failed to read \"${CASAMS_VIS}\"/SOURCE/table.* files! Please make sure the measurement set is complete!"
+    #    echo ""
+    #    exit
+    #else
+    #    IFS=$'\n' read -d '' -r -a CASAMS_TableFields < "$CASAMS_ScriptName.field.txt"
+    #fi
     if [[ ! -f "$CASAMS_ScriptName.chan.width.txt" ]]; then
         echo ""
         echo "Error! Failed to read \"${CASAMS_VIS}\"/SPECTRAL_WINDOW/table.* files! Please make sure the measurement set is complete!"
@@ -441,7 +450,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     
     
     #<DEBUG># 
-    echo "CASAMS_TableSources = ${CASAMS_TableSources[@]}"
+    echo "CASAMS_TableFieldNames = ${CASAMS_TableFieldNames[@]}"
     echo "CASAMS_TableSpws = ${CASAMS_TableSpws[@]}"
     echo "CASA_INP_FIELD = ${CASA_INP_FIELD[@]}"
     echo "CASA_INP_SPW = ${CASA_INP_SPW[@]}"
@@ -454,8 +463,8 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         CASAMS_SOU=(${CASA_INP_FIELD[@]})
         echo "Setting source list according to the user input (${#CASAMS_SOU[@]} sources)"
     else
-        CASAMS_SOU=(${CASAMS_TableSources[@]})
-        echo "Setting source list according to the SOURCE table (${#CASAMS_SOU[@]} sources)"
+        CASAMS_SOU=(${CASAMS_TableFieldNames[@]})
+        echo "Setting source list according to the FIELD table (${#CASAMS_SOU[@]} sources)"
     fi
     
     
@@ -466,15 +475,18 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     # 
     # Loop each source in the list
     # 
+    CASAMS_SID=()
     for (( isou=0; isou<${#CASAMS_SOU[@]}; isou++ )); do 
+        CASAMS_SID+=(-1)
         
         # 
         # Check current source, see if it is inside the SOURCE table.
         # 
         CASAMS_YES=0
-        for (( j=0; j<${#CASAMS_TableSources[@]}; j++ )); do 
-            if [[ x$(echo "${CASAMS_SOU[isou]}") == x$(echo "${CASAMS_TableSources[j]}") ]]; then
+        for (( j=0; j<${#CASAMS_TableFieldNames[@]}; j++ )); do 
+            if [[ x$(echo "${CASAMS_SOU[isou]}") == x$(echo "${CASAMS_TableFieldNames[j]}") ]]; then
                 CASAMS_YES=1
+                CASAMS_SID[isou]=$j
             fi
         done
         if [[ $CASAMS_YES -eq 0 ]]; then
@@ -536,6 +548,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         for (( ispw=0; ispw<${#CASAMS_SPW[@]}; ispw++ )); do
             
             SPLIT_SOU="${CASAMS_SOU[isou]}"
+            SPLIT_SID="${CASAMS_SID[isou]}"
             SPLIT_SPW="${CASAMS_SPW[ispw]}"
             SPLIT_WID=""
             SPLIT_FEQ=""
@@ -545,9 +558,11 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             # determine whether there are flagged channels (experimental)
             # apply this if user has not input "-spw 0:XXX~XXX 1:XXX~XXX"
             if [[ $CASA_INP_SPLIT_TRIMCHAN -eq 1 ]]; then
+                # if user gives the option "-trim-chan"
                 if [[ "$SPLIT_SPW_NUMBER" == "$SPLIT_SPW" ]]; then
-                    if [[ -f "$CASAMS_ScriptName.chan.flagged.spw${SPLIT_SPW_NUMBER}.txt" ]] && [[ -f "$CASAMS_ScriptName.chan.nonflagged.spw${SPLIT_SPW_NUMBER}.txt" ]]; then
-                        SPLIT_SPW="${SPLIT_SPW_NUMBER}:"$(cat "$CASAMS_ScriptName.chan.nonflagged.spw${SPLIT_SPW_NUMBER}.txt" | grep -v "^#" | head -n 1 | sed -e 's/ *//g')
+                    # if user is not applying channalized spw like "-spw 0:XXX~XXX"
+                    if [[ -f "$CASAMS_ScriptName.chan.flagged.spw${SPLIT_SPW_NUMBER}.field${SPLIT_SID}.txt" ]] && [[ -f "$CASAMS_ScriptName.chan.nonflagged.spw${SPLIT_SPW_NUMBER}.field${SPLIT_SID}.txt" ]]; then
+                        SPLIT_SPW="${SPLIT_SPW_NUMBER}:"$(cat "$CASAMS_ScriptName.chan.nonflagged.spw${SPLIT_SPW_NUMBER}.field${SPLIT_SID}.txt" | grep -v "^#" | head -n 1 | sed -e 's/ *//g')
                     fi
                 fi
             fi
