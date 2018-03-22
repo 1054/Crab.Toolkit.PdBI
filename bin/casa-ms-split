@@ -313,7 +313,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     echo "        os.system('rm $CASAMS_ScriptName.chan.flagged.spw%d.txt'%(i))"        >> "$CASAMS_ScriptName.py"
     echo "    # if we found nonflagged channels for each spw"                           >> "$CASAMS_ScriptName.py"
     echo "    if len(list_chan_nonflagged[vis_spwt]) > 0:"                              >> "$CASAMS_ScriptName.py" # if found some flagged channels
-    echo "        fo = open('$CASAMS_ScriptName.chan.fnonlagged.spw%d.txt'%(i),'wb')"   >> "$CASAMS_ScriptName.py"
+    echo "        fo = open('$CASAMS_ScriptName.chan.nonflagged.spw%d.txt'%(i),'wb')"   >> "$CASAMS_ScriptName.py"
     echo "        for j in range(len(list_chan_nonflagged[vis_spwt])):"                 >> "$CASAMS_ScriptName.py"
     echo "            if j == 0:"                                                       >> "$CASAMS_ScriptName.py"
     echo "                fo.write('%d'%(list_chan_nonflagged[vis_spwt][j]))"           >> "$CASAMS_ScriptName.py"
