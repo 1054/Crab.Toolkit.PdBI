@@ -307,9 +307,9 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     echo "                        fo2.write(',%d'%(j))"                                         >> "$CASAMS_ScriptName.py"
     echo "            fo1.write('\n')"                                                          >> "$CASAMS_ScriptName.py"
     echo "            fo2.write('\n')"                                                          >> "$CASAMS_ScriptName.py"
-    echo "            fo1.close()"                                                              >> "$CASAMS_ScriptName.py"
-    echo "            fo2.close()"                                                              >> "$CASAMS_ScriptName.py"
-    echo "    tb2.close()"                                                                  >> "$CASAMS_ScriptName.py"  # see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1
+    echo "        fo1.close()"                                                                  >> "$CASAMS_ScriptName.py"
+    echo "        fo2.close()"                                                                  >> "$CASAMS_ScriptName.py"
+    echo "    tb2.close()"                                                                      >> "$CASAMS_ScriptName.py"  # see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1
     #<old-method-20180322>#echo "loop_row = 0"                                                                 >> "$CASAMS_ScriptName.py"
     #<old-method-20180322>#echo "while loop_row < tb.nrows():"                                                 >> "$CASAMS_ScriptName.py"
     #<old-method-20180322>#echo "    if tb.getcell('FLAG_ROW',loop_row) == 0:"                                 >> "$CASAMS_ScriptName.py"
