@@ -133,7 +133,17 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     CASAMS_TableSpws=() # The list of list of spw for each source, has a dimension of source number. 
     CASAMS_ScriptName="$CASAMS_VIS_NAME.read.tables"
     echo "#!/bin/python"                                                   >  "$CASAMS_ScriptName.py"
+    echo "# "                                                              >> "$CASAMS_ScriptName.py"
+    echo "import os"                                                       >> "$CASAMS_ScriptName.py" #<20180321>#
+    echo "import numpy"                                                    >> "$CASAMS_ScriptName.py" #<20180321>#
+    echo "import json"                                                     >> "$CASAMS_ScriptName.py" #<20180321>#
+    echo "# "                                                              >> "$CASAMS_ScriptName.py"
+    echo "#####################"                                           >> "$CASAMS_ScriptName.py"
+    echo "# Read SOURCE table #"                                           >> "$CASAMS_ScriptName.py"
+    echo "#####################"                                           >> "$CASAMS_ScriptName.py"
+    echo "# "                                                              >> "$CASAMS_ScriptName.py"
     echo "tb.open('${CASAMS_VIS}/SOURCE')"                                 >> "$CASAMS_ScriptName.py"
+    echo "# "                                                              >> "$CASAMS_ScriptName.py"
     echo "fo = open('$CASAMS_ScriptName.name.txt','wb')"                   >> "$CASAMS_ScriptName.py"
     echo "fo.write('\n'.join(list(set(tb.getcol('NAME')))))"               >> "$CASAMS_ScriptName.py"
     echo "fo.write('\n')"                                                  >> "$CASAMS_ScriptName.py"
@@ -179,10 +189,15 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     echo "        list_ref_feq = 0.0"                                      >> "$CASAMS_ScriptName.py"
     echo "    fo.write('%s\n'%(list_ref_feq))"                             >> "$CASAMS_ScriptName.py"
     echo "fo.close()"                                                      >> "$CASAMS_ScriptName.py"
-    echo ""                                                                >> "$CASAMS_ScriptName.py"
+    echo "# "                                                              >> "$CASAMS_ScriptName.py"
     echo "tb.close()"                                                      >> "$CASAMS_ScriptName.py"
-    echo ""                                                                >> "$CASAMS_ScriptName.py"
+    echo "# "                                                              >> "$CASAMS_ScriptName.py"
+    echo "##############################"                                  >> "$CASAMS_ScriptName.py"
+    echo "# Read SPECTRAL_WINDOW table #"                                  >> "$CASAMS_ScriptName.py"
+    echo "##############################"                                  >> "$CASAMS_ScriptName.py"
+    echo "# "                                                              >> "$CASAMS_ScriptName.py"
     echo "tb.open('${CASAMS_VIS}/SPECTRAL_WINDOW')"                        >> "$CASAMS_ScriptName.py"
+    echo "# "                                                              >> "$CASAMS_ScriptName.py"
     echo "fo = open('$CASAMS_ScriptName.spw.txt','wb')"                    >> "$CASAMS_ScriptName.py"
     echo "list_all_chn = tb.getcol('NUM_CHAN')"                            >> "$CASAMS_ScriptName.py"
     echo "for i in range(len(list_all_chn)):"                              >> "$CASAMS_ScriptName.py"
@@ -214,18 +229,59 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     echo "    for j in range(len(list_all_chk)): "                         >> "$CASAMS_ScriptName.py"
     echo "        fo.write('%0.10g\n'%(list_all_chk[j]))"                  >> "$CASAMS_ScriptName.py"
     echo "    fo.close()"                                                  >> "$CASAMS_ScriptName.py"
-    echo ""                                                                >> "$CASAMS_ScriptName.py"
+    echo "#"                                                               >> "$CASAMS_ScriptName.py"
     echo "tb.close()"                                                      >> "$CASAMS_ScriptName.py"
-    echo ""                                                                >> "$CASAMS_ScriptName.py"
+    echo "# "                                                              >> "$CASAMS_ScriptName.py"
+    echo "##############################"                                  >> "$CASAMS_ScriptName.py"
+    echo "# Read CASAMS_VIS main table #"                                  >> "$CASAMS_ScriptName.py"
+    echo "##############################"                                  >> "$CASAMS_ScriptName.py"
+    echo "#"                                                               >> "$CASAMS_ScriptName.py"
     echo "tb.open('${CASAMS_VIS}')"                                        >> "$CASAMS_ScriptName.py"
-    echo "fo = open('$CASAMS_ScriptName.datatype.txt','wb')"               >> "$CASAMS_ScriptName.py"
+    echo "#"                                                               >> "$CASAMS_ScriptName.py"
+    echo "fo = open('$CASAMS_ScriptName.datatype.txt','wb')"               >> "$CASAMS_ScriptName.py" # need to make sure that column corrected is not there
     echo "list_col = tb.colnames()"                                        >> "$CASAMS_ScriptName.py"
     echo "if 'CORRECTED_DATA' in list_col: "                               >> "$CASAMS_ScriptName.py"
     echo "    fo.write('corrected\n')"                                     >> "$CASAMS_ScriptName.py"
     echo "else: "                                                          >> "$CASAMS_ScriptName.py"
-    echo "    fo.write('data\n')"                                          >> "$CASAMS_ScriptName.py" #<TODO># need to make sure that column corrected is not there
+    echo "    fo.write('data\n')"                                          >> "$CASAMS_ScriptName.py"
     echo ""                                                                >> "$CASAMS_ScriptName.py"
     echo "fo.close()"                                                      >> "$CASAMS_ScriptName.py"
+    echo "#"                                                               >> "$CASAMS_ScriptName.py"
+    #echo "numb_row = tb.nrows()"                                           >> "$CASAMS_ScriptName.py" # also need to find out flagged channels <TODO> this does not work, because flags for channels might change between rows! The solution is to allow user to specify spw with channel range!
+    #echo "loop_row = 0"                                                    >> "$CASAMS_ScriptName.py"
+    #echo "list_chan_flagged = {}"                                          >> "$CASAMS_ScriptName.py"
+    #echo "list_chan_valid = {}"                                            >> "$CASAMS_ScriptName.py"
+    #echo "while loop_row < numb_row:"                                      >> "$CASAMS_ScriptName.py"
+    #echo "    # iterate to get the first non-flagged data, "               >> "$CASAMS_ScriptName.py"
+    #echo "    # then read flagged channels therein"                        >> "$CASAMS_ScriptName.py"
+    #echo "    if tb.getcell('FLAG_ROW',loop_row) == 0:"                    >> "$CASAMS_ScriptName.py"
+    #echo "        list_val = tb.getcell('FLAG',loop_row)"                  >> "$CASAMS_ScriptName.py"
+    #echo "        for i in range(len(list_val)):"                          >> "$CASAMS_ScriptName.py"
+    #echo "            if list_val[i] == False:"                            >> "$CASAMS_ScriptName.py"
+    #echo "                list_chan_valid.append(i)"                       >> "$CASAMS_ScriptName.py"
+    #echo "            else:"                                               >> "$CASAMS_ScriptName.py"
+    #echo "                list_chan_flagged.append(i)"                     >> "$CASAMS_ScriptName.py"
+    #echo "        break"                                                   >> "$CASAMS_ScriptName.py"
+    #echo "    loop_row = loop_row + 1"                                     >> "$CASAMS_ScriptName.py"
+    #echo "#"                                                               >> "$CASAMS_ScriptName.py"
+    #echo "if len(list_chan_flagged) > 0:"                                  >> "$CASAMS_ScriptName.py" # if find some flagged channels
+    #echo "    fo = open('$CASAMS_ScriptName.list.chan.flagged.txt','wb')"  >> "$CASAMS_ScriptName.py" # then write them to file
+    #echo "    for i in range(len(list_chan_flagged)):"                     >> "$CASAMS_ScriptName.py"
+    #echo "        fo.write('%d'%(list_chan_flagged[i]))"                   >> "$CASAMS_ScriptName.py"
+    #echo "    fo.write('\n')"                                              >> "$CASAMS_ScriptName.py"
+    #echo "    fo.close()"                                                  >> "$CASAMS_ScriptName.py"
+    #echo "elif os.path.isfile('$CASAMS_ScriptName.list.chan.flagged.txt'):">> "$CASAMS_ScriptName.py"
+    #echo "    os.system('rm $CASAMS_ScriptName.list.chan.flagged.txt')"    >> "$CASAMS_ScriptName.py"
+    #echo "#"                                                               >> "$CASAMS_ScriptName.py"
+    #echo "if len(list_chan_valid) > 0:"                                    >> "$CASAMS_ScriptName.py" # if find some valid channels
+    #echo "    fo = open('$CASAMS_ScriptName.list.chan.valid.txt','wb')"    >> "$CASAMS_ScriptName.py" # then also write them to file
+    #echo "    for i in range(len(list_chan_valid)):"                       >> "$CASAMS_ScriptName.py"
+    #echo "        fo.write('%d'%(list_chan_valid[i]))"                     >> "$CASAMS_ScriptName.py"
+    #echo "    fo.write('\n')"                                              >> "$CASAMS_ScriptName.py"
+    #echo "    fo.close()"                                                  >> "$CASAMS_ScriptName.py"
+    #echo "elif os.path.isfile('$CASAMS_ScriptName.list.chan.valid.txt'):"  >> "$CASAMS_ScriptName.py"
+    #echo "    os.system('rm $CASAMS_ScriptName.list.chan.valid.txt')"      >> "$CASAMS_ScriptName.py"
+    echo "#"                                                               >> "$CASAMS_ScriptName.py"
     echo "tb.close()"                                                      >> "$CASAMS_ScriptName.py"
     echo ""                                                                >> "$CASAMS_ScriptName.py"
     echo "Running CASA ($CASA_COMMAND) to read measurement set data tables: "
@@ -391,6 +447,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             SPLIT_WID=""
             SPLIT_FEQ=""
             SPLIT_STK=""
+            SPLIT_SPW_NUMBER=$(echo "$SPLIT_SPW" | sed -e 's/:.*$//g')
             
             #<alternative># # determine the width
             #<alternative># if [[ $ispw -ge ${#CASAMS_WID[@]} ]]; then 
@@ -399,13 +456,13 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             #<alternative># SPLIT_WID="${CASAMS_WID[ispw]}"
             
             # read Freq_Ref_Ch0_MHz
-            if [[ ! -f "$CASAMS_ScriptName.chan.freq.spw${SPLIT_SPW}.txt" ]]; then
+            if [[ ! -f "$CASAMS_ScriptName.chan.freq.spw${SPLIT_SPW_NUMBER}.txt" ]]; then
                 echo ""
-                echo "Error! Failed to read \"$CASAMS_ScriptName.chan.freq.spw${SPLIT_SPW}.txt\" file, which is produced by reading the \"${CASAMS_VIS}\"/SPECTRAL_WINDOW/table.* files! Please make sure the measurement set is complete!"
+                echo "Error! Failed to read \"$CASAMS_ScriptName.chan.freq.spw${SPLIT_SPW_NUMBER}.txt\" file, which is produced by reading the \"${CASAMS_VIS}\"/SPECTRAL_WINDOW/table.* files! Please make sure the measurement set is complete!"
                 echo ""
                 exit
             else
-                IFS=$'\n' read -d '' -r -a CASAMS_TableSpwChanFreqs < "$CASAMS_ScriptName.chan.freq.spw${SPLIT_SPW}.txt"
+                IFS=$'\n' read -d '' -r -a CASAMS_TableSpwChanFreqs < "$CASAMS_ScriptName.chan.freq.spw${SPLIT_SPW_NUMBER}.txt"
             fi
             
             # determine the width
@@ -424,8 +481,8 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             fi
             
             # determine the skyfreq
-            if echo "$SPLIT_SPW" | grep -q "^[0-9]*$"; then
-                if [[ $SPLIT_SPW -lt ${#CASAMS_TableFreqs[@]} ]]; then 
+            if echo "$SPLIT_SPW_NUMBER" | grep -q "^[0-9]*$"; then
+                if [[ $SPLIT_SPW_NUMBER -lt ${#CASAMS_TableFreqs[@]} ]]; then 
                     SPLIT_FEQ="${CASAMS_TableFreqs[ispw]}"
                 else
                     SPLIT_FEQ=""
@@ -480,7 +537,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 # 
                 # Append spw info to the output name
                 # 
-                if [[ x"$SPLIT_SPW" != x ]]; then SPLIT_OutputName="${SPLIT_OutputName}_spw${SPLIT_SPW}"; fi
+                if [[ x"$SPLIT_SPW" != x ]]; then SPLIT_OutputName="${SPLIT_OutputName}_spw${SPLIT_SPW_NUMBER}"; fi
                 if [[ x"$SPLIT_WID" != x ]]; then SPLIT_OutputName="${SPLIT_OutputName}_width${SPLIT_WID}"; fi
                 if [[ x"$SPLIT_STK" != x ]]; then SPLIT_OutputName="${SPLIT_OutputName}_stokes${SPLIT_STK}"; fi
                 
