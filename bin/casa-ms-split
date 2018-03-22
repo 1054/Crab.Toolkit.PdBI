@@ -279,7 +279,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     echo "        vis_flag = tb.getcell('FLAG',loop_row)"                               >> "$CASAMS_ScriptName.py"
     echo "        vis_spwt = 'spw%0d'%(list_vis_desc_spwid[vis_desc])"                  >> "$CASAMS_ScriptName.py"
     echo "        for i in range(len(vis_flag)):"                                       >> "$CASAMS_ScriptName.py"
-    echo "            if vis_flag[i]:"                                                  >> "$CASAMS_ScriptName.py"
+    echo "            if vis_flag[i][0] or vis_flag[i][1]:"                             >> "$CASAMS_ScriptName.py" # note that each vis_flag has two correlations (stokes) RR LL
     echo "                if vis_spwt not in list_chan_flagged:"                        >> "$CASAMS_ScriptName.py"
     echo "                    list_chan_flagged[vis_spwt] = [i]"                        >> "$CASAMS_ScriptName.py"
     echo "                else:"                                                        >> "$CASAMS_ScriptName.py"
