@@ -9,6 +9,7 @@
 #     2018-02-08 pdbi-uvt-go-uvfit-print-results-v6 --> pdbi-uvt-go-uvfit-print-results-v7 (more columns, velwidth, ra_hms, dec_dms)
 #     2018-02-12 Copied from v7, then reverted v7 to v6 which does not have new columns of velwidth, ra_hms, dec_dms.
 #     2018-03-21 found a solution to identify bad channel: use the rf_2 which is the number of fitted functions
+#     2018-03-29 found a bug! rf_2=0 does not work for earlier GILDAS e.g. nov2017! I do an additional check on rf_2 and rf_7 now.
 # 
 # 
 # Notes on GILDAS/MAPPING UV_FIT program:
