@@ -184,6 +184,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo "say \"\""                                         >> "$PdBIUVT_EXE"
         echo "say \"fits\""                                     >> "$PdBIUVT_EXE"
         echo "fits 'name'.lmv.fits from 'name'.lmv /overwrite"  >> "$PdBIUVT_EXE"
+        echo "fits 'name'.beam.fits from 'name'.beam /overwrite">> "$PdBIUVT_EXE"
         
         echo ""                                                 >> "$PdBIUVT_EXE"
         echo "say \"\""                                         >> "$PdBIUVT_EXE"
@@ -312,9 +313,12 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
                 echo "Successufully saved to \"${PdBIUVT_EPS}.eps\"!"
                 echo "--"
             fi
-            #if [[ -f "$PdBIUVT_LOG" ]]; then
-            #    rm "$PdBIUVT_LOG"
-            #fi
+            if [[ -f "$PdBIUVT_LOG" ]]; then
+                rm "$PdBIUVT_LOG"
+            fi
+            if [[ -f "$PdBIUVT_EXE" ]]; then
+                rm "$PdBIUVT_EXE"
+            fi
         else
             echo "Error! Failed to run GILDAS MAPPING UV_MAP and output \"${PdBIUVT_EPS}.eps\"!"
             echo "Please check \"$PdBIUVT_LOG\"!"
