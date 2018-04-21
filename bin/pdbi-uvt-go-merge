@@ -188,7 +188,7 @@ for (( i=1; i<${#PdBIUVT_NAME[@]}; i++ )); do
                 echo "Deleted \"${PdBIUVT_SAVE[0]}.$((i-1)).uvt\""
                 rm "${PdBIUVT_SAVE[0]}.$((i-1)).uvt"
             fi
-            if [[ $PdBIUVT_UVMERGE_KEEP_FILE -lt 0 ]]; then
+            if [[ $PdBIUVT_UVMERGE_KEEP_FILE -le 0 ]]; then
                 echo "Deleted \"${PdBIUVT_SAVE[0]}.$((i-1)).log\""
                 rm "${PdBIUVT_SAVE[0]}.$((i-1)).log"
                 echo "Deleted \"${PdBIUVT_SAVE[0]}.$((i-1)).map\""
