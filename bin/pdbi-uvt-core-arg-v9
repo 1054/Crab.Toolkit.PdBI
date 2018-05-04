@@ -10,6 +10,11 @@
 #     2017-03-21 Use "return" instead of "exit".
 #     2017-03-29 Add "-add-offset" argument.
 #     2017-03-30 Allow multiple PdBIUVT_NAME
+#     2018-01-24 Allow user option -fixed-flux
+#     2018-02-11 Added option "-Ch0-MHz"
+#     2018-02-12 Copied from v7, now using 'pdbi-uvt-core-rad-v8'
+#     2018-02-14 Added PdBIUVT_UVMAP_SPACING
+#     2018-02-14 Fixed the problem of inputting symbol link file "[[ ! -f "${PdBIUVT_NAME[PdBIUVT_ITER]}.${PdBIUVT_TYPE[PdBIUVT_ITER]}" ]] && [[ ! -L "${PdBIUVT_NAME[PdBIUVT_ITER]}.${PdBIUVT_TYPE[PdBIUVT_ITER]}" ]]"
 #     2018-05-03 Added option "-cdisk" "-edisk" "-disk"
 # 
 
@@ -79,14 +84,17 @@ PdBIUVT_MAP_SIZE=()
 PdBIUVT_MAP_CELL=()
 # ----------------------- # other parameters
 PdBIUVT_FOV_SIZE=()
+PdBIUVT_SHOW_HEADER="NO"  # 
 # ----------------------- # fitting parameters
 PdBIUVT_OBJ_NUMB=0        # Number of objects to fit, according to the input RA Dec
 PdBIUVT_OBJ_NAME=()       # 
 PdBIUVT_OBJ_POS=()        # RA Dec in degrees, 2*N dimension, where N is the number of objects to fit. 
+PdBIUVT_OBJ_FLUX=()       # Flux density, usually Jy/beam
 PdBIUVT_OBJ_SIZE=()       # Major and minor axis FWHM size in arcsec, 2*N dimension, where N is the number of objects to fit. 
 PdBIUVT_OBJ_ANGLE=()      # Position angle in degree
 PdBIUVT_OBJ_VARY_POS=()   # 1 to vary, 0 to be fixed. 
 PdBIUVT_OBJ_VARY_SIZE=()  # 1 to vary, 0 to be fixed. 
+PdBIUVT_OBJ_VARY_FLUX=()  # 1 to vary, 0 to be fixed. 
 PdBIUVT_OBJ_VARY_ANGLE=() # 1 to vary, 0 to be fixed. 
 PdBIUVT_OBJ_FUNC=()       # "POINT"
 PdBIUVT_RSUB="NO"         # whether subtract the fit component or not (if we set PdBIUVT_RESI, then PdBIUVT_RSUB="YES")
@@ -113,11 +121,11 @@ PdBIUVT_CHAN_MAX=0        #
 PdBIUVT_CHAN_CEN=0        # 
 PdBIUVT_FREQ_MIN=0        # 
 PdBIUVT_FREQ_MAX=0        # 
-PdBIUVT_CHAN_REF=""
-PdBIUVT_VELO_BIN=""
-PdBIUVT_FREQ_BIN=""
-PdBIUVT_VELO_REF=""
-PdBIUVT_FREQ_REF=""
+PdBIUVT_CHAN_REF=()       # used by 'pdbi-uvt-core-cvf-*'
+PdBIUVT_VELO_BIN=()       # used by 'pdbi-uvt-core-cvf-*'
+PdBIUVT_FREQ_BIN=()       # used by 'pdbi-uvt-core-cvf-*'
+PdBIUVT_VELO_REF=()       # used by 'pdbi-uvt-core-cvf-*'
+PdBIUVT_FREQ_REF=()       # used by 'pdbi-uvt-core-cvf-*' and 'pdbi-uvt-go-import-uvfits', MHz
 # ------------------------# pointing info
 PdBIUVT_RANX_OBJT=()      # "09:59:38.101"
 PdBIUVT_DECX_OBJT=()      # "02:28:57.108"
@@ -139,13 +147,19 @@ PdBIUVT_UVMERGE_KEEP_FILE=0
 PdBIUVT_UVMERGE_CONT_MODE=0
 # ------------------------# uv compress
 PdBIUVT_UVCOMPRESS_NC=()  # channel number to compress
+# ------------------------# uv map
+PdBIUVT_UVMAP_CONTOURS=() # contours in unit of 'noise' (TODO: 20180214)
+PdBIUVT_UVMAP_SPACING=()  # spacing in unit of 'noise'
 # ------------------------# uv compress
 PdBIUVT_UVRESAMPLE_VW=()  # velocity width to resample
+# ------------------------# uv ctime
+PdBIUVT_TIME_INTERVAL=()  # time interval in unit of TODO
 # ----------------------- # uvt line search
 PdBIUVT_LINE_SEARCH_WIDTH=()
 PdBIUVT_LINE_SEARCH_STEP=()
 PdBIUVT_LINE_SEARCH_SIGMA=()
 PdBIUVT_LINE_SEARCH_BLEND=()
+PdBIUVT_LINE_SEARCH_MAXNUM=()
 # ------------------------# program control
 PdBIUVT_PARALLELS=0
 
@@ -159,7 +173,7 @@ PdBIUVT_TSTR=""
 PdBIUVT_RPAR="none"
 while [[ "$#" -gt 0 ]]; do
     
-    PdBIUVT_TSTR=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+    PdBIUVT_TSTR=$(echo "$1" | sed -e 's/^--/-/g' | sed -e 's/_/-/g' | tr '[:upper:]' '[:lower:]')
     
     case "$PdBIUVT_TSTR" in
       
@@ -181,8 +195,10 @@ while [[ "$#" -gt 0 ]]; do
 
          "-overwrite") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OVERWRITE="YES";; # argument with no value, no shift;
 
+           "-mapsize") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
           "-map_size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
           "-map-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
+           "-mapcell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_cell";;
           "-map_cell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_cell";;
           "-map-cell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_cell";;
 
@@ -195,6 +211,20 @@ while [[ "$#" -gt 0 ]]; do
             "-vrange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="vrange";; # km/s
             "-frange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="frange";; # GHz
           "-redshift") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="redshift";;
+
+          "-freq-ref") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="freq_ref";; # MHz
+          "-ref-freq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="freq_ref";; # MHz
+           "-ch0-mhz") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="freq_ref";; # MHz
+          
+           "-contour") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_contours";; # (TODO: 20180214)
+          "-contours") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_contours";; # (TODO: 20180214)
+    "-uvmap-contours") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_contours";; # (TODO: 20180214)
+           "-spacing") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_spacing";; # in unit of 'noise'
+   "-contour-spacing") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_spacing";; # in unit of 'noise'
+     "-uvmap-spacing") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_spacing";; # in unit of 'noise'
+
+             "-ctime") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uv_ctime";; # 
+     "-time-interval") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uv_ctime";; # 
 
              "-radec") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="radec";;  # object coordinate pairs
 
@@ -226,6 +256,9 @@ while [[ "$#" -gt 0 ]]; do
               "-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_SIZE";;
           "-obj-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_SIZE";;
 
+              "-flux") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_FLUX";;
+          "-obj-flux") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_FLUX";;
+
              "-angle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
           "-posangle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
          "-obj-angle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
@@ -238,6 +271,16 @@ while [[ "$#" -gt 0 ]]; do
                "-fix") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);; # does not accept input value
             "-fixpos") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);;
        "-fixposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);;
+
+          "-varyflux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(1);; # does not accept input value
+         "-vary-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(1);;
+        "-variedflux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(1);; # does not accept input value
+       "-varied-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(1);;
+
+           "-fixflux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(0);; # does not accept input value
+          "-fix-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(0);;
+         "-fixedflux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(0);; # does not accept input value
+        "-fixed-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(0);;
 
           "-varysize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);;
        "-varyobjsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);;
@@ -285,6 +328,19 @@ while [[ "$#" -gt 0 ]]; do
               "-step") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="step";;
              "-sigma") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="sigma";;
              "-blend") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="blend";;
+            "-maxnum") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="maxnum";;
+               "-fov") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
+           "-fovsize") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
+          "-fov-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
+          "-fov_size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
+       "-show_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
+       "-show-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
+         "-do_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
+         "-do-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
+       "-hide_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
+       "-hide-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
+         "-no_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
+         "-no-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
             
       "-simultaneous") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run
           "-parallel") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run
@@ -326,6 +382,19 @@ while [[ "$#" -gt 0 ]]; do
             break
         fi
         PdBIUVT_SAVE+=("$1")
+    fi
+    
+    
+    
+    if [[ "$PdBIUVT_RPAR" == "fov_size" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        if echo "$1" | grep -q -v -e "^[0-9 .+-]*$"; then
+            echo ""; echo "Error! Input -fov_size has a wrong format! Please input only number value."; echo ""
+            return 2
+        fi
+        PdBIUVT_FOV_SIZE+=("$1")
     fi
     
     
@@ -442,6 +511,39 @@ while [[ "$#" -gt 0 ]]; do
         PdBIUVT_zRED+=("$1")
     fi
     
+    if [[ "$PdBIUVT_RPAR" == "freq_ref" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        if echo "$1" | grep -q -v -E "^[0-9Ee.+-]*$"; then
+            echo ""; echo "Error! Input -freq-ref (or -Ch0-MHz) has a wrong format! Please input only number value for the first channel obs-frame frequency (MHz)!"; echo ""
+            return 2
+        fi
+        PdBIUVT_FREQ_REF+=("$1")
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "uvmap_contours" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        PdBIUVT_UVMAP_CONTOURS+=("$1")
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "uvmap_spacing" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        PdBIUVT_UVMAP_SPACING+=("$1")
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "uv_ctime" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        PdBIUVT_TIME_INTERVAL+=("$1")
+    fi
+    
+    
     # 
     # object-oriented below
     # 
@@ -457,6 +559,9 @@ while [[ "$#" -gt 0 ]]; do
         while [[ ${#PdBIUVT_OBJ_FUNC[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
             PdBIUVT_OBJ_FUNC+=("POINT")
         done
+        while [[ ${#PdBIUVT_OBJ_FLUX[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_FLUX+=("1.0")
+        done
         while [[ ${#PdBIUVT_OBJ_SIZE[@]} -lt $((2*$PdBIUVT_OBJ_NUMB)) ]]; do 
             PdBIUVT_OBJ_SIZE+=("0.0")
         done
@@ -465,6 +570,9 @@ while [[ "$#" -gt 0 ]]; do
         done
         while [[ ${#PdBIUVT_OBJ_VARY_POS[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
             PdBIUVT_OBJ_VARY_POS+=(0)
+        done
+        while [[ ${#PdBIUVT_OBJ_VARY_FLUX[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_VARY_FLUX+=(1) # in default we vary flux
         done
         while [[ ${#PdBIUVT_OBJ_VARY_SIZE[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
             PdBIUVT_OBJ_VARY_SIZE+=(1) # in default we vary size
@@ -508,6 +616,9 @@ while [[ "$#" -gt 0 ]]; do
         while [[ ${#PdBIUVT_OBJ_FUNC[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
             PdBIUVT_OBJ_FUNC+=("POINT")
         done
+        while [[ ${#PdBIUVT_OBJ_FLUX[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_FLUX+=("1.0")
+        done
         while [[ ${#PdBIUVT_OBJ_SIZE[@]} -lt $((2*$PdBIUVT_OBJ_NUMB)) ]]; do 
             PdBIUVT_OBJ_SIZE+=("0.0")
         done
@@ -516,6 +627,9 @@ while [[ "$#" -gt 0 ]]; do
         done
         while [[ ${#PdBIUVT_OBJ_VARY_POS[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
             PdBIUVT_OBJ_VARY_POS+=(0)
+        done
+        while [[ ${#PdBIUVT_OBJ_VARY_FLUX[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_VARY_FLUX+=(1) # in default we vary size
         done
         while [[ ${#PdBIUVT_OBJ_VARY_SIZE[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
             PdBIUVT_OBJ_VARY_SIZE+=(1) # in default we vary size
@@ -564,9 +678,18 @@ while [[ "$#" -gt 0 ]]; do
         PdBIUVT_OBJ_NAME+=("$1")
     fi
     # -- obj size
+    if [[ "$PdBIUVT_RPAR" == "OBJ_FLUX" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        if echo "$1" | grep -q -v -E '^[0-9 ".+-Ee]*$'; then
+            echo ""; echo "Error! Input -objflux $1 has a wrong format! Please input only number value of the object flux."; echo ""
+            return 2
+        fi
+        PdBIUVT_OBJ_FLUX+=($(echo "$1"))
+    fi
+    # -- obj size
     if [[ "$PdBIUVT_RPAR" == "OBJ_SIZE" ]];  then 
         if [[ "$#" -lt 1 ]]; then break; fi
-        if echo "$1" | grep -q -v -E '^[0-9 ".+-]*$'; then # objsize allows input a pair of number, for major and minor axis size. 
+        if echo "$1" | grep -q -v -E '^[0-9 ".+-Ee]*$'; then # objsize allows input a pair of number, for major and minor axis size. 
             echo ""; echo "Error! Input -objsize $1 has a wrong format! Please input only number value of the object size."; echo ""
             return 2
         fi
@@ -576,7 +699,7 @@ while [[ "$#" -gt 0 ]]; do
     # -- obj angle
     if [[ "$PdBIUVT_RPAR" == "OBJ_ANGLE" ]];  then 
         if [[ "$#" -lt 1 ]]; then break; fi
-        if echo "$1" | grep -q -v -E "^[0-9.+-]*$"; then
+        if echo "$1" | grep -q -v -E "^[0-9.+-Ee]*$"; then
             echo ""; echo "Error! Input -objposangle has a wrong format! Please input only number value of the object pos angle."; echo ""
             return 2
         fi
@@ -586,7 +709,7 @@ while [[ "$#" -gt 0 ]]; do
     
     if [[ "$PdBIUVT_RPAR" == "linewidth" ]];  then 
         if [[ "$#" -lt 1 ]]; then break; fi
-        if echo "$1" | grep -q -v -E "^[0-9.+-]*$"; then
+        if echo "$1" | grep -q -v -E "^[0-9.+-Ee]*$"; then
             echo ""; echo "Error! Input -linewidth has a wrong format! Please input only number value of the expected observing line width in unit of km/s."; echo ""
             return 2
         fi
@@ -594,7 +717,7 @@ while [[ "$#" -gt 0 ]]; do
     fi
     if [[ "$PdBIUVT_RPAR" == "lineobsfreq" ]];  then 
         if [[ "$#" -lt 1 ]]; then break; fi
-        if echo "$1" | grep -q -v -E "^[0-9.+-]*$"; then
+        if echo "$1" | grep -q -v -E "^[0-9.+-Ee]*$"; then
             echo ""; echo "Error! Input -lineobsfreq has a wrong format! Please input only number value of the expected line observing frequency in unit of GHz."; echo ""
             return 2
         fi
@@ -602,7 +725,7 @@ while [[ "$#" -gt 0 ]]; do
     fi
     if [[ "$PdBIUVT_RPAR" == "linerestfreq" ]];  then 
         if [[ "$#" -lt 1 ]]; then break; fi
-        if echo "$1" | grep -q -v -E "^[0-9.+-]*$"; then
+        if echo "$1" | grep -q -v -E "^[0-9.+-Ee]*$"; then
             echo ""; echo "Error! Input -linerestfreq has a wrong format! Please input only number value of the expected line observing frequency in unit of GHz."; echo ""
             return 2
         fi
@@ -651,6 +774,12 @@ while [[ "$#" -gt 0 ]]; do
         PdBIUVT_LINE_SEARCH_BLEND+=("$1")
     fi
     
+    # -- uvtlinesearch
+    if [[ "$PdBIUVT_RPAR" == "maxnum" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_LINE_SEARCH_MAXNUM+=("$1")
+    fi
+    
     
     shift
     
@@ -668,7 +797,7 @@ done
 # Check input uv table name
 # 
 if [[ "${#PdBIUVT_NAME[@]}" == x ]]; then
-    echo ""; echo "Error! UV table name was not given! Exit!"; echo ""
+    echo ""; echo "Error! UV table name was not given! Please set \"-name\" if needed! Exit!"; echo ""
     PdBIUVT_GOOD=0
     return 3
 fi
@@ -676,6 +805,9 @@ fi
 # Remove the suffix of the input uvtable name, and test whether the file exists
 # 
 for (( PdBIUVT_ITER = 0; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ )); do
+    if [[ $PdBIUVT_ITER -ge ${#PdBIUVT_TYPE[@]} ]]; then
+        PdBIUVT_TYPE+=("unknown")
+    fi
     if [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".uvt" ]]; then
         PdBIUVT_TYPE[PdBIUVT_ITER]="uvt"
         PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]uvt$//g')
@@ -726,15 +858,17 @@ fi
 # 
 # Call pdbi-uvt-core-rad
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v5" ]]; then
-    # source bash argument "$*" must be quoted to keep white space values. 
-    # source bash argument "$@" is the correct one when passing multiple times.
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v5" "$@"
-else
-    echo ""
-    echo "Error! Could not find \"$(dirname "${BASH_SOURCE[0]}")/pdbi-uvt-core-rad-v5\"!"
-    echo ""
-    return 1
+if [[ $# -gt 0 ]]; then
+    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v8" ]]; then
+        # source bash argument "$*" must be quoted to keep white space values. 
+        # source bash argument "$@" is the correct one when passing multiple times.
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-rad-v8" "$@"
+    else
+        echo ""
+        echo "Error! Could not find \"$(dirname "${BASH_SOURCE[0]}")/pdbi-uvt-core-rad-v8\"!"
+        echo ""
+        return 1
+    fi
 fi
 
 

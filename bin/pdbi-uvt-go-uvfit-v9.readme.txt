@@ -1,0 +1,4 @@
+2018-05-03 Allow fitting C_DISK, E_DISK
+
+2018-02-11 Source positions are in default fixed. 
+           Updated 'pdbi-uvt-go-uvfit-print-results-v8' which produces OUTPUTNAME.result.obj_*.txt with more useful columns.
