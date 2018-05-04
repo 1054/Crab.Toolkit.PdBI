@@ -355,7 +355,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         if echo "$PdBIUVT_Function" | grep -q -i "EXPO"; then
             echo Obj FWHM Major = $PdBIUVT_Obj_Maj arcsec "(START=$PdBIUVT_Fit_Maj)"
             if [[ $(awk "BEGIN {if($PdBIUVT_Obj_Maj<=0) print 1; else print 0;}") -eq 1 ]]; then
-                PdBIUVT_Obj_Maj="0.1" # set a non-zero initial guess if the user has not provided any. This is needed for DISK fitting.
+                PdBIUVT_Obj_Maj="0.1" # set a non-zero initial guess if the user has not provided any. This is needed for EXPO fitting.
             fi
         fi
         # 
