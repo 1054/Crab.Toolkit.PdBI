@@ -14,6 +14,7 @@
 #    2018-02-00 -residual issue
 #    2018-02-08 pdbi-uvt-go-uvfit-print-results-v6 --> pdbi-uvt-go-uvfit-print-results-v8 (more columns, velwidth, ra_hms, dec_dms)
 #    2018-02-12 added 'pdbi-uvt-go-plot-uvfit-result-spectrum-with-python' and use that in default for plottting spectrum.
+#    2018-05-03 now allow -cdisk -edisk -disk -expo
 # 
 
 
@@ -349,6 +350,12 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                 if [[ $(awk "BEGIN {if($PdBIUVT_Obj_Min<=0) print 1; else print 0;}") -eq 1 ]]; then
                     PdBIUVT_Obj_Min="0.1" # set a non-zero initial guess if the user has not provided any. This is needed for DISK fitting.
                 fi
+            fi
+        fi
+        if echo "$PdBIUVT_Function" | grep -q -i "EXPO"; then
+            echo Obj FWHM Major = $PdBIUVT_Obj_Maj arcsec "(START=$PdBIUVT_Fit_Maj)"
+            if [[ $(awk "BEGIN {if($PdBIUVT_Obj_Maj<=0) print 1; else print 0;}") -eq 1 ]]; then
+                PdBIUVT_Obj_Maj="0.1" # set a non-zero initial guess if the user has not provided any. This is needed for DISK fitting.
             fi
         fi
         # 

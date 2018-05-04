@@ -215,6 +215,7 @@ while [[ "$#" -gt 0 ]]; do
              "-cdisk") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("C_DISK");;
             "-e_disk") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("E_DISK");;
             "-c_disk") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("C_DISK");;
+              "-expo") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("EXPO");;
 
                "-obj") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
            "-objname") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;

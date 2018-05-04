@@ -11,7 +11,7 @@
 #    2016-07-01 support simultaneous running now
 #    2017-03-17 now object-oriented
 #    2018-02-00 updated pdbi-uvt-go-uvfit-print-results-v5
-#    2018-05-03 now allow -cdisk -edisk -disk
+#    2018-05-03 now allow -cdisk -edisk -disk -expo
 # 
 
 
@@ -294,6 +294,12 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                 if [[ $(awk "BEGIN {if($PdBIUVT_Obj_Min<=0) print 1; else print 0;}") -eq 1 ]]; then
                     PdBIUVT_Obj_Min="0.1" # set a non-zero initial guess if the user has not provided any. This is needed for DISK fitting.
                 fi
+            fi
+        fi
+        if echo "$PdBIUVT_Function" | grep -q -i "EXPO"; then
+            echo Obj FWHM Major = $PdBIUVT_Obj_Maj arcsec "(START=$PdBIUVT_Fit_Maj)"
+            if [[ $(awk "BEGIN {if($PdBIUVT_Obj_Maj<=0) print 1; else print 0;}") -eq 1 ]]; then
+                PdBIUVT_Obj_Maj="0.1" # set a non-zero initial guess if the user has not provided any. This is needed for DISK fitting.
             fi
         fi
         # 
