@@ -20,7 +20,7 @@ cp ../uv_table_data/split_VUDS0510807732_spw1_width10_SP.uvt NAME.uvt
 
 
 # go uvfit
-pdbi-uvt-go-uvfit -name NAME.uvt \
+pdbi-uvt-go-uvfit-v5 -name NAME.uvt \
                   -radec 150.0351 2.01330 -fixpos -size 0.9 0.7 -fixsize -angle 90 -fixangle -egauss \
                   -offset 3.0 3.0 -fixpos -point \
                   -offset -6.0 6.0 -fixpos -point \
