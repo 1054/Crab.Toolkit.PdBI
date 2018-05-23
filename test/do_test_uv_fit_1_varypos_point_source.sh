@@ -22,6 +22,13 @@ cp ../uv_table_data/split_VUDS0510807732_spw1_width10_SP.uvt NAME.uvt
 # go uvfit
 pdbi-uvt-go-uvfit -name NAME.uvt \
                   -out OUTPUTNAME \
+                  -offset 0 0 -varypos \
+                  -residual RESI.uvt
+
+#pdbi-uvt-go-uvfit-v5 -name NAME.uvt \
+#                  -out OUTPUTNAME \
+#                  -offset 0 0 -varypos \
+#                  -residual RESI.uvt
 
 
 # go uvmap the input image
