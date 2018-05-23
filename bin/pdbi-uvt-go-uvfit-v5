@@ -201,7 +201,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     PdBIUVT_TEMP_EXEC="${PdBIUVT_SAVE[tk]}.uv_fit.map"
     PdBIUVT_TEMP_LOGT="${PdBIUVT_SAVE[tk]}.uv_fit.log"
     # <20180523><dzliu> if set -residual then automatically set -subtract
-    if [[ ${#PdBIUVT_RESI[@]} -le $tk ]]; then
+    if [[ ${#PdBIUVT_RESI[@]} -gt $tk ]]; then
         PdBIUVT_RSUB="YES"
     fi
     if [[ x"$PdBIUVT_RSUB" == x"YES" ]]; then
