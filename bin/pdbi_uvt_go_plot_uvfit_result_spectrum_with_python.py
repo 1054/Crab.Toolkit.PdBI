@@ -16,13 +16,19 @@ if len(sys.argv) <= 1:
 # Read user input file names
 input_names = []
 output_name = ''
+set_no_errorbar = False
 
 i = 1
 while i < len(sys.argv):
-    if sys.argv[i].lower() == '-out' or sys.argv[i].lower() == '-output':
+    temp_argv = sys.argv[i].lower()
+    if temp_argv.find('--') == 0:
+        temp_argv = '-'+temp_argv.lstrip('-')
+    if temp_argv == '-out' or temp_argv == '-output':
         if i+1 < len(sys.argv):
             i = i + 1
             output_name = sys.argv[i]
+    elif temp_argv == '-no-errorbar' or temp_argv == '-noerrorbar':
+        set_no_errorbar = True
     else:
         input_names.append(sys.argv[i])
     i = i + 1
@@ -168,7 +174,7 @@ for i in range(len(input_names)):
                 if capsize < 0.25:
                     capsize = 0.25
                 # 
-                if yerr is not None:
+                if yerr is not None and set_no_errorbar is False:
                     ax.errorbar(x, y, yerr=yerr, linestyle='none', capsize=12, color='blue', alpha=0.9) # color='#1e90ff'
 
 print('global_x_min = ', global_x_min)
