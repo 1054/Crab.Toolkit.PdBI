@@ -184,12 +184,12 @@ ax.plot([global_x_min-0.1*(global_x_max-global_x_min), global_x_max+0.1*(global_
 # 
 # xy label
 #plt.grid(True)
-plt.xlabel('Observing Frequency')
-plt.ylabel('Flux Density')
+plt.xlabel('Observing Frequency', fontsize=16)
+plt.ylabel('Flux Density', fontsize=16)
 title_plot = os.path.basename(input_names[0])
 if len(input_names)>1:
     title_plot = title_plot + ' and %d files'%(len(input_names)-1)
-plt.title(title_plot)
+plt.title(title_plot, fontsize=16)
 
 # 
 # Save figure
