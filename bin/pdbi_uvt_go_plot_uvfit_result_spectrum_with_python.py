@@ -161,6 +161,13 @@ for i in range(len(input_names)):
                 #ax.bar(x, y, width=2.0*x_left_width, align='center', fill=False, edgecolor='#1e90ff', alpha=1.0)
                 ax.errorbar(x_plot, y_plot, linestyle='-', color='blue', alpha=1.0) # color='#1e90ff'
                 # 
+                # capsize
+                capsize = int(120/len(x))
+                if capsize > 12:
+                    capsize = 12
+                if capsize < 2:
+                    capsize = 2
+                # 
                 if yerr is not None:
                     ax.errorbar(x, y, yerr=yerr, linestyle='none', capsize=12, color='blue', alpha=0.9) # color='#1e90ff'
 
