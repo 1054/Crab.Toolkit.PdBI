@@ -15,6 +15,7 @@
 #    2018-02-08 pdbi-uvt-go-uvfit-print-results-v6 --> pdbi-uvt-go-uvfit-print-results-v8 (more columns, velwidth, ra_hms, dec_dms)
 #    2018-02-12 added 'pdbi-uvt-go-plot-uvfit-result-spectrum-with-python' and use that in default for plottting spectrum.
 #    2018-05-03 now allow -cdisk -edisk -disk -expo
+#    2018-05-24 now we do not show errorbar when plotting spectrum in default
 # 
 
 
@@ -581,8 +582,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                         pdbi-uvt-go-plot-uvfit-result-spectrum "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.txt" -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.spectrum" > "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.spectrum.log"
                     else
                         echo 
-                        echo pdbi-uvt-go-plot-uvfit-result-spectrum-with-python "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.txt" -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.spectrum"
-                        pdbi-uvt-go-plot-uvfit-result-spectrum-with-python "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.txt" -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.spectrum" > "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.spectrum.log"
+                        echo pdbi-uvt-go-plot-uvfit-result-spectrum-with-python "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.txt" -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.spectrum" -no-errorbar
+                        pdbi-uvt-go-plot-uvfit-result-spectrum-with-python "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.txt" -output "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.spectrum" -no-errorbar > "${PdBIUVT_SAVE[tk]}.result.${PdBIUVT_OBJ_NAME[i]}.spectrum.log"
                     fi
                 fi
             fi
