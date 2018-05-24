@@ -174,7 +174,7 @@ for i in range(len(input_names)):
                 if capsize < 0.25:
                     capsize = 0.25
                 # 
-                if yerr is not None and set_no_errorbar is False:
+                if yerr is not None and not set_no_errorbar:
                     ax.errorbar(x, y, yerr=yerr, linestyle='none', capsize=12, color='blue', alpha=0.9) # color='#1e90ff'
 
 print('global_x_min = ', global_x_min)
