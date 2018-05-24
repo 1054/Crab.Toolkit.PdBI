@@ -184,6 +184,8 @@ ax.plot([global_x_min-0.1*(global_x_max-global_x_min), global_x_max+0.1*(global_
 # 
 # xy label
 #plt.grid(True)
+plt.xticks(fontsize=14)
+plt.yticks(fontsize=14)
 plt.xlabel('Observing Frequency', fontsize=16)
 plt.ylabel('Flux Density', fontsize=16)
 title_plot = os.path.basename(input_names[0])
