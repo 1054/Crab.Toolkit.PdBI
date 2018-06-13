@@ -209,6 +209,16 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     echo "for i in range(len(list_all_chn)):"                                           >> "$CASAMS_ScriptName.py"
     echo "    fo.write('%d\n'%(i))"                                                     >> "$CASAMS_ScriptName.py"
     echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+    echo "fo = open('$CASAMS_ScriptName.spw.name.txt','wb')"                            >> "$CASAMS_ScriptName.py"
+    echo "list_all_str = tb.getcol('NAME')"                                             >> "$CASAMS_ScriptName.py"
+    echo "for i in range(len(list_all_str)):"                                           >> "$CASAMS_ScriptName.py"
+    echo "    fo.write('%s\n'%(list_all_str[i]))"                                       >> "$CASAMS_ScriptName.py"
+    echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+    echo "fo = open('$CASAMS_ScriptName.spw.bandwidth.txt','wb')"                       >> "$CASAMS_ScriptName.py"
+    echo "list_all_chn = tb.getcol('TOTAL_BANDWIDTH')"                                  >> "$CASAMS_ScriptName.py"
+    echo "for i in range(len(list_all_chn)):"                                           >> "$CASAMS_ScriptName.py"
+    echo "    fo.write('%g\n'%(list_all_chn[i]))"                                       >> "$CASAMS_ScriptName.py"
+    echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
     echo "fo = open('$CASAMS_ScriptName.chan.txt','wb')"                                >> "$CASAMS_ScriptName.py"
     echo "list_all_chn = tb.getcol('NUM_CHAN')"                                         >> "$CASAMS_ScriptName.py"
     echo "for i in range(len(list_all_chn)):"                                           >> "$CASAMS_ScriptName.py"
@@ -446,6 +456,22 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     else
         IFS=$'\n' read -d '' -r -a CASAMS_TableSpws < "$CASAMS_ScriptName.spw.txt"
     fi
+    if [[ ! -f "$CASAMS_ScriptName.spw.name.txt" ]]; then
+        echo ""
+        echo "Error! Failed to read \"${CASAMS_VIS}\"/SOURCE/table.* files! Please make sure the measurement set is complete!"
+        echo ""
+        exit
+    else
+        IFS=$'\n' read -d '' -r -a CASAMS_TableSpwNames < "$CASAMS_ScriptName.spw.name.txt"
+    fi
+    if [[ ! -f "$CASAMS_ScriptName.spw.bandwidth.txt" ]]; then
+        echo ""
+        echo "Error! Failed to read \"${CASAMS_VIS}\"/SOURCE/table.* files! Please make sure the measurement set is complete!"
+        echo ""
+        exit
+    else
+        IFS=$'\n' read -d '' -r -a CASAMS_TableSpwBandwidths < "$CASAMS_ScriptName.spw.bandwidth.txt"
+    fi
     if [[ ! -f "$CASAMS_ScriptName.datatype.txt" ]]; then
         echo ""
         echo "Error! Failed to read \"${CASAMS_VIS}\"/table.* files! Please make sure the measurement set is complete!"
@@ -458,6 +484,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     
     #<DEBUG># 
     echo "CASAMS_TableFieldNames = ${CASAMS_TableFieldNames[@]}"
+    echo "CASAMS_TableSpwNames = ${CASAMS_TableSpwNames[@]}"
     echo "CASAMS_TableSpws = ${CASAMS_TableSpws[@]}"
     echo "CASA_INP_FIELD = ${CASA_INP_FIELD[@]}"
     echo "CASA_INP_SPW = ${CASA_INP_SPW[@]}"
@@ -470,7 +497,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         CASAMS_SOU=(${CASA_INP_FIELD[@]})
         echo "Setting source list according to the user input (${#CASAMS_SOU[@]} sources)"
     else
-        CASAMS_SOU=(${CASAMS_TableFieldNames[@]})
+        CASAMS_SOU=("${CASAMS_TableFieldNames[@]}")
         echo "Setting source list according to the FIELD table (${#CASAMS_SOU[@]} sources)"
     fi
     
@@ -506,13 +533,19 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         # 
         if [[ $isou -lt ${#CASA_INP_SPW[@]} ]]; then
             CASAMS_SPW=(${CASA_INP_SPW[isou]})
+            CASAMS_SPW_NAMES=()
+            CASAMS_SPW_BANDWIDTHS=()
             if [[ $isou -eq 0 ]]; then echo "Setting spw according to the user input (${#CASAMS_SPW[@]} spws) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
         else
             if [[ ${#CASA_INP_SPW[@]} -gt 0 ]]; then
                 CASAMS_SPW=(${CASA_INP_SPW[$((${#CASA_INP_SPW[@]}-1))]})
+                CASAMS_SPW_NAMES=()
+                CASAMS_SPW_BANDWIDTHS=()
                 if [[ $isou -eq 0 ]]; then echo "Setting spw according to the user input (${#CASAMS_SPW[@]} spws) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
             else
                 CASAMS_SPW=(${CASAMS_TableSpws[@]})
+                CASAMS_SPW_NAMES=("${CASAMS_TableSpwNames[@]}")
+                CASAMS_SPW_BANDWIDTHS=()
                 if [[ $isou -eq 0 ]]; then echo "Setting spw according to the SPECTRAL_WINDOW table (${#CASAMS_SPW[@]} spws) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
             fi
         fi
@@ -560,16 +593,48 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             SPLIT_WID=""
             SPLIT_FEQ=""
             SPLIT_STK=""
-            SPLIT_SPW_NUMBER=$(echo "$SPLIT_SPW" | sed -e 's/:.*$//g')
+            SPLIT_SPW_ID=$(echo "$SPLIT_SPW" | sed -e 's/:.*$//g')
+            
+            # check SPLIT_SPW_ID
+            if [[ $SPLIT_SPW_ID -ge ${#CASAMS_TableWidths[@]} ]]; then
+                echo ""
+                echo "Error! The input spw \"$SPLIT_SPW_ID\" is larger than the SPECTRAL_WINDOW table row number ${#CASAMS_TableWidths[@]}!"
+                echo ""
+                exit 1
+            fi
+            if [[ $SPLIT_SPW_ID -ge ${#CASAMS_TableSpwBandwidths[@]} ]]; then
+                echo ""
+                echo "Error! The input spw \"$SPLIT_SPW_ID\" is larger than the SPECTRAL_WINDOW table row number ${#CASAMS_TableSpwBandwidths[@]}!"
+                echo ""
+                exit 1
+            fi
+            if [[ $SPLIT_SPW_ID -ge ${#CASAMS_TableSpwNames[@]} ]]; then
+                echo ""
+                echo "Error! The input spw \"$SPLIT_SPW_ID\" is larger than the SPECTRAL_WINDOW table row number ${#CASAMS_TableSpwNames[@]}!"
+                echo ""
+                exit 1
+            fi
+            
+            SPLIT_SPW_NUMCHAN=${CASAMS_TableWidths[$SPLIT_SPW_ID]} # calculate SPLIT_SPW_NUMCHAN -- 20180612
+            SPLIT_SPW_BANDWIDTH=${CASAMS_TableSpwBandwidths[$SPLIT_SPW_ID]} # calculate SPLIT_SPW_BANDWIDTH -- 20180612
+            SPLIT_SPW_NAME="${CASAMS_TableSpwNames[$SPLIT_SPW_ID]}"
+            
+            # skip calibration spws by their names -- 20180612
+            if [[ x"$SPLIT_SPW_NAME" != x*"FULL_RES" ]]; then
+                echo ""
+                echo "Skipping spw \"$SPLIT_SPW_ID\" because its NAME in SPECTRAL_WINDOW table is \"$SPLIT_SPW_NAME\"!"
+                echo ""
+                continue
+            fi
             
             # determine whether there are flagged channels (experimental)
             # apply this if user has not input "-spw 0:XXX~XXX 1:XXX~XXX"
             if [[ $CASA_INP_SPLIT_TRIMCHAN -eq 1 ]]; then
                 # if user gives the option "-trim-chan"
-                if [[ "$SPLIT_SPW_NUMBER" == "$SPLIT_SPW" ]]; then
+                if [[ "$SPLIT_SPW_ID" == "$SPLIT_SPW" ]]; then
                     # if user is not applying channalized spw like "-spw 0:XXX~XXX"
-                    if [[ -f "$CASAMS_ScriptName.chan.flagged.spw${SPLIT_SPW_NUMBER}.field${SPLIT_SID}.txt" ]] && [[ -f "$CASAMS_ScriptName.chan.nonflagged.spw${SPLIT_SPW_NUMBER}.field${SPLIT_SID}.txt" ]]; then
-                        SPLIT_SPW="${SPLIT_SPW_NUMBER}:"$(cat "$CASAMS_ScriptName.chan.nonflagged.spw${SPLIT_SPW_NUMBER}.field${SPLIT_SID}.txt" | grep -v "^#" | head -n 1 | sed -e 's/ *//g')
+                    if [[ -f "$CASAMS_ScriptName.chan.flagged.spw${SPLIT_SPW_ID}.field${SPLIT_SID}.txt" ]] && [[ -f "$CASAMS_ScriptName.chan.nonflagged.spw${SPLIT_SPW_ID}.field${SPLIT_SID}.txt" ]]; then
+                        SPLIT_SPW="${SPLIT_SPW_ID}:"$(cat "$CASAMS_ScriptName.chan.nonflagged.spw${SPLIT_SPW_ID}.field${SPLIT_SID}.txt" | grep -v "^#" | head -n 1 | sed -e 's/ *//g')
                     fi
                 fi
             fi
@@ -581,13 +646,22 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             #<alternative># SPLIT_WID="${CASAMS_WID[ispw]}"
             
             # read Freq_Ref_Ch0_MHz
-            if [[ ! -f "$CASAMS_ScriptName.chan.freq.spw${SPLIT_SPW_NUMBER}.txt" ]]; then
+            if [[ ! -f "$CASAMS_ScriptName.chan.freq.spw${SPLIT_SPW_ID}.txt" ]]; then
                 echo ""
-                echo "Error! Failed to read \"$CASAMS_ScriptName.chan.freq.spw${SPLIT_SPW_NUMBER}.txt\" file, which is produced by reading the \"${CASAMS_VIS}\"/SPECTRAL_WINDOW/table.* files! Please make sure the measurement set is complete!"
+                echo "Error! Failed to read \"$CASAMS_ScriptName.chan.freq.spw${SPLIT_SPW_ID}.txt\" file, which is produced by reading the \"${CASAMS_VIS}\"/SPECTRAL_WINDOW/table.* files! Please make sure the measurement set is complete!"
                 echo ""
                 exit
             else
-                IFS=$'\n' read -d '' -r -a CASAMS_TableSpwChanFreqs < "$CASAMS_ScriptName.chan.freq.spw${SPLIT_SPW_NUMBER}.txt"
+                IFS=$'\n' read -d '' -r -a CASAMS_TableSpwChanFreqs < "$CASAMS_ScriptName.chan.freq.spw${SPLIT_SPW_ID}.txt"
+            fi
+            
+            # determine the skyfreq
+            if echo "$SPLIT_SPW_ID" | grep -q "^[0-9]*$"; then
+                if [[ $SPLIT_SPW_ID -lt ${#CASAMS_TableFreqs[@]} ]]; then 
+                    SPLIT_FEQ="${CASAMS_TableFreqs[ispw]}"
+                else
+                    SPLIT_FEQ=""
+                fi
             fi
             
             # determine the width
@@ -599,20 +673,24 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             
             # if the width is 0, set it to the full width (i.e. a single-channel continuum)
             if [[ x"$SPLIT_WID" == x"0" ]]; then
-                SPLIT_WID=${CASAMS_TableWidths[ispw]}
+                SPLIT_WID=$SPLIT_SPW_NUMCHAN
             fi
-            if [[ $(awk "BEGIN {if($SPLIT_WID > ${CASAMS_TableWidths[ispw]}) print 1; else print 0;}") -eq 1 ]]; then
-                SPLIT_WID=${CASAMS_TableWidths[ispw]}
-            fi
-            
-            # determine the skyfreq
-            if echo "$SPLIT_SPW_NUMBER" | grep -q "^[0-9]*$"; then
-                if [[ $SPLIT_SPW_NUMBER -lt ${#CASAMS_TableFreqs[@]} ]]; then 
-                    SPLIT_FEQ="${CASAMS_TableFreqs[ispw]}"
-                else
-                    SPLIT_FEQ=""
+            # if the width has a unit of km/s, then round to a channel width -- 20180612 
+            if [[ x"$SPLIT_WID" == x*"km/s" ]]; then
+                if [[ x"$SPLIT_FEQ" == x ]]; then
+                    echo "Error! Could not compute channel binning width from the given velocity $SPLIT_WID without REF_FREQUENCY!"
+                    exit 1
                 fi
+                if [[ x"$SPLIT_SPW_BANDWIDTH" == x ]]; then
+                    echo "Error! Could not compute channel binning width from the given velocity $SPLIT_WID without REF_FREQUENCY!"
+                    exit 1
+                fi
+                SPLIT_WID=$(echo "$SPLIT_WID" | sed -e 's%km/s%%g')
+                SPLIT_WID=$(awk "BEGIN {printf (\"%.0f\", $SPLIT_WID/(($SPLIT_SPW_BANDWIDTH/$SPLIT_SPW_NUMCHAN)/$SPLIT_FEQ*2.99792458e5));}")
+                SPLIT_WID=$(awk "BEGIN {if ($SPLIT_WID<1) print 1; else print $SPLIT_WID;}")
             fi
+            # 
+            SPLIT_WID=$(awk "BEGIN {if ($SPLIT_WID>$SPLIT_SPW_NUMCHAN) print $SPLIT_SPW_NUMCHAN; else print $SPLIT_WID;}")
             
             # determine the timebin <20180316> <TODO> only support a single value
             SPLIT_TIMEBIN="0s"
@@ -662,7 +740,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 # 
                 # Append spw info to the output name
                 # 
-                if [[ x"$SPLIT_SPW" != x ]]; then SPLIT_OutputName="${SPLIT_OutputName}_spw${SPLIT_SPW_NUMBER}"; fi
+                if [[ x"$SPLIT_SPW" != x ]]; then SPLIT_OutputName="${SPLIT_OutputName}_spw${SPLIT_SPW_ID}"; fi
                 if [[ x"$SPLIT_WID" != x ]]; then SPLIT_OutputName="${SPLIT_OutputName}_width${SPLIT_WID}"; fi
                 if [[ x"$SPLIT_STK" != x ]]; then SPLIT_OutputName="${SPLIT_OutputName}_stokes${SPLIT_STK}"; fi
                 
