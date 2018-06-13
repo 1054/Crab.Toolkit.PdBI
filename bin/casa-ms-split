@@ -753,7 +753,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 # 
                 # Write scripts
                 # 
-                if [[ $ispw -eq 0 ]]; then 
+                if [[ $count_ispw -eq 1 ]]; then 
                     CASAMS_Script1="run_${SPLIT_SourceName}_step1_split.py"
                     CASAMS_Script2="run_${SPLIT_SourceName}_step2_cvel.py"
                     CASAMS_Script3="run_${SPLIT_SourceName}_step3_exportuvfits.py"
@@ -805,7 +805,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "import os, sys" >> "$CASAMS_Script4"
                 fi
                 # 
-                if [[ $ispw -ge 0 ]]; then 
+                if [[ $count_ispw -ge 1 ]]; then 
         
                     # 
                     # Write python script: run_casa_ms_step1_split.py
