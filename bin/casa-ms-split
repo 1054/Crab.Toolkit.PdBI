@@ -12,6 +12,9 @@
 #               The solution is to use a higher version, e.g., 4.7.2. 
 #               If must use CASA 4.5.3, then I can only recommend to use CASA to split the original width data cube, then exportuvfits, then do rebinning with GILDAS!
 #    2018-06-13 adapted for CASA 5 ms naming and spw numbers.
+#               now support wildcard in "-source" option
+#               TRIMCHAN still not working, getcell::REST_FREQUENCY Exception Reported: Table DataManager error: ... no array ... in column REST_FREQUENCY ...
+#               allow wildcard in argument "-spw", e.g., "-spw" "*:5-60"
 # 
 
 
@@ -302,17 +305,18 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     echo "        spw_numb = list_vis_desc_spwid[i]"                                        >> "$CASAMS_ScriptName.py"
     echo "        spw_name = 'spw%0d'%(list_vis_desc_spwid[i])"                             >> "$CASAMS_ScriptName.py"
     echo "        # check if there are any flagged channel in any row which is not completely flagged" >> "$CASAMS_ScriptName.py"
-    echo "        tb1 = tb.query('FLAG_ROW==FALSE AND ntrue(FLAG)>0 AND DATA_DESC_ID==%d AND FIELD_ID==%d'%(spw_numb, field_numb), style='python')" >> "$CASAMS_ScriptName.py"  # style='python' means the row number starts from 0, see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1   -- ntrue(FLAG) or nfalse(FLAG) returns for each row the number of flags set, see https://casa.nrao.edu/docs/casaref/table.calc.html#x917-9330003.2.1
-    echo "        if tb1.nrows() == 0:"                                                                >> "$CASAMS_ScriptName.py"
-    echo "            if os.path.isfile('$CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb)):"      >> "$CASAMS_ScriptName.py"
-    echo "                os.system('rm $CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb))"        >> "$CASAMS_ScriptName.py"
-    echo "            if os.path.isfile('$CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb)):"   >> "$CASAMS_ScriptName.py"
-    echo "                os.system('rm $CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb))"     >> "$CASAMS_ScriptName.py"
-    echo "            continue"                                                                        >> "$CASAMS_ScriptName.py"
-    echo "        tb1.close()"                                                                         >> "$CASAMS_ScriptName.py"  # see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1
+    echo "        #tb1 = tb.query('FLAG_ROW==FALSE AND ntrue(FLAG)>0 AND DATA_DESC_ID==%d AND FIELD_ID==%d'%(spw_numb, field_numb), style='python')" >> "$CASAMS_ScriptName.py"  # style='python' means the row number starts from 0, see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1   -- ntrue(FLAG) or nfalse(FLAG) returns for each row the number of flags set, see https://casa.nrao.edu/docs/casaref/table.calc.html#x917-9330003.2.1
+    echo "        #if tb1.nrows() == 0:"                                                                >> "$CASAMS_ScriptName.py"
+    echo "        #    if os.path.isfile('$CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb)):"      >> "$CASAMS_ScriptName.py"
+    echo "        #        os.system('rm $CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb))"        >> "$CASAMS_ScriptName.py"
+    echo "        #    if os.path.isfile('$CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb)):"   >> "$CASAMS_ScriptName.py"
+    echo "        #        os.system('rm $CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb))"     >> "$CASAMS_ScriptName.py"
+    echo "        #    continue"                                                                        >> "$CASAMS_ScriptName.py"
+    echo "        #tb1.close()"                                                                         >> "$CASAMS_ScriptName.py"  # see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1
     echo "        # then get the flag in those not-completely-flagged rows "                           >> "$CASAMS_ScriptName.py"
-    echo "        tb2 = tb.query('FLAG_ROW==FALSE AND nfalse(FLAG)>0 AND DATA_DESC_ID==%d AND FIELD_ID==%d'%(spw_numb, field_numb), style='python')" >> "$CASAMS_ScriptName.py"  # style='python' means the row number starts from 0, see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1   -- ntrue(FLAG) or nfalse(FLAG) returns for each row the number of flags set, see https://casa.nrao.edu/docs/casaref/table.calc.html#x917-9330003.2.1
-    echo "        if tb2.nrows() > 0:"                                                                 >> "$CASAMS_ScriptName.py" # also need to find out flagged channels <TODO> this does not work, because flags for channels might change between rows! The solution is to allow user to specify spw with channel range!
+    echo "        #tb2 = tb.query('FLAG_ROW==FALSE AND nfalse(FLAG)>0 AND DATA_DESC_ID==%d AND FIELD_ID==%d'%(spw_numb, field_numb), style='python')" >> "$CASAMS_ScriptName.py"  # style='python' means the row number starts from 0, see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1   -- ntrue(FLAG) or nfalse(FLAG) returns for each row the number of flags set, see https://casa.nrao.edu/docs/casaref/table.calc.html#x917-9330003.2.1
+    echo "        #if tb2.nrows() > 0:"                                                                 >> "$CASAMS_ScriptName.py" # also need to find out flagged channels <TODO> this does not work, because flags for channels might change between rows! The solution is to allow user to specify spw with channel range!
+    echo "        if True:"                                                                             >> "$CASAMS_ScriptName.py" # 20180613 debug
     echo "            # then read flagged channels and write to file"                                  >> "$CASAMS_ScriptName.py"
     echo "            fo1 = open('$CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb),'wb')"         >> "$CASAMS_ScriptName.py"
     echo "            fo2 = open('$CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb),'wb')"      >> "$CASAMS_ScriptName.py"
@@ -495,8 +499,18 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     # Check input source, if input source is empty, set to all sources in SOURCE table
     # 
     if [[ ${#CASA_INP_FIELD[@]} -gt 0 ]]; then
-        CASAMS_SOU=(${CASA_INP_FIELD[@]})
-        echo "Setting source list according to the user input (${#CASAMS_SOU[@]} sources)"
+        if [[ "${CASA_INP_FIELD[@]}" == *"*"* ]]; then
+            CASAMS_SOU=()
+            for (( isou=0; isou<${#CASAMS_TableFieldNames[@]}; isou++ )); do 
+                if [[ $(echo "${CASAMS_TableFieldNames[isou]}" | grep "${CASA_INP_FIELD[@]}" | wc -l) -gt 0 ]]; then
+                    CASAMS_SOU+=("${CASAMS_TableFieldNames[isou]}") # 20180613 now support wildcard in "-source" option
+                fi
+            done
+            echo "Setting source list according to the user input with wildcard (${#CASAMS_SOU[@]} sources)"
+        else
+            CASAMS_SOU=(${CASA_INP_FIELD[@]})
+            echo "Setting source list according to the user input (${#CASAMS_SOU[@]} sources)"
+        fi
     else
         CASAMS_SOU=("${CASAMS_TableFieldNames[@]}")
         echo "Setting source list according to the FIELD table (${#CASAMS_SOU[@]} sources)"
@@ -539,7 +553,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             if [[ $isou -eq 0 ]]; then echo "Setting spw according to the user input (${#CASAMS_SPW[@]} spws) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
         else
             if [[ ${#CASA_INP_SPW[@]} -gt 0 ]]; then
-                CASAMS_SPW=(${CASA_INP_SPW[$((${#CASA_INP_SPW[@]}-1))]})
+                CASAMS_SPW=(${CASA_INP_SPW[$((${#CASA_INP_SPW[@]}-1))]}) # repeat last spw for the rest sources
                 CASAMS_SPW_NAMES=()
                 CASAMS_SPW_BANDWIDTHS=()
                 if [[ $isou -eq 0 ]]; then echo "Setting spw according to the user input (${#CASAMS_SPW[@]} spws) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
@@ -549,6 +563,23 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 CASAMS_SPW_BANDWIDTHS=()
                 if [[ $isou -eq 0 ]]; then echo "Setting spw according to the SPECTRAL_WINDOW table (${#CASAMS_SPW[@]} spws) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
             fi
+        fi
+        
+        if [[ "$CASAMS_SPW" == "*"* ]] || [[ "$CASAMS_SPW" == ":"* ]]; then
+            # 20180613 allow wildcard in argument "-spw", e.g., "-spw" "*:5-60"
+            if [[ "$CASAMS_SPW" == *":"* ]]; then
+                CASAMS_SPW_CHANSEL=$(echo "$CASAMS_SPW" | perl -p -e 's/^.*:/:/g')
+            else
+                CASAMS_SPW_CHANSEL=":"
+            fi
+            CASAMS_SPW=()
+            CASAMS_SPW_NAMES=()
+            CASAMS_SPW_BANDWIDTHS=()
+            for (( ispw=0; ispw<${#CASAMS_TableSpws[@]}; ispw++ )); do
+                CASAMS_SPW+=("${CASAMS_TableSpws[ispw]}${CASAMS_SPW_CHANSEL}")
+                CASAMS_SPW_NAMES+=("${CASAMS_TableSpwNames[ispw]}")
+                CASAMS_SPW_BANDWIDTHS+=("${CASAMS_TableSpwBandwidths[ispw]}")
+            done
         fi
         
         # 
@@ -595,7 +626,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             SPLIT_WID=""
             SPLIT_FEQ=""
             SPLIT_STK=""
-            SPLIT_SPW_ID=$(echo "$SPLIT_SPW" | sed -e 's/:.*$//g')
+            SPLIT_SPW_ID=$(echo "$SPLIT_SPW" | sed -e 's/:.*$//g') # remove channel selection part after colon ":", e.g., "*:1-3"
             
             # check SPLIT_SPW_ID
             if [[ $SPLIT_SPW_ID -ge ${#CASAMS_TableWidths[@]} ]]; then
