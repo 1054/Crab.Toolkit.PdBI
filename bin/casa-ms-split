@@ -585,6 +585,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         # 
         # Loop each spw for each source, determine the width and skyfreq
         # 
+        count_ispw=0
         for (( ispw=0; ispw<${#CASAMS_SPW[@]}; ispw++ )); do
             
             SPLIT_SOU="${CASAMS_SOU[isou]}"
@@ -620,11 +621,13 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             SPLIT_SPW_NAME="${CASAMS_TableSpwNames[$SPLIT_SPW_ID]}"
             
             # skip calibration spws by their names -- 20180612
-            if [[ x"$SPLIT_SPW_NAME" != x*"FULL_RES" ]]; then
+            if [[ x"$SPLIT_SPW_NAME" == x"BB"* ]] || [[ x"$SPLIT_SPW_NAME" == x"WVR"* ]]; then
                 echo ""
                 echo "Skipping spw \"$SPLIT_SPW_ID\" because its NAME in SPECTRAL_WINDOW table is \"$SPLIT_SPW_NAME\"!"
                 echo ""
                 continue
+            else
+                count_ispw=$(awk "BEGIN {print ($count_ispw+1);}")
             fi
             
             # determine whether there are flagged channels (experimental)
@@ -705,11 +708,12 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             # 
             # print progress
             # 
-            if [[ $ispw -eq 0 ]]; then echo "  "; 
-                                       echo "  * looping source '$SPLIT_SOU'  ($(($isou+1))/${#CASAMS_SOU[@]})"; fi
-                                       echo "    *       spw    '$SPLIT_SPW'"
-                                       echo "            width  '$SPLIT_WID'"
-                                      #echo "            freq   '$SPLIT_FEQ'"
+            if [[ $count_ispw -eq 1 ]]; then 
+                echo "  "; 
+                echo "  * looping source '$SPLIT_SOU'  ($(($isou+1))/${#CASAMS_SOU[@]})"; fi
+                echo "    *       spw    '$SPLIT_SPW'"
+                echo "            width  '$SPLIT_WID'"
+                echo "            freq   '$SPLIT_FEQ'"
             
             
             # 
@@ -722,7 +726,9 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 # 
                 # print progress
                 # 
-                if [[ x"$SPLIT_STK" != x ]]; then echo "      *     stokes '$SPLIT_STK'"; fi
+                if [[ x"$SPLIT_STK" != x ]]; then 
+                    echo "      *     stokes '$SPLIT_STK'"
+                fi
                 
                 # 
                 # Prepare SourcesName and OutputName for the CASA scripts
