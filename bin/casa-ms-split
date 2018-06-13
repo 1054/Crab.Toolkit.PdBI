@@ -713,7 +713,8 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 echo "  "; 
                 echo "  * looping source    '$SPLIT_SOU'  ($(($isou+1))/${#CASAMS_SOU[@]})"; fi
                 echo "    *       spw       '$SPLIT_SPW_ID'"
-                echo "            width     '$SPLIT_WID'"
+                echo "    *       spw_name  '$SPLIT_SPW_NAME'"
+                echo "            chanwidth '$SPLIT_WID'"
                 echo "            bandwidth '$SPLIT_SPW_BANDWIDTH'"
                 echo "            ref_freq  '$SPLIT_FEQ'"
             
