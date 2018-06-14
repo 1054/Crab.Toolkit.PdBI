@@ -14,7 +14,8 @@
 #    2018-06-13 adapted for CASA 5 ms naming and spw numbers.
 #               now support wildcard in "-source" option
 #               TRIMCHAN still not working, getcell::REST_FREQUENCY Exception Reported: Table DataManager error: ... no array ... in column REST_FREQUENCY ...
-#               allow wildcard in argument "-spw", e.g., "-spw" "*:5-60"
+#               allow wildcard in argument "-spw", e.g., "-spw" "*:5~60"
+#               allow multiple spw in one argument "-spw", e.g., "-spw" "5,7,9,11:5~60"
 # 
 
 
@@ -547,7 +548,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         # Check input spw, if input spw is empty, set to all spw in SPECTRAL_WINDOW table
         # 
         if [[ $isou -lt ${#CASA_INP_SPW[@]} ]]; then
-            CASAMS_SPW=(${CASA_INP_SPW[isou]})
+            CASAMS_SPW=(${CASA_INP_SPW[isou]}) # user can input -spw "5 6 7 8" and here it will expand to a list (5 6 7 8)
             CASAMS_SPW_NAMES=()
             CASAMS_SPW_BANDWIDTHS=()
             if [[ $isou -eq 0 ]]; then echo "Setting spw according to the user input (${#CASAMS_SPW[@]} spws) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
@@ -565,22 +566,42 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             fi
         fi
         
-        if [[ "$CASAMS_SPW" == "*"* ]] || [[ "$CASAMS_SPW" == ":"* ]]; then
-            # 20180613 allow wildcard in argument "-spw", e.g., "-spw" "*:5-60"
-            if [[ "$CASAMS_SPW" == *":"* ]]; then
-                CASAMS_SPW_CHANSEL=$(echo "$CASAMS_SPW" | perl -p -e 's/^.*:/:/g')
+        # Check multiple spw expression and channel selection expression, 
+        # and also get spw name and bandwidth
+        CASAMS_SPW_EXPANDED=() # expand multi-spw expression
+        CASAMS_SPW_NAMES=() # also expanded
+        CASAMS_SPW_BANDWIDTHS=() # also expanded
+        for (( ispw=0; ispw<${#CASAMS_SPW[@]}; ispw++ )); do
+            if [[ "${CASAMS_SPW[ispw]}" == "*"* ]] || [[ "${CASAMS_SPW[ispw]}" == ":"* ]]; then
+                # 20180613 allow wildcard in argument "-spw", e.g., "-spw" "*:5~60"
+                if [[ "${CASAMS_SPW[ispw]}" == *":"* ]]; then
+                    CASAMS_SPW_CHANSEL=$(echo "${CASAMS_SPW[ispw]}" | perl -p -e 's/^.*:/:/g')
+                else
+                    CASAMS_SPW_CHANSEL=":"
+                fi
+                for (( ispw2=0; ispw2<${#CASAMS_TableSpws[@]}; ispw2++ )); do
+                    CASAMS_SPW_EXPANDED+=("${CASAMS_TableSpws[ispw2]}${CASAMS_SPW_CHANSEL}")
+                    CASAMS_SPW_NAMES+=("${CASAMS_TableSpwNames[ispw2]}") # Also get spw name and bandwidth
+                    CASAMS_SPW_BANDWIDTHS+=("${CASAMS_TableSpwBandwidths[ispw2]}") # Also get spw name and bandwidth
+                done
             else
-                CASAMS_SPW_CHANSEL=":"
+                CASAMS_SPW_EXPANDED+=("${CASAMS_SPW[ispw]}")
+                CASAMS_SPW_NAME2="" # Also get spw name and bandwidth
+                CASAMS_SPW_BANDWIDTH2="" # Also get spw name and bandwidth
+                for (( ispw2=0; ispw2<${#CASAMS_TableSpws[@]}; ispw2++ )); do
+                    CASAMS_SPW_PURE_NUMBER=$(echo "${CASAMS_SPW[ispw]}" | perl -p -e 's/:.*$//g') # remove channel selection expression after the colon character
+                    if [[ "$CASAMS_SPW_PURE_NUMBER" == "${CASAMS_TableSpws[ispw2]}" ]]; then
+                        CASAMS_SPW_NAME2="${CASAMS_TableSpwNames[ispw2]}"
+                        CASAMS_SPW_BANDWIDTH2="${CASAMS_TableSpwBandwidths[ispw2]}"
+                    fi
+                    #CASAMS_SPW+=("${CASAMS_TableSpws[ispw]}${CASAMS_SPW_CHANSEL}")
+                    #CASAMS_SPW_NAMES+=("${CASAMS_TableSpwNames[ispw]}")
+                    #CASAMS_SPW_BANDWIDTHS+=("${CASAMS_TableSpwBandwidths[ispw]}")
+                done
+                CASAMS_SPW_NAMES+=($CASAMS_SPW_NAME2)
+                CASAMS_SPW_BANDWIDTHS+=($CASAMS_SPW_BANDWIDTH2)
             fi
-            CASAMS_SPW=()
-            CASAMS_SPW_NAMES=()
-            CASAMS_SPW_BANDWIDTHS=()
-            for (( ispw=0; ispw<${#CASAMS_TableSpws[@]}; ispw++ )); do
-                CASAMS_SPW+=("${CASAMS_TableSpws[ispw]}${CASAMS_SPW_CHANSEL}")
-                CASAMS_SPW_NAMES+=("${CASAMS_TableSpwNames[ispw]}")
-                CASAMS_SPW_BANDWIDTHS+=("${CASAMS_TableSpwBandwidths[ispw]}")
-            done
-        fi
+        done
         
         # 
         # Check input spw width, if input spw width is empty, set to the full width of the spw
@@ -618,11 +639,11 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         # Loop each spw for each source, determine the width and skyfreq
         # 
         count_ispw=0
-        for (( ispw=0; ispw<${#CASAMS_SPW[@]}; ispw++ )); do
+        for (( ispw=0; ispw<${#CASAMS_SPW_EXPANDED[@]}; ispw++ )); do
             
             SPLIT_SOU="${CASAMS_SOU[isou]}"
             SPLIT_SID="${CASAMS_SID[isou]}"
-            SPLIT_SPW="${CASAMS_SPW[ispw]}"
+            SPLIT_SPW="${CASAMS_SPW_EXPANDED[ispw]}"
             SPLIT_WID=""
             SPLIT_FEQ=""
             SPLIT_STK=""
