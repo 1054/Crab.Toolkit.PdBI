@@ -69,6 +69,16 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     
     
     # 
+    # Set default parameters -- crange
+    # 
+    if [[ ${#PdBIUVT_CMIN[@]} -le 0 && ${#PdBIUVT_CMAX[@]} -le 0 ]]; then
+        PdBIUVT_CMIN=$PdBIUVT_CHAN_MIN
+        PdBIUVT_CMAX=$PdBIUVT_CHAN_MAX
+    fi
+    
+    
+    
+    # 
     # Check input parameters -- crange
     # 
     if [[ ${#PdBIUVT_CMIN[@]} -le 0 || ${#PdBIUVT_CMAX[@]} -le 0 ]]; then

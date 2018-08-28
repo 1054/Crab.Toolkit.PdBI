@@ -17,7 +17,10 @@
 # 
 usage() {
     echo "Usage: "
-    echo "  pdbi-uvt-go-subtract -name NAME.uvt CONT.uvt -out NAME_CONTSUB.uvt"
+    echo "  pdbi-uvt-go-subtract -name NAME.uvt CONT.uvt -out NAME_CONTSUB.uvt [-weight 0.5]"
+    echo ""
+    echo "Notes: "
+    echo "  -weight is a factor that will be multiplied to \"CONT.uvt\" before the subtraction."
     echo ""
 }
 
@@ -88,6 +91,11 @@ PdBIUVT_EXE="${PdBIUVT_NAME[0]}.${PdBIUVT_TYPE[0]}.uv_subtract.script"
 PdBIUVT_LOG="${PdBIUVT_NAME[0]}.${PdBIUVT_TYPE[0]}.uv_subtract.log"
 PdBIUVT_INI="${PdBIUVT_NAME[0]}.${PdBIUVT_TYPE[0]}.uv_subtract.init"
 
+PdBIUVT_SUB="1"
+if [[ ${#PdBIUVT_UVMERGE_WEIGHT[@]} -gt 0 ]]; then
+    PdBIUVT_SUB="${PdBIUVT_UVMERGE_WEIGHT[0]}"
+fi
+
 echo "Checking \"${PdBIUVT_NAME[0]}.${PdBIUVT_TYPE[0]}\""
 cp "${PdBIUVT_NAME[0]}.${PdBIUVT_TYPE[0]}" "${PdBIUVT_SAVE[0]}.uvt"
 
@@ -100,7 +108,7 @@ echo 'TASK\CHARACTER "UV table to subtract from"                         UV_TABL
 echo 'TASK\CHARACTER "UV table used as continuum"                            SELF$    "'"${PdBIUVT_NAME[1]}.${PdBIUVT_TYPE[1]}"'"'  >> "$PdBIUVT_INI"
 echo 'TASK\REAL      "The smoothing time constant in seconds"               DTIME$     500'                                         >> "$PdBIUVT_INI"
 echo 'TASK\INTEGER   "The continuum channel"                                 WCOL$[2]  0 0'                                         >> "$PdBIUVT_INI"
-echo 'TASK\REAL      "How many times should the continuum be subtracted"      SUB$     1'                                           >> "$PdBIUVT_INI"
+echo 'TASK\REAL      "How many times should the continuum be subtracted"      SUB$     '"${PdBIUVT_SUB}"                            >> "$PdBIUVT_INI"
 echo 'TASK\GO'                                                                                                                      >> "$PdBIUVT_INI"
 # 
 echo "run uv_subtract $PdBIUVT_INI /NOWINDOW" > "$PdBIUVT_EXE"
@@ -110,18 +118,21 @@ echo "@$PdBIUVT_EXE" | mapping > "$PdBIUVT_LOG"
 
 if [[ -f "${PdBIUVT_SAVE[0]}.uvt" ]]; then
     echo "Successufully saved to \"${PdBIUVT_SAVE[0]}.uvt\"!"
-    if [[ -f "$PdBIUVT_LOG" ]]; then
-        rm "$PdBIUVT_LOG"
-    fi
-    if [[ -f "$PdBIUVT_EXE" ]]; then
-        rm "$PdBIUVT_EXE"
-    fi
-    if [[ -f "$PdBIUVT_INI" ]]; then
-        rm "$PdBIUVT_INI"
+    if [[ $PdBIUVT_UVMERGE_KEEP_FILE -eq 0 ]]; then
+        # if do not keep intermediate files, then delete them.
+        if [[ -f "$PdBIUVT_LOG" ]]; then
+            rm "$PdBIUVT_LOG"
+        fi
+        if [[ -f "$PdBIUVT_EXE" ]]; then
+            rm "$PdBIUVT_EXE"
+        fi
+        if [[ -f "$PdBIUVT_INI" ]]; then
+            rm "$PdBIUVT_INI"
+        fi
     fi
 else
     echo "Error! Failed to run GILDAS MAPPING UV_SUBTRACT and output \"${PdBIUVT_SAVE[0]}.uvt\"!"
-    echo "Please check \"$PdBIUVT_LOG\"!"
+    echo "Please check \"$PdBIUVT_LOG\" and \"$PdBIUVT_INI\"!"
     exit 1
 fi
 

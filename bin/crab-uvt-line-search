@@ -72,6 +72,15 @@ if [[ $(CrabFitsImageArithmetic 2>/dev/null | wc -l) -eq 0 ]]; then
     exit -1
 fi
 
+# 
+# CHECK ln
+# 
+if [[ $(type gln 2>/dev/null | wc -l) -eq 1 ]]; then
+    command_ln=gln
+else
+    command_ln=ln
+fi
+
 
 
 # 
@@ -159,7 +168,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # 
     uvt_name=$(basename "${PdBIUVT_NAME[tk]}")
     if [[ "${PdBIUVT_NAME[tk]}" == *"/"* ]] || [[ "${PdBIUVT_TYPE[tk]}" != "uvt" ]]; then
-        ln -fsT "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" "${uvt_name}.uvt"
+        $command_ln -fsT "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}" "${uvt_name}.uvt"
     fi
     echo ""
     echo "uvt_name = $uvt_name"
@@ -212,10 +221,11 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # 
     if [[ $continuum_mode -eq 0 ]]; then
         echo ""
-        echo "pdbi-uvt-go-average -name \"${uvt_name}.uvt\" -out \"${uvt_name}_continuum.uvt\""
-        pdbi-uvt-go-average -name "${uvt_name}.uvt" -out "${uvt_name}_continuum.uvt" > "${uvt_name}_continuum.uvt.uv_average_to_continuum.log"
+        echo "pdbi-uvt-go-average -name \"${uvt_name}.uvt\" -out \"${uvt_name}_continuum.uvt\" -keep-files"
+              pdbi-uvt-go-average -name  "${uvt_name}.uvt"  -out  "${uvt_name}_continuum.uvt"  -keep-files \
+                                                                > "${uvt_name}_continuum.uvt.uv_average_to_continuum.log"
     else
-        ln -fsT "${uvt_name}.uvt" "${uvt_name}_continuum.uvt"
+        $command_ln -fsT "${uvt_name}.uvt" "${uvt_name}_continuum.uvt"
     fi
     
     
@@ -361,11 +371,11 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             if [[ $continuum_mode -eq 1 ]]; then
                 #echo "cp \"${uvt_name}.uvt\" \"velo_bin_${velo_count}.uvt\""
                 #cp "${uvt_name}.uvt" "velo_bin_${velo_count}.uvt"
-                echo "ln -fsT \"../${uvt_name}.uvt\" \"velo_bin_${velo_count}.uvt\""
-                      ln -fsT  "../${uvt_name}.uvt"   "velo_bin_${velo_count}.uvt"
+                echo "$command_ln -fsT \"../${uvt_name}.uvt\" \"velo_bin_${velo_count}.uvt\""
+                      $command_ln -fsT  "../${uvt_name}.uvt"   "velo_bin_${velo_count}.uvt"
             else
-                echo "ln -fsT \"../${uvt_name}_contsub.uvt\" \"${uvt_name}_contsub.uvt\""
-                      ln -fsT  "../${uvt_name}_contsub.uvt"   "${uvt_name}_contsub.uvt"
+                echo "$command_ln -fsT \"../${uvt_name}_contsub.uvt\" \"${uvt_name}_contsub.uvt\""
+                      $command_ln -fsT  "../${uvt_name}_contsub.uvt"   "${uvt_name}_contsub.uvt"
                 echo "pdbi-uvt-go-average -name \"${uvt_name}_contsub.uvt\" -out \"velo_bin_${velo_count}.uvt\" -vrange \"$velo_start\" \"$velo_end\""
                       pdbi-uvt-go-average -name  "${uvt_name}_contsub.uvt"  -out  "velo_bin_${velo_count}.uvt"  -vrange  "$velo_start"   "$velo_end" \
                                                                                >  "velo_bin_${velo_count}.uv_average.log"
@@ -375,8 +385,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         #rm "velo_bin_${velo_count}.lmv"* "velo_bin_${velo_count}.lmv_bscale.detect_blob"* 2>/dev/null
         
         if [[ ! -f "velo_bin_${velo_count}.lmv" || ! -f "velo_bin_${velo_count}.lmv.fits" || ! -f "velo_bin_${velo_count}.uvt.uv_map.log" ]]; then
-            echo "pdbi-uvt-go-uvmap -name \"velo_bin_${velo_count}.uvt\" -size $fov_size -map_size $map_size"
-                  pdbi-uvt-go-uvmap -name  "velo_bin_${velo_count}.uvt"  -size $fov_size -map_size $map_size | sed -e 's/[^[[:print:]]]//g' \
+            echo "pdbi-uvt-go-uvmap -name \"velo_bin_${velo_count}.uvt\" -size $fov_size -map_size $map_size -keep-files"
+                  pdbi-uvt-go-uvmap -name  "velo_bin_${velo_count}.uvt"  -size $fov_size -map_size $map_size -keep-files | sed -e 's/[^[[:print:]]]//g' \
                                         >  "velo_bin_${velo_count}.uvt.uv_map.log.log"
         fi
         
@@ -544,8 +554,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                         # run uvfit
                         if [[ $blob_uv_fit_separ -ne 1 ]]; then
                             # run uvfit simultaneously for all blobs (note that the blob_num should not be larger than 11, limited by GILDAS/MAPPING)
-                            echo "ln -fsT \"../${uvt_name}.uvt\" \"${uvt_name}.uvt\""
-                                  ln -fsT  "../${uvt_name}.uvt"   "${uvt_name}.uvt"
+                            echo "$command_ln -fsT \"../${uvt_name}.uvt\" \"${uvt_name}.uvt\""
+                                  $command_ln -fsT  "../${uvt_name}.uvt"   "${uvt_name}.uvt"
                             echo "pdbi-uvt-go-uvfit -parallel -name \"${uvt_name}.uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit\" -radec ${blob_radec[@]} -FoV $fov_size -uvmap-spacing 3 > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log\""
                                   pdbi-uvt-go-uvfit -parallel -name  "${uvt_name}.uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit"  -radec ${blob_radec[@]} -FoV $fov_size -uvmap-spacing 3 >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.log.log"
                             #<20180214># removed "-vrange ${blob_vrange[@]} "
@@ -557,8 +567,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                             
                             if [[ $blob_uv_fit_separ -eq 1 ]]; then
                                 # run uvfit separately for each blob
-                                echo "ln -fsT \"../${uvt_name}.uvt\" \"${uvt_name}.uvt\""
-                                      ln -fsT  "../${uvt_name}.uvt"   "${uvt_name}.uvt"
+                                echo "$command_ln -fsT \"../${uvt_name}.uvt\" \"${uvt_name}.uvt\""
+                                      $command_ln -fsT  "../${uvt_name}.uvt"   "${uvt_name}.uvt"
                                 echo "pdbi-uvt-go-uvfit -parallel -name \"${uvt_name}.uvt\" -out \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}\" -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -FoV $fov_size -uvmap-spacing 3 > \"velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log\""
                                       pdbi-uvt-go-uvfit -parallel -name  "${uvt_name}.uvt"  -out  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}"  -radec ${blob_ra[$((iobj-1))]} ${blob_dec[$((iobj-1))]} -FoV $fov_size -uvmap-spacing 3 >  "velo_bin_${velo_count}.${lmv_type}.detect_blob.uv_fit.run.obj_${iobj}.log.log"
                                 #<20180214># removed "-vrange ${blob_vrange[@]} "
@@ -610,22 +620,23 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         
         
         # clean files if -clean-files are given by the user
-        if [[ $PdBIUVT_UVMERGE_KEEP_FILE -lt 0 ]]; then
+        if [[ $PdBIUVT_UVMERGE_KEEP_FILE -le 0 ]]; then
             echo "Cleaning files for non detection"
             lmv_blobs_total=0
             for (( i=0; i<${#lmv_types[@]}; i++ )); do
                 lmv_blobs_total=$(awk "BEGIN {print ($lmv_blobs_total)+(${lmv_blobs[i]});}")
                 if [[ ${lmv_blobs[i]} -eq 0 ]]; then
                     echo rm $(ls -1 velo_bin_${velo_count}.${lmv_types[i]}.* | grep -v ".detect_blob.log")
-                    rm $(ls -1 velo_bin_${velo_count}.${lmv_types[i]}.* | grep -v ".detect_blob.log")
+                         rm $(ls -1 velo_bin_${velo_count}.${lmv_types[i]}.* | grep -v ".detect_blob.log")
                 fi
             done
             if [[ $lmv_blobs_total -eq 0 ]]; then
                 echo rm $(ls -1 velo_bin_${velo_count}[._]* | grep -v ".detect_blob.log")
-                rm $(ls -1 velo_bin_${velo_count}[._]* | grep -v ".detect_blob.log")
+                     rm $(ls -1 velo_bin_${velo_count}[._]* | grep -v ".detect_blob.log")
             else
-                echo rm $(ls -1 velo_bin_${velo_count}[._]* | grep -v ".uv_fit.")
-                rm $(ls -1 velo_bin_${velo_count}[._]* | grep -v ".uv_fit.")
+                # if we did detect some blobs, then keep *.uv_fit.* and *.detect_blob.* files
+                echo rm $(ls -1 velo_bin_${velo_count}[._]* | grep -v ".lmv.fits" | grep -v ".uv_average." | grep -v ".uv_fit." | grep -v ".detect_blob.")
+                     rm $(ls -1 velo_bin_${velo_count}[._]* | grep -v ".lmv.fits" | grep -v ".uv_average." | grep -v ".uv_fit." | grep -v ".detect_blob.")
             fi
         fi
         

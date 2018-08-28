@@ -313,11 +313,13 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
                 echo "Successufully saved to \"${PdBIUVT_EPS}.eps\"!"
                 echo "--"
             fi
-            if [[ -f "$PdBIUVT_LOG" ]]; then
-                rm "$PdBIUVT_LOG"
-            fi
-            if [[ -f "$PdBIUVT_EXE" ]]; then
-                rm "$PdBIUVT_EXE"
+            if [[ $PdBIUVT_UVMERGE_KEEP_FILE -le 0 ]]; then
+                if [[ -f "$PdBIUVT_LOG" ]]; then
+                    rm "$PdBIUVT_LOG"
+                fi
+                if [[ -f "$PdBIUVT_EXE" ]]; then
+                    rm "$PdBIUVT_EXE"
+                fi
             fi
         else
             echo "Error! Failed to run GILDAS MAPPING UV_MAP and output \"${PdBIUVT_EPS}.eps\"!"

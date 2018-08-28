@@ -160,6 +160,8 @@ PdBIUVT_LINE_SEARCH_STEP=()
 PdBIUVT_LINE_SEARCH_SIGMA=()
 PdBIUVT_LINE_SEARCH_BLEND=()
 PdBIUVT_LINE_SEARCH_MAXNUM=()
+# ------------------------# plot channel map in uv-fit
+PdBIUVT_PLOT_CHANNEL_MAP="NO"
 # ------------------------# program control
 PdBIUVT_PARALLELS=0
 
@@ -342,6 +344,7 @@ while [[ "$#" -gt 0 ]]; do
        "-hide-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
          "-no_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
          "-no-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
+  "-plot-channel-map") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PLOT_CHANNEL_MAP="YES";;
             
       "-simultaneous") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run
           "-parallel") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run
