@@ -10,6 +10,7 @@
 #    2017-03-30 using "pdbi-uvt-core-arg-v4"
 #    2017-03-30 using "pdbi-uvt-core-arg-v5"
 #    2018-02-12 using "pdbi-uvt-core-arg-v8"
+#    2018-10-23 using "pdbi-uvt-core-arg-v9" with "-stokes"
 # 
 # 
 
@@ -29,11 +30,11 @@ usage() {
 # 
 # SOURCE pdbi-uvt-core-arg
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v9" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v9" "$@"
 else
     echo ""
-    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8\"!"
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v9\"!"
     echo ""
     exit 1
 fi
@@ -102,19 +103,28 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         fi
         
         if [[ -f "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.header.txt" ]]; then
-            PdBIUVT_Stokes=$(grep "Stokes: " "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.header.txt" | sed -E 's/.*Stokes: *([0-9]*) *.*/\1/g')
+            Count_Stokes=$(grep "Stokes: " "${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.header.txt" | sed -E 's/.*Stokes: *([0-9]*) *.*/\1/g')
         else
             echo ""; echo "Error! Failed to run \"header ${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" in GILDAS mapping and output \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.header.txt\"!"; echo ""
             exit 1
         fi
         
-        if [[ $PdBIUVT_Stokes -le 1 ]]; then
+        if [[ $Count_Stokes -le 1 ]]; then
             echo "Warning! The number of stokes in \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" is already one, no need to split and merge!"
         else
+            if [[ ${#PdBIUVT_UVSPLIT_STOKES[@]} -gt $i ]]; then
+                PdBIUVT_STOKES=${PdBIUVT_UVSPLIT_STOKES[$i]}
+            else
+                if [[ ${#PdBIUVT_UVSPLIT_STOKES[@]} -gt 0 ]]; then
+                    PdBIUVT_STOKES=${PdBIUVT_UVSPLIT_STOKES[${#PdBIUVT_UVSPLIT_STOKES[@]}-1]}
+                else
+                    PdBIUVT_STOKES="NONE"
+                fi
+            fi
             echo "Splitting \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\" polarizations and merging into a single polarization uv data file"
             echo "TASK\\FILE      \"\"      INPUT\$ \"${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}\""  >  "$PdBIUVT_INI"
             echo "TASK\\FILE      \"\"     OUTPUT\$ \"${PdBIUVT_SAVE[i]}.uvt\""                 >> "$PdBIUVT_INI"
-            echo "TASK\\CHARACTER \"\"     STOKES\$ \"NONE\""                                   >> "$PdBIUVT_INI"
+            echo "TASK\\CHARACTER \"\"     STOKES\$ \"${PdBIUVT_STOKES}\""                      >> "$PdBIUVT_INI"
             echo "TASK\\GO"                                                                     >> "$PdBIUVT_INI"
             echo "run uv_splitpolar $PdBIUVT_INI /NOWINDOW" > "$PdBIUVT_EXE"
             echo "Running @$PdBIUVT_EXE in GILDAS mapping"

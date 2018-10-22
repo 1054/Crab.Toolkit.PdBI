@@ -562,7 +562,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                 # plot image if there is only one channel or user has input "-plot-channel-map"
                 if [[ "${PdBIUVT_PLOT_CHANNEL_MAP}" == "YES" ]]; then
                     PLOT_CHANNEL_MAP="YES"
-                elif [[ ${#PdBIUVT_OutXY[@]} -eq 1 ]]; then
+                elif [[ ${#PdBIUVT_OutX[@]} -eq 1 ]]; then
                     PLOT_CHANNEL_MAP="YES"
                 else
                     PLOT_CHANNEL_MAP="NO"

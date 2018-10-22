@@ -16,6 +16,7 @@
 #     2018-02-14 Added PdBIUVT_UVMAP_SPACING
 #     2018-02-14 Fixed the problem of inputting symbol link file "[[ ! -f "${PdBIUVT_NAME[PdBIUVT_ITER]}.${PdBIUVT_TYPE[PdBIUVT_ITER]}" ]] && [[ ! -L "${PdBIUVT_NAME[PdBIUVT_ITER]}.${PdBIUVT_TYPE[PdBIUVT_ITER]}" ]]"
 #     2018-05-03 Added option "-cdisk" "-edisk" "-disk"
+#     2018-10-23 Added option "-stokes"
 # 
 
 
@@ -140,6 +141,7 @@ PdBIUVT_ADD_OFF_Y=()      # the offset added to the input radec or offset
 # ------------------------# uv taper
 PdBIUVT_UVRANGE_MIN="0"
 PdBIUVT_UVRANGE_MAX="36000"
+PdBIUVT_UVSPLIT_STOKES=()
 # ------------------------# uv merge
 PdBIUVT_UVMERGE_WEIGHT=()
 PdBIUVT_UVMERGE_FACTOR=()
@@ -326,6 +328,8 @@ while [[ "$#" -gt 0 ]]; do
          "-weighting") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_weight";;
             "-factor") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_factor";;
            "-scaling") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_factor";;
+            
+            "-stokes") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvsplit_stokes";;
   
              "-width") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvcompress_nc";;
               "-step") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="step";;
@@ -538,6 +542,13 @@ while [[ "$#" -gt 0 ]]; do
             break
         fi
         PdBIUVT_UVMAP_SPACING+=("$1")
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "uvsplit_stokes" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        PdBIUVT_UVSPLIT_STOKES+=("$1")
     fi
     
     if [[ "$PdBIUVT_RPAR" == "uv_ctime" ]];  then 
