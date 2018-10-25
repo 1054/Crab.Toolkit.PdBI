@@ -271,10 +271,12 @@ while [[ "$#" -gt 0 ]]; do
   
               "-vary") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(1);; # does not accept input value
            "-varypos") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(1);;
+         "-variedpos") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(1);;
       "-varyposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(1);;
 
                "-fix") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);; # does not accept input value
             "-fixpos") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);;
+          "-fixedpos") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);;
        "-fixposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);;
 
           "-varyflux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(1);; # does not accept input value
