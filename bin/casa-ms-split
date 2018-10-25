@@ -714,7 +714,8 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             # determine the skyfreq
             if echo "$SPLIT_SPW_ID" | grep -q "^[0-9]*$"; then
                 if [[ $SPLIT_SPW_ID -lt ${#CASAMS_TableFreqs[@]} ]]; then 
-                    SPLIT_FEQ="${CASAMS_TableFreqs[ispw]}"
+                    #SPLIT_FEQ="${CASAMS_TableFreqs[ispw]}" #<BUGGY><20181025># 
+                    SPLIT_FEQ="${CASAMS_TableFreqs[SPLIT_SPW_ID]}"
                 else
                     SPLIT_FEQ=""
                 fi
