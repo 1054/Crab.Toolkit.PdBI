@@ -23,6 +23,8 @@ input_lineFWHM = [] # km/s
 set_figure_size = [12.0,5.0]
 set_no_errorbar = False
 set_no_liblines = False
+set_xrange = []
+set_yrange = []
 set_highlight_frange = []
 set_xtickinterval = numpy.nan
 
@@ -76,6 +78,18 @@ while i < len(sys.argv):
         if i+1 < len(sys.argv):
             i = i + 1
             set_xtickinterval = float(sys.argv[i])
+    elif temp_argv == '-plot-yrange' or temp_argv == '-set-ylim' or temp_argv == '-yrange' or temp_argv == '-ylim':
+        if i+2 < len(sys.argv):
+            i = i + 1
+            set_yrange.append(float(sys.argv[i]))
+            i = i + 1
+            set_yrange.append(float(sys.argv[i]))
+    elif temp_argv == '-plot-xrange' or temp_argv == '-set-xlim' or temp_argv == '-xrange' or temp_argv == '-xlim':
+        if i+2 < len(sys.argv):
+            i = i + 1
+            set_xrange.append(float(sys.argv[i]))
+            i = i + 1
+            set_xrange.append(float(sys.argv[i]))
     elif temp_argv == '-highlight-freq' or temp_argv == '-highlight-frange' or temp_argv == '-frange':
         if i+2 < len(sys.argv):
             i = i + 1
@@ -299,7 +313,15 @@ for i in range(len(input_names)):
 print('global_x_min = ', global_x_min)
 print('global_x_max = ', global_x_max)
 ax.plot([global_x_min-0.1*(global_x_max-global_x_min), global_x_max+0.1*(global_x_max-global_x_min)], [0.0, 0.0], linewidth=1, color='k')
+# 
+# x y range
+# 
+if len(set_xrange) == 2:
+    ax.set_xlim(set_xrange)
+if len(set_yrange) == 2:
+    ax.set_ylim(set_yrange)
 global_y_min, global_y_max = ax.get_ylim()
+
 
 
 # 
