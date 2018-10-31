@@ -528,18 +528,19 @@ if ~numpy.isnan(set_ytickinterval):
     ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(base=set_ytickinterval))
     ax.yaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(base=set_ytickinterval/10.0))
 ax.tick_params(axis='both', which='both', direction='in')
-plt.grid(True, ls='dotted', lw=0.8, color='darkgray')
-plt.xticks(fontsize=set_xtickfontsize)
-plt.yticks(fontsize=set_ytickfontsize)
-plt.xlabel('Observing Frequency', fontsize=set_xtitlefontsize)
-plt.ylabel('Flux Density', fontsize=set_ytitlefontsize)
+ax.grid(True, ls='dotted', lw=0.8, color='darkgray')
+ax.xticks(fontsize=set_xtickfontsize)
+ax.yticks(fontsize=set_ytickfontsize)
+ax.xlabel('Observing Frequency', fontsize=set_xtitlefontsize)
+ax.ylabel('Flux Density', fontsize=set_ytitlefontsize)
 if set_plot_title != '':
     title_plot = set_plot_title
 else:
     title_plot = os.path.basename(input_names[0])
     if len(input_names)>1:
         title_plot = title_plot + ' and %d files'%(len(input_names)-1)
-plt.title(title_plot, fontsize = set_plot_title_fontsize ) # , pad = set_plot_title_pad <TODO>
+ax.title(title_plot, fontsize = set_plot_title_fontsize ) # , pad = set_plot_title_pad <TODO>
+ax.tight_layout()
 
 # 
 # Save figure
