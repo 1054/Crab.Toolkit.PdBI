@@ -529,8 +529,8 @@ if ~numpy.isnan(set_ytickinterval):
     ax.yaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(base=set_ytickinterval/10.0))
 ax.tick_params(axis='both', which='both', direction='in')
 ax.grid(True, ls='dotted', lw=0.8, color='darkgray')
-ax.xticks(fontsize=set_xtickfontsize)
-ax.yticks(fontsize=set_ytickfontsize)
+plt.xticks(fontsize=set_xtickfontsize)
+plt.yticks(fontsize=set_ytickfontsize)
 ax.xlabel('Observing Frequency', fontsize=set_xtitlefontsize)
 ax.ylabel('Flux Density', fontsize=set_ytitlefontsize)
 if set_plot_title != '':
