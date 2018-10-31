@@ -37,6 +37,6 @@ fi
 export PYTHONPATH="."
 
 
-$(dirname "${BASH_SOURCE[0]}")"/pdbi_uvt_go_plot_uvfit_result_spectrum_with_python.py" $@
+$(dirname "${BASH_SOURCE[0]}")"/pdbi_uvt_go_plot_uvfit_result_spectrum_with_python.py" "$@"
 
 
