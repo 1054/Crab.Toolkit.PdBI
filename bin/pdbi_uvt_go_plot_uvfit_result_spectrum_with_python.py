@@ -174,7 +174,8 @@ while i < len(sys.argv):
             except:
                 break
             j += 1
-        i = j
+            i = j
+        # 
     #elif temp_argv == '-plot-line-label-fontsize' or temp_argv == '-line-label-fontsize':
     #    if i+1 < len(sys.argv):
     #        i = i + 1
