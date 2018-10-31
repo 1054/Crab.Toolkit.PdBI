@@ -531,8 +531,8 @@ ax.tick_params(axis='both', which='both', direction='in')
 ax.grid(True, ls='dotted', lw=0.8, color='darkgray')
 plt.xticks(fontsize=set_xtickfontsize)
 plt.yticks(fontsize=set_ytickfontsize)
-ax.xlabel('Observing Frequency', fontsize=set_xtitlefontsize)
-ax.ylabel('Flux Density', fontsize=set_ytitlefontsize)
+plt.xlabel('Observing Frequency', fontsize=set_xtitlefontsize)
+plt.ylabel('Flux Density', fontsize=set_ytitlefontsize)
 if set_plot_title != '':
     title_plot = set_plot_title
 else:
