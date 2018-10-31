@@ -27,6 +27,15 @@ set_xrange = []
 set_yrange = []
 set_highlight_frange = []
 set_xtickinterval = numpy.nan
+set_ytickinterval = numpy.nan
+set_xtitlefontsize = 16
+set_ytitlefontsize = 16
+set_xtickfontsize = 14
+set_ytickfontsize = 14
+set_plot_title = ''
+set_plot_title_pad = 3
+set_plot_title_fontsize = 16
+set_line_label_fontsize = [] # same dimension as input_linename <TODO>
 
 lib_linefreq = [115.2712018, 230.538, 345.7959899, 461.0407682, 576.2679305, 691.4730763, 806.651806, 921.7997, 1036.912393, 1151.985452, 1267.014486, 1381.995105, 1496.922909]
 lib_linename = ['CO(1-0)', 'CO(2-1)', 'CO(3-2)', 'CO(4-3)', 'CO(5-4)', 'CO(6-5)', 'CO(7-6)', 'CO(8-7)', 'CO(9-8)', 'CO(10-9)', 'CO(11-10)', 'CO(12-11)', 'CO(13-12)']
@@ -78,6 +87,26 @@ while i < len(sys.argv):
         if i+1 < len(sys.argv):
             i = i + 1
             set_xtickinterval = float(sys.argv[i])
+    elif temp_argv == '-plot-ytick-interval' or temp_argv == '-ytickinterval':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            set_ytickinterval = float(sys.argv[i])
+    elif temp_argv == '-plot-xtick-fontsize' or temp_argv == '-xtickfontsize':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            set_xtickfontsize = float(sys.argv[i])
+    elif temp_argv == '-plot-ytick-fontsize' or temp_argv == '-ytickfontsize':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            set_ytickfontsize = float(sys.argv[i])
+    elif temp_argv == '-plot-xtitle-fontsize' or temp_argv == '-xtitlefontsize':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            set_xtitlefontsize = float(sys.argv[i])
+    elif temp_argv == '-plot-ytitle-fontsize' or temp_argv == '-ytitlefontsize':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            set_ytitlefontsize = float(sys.argv[i])
     elif temp_argv == '-plot-yrange' or temp_argv == '-set-ylim' or temp_argv == '-yrange' or temp_argv == '-ylim':
         if i+2 < len(sys.argv):
             i = i + 1
@@ -90,6 +119,24 @@ while i < len(sys.argv):
             set_xrange.append(float(sys.argv[i]))
             i = i + 1
             set_xrange.append(float(sys.argv[i]))
+    elif temp_argv == '-plot-title' or temp_argv == '-title':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            set_plot_title = sys.argv[i]
+    elif temp_argv == '-plot-title-padding' or temp_argv == '-title-pad':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            set_plot_title_pad = float(sys.argv[i])
+    elif temp_argv == '-plot-title-fontsize' or temp_argv == '-title-fontsize':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            set_plot_title_fontsize = float(sys.argv[i])
+    #elif temp_argv == '-plot-line-label-fontsize' or temp_argv == '-line-label-fontsize':
+    #    if i+1 < len(sys.argv):
+    #        i = i + 1
+    #        while len(set_line_label_fontsize) < len(input_linename):
+    #            # make sure set_line_label_fontsize has the same dimension as input_linename
+    #        set_line_label_fontsize = float(sys.argv[i])
     elif temp_argv == '-highlight-freq' or temp_argv == '-highlight-frange' or temp_argv == '-frange':
         if i+2 < len(sys.argv):
             i = i + 1
@@ -346,27 +393,29 @@ global_y_min, global_y_max = ax.get_ylim()
 # Annotate lines
 # 
 if set_no_liblines:
-    lib_linefreq = input_linefreq
-    lib_linename = input_linename
+    loop_linefreq = input_linefreq
+    loop_linename = input_linename
 else:
+    # append library lines
     if len(input_linefreq) > 0:
-        lib_linefreq.extend(input_linefreq)
+        loop_linefreq = input_linefreq; loop_linefreq.extend(lib_linefreq)
     if len(input_linename) > 0:
-        lib_linename.extend(input_linename)
+        loop_linename = input_linename; loop_linename.extend(lib_linename)
 # 
-for j in range(len(lib_linefreq)):
-    linefreq = lib_linefreq[j] / (1.0+input_redshift)
-    if j < len(lib_linename):
-        linename = lib_linename[j]
+# 
+for j in range(len(loop_linefreq)):
+    linefreq = loop_linefreq[j] / (1.0+input_redshift) # obs-frame frequency
+    if j < len(loop_linename):
+        linename = loop_linename[j]
     else:
         linename = 'Line at %0.3f GHz'%(linefreq)
     if (linefreq >= global_x_min and linefreq <= global_x_max) or True:
         if linename.startswith('H2O'):
-            fontsize = 6
+            fontsize = 8
             color = 'seagreen'
             yshift = 0.05
         elif linename.startswith('[CI]'):
-            fontsize = 6
+            fontsize = 8
             color = 'magenta'
             yshift = 0.1
         else:
@@ -415,16 +464,22 @@ if numpy.isnan(set_xtickinterval):
 print('set_xtickinterval = %s'%(set_xtickinterval))
 ax.xaxis.set_major_locator(matplotlib.ticker.MultipleLocator(base=set_xtickinterval))
 ax.xaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(base=set_xtickinterval/10.0))
+if ~numpy.isnan(set_xtickinterval):
+    ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(base=set_ytickinterval))
+    ax.yaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(base=set_ytickinterval/10.0))
 ax.tick_params(axis='both', which='both', direction='in')
-plt.grid(True)
-plt.xticks(fontsize=14)
-plt.yticks(fontsize=14)
-plt.xlabel('Observing Frequency', fontsize=16)
-plt.ylabel('Flux Density', fontsize=16)
-title_plot = os.path.basename(input_names[0])
-if len(input_names)>1:
-    title_plot = title_plot + ' and %d files'%(len(input_names)-1)
-plt.title(title_plot, fontsize=16)
+plt.grid(True, ls='dotted', lw=0.8, color='darkgray')
+plt.xticks(fontsize=set_xtickfontsize)
+plt.yticks(fontsize=set_ytickfontsize)
+plt.xlabel('Observing Frequency', fontsize=set_xtitlefontsize)
+plt.ylabel('Flux Density', fontsize=set_ytitlefontsize)
+if set_plot_title != '':
+    title_plot = set_plot_title
+else:
+    title_plot = os.path.basename(input_names[0])
+    if len(input_names)>1:
+        title_plot = title_plot + ' and %d files'%(len(input_names)-1)
+plt.title(title_plot, fontsize=set_plot_title_fontsize, pad = set_plot_title_pad)
 
 # 
 # Save figure
