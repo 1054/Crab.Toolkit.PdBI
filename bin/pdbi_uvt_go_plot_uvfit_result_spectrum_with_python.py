@@ -132,10 +132,11 @@ if len(input_linename) > 0:
     if len(input_linefreq) == 0:
         for kk in range(len(input_linename)):
             jkk = numpy.argwhere(lib_linename == input_linename[kk]).flatten().tolist()
+            print(jkk)
             if len(jkk) > 0:
                 input_linefreq.append(lib_linefreq[jkk])
             else:
-                print('Error! Could not find line name "%s" in our library! Please input its rest-frequency in GHz with the "-linefreq" option!')
+                print('Error! Could not find line name "%s" in our library! Please input its rest-frequency in GHz with the "-linefreq" option!'%(input_linename[kk]))
                 sys.exit()
                 
 
