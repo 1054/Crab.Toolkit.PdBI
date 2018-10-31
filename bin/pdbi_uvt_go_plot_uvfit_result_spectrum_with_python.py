@@ -4,12 +4,43 @@
 import os, sys, numpy, matplotlib, astropy
 import astropy.io.ascii as asciitable
 import matplotlib.pyplot as plt
+import scipy.interpolate as interpolate
 
 if len(sys.argv) <= 1:
     print('Usage: ')
     print('    pdbi_uvt_go_plot_uvfit_result_spectrum_with_python.py *.result.obj_1.txt [-output output_name] [-figwidth 20] [-line-name XXX -rest-freq XXX -redshift XXX]')
     print('')
     sys.exit()
+
+# 
+# extrap1d -- from https://stackoverflow.com/questions/2745329/how-to-make-scipy-interpolate-give-an-extrapolated-result-beyond-the-input-range
+def extrap1d(interpolator):
+    xs = interpolator.x
+    ys = interpolator.y
+    def pointwise(x):
+        if x < xs[0]:
+            return ys[0]+(x-xs[0])*(ys[1]-ys[0])/(xs[1]-xs[0])
+        elif x > xs[-1]:
+            return ys[-1]+(x-xs[-1])*(ys[-1]-ys[-2])/(xs[-1]-xs[-2])
+        else:
+            return interpolator(x)
+    def ufunclike(xs):
+        return scipy.array(map(pointwise, scipy.array(xs)))
+    return ufunclike
+
+# 
+# getbaseline
+def getbaseline(x_baseline, input_continuum):
+    if len(input_continuum) >= 4:
+        y_baseline = extrap_continuum(x_baseline)
+    elif len(input_continuum) == 2:
+        y_baseline = x_baseline*0.0 + input_continuum[1]
+    elif len(input_continuum) == 1:
+        y_baseline = x_baseline*0.0 + input_continuum[0]
+    else:
+        y_baseline = x_baseline*0.0
+    return y_baseline
+
 
 
 # 
@@ -36,6 +67,7 @@ set_plot_title = ''
 set_plot_title_pad = 3
 set_plot_title_fontsize = 16
 set_line_label_fontsize = [] # same dimension as input_linename <TODO>
+input_continuum = []
 
 lib_linefreq = [115.2712018, 230.538, 345.7959899, 461.0407682, 576.2679305, 691.4730763, 806.651806, 921.7997, 1036.912393, 1151.985452, 1267.014486, 1381.995105, 1496.922909]
 lib_linename = ['CO(1-0)', 'CO(2-1)', 'CO(3-2)', 'CO(4-3)', 'CO(5-4)', 'CO(6-5)', 'CO(7-6)', 'CO(8-7)', 'CO(9-8)', 'CO(10-9)', 'CO(11-10)', 'CO(12-11)', 'CO(13-12)']
@@ -131,6 +163,18 @@ while i < len(sys.argv):
         if i+1 < len(sys.argv):
             i = i + 1
             set_plot_title_fontsize = float(sys.argv[i])
+    elif temp_argv == '-continuum':
+        # should be either one value
+        # or pairs of values
+        j = i + 1
+        while j < len(sys.argv):
+            try:
+                float(sys.argv[j])
+                input_continuum.append(float(sys.argv[j]))
+            except:
+                i = j
+                break
+            j += 1
     #elif temp_argv == '-plot-line-label-fontsize' or temp_argv == '-line-label-fontsize':
     #    if i+1 < len(sys.argv):
     #        i = i + 1
@@ -189,7 +233,16 @@ if len(input_linename) > 0:
             else:
                 print('Error! Could not find line name "%s" in our library! Please input its rest-frequency in GHz with the "-linefreq" option!'%(input_linename[kk]))
                 sys.exit()
-                
+# 
+# Check input input_continuum
+if len(input_continuum) > 0:
+    print('input_continuum: %s'%(input_continuum))
+    if len(input_continuum) >= 2 and len(input_continuum) % 2 != 0:
+        input_continuum = input_continuum[:-1]
+    if len(input_continuum) >= 4:
+        interp_continuum = interpolate.interp1d(input_continuum[::2], input_continuum[1:][::2])
+        extrap_continuum = extrap1d(interp_continuum) # see https://stackoverflow.com/questions/2745329/how-to-make-scipy-interpolate-give-an-extrapolated-result-beyond-the-input-range
+        
 
 # 
 # Set default output_name if not given
@@ -360,7 +413,9 @@ for i in range(len(input_names)):
                 # 
                 # highlight specific channels
                 for k in range(len(x_highlights)):
-                    ax.fill_between(x_highlights[k], y_highlights[k], numpy.array(y_highlights[k])*0.0, color='gold', alpha=0.5)
+                    x_baseline = x_highlights[k]
+                    y_baseline = getbaseline(x_baseline, input_continuum)
+                    ax.fill_between(x_highlights[k], y_highlights[k], y_baseline, color='gold', alpha=0.5)
                 # 
                 # capsize
                 capsize = 120.0/len(x)
@@ -377,7 +432,11 @@ for i in range(len(input_names)):
 
 print('global_x_min = ', global_x_min)
 print('global_x_max = ', global_x_max)
-ax.plot([global_x_min-0.1*(global_x_max-global_x_min), global_x_max+0.1*(global_x_max-global_x_min)], [0.0, 0.0], linewidth=1, color='k')
+baseline_x = numpy.linspace(global_x_min-0.1*(global_x_max-global_x_min), global_x_max+0.1*(global_x_max-global_x_min), num=100, endpoint=True)
+baseline_y = getbaseline(baseline_x, input_continuum)
+ax.plot(baseline_x, 
+        baseline_y, 
+        linewidth=1, color='k')
 # 
 # x y range
 # 
