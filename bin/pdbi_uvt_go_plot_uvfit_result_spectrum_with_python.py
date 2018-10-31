@@ -290,8 +290,8 @@ for i in range(len(input_names)):
                             if kk >= len(input_lineFWHM):
                                 input_lineFWHM.append(input_lineFWHM[-1])
                             if input_lineFWHM[kk] > 0:
-                                x_highlights.append([(1.0-input_lineFWHM[kk]/2.99792458e9)*input_linefreq[kk]/(1.0+input_redshift)-x_left_width[j],
-                                                     (1.0+input_lineFWHM[kk]/2.99792458e9)*input_linefreq[kk]/(1.0+input_redshift)+x_right_width[j]])
+                                x_highlights.append([(1.0-input_lineFWHM[kk]/2.99792458e5)*input_linefreq[kk]/(1.0+input_redshift)-x_left_width[j],
+                                                     (1.0+input_lineFWHM[kk]/2.99792458e5)*input_linefreq[kk]/(1.0+input_redshift)+x_right_width[j]])
                                 y_highlights.append([y[j],y[j]])
                 # 
                 linewidth = 100.0/len(x) # plotting line thickness
