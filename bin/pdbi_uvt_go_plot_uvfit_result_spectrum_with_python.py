@@ -539,7 +539,8 @@ else:
     title_plot = os.path.basename(input_names[0])
     if len(input_names)>1:
         title_plot = title_plot + ' and %d files'%(len(input_names)-1)
-plt.title(title_plot, fontsize = set_plot_title_fontsize, pad = set_plot_title_pad ) # , pad = set_plot_title_pad <TODO>
+plt.title(title_plot, fontsize = set_plot_title_fontsize) # , pad = set_plot_title_pad <TODO>
+plt.subplots_adjust(top=0.96)
 #plt.tight_layout()
 
 # 
