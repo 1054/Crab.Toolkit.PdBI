@@ -17,17 +17,20 @@ if len(sys.argv) <= 1:
 input_names = []
 output_name = ''
 input_redshift = 0.0 
-input_linefreq = [115.2712018, 230.538, 345.7959899, 461.0407682, 576.2679305, 691.4730763, 806.651806, 921.7997, 1036.912393, 1151.985452, 1267.014486, 1381.995105, 1496.922909]
-input_linename = ['CO(1-0)', 'CO(2-1)', 'CO(3-2)', 'CO(4-3)', 'CO(5-4)', 'CO(6-5)', 'CO(7-6)', 'CO(8-7)', 'CO(9-8)', 'CO(10-9)', 'CO(11-10)', 'CO(12-11)', 'CO(13-12)']
-input_linefreq.extend([492.16065,809.34197])
-input_linename.extend(['[CI](1-0)','[CI](2-1)'])
-input_linefreq.extend([556.93599,1113.34301,987.92676,752.03314,1669.90477,1228.78872,1661.00764,1716.76963,1153.12682,1097.36479,1162.91160,1919.35953,1893.68651,1602.21937,916.17158,1207.63873,1410.61807])
-input_linename.extend(['H2O(110-101)','H2O(111-000)','H2O(202-111)','H2O(211-202)','H2O(212-101)','H2O(220-211)','H2O(221-212)','H2O(302-212)','H2O(312-221)','H2O(312-303)','H2O(321-312)','H2O(322-313)','H2O(331-404)','H2O(413-404)','H2O(422-331)','H2O(422-413)','H2O(523-514)'])
-input_lineFWHM = [] #<TODO># 
+input_linefreq = [] # rest-frame
+input_lineFWHM = [] # km/s
 set_figure_size = [12.0,5.0]
 set_no_errorbar = False
+set_no_liblines = False
 set_highlight_frange = []
 set_xtickinterval = numpy.nan
+
+lib_linefreq = [115.2712018, 230.538, 345.7959899, 461.0407682, 576.2679305, 691.4730763, 806.651806, 921.7997, 1036.912393, 1151.985452, 1267.014486, 1381.995105, 1496.922909]
+lib_linename = ['CO(1-0)', 'CO(2-1)', 'CO(3-2)', 'CO(4-3)', 'CO(5-4)', 'CO(6-5)', 'CO(7-6)', 'CO(8-7)', 'CO(9-8)', 'CO(10-9)', 'CO(11-10)', 'CO(12-11)', 'CO(13-12)']
+lib_linefreq.extend([492.16065,809.34197])
+lib_linename.extend(['[CI](1-0)','[CI](2-1)'])
+lib_linefreq.extend([556.93599,1113.34301,987.92676,752.03314,1669.90477,1228.78872,1661.00764,1716.76963,1153.12682,1097.36479,1162.91160,1919.35953,1893.68651,1602.21937,916.17158,1207.63873,1410.61807])
+lib_linename.extend(['H2O(110-101)','H2O(111-000)','H2O(202-111)','H2O(211-202)','H2O(212-101)','H2O(220-211)','H2O(221-212)','H2O(302-212)','H2O(312-221)','H2O(312-303)','H2O(321-312)','H2O(322-313)','H2O(331-404)','H2O(413-404)','H2O(422-331)','H2O(422-413)','H2O(523-514)'])
 
 i = 1
 while i < len(sys.argv):
@@ -84,6 +87,8 @@ while i < len(sys.argv):
             i = i + 1
     elif temp_argv == '-no-errorbar' or temp_argv == '-noerrorbar':
         set_no_errorbar = True
+    elif temp_argv == '-no-lib-lines' or temp_argv == '-no-liblines' or temp_argv == '-noliblines':
+        set_no_liblines = True
     else:
         input_names.append(sys.argv[i])
     i = i + 1
@@ -94,19 +99,20 @@ if input_names == []:
     print('Error! Failed to read data table names from user input!')
     sys.exit()
 
-# Check input_linename
-input_check = True
-if len(input_linename) > 0:
-    if len(input_linefreq) > 0:
-        if len(input_linefreq) != len(input_linename):
-            print('Error! The input_linefreq and input_linename do not have the same dimension!')
-            input_check = False
-    if len(input_lineFWHM) > 0:
-        if len(input_lineFWHM) != len(input_linename):
-            print('Error! The input_lineFWHM and input_linename do not have the same dimension!')
-            input_check = False
-if input_check == False:
-    sys.exit()
+# Check input_linename, input_linefreq and input_lineFWHM
+#input_check = True
+#input_count = max([len(input_linename), len(input_linefreq), len(input_lineFWHM)])
+#if len(input_linename) > 0:
+#    if len(input_linefreq) > 0:
+#        if len(input_linefreq) != len(input_linename):
+#            print('Error! The input_linefreq and input_linename do not have the same dimension!')
+#            input_check = False
+#    if len(input_lineFWHM) > 0:
+#        if len(input_lineFWHM) != len(input_linename):
+#            print('Error! The input_lineFWHM and input_linename do not have the same dimension!')
+#            input_check = False
+#if input_check == False:
+#    sys.exit()
 
 # 
 # Set default output_name if not given
@@ -249,11 +255,14 @@ for i in range(len(input_names)):
                                     y_highlights.append([y[j],y[j]])
                     # 
                     # highlight by input_lineFWHM
-                    if len(input_lineFWHM) > 0:
-                        for kk in range(len(input_lineFWHM)):
-                            x_highlights.append([(1.0-input_lineFWHM[kk]/2.99792458e9)*input_linefreq/(1.0+input_redshift)-x_left_width[j],
-                                                 (1.0+input_lineFWHM[kk]/2.99792458e9)*input_linefreq/(1.0+input_redshift)+x_right_width[j]])
-                            y_highlights.append([y[j],y[j]])
+                    if len(input_linefreq) > 0:
+                        for kk in range(len(input_linefreq)):
+                            if kk >= len(input_lineFWHM):
+                                input_lineFWHM.append(input_lineFWHM[-1])
+                            if input_lineFWHM[kk] > 0:
+                                x_highlights.append([(1.0-input_lineFWHM[kk]/2.99792458e9)*input_linefreq[kk]/(1.0+input_redshift)-x_left_width[j],
+                                                     (1.0+input_lineFWHM[kk]/2.99792458e9)*input_linefreq[kk]/(1.0+input_redshift)+x_right_width[j]])
+                                y_highlights.append([y[j],y[j]])
                 # 
                 linewidth = 100.0/len(x) # plotting line thickness
                 if linewidth > 1.0:
@@ -266,13 +275,12 @@ for i in range(len(input_names)):
                 #ax.bar(x, y, width=2.0*x_left_width, align='center', fill=False, edgecolor='#1e90ff', alpha=1.0)
                 spec_plot = ax.errorbar(x_plot, y_plot, linestyle='-', color='blue', alpha=1.0, linewidth=linewidth) # color='#1e90ff'
                 global_spec_list.append(spec_plot)
-                global_x_arr.extend(x)
-                global_y_arr.extend(y)
+                global_x_arr.extend(x) # add to global_x_arr
+                global_y_arr.extend(y) # add to global_y_arr
                 # 
-                # highlight freq
+                # highlight specific channels
                 for k in range(len(x_highlights)):
                     ax.fill_between(x_highlights[k], y_highlights[k], numpy.array(y_highlights[k])*0.0, color='gold', alpha=0.5)
-                        
                 # 
                 # capsize
                 capsize = 120.0/len(x)
@@ -292,10 +300,23 @@ print('global_x_max = ', global_x_max)
 ax.plot([global_x_min-0.1*(global_x_max-global_x_min), global_x_max+0.1*(global_x_max-global_x_min)], [0.0, 0.0], linewidth=1, color='k')
 global_y_min, global_y_max = ax.get_ylim()
 
-for j in range(len(input_linefreq)):
-    linefreq = input_linefreq[j] / (1.0+input_redshift)
-    if j < len(input_linename):
-        linename = input_linename[j]
+
+# 
+# Annotate lines
+# 
+if set_no_liblines:
+    lib_linefreq = input_linefreq
+    lib_linename = input_linename
+else:
+    if len(input_linefreq) > 0:
+        lib_linefreq.extend(input_linefreq)
+    if len(input_linename) > 0:
+        lib_linename.extend(input_linename)
+# 
+for j in range(len(lib_linefreq)):
+    linefreq = lib_linefreq[j] / (1.0+input_redshift)
+    if j < len(lib_linename):
+        linename = lib_linename[j]
     else:
         linename = 'Line at %0.3f GHz'%(linefreq)
     if (linefreq >= global_x_min and linefreq <= global_x_max) or True:
@@ -328,7 +349,7 @@ for j in range(len(input_linefreq)):
 
 
 # 
-# adjust linewidht
+# adjust plot line thickness
 for spec_plot in global_spec_list:
     # see https://matplotlib.org/api/container_api.html#matplotlib.container.ErrorbarContainer
     spec_plot_data_line, spec_plot_caplines, spec_plot_barlinecols = spec_plot
