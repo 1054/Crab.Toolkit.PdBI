@@ -173,8 +173,8 @@ while i < len(sys.argv):
                 input_continuum.append(float(sys.argv[j]))
             except:
                 break
-            j += 1
             i = j
+            j += 1
         # 
     #elif temp_argv == '-plot-line-label-fontsize' or temp_argv == '-line-label-fontsize':
     #    if i+1 < len(sys.argv):
