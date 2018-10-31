@@ -133,7 +133,7 @@ if len(input_linename) > 0:
         for kk in range(len(input_linename)):
             jkk = []
             for ikk in range(len(lib_linename)):
-                if lib_linename[jkk] == input_linename[kk]:
+                if lib_linename[ikk] == input_linename[kk]:
                     jkk.append(ikk)
             #jkk = numpy.argwhere(lib_linename == input_linename[kk]).flatten().tolist()
             #print(jkk)
