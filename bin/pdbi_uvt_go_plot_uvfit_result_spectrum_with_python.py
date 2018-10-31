@@ -34,11 +34,11 @@ def getbaseline(x_baseline, input_continuum):
     if len(input_continuum) >= 4:
         y_baseline = extrap_continuum(x_baseline)
     elif len(input_continuum) == 2:
-        y_baseline = x_baseline*0.0 + input_continuum[1]
+        y_baseline = numpy.array(x_baseline)*0.0 + input_continuum[1]
     elif len(input_continuum) == 1:
-        y_baseline = x_baseline*0.0 + input_continuum[0]
+        y_baseline = numpy.array(x_baseline)*0.0 + input_continuum[0]
     else:
-        y_baseline = x_baseline*0.0
+        y_baseline = numpy.array(x_baseline)*0.0
     return y_baseline
 
 
