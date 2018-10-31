@@ -17,6 +17,7 @@ if len(sys.argv) <= 1:
 input_names = []
 output_name = ''
 input_redshift = 0.0 
+input_linename = []
 input_linefreq = [] # rest-frame
 input_lineFWHM = [] # km/s
 set_figure_size = [12.0,5.0]
