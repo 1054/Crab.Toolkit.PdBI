@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 if len(sys.argv) <= 1:
     print('Usage: ')
-    print('    pdbi_uvt_go_plot_uvfit_result_spectrum_with_python.py *.result.obj_1.txt [-output output_name] [-figwidth 20]')
+    print('    pdbi_uvt_go_plot_uvfit_result_spectrum_with_python.py *.result.obj_1.txt [-output output_name] [-figwidth 20] [-line-name XXX -rest-freq XXX -redshift XXX]')
     print('')
     sys.exit()
 
@@ -23,6 +23,7 @@ input_linefreq.extend([492.16065,809.34197])
 input_linename.extend(['[CI](1-0)','[CI](2-1)'])
 input_linefreq.extend([556.93599,1113.34301,987.92676,752.03314,1669.90477,1228.78872,1661.00764,1716.76963,1153.12682,1097.36479,1162.91160,1919.35953,1893.68651,1602.21937,916.17158,1207.63873,1410.61807])
 input_linename.extend(['H2O(110-101)','H2O(111-000)','H2O(202-111)','H2O(211-202)','H2O(212-101)','H2O(220-211)','H2O(221-212)','H2O(302-212)','H2O(312-221)','H2O(312-303)','H2O(321-312)','H2O(322-313)','H2O(331-404)','H2O(413-404)','H2O(422-331)','H2O(422-413)','H2O(523-514)'])
+input_lineFWHM = [] #<TODO># 
 set_figure_size = [12.0,5.0]
 set_no_errorbar = False
 set_highlight_frange = []
@@ -49,6 +50,10 @@ while i < len(sys.argv):
         if i+1 < len(sys.argv):
             i = i + 1
             input_linename.append(sys.argv[i])
+    elif temp_argv == '-linewidth' or temp_argv == '-line-name':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            input_lineFWHM.append(float(sys.argv[i]))
     elif temp_argv == '-plot-width' or temp_argv == '-fig-width' or temp_argv == '-figwidth':
         if i+1 < len(sys.argv):
             i = i + 1
@@ -89,6 +94,20 @@ if input_names == []:
     print('Error! Failed to read data table names from user input!')
     sys.exit()
 
+# Check input_linename
+input_check = True
+if len(input_linename) > 0:
+    if len(input_linefreq) > 0:
+        if len(input_linefreq) != len(input_linename):
+            print('Error! The input_linefreq and input_linename do not have the same dimension!')
+            input_check = False
+    if len(input_lineFWHM) > 0:
+        if len(input_lineFWHM) != len(input_linename):
+            print('Error! The input_lineFWHM and input_linename do not have the same dimension!')
+            input_check = False
+if input_check == False:
+    sys.exit()
+
 # 
 # Set default output_name if not given
 if output_name == '':
@@ -109,6 +128,8 @@ ax = fig.add_subplot(1,1,1)
 
 global_x_min = numpy.nan
 global_x_max = numpy.nan
+global_x_arr = []
+global_y_arr = []
 global_linewidth = 2.0
 global_capsize = 12.0
 global_spec_list = []
@@ -226,8 +247,15 @@ for i in range(len(input_names)):
                                 if x[j]-x_left_width[j] >= set_highlight_frange[k] and x[j]+x_right_width[j] <= set_highlight_frange[k+1]:
                                     x_highlights.append([x[j]-x_left_width[j],x[j]+x_right_width[j]])
                                     y_highlights.append([y[j],y[j]])
+                    # 
+                    # highlight by input_lineFWHM
+                    if len(input_lineFWHM) > 0:
+                        for kk in range(len(input_lineFWHM)):
+                            x_highlights.append([(1.0-input_lineFWHM[kk]/2.99792458e9)*input_linefreq/(1.0+input_redshift)-x_left_width[j],
+                                                 (1.0+input_lineFWHM[kk]/2.99792458e9)*input_linefreq/(1.0+input_redshift)+x_right_width[j]])
+                            y_highlights.append([y[j],y[j]])
                 # 
-                linewidth = 100.0/len(x)
+                linewidth = 100.0/len(x) # plotting line thickness
                 if linewidth > 1.0:
                     linewidth = 1.0
                 if global_linewidth > linewidth:
@@ -238,6 +266,8 @@ for i in range(len(input_names)):
                 #ax.bar(x, y, width=2.0*x_left_width, align='center', fill=False, edgecolor='#1e90ff', alpha=1.0)
                 spec_plot = ax.errorbar(x_plot, y_plot, linestyle='-', color='blue', alpha=1.0, linewidth=linewidth) # color='#1e90ff'
                 global_spec_list.append(spec_plot)
+                global_x_arr.extend(x)
+                global_y_arr.extend(y)
                 # 
                 # highlight freq
                 for k in range(len(x_highlights)):
@@ -281,8 +311,10 @@ for j in range(len(input_linefreq)):
             fontsize = None
             color = None
             yshift = 0.0
+        # annotate the line
+        lineheight = global_y_arr[np.argsort(np.abs(global_x_arr-linefreq))]
         ax.annotate(linename + '\n' + 'at %0.3f GHz'%(linefreq), 
-                        xy=(linefreq,global_y_max-0.2*(global_y_max-global_y_min)), 
+                        xy=(linefreq,lineheight+0.02*(global_y_max-global_y_min)), # xy=(linefreq,global_y_max-0.2*(global_y_max-global_y_min)), # 
                         xycoords='data', 
                         xytext=(linefreq,global_y_max-0.01*(global_y_max-global_y_min)-yshift*(global_y_max-global_y_min)), 
                         ha='center', va='top', 
