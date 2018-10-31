@@ -25,7 +25,7 @@ def extrap1d(interpolator):
         else:
             return interpolator(x)
     def ufunclike(xs):
-        return scipy.array(map(pointwise, scipy.array(xs)))
+        return numpy.array(map(pointwise, numpy.array(xs)))
     return ufunclike
 
 # 
