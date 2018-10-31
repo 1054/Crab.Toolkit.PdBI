@@ -290,7 +290,7 @@ for i in range(len(input_names)):
                             if kk >= len(input_lineFWHM):
                                 input_lineFWHM.append(input_lineFWHM[-1])
                             if input_lineFWHM[kk] > 0:
-                                if numpy.abs(x[j]/(input_linefreq[kk]/(1.0+input_redshift))) * 2.99792458e5 <= input_lineFWHM[kk] / 2.0:
+                                if numpy.abs(x[j] / (input_linefreq[kk]/(1.0+input_redshift)) - 1.0) * 2.99792458e5 <= input_lineFWHM[kk] / 2.0:
                                     x_highlights.append([x[j]-x_left_width[j],x[j]+x_right_width[j]])
                                     y_highlights.append([y[j],y[j]])
                                 #x_highlights.append([(1.0-input_lineFWHM[kk]/2.99792458e5)*input_linefreq[kk]/(1.0+input_redshift)-x_left_width[j],
@@ -375,6 +375,8 @@ for j in range(len(lib_linefreq)):
             yshift = 0.0
         # annotate the line
         lineheight = global_y_arr[numpy.argsort(numpy.abs(numpy.array(global_x_arr)-linefreq))[0]]
+        if lineheight < 0:
+            lineheight = -lineheight
         ax.annotate(linename + '\n' + 'at %0.3f GHz'%(linefreq), 
                         xy=(linefreq,lineheight+0.02*(global_y_max-global_y_min)), # xy=(linefreq,global_y_max-0.2*(global_y_max-global_y_min)), # 
                         xycoords='data', 
