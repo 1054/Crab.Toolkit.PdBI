@@ -290,9 +290,12 @@ for i in range(len(input_names)):
                             if kk >= len(input_lineFWHM):
                                 input_lineFWHM.append(input_lineFWHM[-1])
                             if input_lineFWHM[kk] > 0:
-                                x_highlights.append([(1.0-input_lineFWHM[kk]/2.99792458e5)*input_linefreq[kk]/(1.0+input_redshift)-x_left_width[j],
-                                                     (1.0+input_lineFWHM[kk]/2.99792458e5)*input_linefreq[kk]/(1.0+input_redshift)+x_right_width[j]])
-                                y_highlights.append([y[j],y[j]])
+                                if numpy.abs(x[j]/input_linefreq[kk]/(1.0+input_redshift)) * 2.99792458e5 <= input_lineFWHM[kk] / 2.0:
+                                    x_highlights.append([x[j]-x_left_width[j],x[j]+x_right_width[j]])
+                                    y_highlights.append([y[j],y[j]])
+                                #x_highlights.append([(1.0-input_lineFWHM[kk]/2.99792458e5)*input_linefreq[kk]/(1.0+input_redshift)-x_left_width[j],
+                                #                     (1.0+input_lineFWHM[kk]/2.99792458e5)*input_linefreq[kk]/(1.0+input_redshift)+x_right_width[j]])
+                                #y_highlights.append([y[j],y[j]])
                 # 
                 linewidth = 100.0/len(x) # plotting line thickness
                 if linewidth > 1.0:
