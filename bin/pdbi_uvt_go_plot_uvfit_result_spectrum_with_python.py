@@ -334,7 +334,7 @@ for j in range(len(lib_linefreq)):
             color = None
             yshift = 0.0
         # annotate the line
-        lineheight = global_y_arr[numpy.argsort(numpy.abs(np.array(global_x_arr)-linefreq))[0]]
+        lineheight = global_y_arr[numpy.argsort(numpy.abs(numpy.array(global_x_arr)-linefreq))[0]]
         ax.annotate(linename + '\n' + 'at %0.3f GHz'%(linefreq), 
                         xy=(linefreq,lineheight+0.02*(global_y_max-global_y_min)), # xy=(linefreq,global_y_max-0.2*(global_y_max-global_y_min)), # 
                         xycoords='data', 
