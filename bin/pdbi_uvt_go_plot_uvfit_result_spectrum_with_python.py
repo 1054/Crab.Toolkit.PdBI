@@ -523,7 +523,7 @@ if numpy.isnan(set_xtickinterval):
 print('set_xtickinterval = %s'%(set_xtickinterval))
 ax.xaxis.set_major_locator(matplotlib.ticker.MultipleLocator(base=set_xtickinterval))
 ax.xaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(base=set_xtickinterval/10.0))
-if ~numpy.isnan(set_xtickinterval):
+if ~numpy.isnan(set_ytickinterval):
     ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(base=set_ytickinterval))
     ax.yaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(base=set_ytickinterval/10.0))
 ax.tick_params(axis='both', which='both', direction='in')
