@@ -1,0 +1,182 @@
+#!/bin/bash
+# 
+# Input uvtablefile and scaling factors X Y Intensity
+# Output uv_mult processed uvtablefile
+# 
+# Last update:
+#    2017-04-03 copied from "pdbi-uvt-go-compress"
+# 
+# 
+
+
+
+# 
+# Uage
+# 
+usage() {
+    echo "Usage: "
+    echo "  pdbi-uvt-go-mult -name UV_TABLE_NAME -factor  -out UV_TABLE_NEW"
+    echo ""
+    echo "  Note that \"-factor\" is the input factors. When you input one value, it will be the factor multiplied to intensity and noise. When you input three values, it will be the factors multiplied to image X dimension, Y dimension and intensity and noise respectively."
+    echo ""
+}
+
+
+
+# 
+# SOURCE pdbi-uvt-core-arg
+# 
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v9" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v9" "$@"
+else
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v9\"!"
+    echo ""
+    exit 1
+fi
+
+
+
+# 
+# Check input parameters -- uvt file name, velocity width ("-width") or line width ("-linewidth")
+# 
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 || (${#PdBIUVT_UVMERGE_FACTOR[@]} -eq 0) ]]; then
+    usage; exit
+fi
+
+
+
+# 
+# Loop input uv tables
+# 
+for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
+    
+    
+    
+    # 
+    # if type is uvtable
+    # 
+    if [[ ${PdBIUVT_TYPE[tk]} != "uvt" && ${PdBIUVT_TYPE[tk]} != "UVT" ]]; then
+        continue
+    fi
+    
+    
+    
+    # 
+    # determine PdBIUVT_UVMERGE_FACTOR
+    # 
+    UV_FACTOR_X="1.0"
+    UV_FACTOR_Y="1.0"
+    UV_FACTOR_I="1.0"
+    if [[ ${#PdBIUVT_UVMERGE_FACTOR[@]} -eq 3 ]]; then
+        UV_FACTOR_X=${PdBIUVT_UVMERGE_FACTOR[0]}
+        UV_FACTOR_Y=${PdBIUVT_UVMERGE_FACTOR[1]}
+        UV_FACTOR_I=${PdBIUVT_UVMERGE_FACTOR[2]}
+    elif [[ ${#PdBIUVT_UVMERGE_FACTOR[@]} -eq 2 ]]; then
+        echo "Warning! The user has input two factors but we require either one or three! Will ignore the second input factor and only apply the first to uv table intensity and noise."
+        UV_FACTOR_I=${PdBIUVT_UVMERGE_FACTOR[0]}
+    else
+        UV_FACTOR_I=${PdBIUVT_UVMERGE_FACTOR[0]}
+    fi
+    
+    
+    
+    # 
+    # Set default output file
+    # 
+    if [[ ${#PdBIUVT_SAVE[@]} -le $tk ]]; then
+        PdBIUVT_SAVE+=($(basename "${PdBIUVT_NAME[tk]}")"-Multiplied")
+        echo ""; echo "Warning! Output name was not defined, we will set it as \"${PdBIUVT_SAVE[tk]}\"!"; echo ""
+    fi
+    if [[ x"${PdBIUVT_SAVE[tk]}" == x || x"${PdBIUVT_SAVE[tk]}" == x"tmp_pdbi_uvt" || x"${PdBIUVT_SAVE[tk]}" == x"tmp_pdbi_uvt_run_uv_fit" ]]; then
+        PdBIUVT_SAVE[tk]=$(basename "${PdBIUVT_NAME[tk]}")"-Multiplied"
+        echo ""; echo "Warning! Output name was not defined, we will set it as \"${PdBIUVT_SAVE[tk]}\"!"; echo ""
+    fi
+    # 
+    # Remove suffix
+    # 
+    if [[ x"${PdBIUVT_SAVE[tk]}" == x*".uvt" ]]; then
+        PdBIUVT_SAVE[tk]=$(echo "${PdBIUVT_SAVE[tk]}" | sed -e 's/\.uvt$//g')
+    fi
+    if [[ x"${PdBIUVT_SAVE[tk]}" == x*".UVT" ]]; then
+        PdBIUVT_SAVE[tk]=$(echo "${PdBIUVT_SAVE[tk]}" | sed -e 's/\.UVT$//g')
+    fi
+    # 
+    # Backup existing output file
+    # 
+    if [[ -f "${PdBIUVT_SAVE[tk]}.uvt" ]]; then
+            if [[ -f "${PdBIUVT_SAVE[tk]}.uvt.backup" ]]; then
+                \rm "${PdBIUVT_SAVE[tk]}.uvt.backup"
+            fi
+        echo "Warning! Found existing \"${PdBIUVT_SAVE[tk]}.uvt\"! Backup as \"${PdBIUVT_SAVE[tk]}.uvt.backup\"!"
+        mv "${PdBIUVT_SAVE[tk]}.uvt" "${PdBIUVT_SAVE[tk]}.uvt.backup"
+    fi
+    # 
+    # dump input uv table to output uv table then process the copied output uv table in-situ
+    # 
+    echo cp "${PdBIUVT_NAME[tk]}.uvt" "${PdBIUVT_SAVE[tk]}.uvt" 
+    cp "${PdBIUVT_NAME[tk]}.uvt" "${PdBIUVT_SAVE[tk]}.uvt"
+    
+    
+    
+    # 
+    # Deal with the input uv data file
+    # 
+    # Prepare VRANGE list
+    echo "Checking UV_FACTOR_X="${UV_FACTOR_X}
+    echo "Checking UV_FACTOR_Y="${UV_FACTOR_Y}
+    echo "Checking UV_FACTOR_I="${UV_FACTOR_I}
+    
+    
+    
+    # 
+    # prepare gildas/mapping init and script and run
+    # 
+    # 
+    PdBIUVT_TEMP_INIT="${PdBIUVT_NAME[tk]}.uvt.uv_mult.init"
+    PdBIUVT_TEMP_EXEC="${PdBIUVT_NAME[tk]}.uvt.uv_mult.map"
+    PdBIUVT_TEMP_LOGT="${PdBIUVT_NAME[tk]}.uvt.uv_mult.log"
+    echo  '! '                                                                             >  $PdBIUVT_TEMP_INIT
+    echo  '! Task UV_MULT'                                                                 >> $PdBIUVT_TEMP_INIT
+    echo  '! '                                                                             >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "UV table"     UV_TABLE$      "'${PdBIUVT_SAVE[tk]}.uvt'"'       >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\REAL "Multipling U"         MULTA$      ' ${UV_FACTOR_X}                   >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\REAL "Multipling V"         MULTB$      ' ${UV_FACTOR_Y}                   >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\REAL "Multipling Intensity" MULTC$      ' ${UV_FACTOR_I}                   >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\GO'                                                                        >> $PdBIUVT_TEMP_INIT
+    echo  "run uv_mult $PdBIUVT_TEMP_INIT /NOWINDOW" > $PdBIUVT_TEMP_EXEC
+    echo  "@$PdBIUVT_TEMP_EXEC | mapping -nw -nl > $PdBIUVT_TEMP_LOGT"
+    echo  "@$PdBIUVT_TEMP_EXEC" | mapping -nw -nl > "$PdBIUVT_TEMP_LOGT"
+    
+    if [[ -f "${PdBIUVT_SAVE[tk]}.uvt" ]]; then
+        echo "Successufully saved to \"${PdBIUVT_SAVE[tk]}.uvt\"!"
+        echo "--"
+        if [[ $PdBIUVT_UVMERGE_KEEP_FILE -le 0 ]]; then
+            rm "$PdBIUVT_TEMP_LOGT"
+            echo "Deleted \"${PdBIUVT_TEMP_LOGT}\" (set -keep-files to keep these files)"
+            rm "$PdBIUVT_TEMP_INIT"
+            echo "Deleted \"${PdBIUVT_TEMP_INIT}\" (set -keep-files to keep these files)"
+            rm "$PdBIUVT_TEMP_EXEC"
+            echo "Deleted \"${PdBIUVT_TEMP_EXEC}\" (set -keep-files to keep these files)"
+        fi
+    else
+        echo "Error! Failed to run GILDAS MAPPING UV_MULT and output \"${PdBIUVT_SAVE[tk]}.uvt\"!"
+        echo "Please check \"$PdBIUVT_TEMP_LOGT\"!"
+        exit 1
+    fi
+    
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
