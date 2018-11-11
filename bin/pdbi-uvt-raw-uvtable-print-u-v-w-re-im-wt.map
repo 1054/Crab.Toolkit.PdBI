@@ -1,0 +1,27 @@
+define uvtable uvt PDBIUVT_INPUT_FILE read
+!say 'size(uvt)' ! total array size = NVISI*(3*NSTOKES*NCHAN+7)
+define integer iu
+define integer iv
+define integer iw
+define integer ire
+define integer iim
+define integer iwt
+sic output PDBIUVT_OUTPUT_FILE new
+say "#" "ivis" " " "ichan" " " "istokes" " " "u" " " "v" " " "w" " " "re" " " "im" " " "wt" /format A1 A11 A1 A12 A1 A12 A1 A14 A1 A14 A1 A14 A1 A14 A1 A14 A1 A14
+for i 1 to UVT%NVISI
+  for j 1 to UVT%NCHAN
+    for k 1 to UVT%NSTOKES
+      let iu = 1 ! first 7 columns are u,v,w,date,date,n1,n2, then followed by visibilities re im wt
+      let iv = 2 ! first 7 columns are u,v,w,date,date,n1,n2, then followed by visibilities re im wt
+      let iw = 3 ! first 7 columns are u,v,w,date,date,n1,n2, then followed by visibilities re im wt
+      let ire = 7+(j-1)*(UVT%NSTOKES)+k
+      let iim = 7+(j-1)*(UVT%NSTOKES)+k+1
+      let iwt = 7+(j-1)*(UVT%NSTOKES)+k+2
+      say 'i' " " 'j' " " 'k' " " 'uvt[iu,i]' " " 'uvt[iv,i]' " " 'uvt[iw,i]' " " 'uvt[ire,i]' " " 'uvt[iim,i]' " " 'uvt[iwt,i]' /format I12 A1 I12 A1 I12 A1 F14.3 A1 F14.3 A1 F14.3 A1 E14.3 A1 E14.3 A1 E14.3
+    next
+  next
+  !if i.GT.2 break !debug
+next
+sic output
+delete /variable uvt
+delete /variable iu iv iw ire iim iwt

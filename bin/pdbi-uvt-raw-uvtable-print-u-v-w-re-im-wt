@@ -1,0 +1,126 @@
+#!/bin/bash
+# 
+
+
+# 
+# Usage
+# 
+PdBIUVT_PrintUsage() {
+    echo "Usage: "
+    echo "    pdbi-uvt-raw-uvtable-print-u-v-w-re-im-wt -name NAME.uvt -out OUTPUT_TEXT.txt"
+    echo ""
+    echo "Notes:"
+    echo "    This code will print all visibilities in the input uvtable to the output text file."
+    echo "    Please input both uvtable name and output file name."
+    echo ""
+}
+if [[ $# -eq 0 ]]; then
+    PdBIUVT_PrintUsage
+    exit
+fi
+
+
+
+# 
+# LANG
+# 
+LANG=C
+
+
+
+# 
+# SOURCE pdbi-uvt-core-arg
+# 
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v9" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v9" "$@"
+else
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v9\"!"
+    echo ""
+    exit 1
+fi
+
+
+
+# 
+# Check UVT name and Object RADec
+# 
+#echo PdBIUVT_NAME=${PdBIUVT_NAME[@]}
+#echo PdBIUVT_SAVE=${PdBIUVT_SAVE[@]}
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 || ${#PdBIUVT_SAVE[@]} -eq 0 ]]; then
+    PdBIUVT_PrintUsage
+    exit
+fi
+
+
+
+# 
+# Loop input uv tables
+# 
+for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
+    # 
+    # Set default output file
+    # 
+    if [[ ${#PdBIUVT_SAVE[@]} -le $tk ]]; then
+        echo "Error! Output name was not defined for the input uvtable \"${PdBIUVT_NAME[tk]}\"!"
+        exit
+    fi
+    if [[ x"${PdBIUVT_SAVE[tk]}" == x || x"${PdBIUVT_SAVE[tk]}" == x"tmp_pdbi_uvt" || x"${PdBIUVT_SAVE[tk]}" == x"tmp_pdbi_uvt_run_uv_fit" ]]; then
+        echo "Error! Output name was not defined for the input uvtable \"${PdBIUVT_NAME[tk]}\"!"
+        exit
+    fi
+    # 
+    # Remove suffix
+    # 
+    if [[ x"${PdBIUVT_SAVE[tk]}" == x*".txt" ]]; then
+        PdBIUVT_SAVE[tk]=$(echo "${PdBIUVT_SAVE[tk]}" | sed -e 's/\.txt$//g')
+    fi
+    if [[ x"${PdBIUVT_SAVE[tk]}" == x*".TXT" ]]; then
+        PdBIUVT_SAVE[tk]=$(echo "${PdBIUVT_SAVE[tk]}" | sed -e 's/\.TXT$//g')
+    fi
+    # 
+    # Backup existing output file
+    # 
+    if [[ -f "${PdBIUVT_SAVE[tk]}.txt" ]]; then
+        echo "Warning! Found previous \"${PdBIUVT_SAVE[tk]}.txt\"! Backup as \"${PdBIUVT_SAVE[tk]}.txt.backup\"!"
+        mv "${PdBIUVT_SAVE[tk]}.txt" "${PdBIUVT_SAVE[tk]}.txt.backup"
+    fi
+    
+    
+    
+    # 
+    # 
+    # 
+    ##################################################
+    # prepare GILDAS mapping init and script and run #
+    ##################################################
+    PdBIUVT_TEMP_EXEC="${PdBIUVT_SAVE[tk]}.print_uvwreimwt.map"
+    PdBIUVT_TEMP_LOGT="${PdBIUVT_SAVE[tk]}.print_uvwreimwt.log"
+    SRC_TEMP_EXEC=$(dirname ${BASH_SOURCE[0]})/$(basename ${BASH_SOURCE[0]})".map"
+    if [[ ! -f "$SRC_TEMP_EXEC" ]]; then
+        echo "Fatal Error! The Crab.Toolkit.PdBI code is incomplete! Please make sure you have the file \"$SRC_TEMP_EXEC\"!"
+        exit 1
+    fi
+    cat "$SRC_TEMP_EXEC" | sed -e "s%PDBIUVT_INPUT_FILE%${PdBIUVT_NAME[tk]}%g" | sed -e "s%PDBIUVT_OUTPUT_FILE%${PdBIUVT_SAVE[tk]}.txt%g" > "$PdBIUVT_TEMP_EXEC"
+    echo "Running GILDAS mapping"
+    echo "echo @$PdBIUVT_TEMP_EXEC | mapping -nw -nl > $PdBIUVT_TEMP_LOGT"
+    echo "@$PdBIUVT_TEMP_EXEC" | mapping -nw -nl > "$PdBIUVT_TEMP_LOGT"
+    
+    if [[ ! -f "${PdBIUVT_SAVE[tk]}.txt" ]]; then
+        echo "Error! Failed to run the code! Please check:"
+        echo "\"$PdBIUVT_TEMP_LOGT\""
+        echo "\"$PdBIUVT_TEMP_EXEC\""
+    else
+        echo "Successfully output to \"${PdBIUVT_SAVE[tk]}.txt\"!"
+        rm "$PdBIUVT_TEMP_LOGT"
+        rm "$PdBIUVT_TEMP_EXEC"
+    fi
+    
+    
+    
+done
+
+
+
+
+
