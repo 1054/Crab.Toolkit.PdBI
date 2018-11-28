@@ -452,6 +452,8 @@ global_y_min, global_y_max = ax.get_ylim()
 # 
 # Annotate lines
 # 
+loop_linefreq = []
+loop_linename = []
 if set_no_liblines:
     loop_linefreq = input_linefreq
     loop_linename = input_linename
