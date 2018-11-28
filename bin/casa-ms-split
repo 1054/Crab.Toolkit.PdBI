@@ -639,6 +639,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         # Loop each spw for each source, determine the width and skyfreq
         # 
         count_ispw=0
+        error_flag=0
         for (( ispw=0; ispw<${#CASAMS_SPW_EXPANDED[@]}; ispw++ )); do
             
             SPLIT_SOU="${CASAMS_SOU[isou]}"
@@ -655,6 +656,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 echo "Error! The input spw \"$SPLIT_SPW_ID\" is larger than the SPECTRAL_WINDOW table row number ${#CASAMS_TableWidths[@]}!"
                 echo ""
                 if [[ $CASA_INP_CONTINUE_ON_ERROR -gt 0 ]]; then
+                    error_flag=1
                     continue
                 else 
                     exit 1
@@ -665,6 +667,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 echo "Error! The input spw \"$SPLIT_SPW_ID\" is larger than the SPECTRAL_WINDOW table row number ${#CASAMS_TableSpwBandwidths[@]}!"
                 echo ""
                 if [[ $CASA_INP_CONTINUE_ON_ERROR -gt 0 ]]; then
+                    error_flag=1
                     continue
                 else 
                     exit 1
@@ -675,6 +678,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 echo "Error! The input spw \"$SPLIT_SPW_ID\" is larger than the SPECTRAL_WINDOW table row number ${#CASAMS_TableSpwNames[@]}!"
                 echo ""
                 if [[ $CASA_INP_CONTINUE_ON_ERROR -gt 0 ]]; then
+                    error_flag=1
                     continue
                 else 
                     exit 1
@@ -1120,6 +1124,11 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 fi
             done # end loop each stokes
         done # end loop each spw
+        
+        # if spw is invalid and continue
+        if [[ $CASA_INP_CONTINUE_ON_ERROR -gt 0 ]] && [[ $error_flag -ne 0 ]]; then
+            continue
+        fi
         
         echo "    * written to python script: $CASAMS_Script1                   PLEASE RUN: $CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script1')\""
         echo "    * written to python script: $CASAMS_Script2                    PLEASE RUN: $CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script2')\""
