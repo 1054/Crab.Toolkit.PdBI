@@ -488,6 +488,14 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     fi
     
     
+    #<20181128># sometimes CASAMS_TableSpwNames is empty, those spws do not have a name! e.g., 2011.0.00097.S
+    if [[ ${#CASAMS_TableSpwNames[@]} -eq 0 ]] && [[ ${#CASAMS_TableSpws[@]} -gt 0 ]] && [[ ${#CASAMS_TableSpwBandwidths[@]} -eq ${#CASAMS_TableSpws[@]} ]]; then
+        CASAMS_TableSpwNames=()
+        for (( ikspw = 0; ikspw < ${#CASAMS_TableSpws[@]}; ikspw++ )); do
+            CASAMS_TableSpwNames+=("ALMA_SPW_NONAME")
+        done
+    fi
+    
     #<DEBUG># 
     echo "CASAMS_TableFieldNames = ${CASAMS_TableFieldNames[@]}"
     echo "CASAMS_TableSpwNames = ${CASAMS_TableSpwNames[@]}"
@@ -553,14 +561,16 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             CASAMS_SPW_BANDWIDTHS=()
             if [[ $isou -eq 0 ]]; then echo "Setting spw according to the user input (${#CASAMS_SPW[@]} spws) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
         else
+            # if the input spws list is shorter than the input source list, then repeat last spws for the rest sources
             if [[ ${#CASA_INP_SPW[@]} -gt 0 ]]; then
                 CASAMS_SPW=(${CASA_INP_SPW[$((${#CASA_INP_SPW[@]}-1))]}) # repeat last spw for the rest sources
                 CASAMS_SPW_NAMES=()
                 CASAMS_SPW_BANDWIDTHS=()
                 if [[ $isou -eq 0 ]]; then echo "Setting spw according to the user input (${#CASAMS_SPW[@]} spws) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
             else
+                # if no spws are given at all, take it from the ms SPECTRAL_WINDOW table
                 CASAMS_SPW=(${CASAMS_TableSpws[@]})
-                CASAMS_SPW_NAMES=("${CASAMS_TableSpwNames[@]}")
+                CASAMS_SPW_NAMES=() # "${CASAMS_TableSpwNames[@]}"
                 CASAMS_SPW_BANDWIDTHS=()
                 if [[ $isou -eq 0 ]]; then echo "Setting spw according to the SPECTRAL_WINDOW table (${#CASAMS_SPW[@]} spws) for source $((isou+1)) (${CASAMS_SOU[isou]})"; fi
             fi
