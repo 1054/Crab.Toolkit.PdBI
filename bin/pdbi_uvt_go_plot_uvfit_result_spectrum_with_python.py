@@ -388,6 +388,8 @@ for i in range(len(input_names)):
                     # highlight by input_lineFWHM
                     if len(input_linefreq) > 0:
                         for kk in range(len(input_linefreq)):
+                            if len(input_lineFWHM) == 0:
+                                input_lineFWHM = [500.0] #<20181128># bug fixed. 
                             if kk >= len(input_lineFWHM):
                                 input_lineFWHM.append(input_lineFWHM[-1])
                             if input_lineFWHM[kk] > 0:
