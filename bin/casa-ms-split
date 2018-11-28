@@ -654,19 +654,31 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 echo ""
                 echo "Error! The input spw \"$SPLIT_SPW_ID\" is larger than the SPECTRAL_WINDOW table row number ${#CASAMS_TableWidths[@]}!"
                 echo ""
-                exit 1
+                if [[ $CASA_INP_CONTINUE_ON_ERROR -gt 0 ]]; then
+                    continue
+                else 
+                    exit 1
+                fi 
             fi
             if [[ $SPLIT_SPW_ID -ge ${#CASAMS_TableSpwBandwidths[@]} ]]; then
                 echo ""
                 echo "Error! The input spw \"$SPLIT_SPW_ID\" is larger than the SPECTRAL_WINDOW table row number ${#CASAMS_TableSpwBandwidths[@]}!"
                 echo ""
-                exit 1
+                if [[ $CASA_INP_CONTINUE_ON_ERROR -gt 0 ]]; then
+                    continue
+                else 
+                    exit 1
+                fi 
             fi
             if [[ $SPLIT_SPW_ID -ge ${#CASAMS_TableSpwNames[@]} ]]; then
                 echo ""
                 echo "Error! The input spw \"$SPLIT_SPW_ID\" is larger than the SPECTRAL_WINDOW table row number ${#CASAMS_TableSpwNames[@]}!"
                 echo ""
-                exit 1
+                if [[ $CASA_INP_CONTINUE_ON_ERROR -gt 0 ]]; then
+                    continue
+                else 
+                    exit 1
+                fi 
             fi
             
             SPLIT_SPW_NUMCHAN=${CASAMS_TableWidths[$SPLIT_SPW_ID]} # calculate SPLIT_SPW_NUMCHAN -- 20180612

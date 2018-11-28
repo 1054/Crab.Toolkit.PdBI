@@ -104,6 +104,7 @@ CASA_INP_CONCAT_FREQTOL=() # freqtolerance for concat()
 CASA_INP_CONCAT_DIRTOL=() # freqtolerance for concat()
 CASA_INP_SPLIT_TIMEBIN=() # bin times, string type
 CASA_INP_SPLIT_TRIMCHAN=0 # trim flagged channel or not
+CASA_INP_CONTINUE_ON_ERROR=0 # continue on error or not
 CASA_CMD_TYPE="n/a"
 
 if [[ $CASA_INP_DEBUG -eq 1 ]]; then
@@ -115,71 +116,73 @@ while [[ "$#" -gt 0 ]]; do
     TempStr=$(echo "$1" | tr '[:upper:]' '[:lower:]')
     # echo $TempStr
     case $1 in
-          "-step") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="steps";;
-         "-steps") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="steps";;
-           "-vis") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="vis";;
-         "-image") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="image";;
-          "-name") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-name";;
-        "-source") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-name";;
-     "-source-id") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-name";;
-         "-field") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-id";;
-      "-field-id") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-id";;
-          "-freq") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="freq";;
-      "-restfreq") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="freq";;
-     "-frequency") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="freq";;
-           "-spw") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="spw";;
-         "-width") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="spw-width";;
-     "-spw-width") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="spw-width";;
-         "-nchan") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="spw-width";;
-  "-polarization") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="stokes";;
-         "-polar") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="stokes";;
-         "-stoke") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="stokes";;
-        "-stokes") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="stokes";;
-        "-intent") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="intent";;
-         "-radec") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="radec";;
-          "-iter") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-iteration";;
-     "-iteration") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-iteration";;
-     "-modeltype") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-modeltype";;
-      "-comptype") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-modeltype";;
-         "-model") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-modeltype";;
-     "-sourcepar") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-sourcepar";;
-          "-vary") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-varypar";;
-       "-varypar") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-varypar";;
-       "-freqtol") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="concat-freqtol";;
-        "-dirtol") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="concat-dirtol";;
-       "-timebin") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="split-timebin";;
-    "-trim-chan"*) CASA_CMD_TEXT="$1";        CASA_CMD_TYPE="split-trimchan";;
-           "-out") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="output";;
-        "-output") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="output";;
-       "-outfile") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="output";;
-     "-overwrite") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="overwrite";;
-           "-yes") CASA_CMD_TEXT="$1";        CASA_CMD_TYPE="yes";;
-            "-no") CASA_CMD_TEXT="$1";        CASA_CMD_TYPE="no";;
+                "-step") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="steps";;
+               "-steps") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="steps";;
+                 "-vis") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="vis";;
+               "-image") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="image";;
+                "-name") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-name";;
+              "-source") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-name";;
+           "-source-id") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-name";;
+               "-field") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-id";;
+            "-field-id") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-id";;
+                "-freq") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="freq";;
+            "-restfreq") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="freq";;
+           "-frequency") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="freq";;
+                 "-spw") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="spw";;
+               "-width") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="spw-width";;
+           "-spw-width") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="spw-width";;
+               "-nchan") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="spw-width";;
+        "-polarization") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="stokes";;
+               "-polar") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="stokes";;
+               "-stoke") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="stokes";;
+              "-stokes") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="stokes";;
+              "-intent") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="intent";;
+               "-radec") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="radec";;
+                "-iter") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-iteration";;
+           "-iteration") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-iteration";;
+           "-modeltype") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-modeltype";;
+            "-comptype") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-modeltype";;
+               "-model") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-modeltype";;
+           "-sourcepar") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-sourcepar";;
+                "-vary") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-varypar";;
+             "-varypar") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="uvfit-varypar";;
+             "-freqtol") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="concat-freqtol";;
+              "-dirtol") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="concat-dirtol";;
+             "-timebin") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="split-timebin";;
+          "-trim-chan"*) CASA_CMD_TEXT="$1";        CASA_CMD_TYPE="split-trimchan";;
+                 "-out") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="output";;
+              "-output") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="output";;
+             "-outfile") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="output";;
+           "-overwrite") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="overwrite";;
+   "-continue-on-error") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="continue-on-error";;
+                 "-yes") CASA_CMD_TEXT="$1";        CASA_CMD_TYPE="yes";;
+                  "-no") CASA_CMD_TEXT="$1";        CASA_CMD_TYPE="no";;
     esac
     # echo "$CASA_CMD_TYPE"
     case "$CASA_CMD_TYPE" in 
-          "steps") if [[ $# -gt 0 ]]; then CASA_INP_STEPS+=("$1"); fi;;
-            "vis") if [[ $# -gt 0 ]]; then CASA_INP_VIS+=("$1"); fi;;
-          "image") if [[ $# -gt 0 ]]; then CASA_INP_IMAGE+=("$1"); fi;;
-     "field-name") if [[ $# -gt 0 ]]; then CASA_INP_FIELD+=("$(echo $1)"); fi;;
-       "field-id") if [[ $# -gt 0 ]]; then CASA_INP_FIELD+=("\"$(echo $1)\""); fi;;
-           "freq") if [[ $# -gt 0 ]]; then CASA_INP_FREQ+=("$1"); fi;;
-            "spw") if [[ $# -gt 0 ]]; then CASA_INP_SPW+=("$1"); fi;;
-      "spw-width") if [[ $# -gt 0 ]]; then CASA_INP_WIDTH+=("$1"); fi;;
-         "stokes") if [[ $# -gt 0 ]]; then CASA_INP_STOKES+=("$1"); fi;;
-         "intent") if [[ $# -gt 0 ]]; then CASA_INP_INTENT+=("$1"); fi;;
-"uvfit-iteration") if [[ $# -gt 0 ]]; then CASA_INP_UVFIT_ITERATION+=("$1"); fi;;
-"uvfit-modeltype") if [[ $# -gt 0 ]]; then CASA_INP_UVFIT_MODELTYPE+=("$1"); fi;;
-"uvfit-sourcepar") if [[ $# -gt 0 ]]; then CASA_INP_UVFIT_SOURCEPAR+=("$1"); fi;;
-  "uvfit-varypar") if [[ $# -gt 0 ]]; then CASA_INP_UVFIT_VARIEDPAR+=("$1"); fi;;
- "concat-freqtol") if [[ $# -gt 0 ]]; then CASA_INP_CONCAT_FREQTOL+=("$1"); fi;;
-  "concat-dirtol") if [[ $# -gt 0 ]]; then CASA_INP_CONCAT_DIRTOL+=("$1"); fi;;
-  "split-timebin") if [[ $# -gt 0 ]]; then CASA_INP_SPLIT_TIMEBIN+=("$1"); fi;;
- "split-trimchan")                         CASA_INP_SPLIT_TRIMCHAN=1;;
-         "output") if [[ $# -gt 0 ]]; then CASA_INP_OUTPUT+=("$1"); fi;;
-      "overwrite") if [[ $# -gt 0 ]]; then CASA_INP_OVERWRITE+=("$1"); fi;;
-            "yes")                         CASA_INP_YES=1;;
-             "no")                         CASA_INP_NO=1;;
+                "steps") if [[ $# -gt 0 ]]; then CASA_INP_STEPS+=("$1"); fi;;
+                  "vis") if [[ $# -gt 0 ]]; then CASA_INP_VIS+=("$1"); fi;;
+                "image") if [[ $# -gt 0 ]]; then CASA_INP_IMAGE+=("$1"); fi;;
+           "field-name") if [[ $# -gt 0 ]]; then CASA_INP_FIELD+=("$(echo $1)"); fi;;
+             "field-id") if [[ $# -gt 0 ]]; then CASA_INP_FIELD+=("\"$(echo $1)\""); fi;;
+                 "freq") if [[ $# -gt 0 ]]; then CASA_INP_FREQ+=("$1"); fi;;
+                  "spw") if [[ $# -gt 0 ]]; then CASA_INP_SPW+=("$1"); fi;;
+            "spw-width") if [[ $# -gt 0 ]]; then CASA_INP_WIDTH+=("$1"); fi;;
+               "stokes") if [[ $# -gt 0 ]]; then CASA_INP_STOKES+=("$1"); fi;;
+               "intent") if [[ $# -gt 0 ]]; then CASA_INP_INTENT+=("$1"); fi;;
+      "uvfit-iteration") if [[ $# -gt 0 ]]; then CASA_INP_UVFIT_ITERATION+=("$1"); fi;;
+      "uvfit-modeltype") if [[ $# -gt 0 ]]; then CASA_INP_UVFIT_MODELTYPE+=("$1"); fi;;
+      "uvfit-sourcepar") if [[ $# -gt 0 ]]; then CASA_INP_UVFIT_SOURCEPAR+=("$1"); fi;;
+        "uvfit-varypar") if [[ $# -gt 0 ]]; then CASA_INP_UVFIT_VARIEDPAR+=("$1"); fi;;
+       "concat-freqtol") if [[ $# -gt 0 ]]; then CASA_INP_CONCAT_FREQTOL+=("$1"); fi;;
+        "concat-dirtol") if [[ $# -gt 0 ]]; then CASA_INP_CONCAT_DIRTOL+=("$1"); fi;;
+        "split-timebin") if [[ $# -gt 0 ]]; then CASA_INP_SPLIT_TIMEBIN+=("$1"); fi;;
+       "split-trimchan")                         CASA_INP_SPLIT_TRIMCHAN=1;;
+               "output") if [[ $# -gt 0 ]]; then CASA_INP_OUTPUT+=("$1"); fi;;
+            "overwrite") if [[ $# -gt 0 ]]; then CASA_INP_OVERWRITE+=("$1"); fi;;
+    "continue-on-error")                         CASA_INP_CONTINUE_ON_ERROR=1;;
+                  "yes")                         CASA_INP_YES=1;;
+                   "no")                         CASA_INP_NO=1;;
     esac
     
     if [[ "$CASA_CMD_TYPE" == "radec" ]];  then 
