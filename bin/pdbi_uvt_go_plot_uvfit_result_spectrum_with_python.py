@@ -455,8 +455,9 @@ for i in range(len(input_names)):
                     ax.fill_between(x_highlights[k], y_highlights[k], y_baseline, color='gold', alpha=0.5)
                 # 
                 # label sum_highlights
-                ax.text(0.01, 0.16, 'sum of highlighted channels: %0.5f'%(sum_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
-                ax.text(0.01, 0.10, 'avg of highlighted channels: %0.5f'%(sum_highlights/cnt_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                if cnt_highlights > 0:
+                    ax.text(0.01, 0.16, 'sum of highlighted channels: %0.5f'%(sum_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                    ax.text(0.01, 0.10, 'avg of highlighted channels: %0.5f'%(sum_highlights/cnt_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
                 # 
                 # capsize
                 capsize = 120.0/len(x)
