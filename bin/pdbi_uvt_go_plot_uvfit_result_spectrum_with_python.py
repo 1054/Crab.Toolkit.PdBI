@@ -470,9 +470,13 @@ for i in range(len(input_names)):
                 # 
                 # label sum_highlights
                 if cnt_highlights > 0:
-                    ax.text(0.01, 0.22, 'sum of highlighted channels: %0.5f'%(sum_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
-                    ax.text(0.01, 0.16, 'avg of highlighted channels: %0.5f'%(sum_highlights/cnt_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
-                    ax.text(0.01, 0.10, 'velocity resolution: %0.5f'%(numpy.abs(x[1]-x[0])/numpy.abs(x[0])*2.99792458e5), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                    ax.text(0.01, 0.22, 'sum of highlighted channels: %0.6g'%(sum_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                    ax.text(0.01, 0.16, 'avg of highlighted channels: %0.6g'%(sum_highlights/cnt_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                    ax.text(0.01, 0.10, 'velocity resolution: %0.6g'%(numpy.abs(x[1]-x[0])/numpy.abs(x[0])*2.99792458e5), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                    print('sum of highlighted channels = %0.6g'%(sum_highlights))
+                    print('avg of highlighted channels = %0.6g'%(sum_highlights/cnt_highlights))
+                    print('velocity resolution = %0.5f'%(numpy.abs(x[1]-x[0])/numpy.abs(x[0])*2.99792458e5))
+                    
                 # 
                 # capsize
                 capsize = 120.0/len(x)
@@ -486,6 +490,9 @@ for i in range(len(input_names)):
                 if yerr is not None and not set_no_errorbar:
                     errorbar_plot = ax.errorbar(x, y, yerr=yerr, linestyle='none', capsize=capsize, color='blue', alpha=0.9, linewidth=linewidth/2.0) # color='#1e90ff'
 
+global_y_rms = numpy.std(global_y_arr)
+print('global rms = %0.6g'%(global_y_rms))
+ax.text(0.01, 0.04, 'global rms: %0.6g'%(global_y_rms), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
 
 print('global_x_min = ', global_x_min)
 print('global_x_max = ', global_x_max)
@@ -502,9 +509,6 @@ if len(set_xrange) == 2:
 if len(set_yrange) == 2:
     ax.set_ylim(set_yrange)
 global_y_min, global_y_max = ax.get_ylim()
-global_y_rms = numpy.std(global_y_arr)
-print('global_y_rms = ', global_y_rms)
-ax.text(0.01, 0.04, 'global rms: %0.5f'%(global_y_rms), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
 
 
 # 
