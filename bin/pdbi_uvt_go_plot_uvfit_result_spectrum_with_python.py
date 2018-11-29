@@ -352,7 +352,7 @@ for i in range(len(input_names)):
             # 
             # clip sigma
             if input_clip_sigma > 0.0:
-                y_rms = numpy.stddev(y)
+                y_rms = numpy.std(y)
                 sig_mask = (numpy.abs(y) <= input_clip_sigma*y_rms)
                 x = x[sig_mask]
                 y = y[sig_mask]
