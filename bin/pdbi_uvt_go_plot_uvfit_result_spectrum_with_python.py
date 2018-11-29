@@ -7,6 +7,7 @@ for i in range(len(sys.path)):
         sys.path[i] = ''
     if sys.path[i].find('CASA') >= 0:
         sys.path[i] = ''
+print(sys.path)
 import numpy, matplotlib, astropy
 import astropy.io.ascii as asciitable
 import matplotlib.pyplot as plt
