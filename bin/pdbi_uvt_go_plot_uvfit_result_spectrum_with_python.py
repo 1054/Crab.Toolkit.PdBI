@@ -573,12 +573,14 @@ else:
     if len(input_names)>1:
         title_plot = title_plot + ' and %d files'%(len(input_names)-1)
 plt.title(title_plot, fontsize = set_plot_title_fontsize) # , pad = set_plot_title_pad <TODO>
-plt.tight_layout()
+
 if set_plot_margin_top is not None or \
    set_plot_margin_bottom is not None or \
    set_plot_margin_left is not None or \
    set_plot_margin_right is not None:
     plt.subplots_adjust(bottom=set_plot_margin_bottom, top=1.0-set_plot_margin_top, left=set_plot_margin_left, right=1.0-set_plot_margin_right)
+else:
+    plt.tight_layout()
 
 # 
 # Save figure
