@@ -57,6 +57,7 @@ input_redshift = 0.0
 input_linename = []
 input_linefreq = [] # rest-frame
 input_lineFWHM = [] # km/s
+input_clip_sigma = 0.0
 set_figure_size = [12.0,5.0]
 set_no_errorbar = False
 set_no_liblines = False
@@ -190,6 +191,10 @@ while i < len(sys.argv):
         if i+1 < len(sys.argv):
             i = i + 1
             set_plot_margin_right = float(sys.argv[i])
+    elif temp_argv == '-clip-sigma' or temp_argv == '-sigma-clip':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            input_clip_sigma = float(sys.argv[i])
     elif temp_argv == '-continuum':
         # should be either one value
         # or pairs of values
@@ -345,6 +350,15 @@ for i in range(len(input_names)):
             if yerr is not None: yerr = yerr[nan_mask]
             if SNR is not None: SNR = SNR[nan_mask]
             # 
+            # clip sigma
+            if input_clip_sigma > 0.0:
+                y_rms = numpy.stddev(y)
+                sig_mask = (numpy.abs(y) <= input_clip_sigma*y_rms)
+                x = x[sig_mask]
+                y = y[sig_mask]
+                if yerr is not None: yerr = yerr[sig_mask]
+                if SNR is not None: SNR = SNR[sig_mask]
+            # 
             # check array size
             if len(x) > 1 and len(y) == len(x):
                 # 
@@ -469,7 +483,7 @@ for i in range(len(input_names)):
                     global_capsize = capsize
                 # 
                 if yerr is not None and not set_no_errorbar:
-                    ax.errorbar(x, y, yerr=yerr, linestyle='none', capsize=capsize, color='blue', alpha=0.9, linewidth=linewidth/2.0) # color='#1e90ff'
+                    errorbar_plot = ax.errorbar(x, y, yerr=yerr, linestyle='none', capsize=capsize, color='blue', alpha=0.9, linewidth=linewidth/2.0) # color='#1e90ff'
 
 
 print('global_x_min = ', global_x_min)
@@ -487,6 +501,8 @@ if len(set_xrange) == 2:
 if len(set_yrange) == 2:
     ax.set_ylim(set_yrange)
 global_y_min, global_y_max = ax.get_ylim()
+global_y_rms = numpy.stddev(global_y_arr)
+print('global_y_rms = ', global_y_rms)
 
 
 
