@@ -389,6 +389,7 @@ for i in range(len(input_names)):
                 x_highlights = []
                 y_highlights = []
                 sum_highlights = 0.0
+                cnt_highlights = 0
                 # 
                 # draw connect points 
                 for j in range(len(x)):
@@ -413,6 +414,7 @@ for i in range(len(input_names)):
                                     x_highlights.append([x[j]-x_left_width[j],x[j]+x_right_width[j]])
                                     y_highlights.append([y[j],y[j]])
                                     sum_highlights+=y[j]
+                                    cnt_highlights+=1
                     # 
                     # highlight by input_lineFWHM
                     if len(input_linefreq) > 0:
@@ -452,9 +454,8 @@ for i in range(len(input_names)):
                     ax.fill_between(x_highlights[k], y_highlights[k], y_baseline, color='gold', alpha=0.5)
                 # 
                 # label sum_highlights
-                ax.text(0.05, 0.15, 'sum of highlighted channels: %s'%(sum_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
-                ax.text(0.05, 0.10, 'sum of highlighted channels: %s'%(numpy.sum(y_highlights)), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
-                ax.text(0.05, 0.05, 'avg of highlighted channels: %s'%(numpy.mean(y_highlights)), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                ax.text(0.01, 0.16, 'sum of highlighted channels: %0.5f'%(sum_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                ax.text(0.01, 0.10, 'avg of highlighted channels: %0.5f'%(sum_highlights/cnt_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
                 # 
                 # capsize
                 capsize = 120.0/len(x)
