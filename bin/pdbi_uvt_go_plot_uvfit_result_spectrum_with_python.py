@@ -554,7 +554,7 @@ else:
         title_plot = title_plot + ' and %d files'%(len(input_names)-1)
 plt.title(title_plot, fontsize = set_plot_title_fontsize) # , pad = set_plot_title_pad <TODO>
 #plt.subplots_adjust(top=0.96)
-#plt.tight_layout()
+plt.tight_layout()
 
 # 
 # Save figure
