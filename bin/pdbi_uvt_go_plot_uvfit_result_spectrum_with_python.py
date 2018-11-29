@@ -389,7 +389,7 @@ for i in range(len(input_names)):
                 x_highlights = []
                 y_highlights = []
                 sum_highlights = 0.0
-                cnt_highlights = 0
+                cnt_highlights = 0.0
                 # 
                 # draw connect points 
                 for j in range(len(x)):
