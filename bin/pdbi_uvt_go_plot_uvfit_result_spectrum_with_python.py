@@ -470,8 +470,9 @@ for i in range(len(input_names)):
                 # 
                 # label sum_highlights
                 if cnt_highlights > 0:
-                    ax.text(0.01, 0.16, 'sum of highlighted channels: %0.5f'%(sum_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
-                    ax.text(0.01, 0.10, 'avg of highlighted channels: %0.5f'%(sum_highlights/cnt_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                    ax.text(0.01, 0.22, 'sum of highlighted channels: %0.5f'%(sum_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                    ax.text(0.01, 0.16, 'avg of highlighted channels: %0.5f'%(sum_highlights/cnt_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                    ax.text(0.01, 0.10, 'velocity resolution: %0.5f'%(numpy.abs(x[1]-x[0])/numpy.abs(x[0])*2.99792458e5), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
                 # 
                 # capsize
                 capsize = 120.0/len(x)
@@ -503,7 +504,7 @@ if len(set_yrange) == 2:
 global_y_min, global_y_max = ax.get_ylim()
 global_y_rms = numpy.std(global_y_arr)
 print('global_y_rms = ', global_y_rms)
-
+ax.text(0.01, 0.04, 'global rms: %0.5f'%(global_y_rms), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
 
 
 # 
