@@ -428,6 +428,7 @@ for i in range(len(input_names)):
                                     x_highlights.append([x[j]-x_left_width[j],x[j]+x_right_width[j]])
                                     y_highlights.append([y[j],y[j]])
                                     sum_highlights+=y[j]
+                                    cnt_highlights+=1
                                     #print('highlighting input spectral line %d between %0.6f and %0.6f GHz'%(kk+1,x[j]-x_left_width[j],x[j]+x_right_width[j]))
                                 #x_highlights.append([(1.0-input_lineFWHM[kk]/2.99792458e5)*input_linefreq[kk]/(1.0+input_redshift)-x_left_width[j],
                                 #                     (1.0+input_lineFWHM[kk]/2.99792458e5)*input_linefreq[kk]/(1.0+input_redshift)+x_right_width[j]])
