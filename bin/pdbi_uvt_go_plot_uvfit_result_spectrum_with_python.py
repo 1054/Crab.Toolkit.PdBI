@@ -501,7 +501,7 @@ if len(set_xrange) == 2:
 if len(set_yrange) == 2:
     ax.set_ylim(set_yrange)
 global_y_min, global_y_max = ax.get_ylim()
-global_y_rms = numpy.stddev(global_y_arr)
+global_y_rms = numpy.std(global_y_arr)
 print('global_y_rms = ', global_y_rms)
 
 
