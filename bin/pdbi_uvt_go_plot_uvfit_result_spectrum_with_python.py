@@ -73,6 +73,10 @@ set_plot_title = ''
 set_plot_title_pad = 3
 set_plot_title_fontsize = 16
 set_line_label_fontsize = [] # same dimension as input_linename <TODO>
+set_plot_margin_top = None
+set_plot_margin_bottom = None
+set_plot_margin_left = None
+set_plot_margin_right = None
 input_continuum = []
 
 lib_linefreq = [115.2712018, 230.538, 345.7959899, 461.0407682, 576.2679305, 691.4730763, 806.651806, 921.7997, 1036.912393, 1151.985452, 1267.014486, 1381.995105, 1496.922909]
@@ -169,6 +173,22 @@ while i < len(sys.argv):
         if i+1 < len(sys.argv):
             i = i + 1
             set_plot_title_fontsize = float(sys.argv[i])
+    elif temp_argv == '-plot-margin-top':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            set_plot_margin_top = float(sys.argv[i])
+    elif temp_argv == '-plot-margin-bottom':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            set_plot_margin_bottom = float(sys.argv[i])
+    elif temp_argv == '-plot-margin-left':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            set_plot_margin_left = float(sys.argv[i])
+    elif temp_argv == '-plot-margin-right':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            set_plot_margin_right = float(sys.argv[i])
     elif temp_argv == '-continuum':
         # should be either one value
         # or pairs of values
@@ -553,8 +573,12 @@ else:
     if len(input_names)>1:
         title_plot = title_plot + ' and %d files'%(len(input_names)-1)
 plt.title(title_plot, fontsize = set_plot_title_fontsize) # , pad = set_plot_title_pad <TODO>
-#plt.subplots_adjust(top=0.96)
 plt.tight_layout()
+if set_plot_margin_top is not None or \
+   set_plot_margin_bottom is not None or \
+   set_plot_margin_left is not None or \
+   set_plot_margin_right is not None:
+    plt.subplots_adjust(bottom=set_plot_margin_bottom, top=1.0-set_plot_margin_top, left=set_plot_margin_left, right=1.0-set_plot_margin_right)
 
 # 
 # Save figure
