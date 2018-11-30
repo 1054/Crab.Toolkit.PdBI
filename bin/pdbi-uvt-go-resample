@@ -38,9 +38,21 @@ fi
 
 
 # 
+# if user has input the -width argument instead of the -linewidth argument, then copy PdBIUVT_UVRESAMPLE_VW to PdBIUVT_VWID
+# 
+if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -gt 0 ]] && [[ ${#PdBIUVT_VWID[@]} -eq 0 ]]; then
+    PdBIUVT_VWID=()
+    for (( i = 0; i < ${#PdBIUVT_UVRESAMPLE_VW[@]}; i++ )); do
+        PdBIUVT_VWID+=("${PdBIUVT_UVRESAMPLE_VW[i]}")
+    done
+fi
+
+
+
+# 
 # Check input parameters -- uvt file name, velocity width ("-width") or line width ("-linewidth")
 # 
-if [[ ${#PdBIUVT_NAME[@]} -eq 0 || (${#PdBIUVT_UVRESAMPLE_VW[@]} -eq 0) ]]; then
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 || (${#PdBIUVT_VWID[@]} -eq 0) ]]; then
     usage; exit
 fi
 
@@ -63,7 +75,7 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     
     
     # 
-    # If user input frequency range rather than velocity range, record the frequency range 
+    # If user has input the frequency range rather than the velocity range, record the frequency range 
     # 
     if [[ ${#PdBIUVT_FMIN[@]} -gt 0 && ${#PdBIUVT_FMAX[@]} -gt 0 ]]; then
         if [[ ${#PdBIUVT_FMIN[@]} -le $tk ]]; then
@@ -74,11 +86,16 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
         fi
     fi
     # 
-    # If user input PdBIUVT_UVRESAMPLE_VW
+    # If the user input PdBIUVT_VWID is not complete for all input uv tables, then assume the missed ones are the same as the last given value. 
     # 
-    if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -gt 0 ]]; then
-        if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -le $tk ]]; then
-            PdBIUVT_UVRESAMPLE_VW+=("${PdBIUVT_UVRESAMPLE_VW[${#PdBIUVT_UVRESAMPLE_VW[@]}-1]}")
+    #if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -gt 0 ]]; then
+    #    if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -le $tk ]]; then
+    #        PdBIUVT_UVRESAMPLE_VW+=("${PdBIUVT_UVRESAMPLE_VW[${#PdBIUVT_UVRESAMPLE_VW[@]}-1]}")
+    #    fi
+    #fi
+    if [[ ${#PdBIUVT_VWID[@]} -gt 0 ]]; then
+        if [[ ${#PdBIUVT_VWID[@]} -le $tk ]]; then
+            PdBIUVT_VWID+=("${PdBIUVT_VWID[${#PdBIUVT_VWID[@]}-1]}")
         fi
     fi
     
@@ -185,10 +202,10 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     # Prepare VWIDTH list
     if [[ ${#TEMP_VWIDTH[0]} -gt $tk ]]; then
         # read width from user input
-        TEMP_VWIDTH=${PdBIUVT_UVRESAMPLE_VW[$tk]}
+        TEMP_VWIDTH=${PdBIUVT_VWID[$tk]}
     else
         # if the input width list is shorter than the input uvt list, repeat the last width choice
-        TEMP_VWIDTH=${PdBIUVT_UVRESAMPLE_VW[${#PdBIUVT_UVRESAMPLE_VW[@]}-1]}
+        TEMP_VWIDTH=${PdBIUVT_VWID[${#PdBIUVT_VWID[@]}-1]}
     fi
     # 
     # check velocity width
