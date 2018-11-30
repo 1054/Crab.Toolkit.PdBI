@@ -40,12 +40,12 @@ fi
 # 
 # if user has input the -width argument instead of the -linewidth argument, then copy PdBIUVT_UVRESAMPLE_VW to PdBIUVT_VWID
 # 
-if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -gt 0 ]] && [[ ${#PdBIUVT_VWID[@]} -eq 0 ]]; then
-    PdBIUVT_VWID=()
-    for (( i = 0; i < ${#PdBIUVT_UVRESAMPLE_VW[@]}; i++ )); do
-        PdBIUVT_VWID+=("${PdBIUVT_UVRESAMPLE_VW[i]}")
-    done
-fi
+#if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -gt 0 ]] && [[ ${#PdBIUVT_VWID[@]} -eq 0 ]]; then
+#    PdBIUVT_VWID=()
+#    for (( i = 0; i < ${#PdBIUVT_UVRESAMPLE_VW[@]}; i++ )); do
+#        PdBIUVT_VWID+=("${PdBIUVT_UVRESAMPLE_VW[i]}")
+#    done
+#fi
 
 
 
@@ -88,16 +88,16 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     # 
     # If the user input PdBIUVT_VWID is not complete for all input uv tables, then assume the missed ones are the same as the last given value. 
     # 
-    #if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -gt 0 ]]; then
-    #    if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -le $tk ]]; then
-    #        PdBIUVT_UVRESAMPLE_VW+=("${PdBIUVT_UVRESAMPLE_VW[${#PdBIUVT_UVRESAMPLE_VW[@]}-1]}")
-    #    fi
-    #fi
-    if [[ ${#PdBIUVT_VWID[@]} -gt 0 ]]; then
-        if [[ ${#PdBIUVT_VWID[@]} -le $tk ]]; then
-            PdBIUVT_VWID+=("${PdBIUVT_VWID[${#PdBIUVT_VWID[@]}-1]}")
+    if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -gt 0 ]]; then
+        if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -le $tk ]]; then
+            PdBIUVT_UVRESAMPLE_VW+=("${PdBIUVT_UVRESAMPLE_VW[${#PdBIUVT_UVRESAMPLE_VW[@]}-1]}")
         fi
     fi
+    #if [[ ${#PdBIUVT_VWID[@]} -gt 0 ]]; then
+    #    if [[ ${#PdBIUVT_VWID[@]} -le $tk ]]; then
+    #        PdBIUVT_VWID+=("${PdBIUVT_VWID[${#PdBIUVT_VWID[@]}-1]}")
+    #    fi
+    #fi
     
     
     
