@@ -206,7 +206,7 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     TEMP_VCENTER=$(awk "BEGIN {print ((${TEMP_VRANGE[0]})+(${TEMP_VRANGE[1]}))/2.0;}") # this determines the real resample center
     # 
     # Prepare VWIDTH -- if ${PdBIUVT_UVRESAMPLE_VW[$tk]} > 0 then 
-    if [[ $(awk "BEGIN {if(${PdBIUVT_UVRESAMPLE_VW[$tk]}>0) print 1; else print 0;}" -eq 1 ]]; then
+    if [[ $(awk "BEGIN {if(${PdBIUVT_UVRESAMPLE_VW[$tk]}>0) print 1; else print 0;}") -eq 1 ]]; then
         # read channel velocity width from user input
         TEMP_VWIDTH=${PdBIUVT_UVRESAMPLE_VW[$tk]}
     else
