@@ -455,7 +455,7 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
             TEMP_VMAX="$TEMP_VVAR"
         fi
         # 
-        # If VMIN>VMAX, then swap
+        # If FMIN>FMAX, then swap
         ##if echo "($TEMP_FMIN)>($TEMP_FMAX)" | bc -l | grep -q "1" #<buggy><20170425>#
         if [[ $(awk "BEGIN {if (($TEMP_FMIN)>($TEMP_FMAX)) print 1; else print 0;}") -eq 1 ]]; then
             TEMP_FVAR="$TEMP_FMIN"
