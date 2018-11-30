@@ -6,6 +6,7 @@
 # Last update:
 #    2017-03-30 using "pdbi-uvt-core-arg-v5"
 #    2018-02-12 using "pdbi-uvt-core-arg-v8"
+#    2018-11-30 using "pdbi-uvt-core-cvf-v9", fixed [CII] [CI] line rest freq bug
 # 
 # 
 
@@ -57,11 +58,11 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # 
     # SOURCE pdbi-uvt-core-cvf
     # 
-    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v8" ]]; then
-        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v8" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
+    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v9" ]]; then
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v9" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
     else
         echo ""
-        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v8\"!"
+        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v9\"!"
         echo ""
         exit 1
     fi
