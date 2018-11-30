@@ -18,7 +18,8 @@ usage() {
     echo "  pdbi-uvt-go-resample -name UV_TABLE_NAME_1 -width 100 -vrange -1000 +1000 -out UV_TABLE_NEW"
     echo ""
     echo "  Note that \"-width\" is the velocity width in km/s, \"-vrange\" is the velocity range. We can also input \"-frange\" for frequency range in GHz."
-    echo "  set \"-width\" to zero will keep the original velocity resolution."
+    echo "  set \"-width\" to 0 will keep the original velocity resolution."
+    echo "  set \"-overwrite\" to allow expanding the output velocity range wider than original velocity range."
     echo ""
 }
 
