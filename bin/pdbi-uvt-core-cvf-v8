@@ -12,6 +12,7 @@
 #     2017-03-29 Add "-add-offset" argument.
 #     2017-03-30 Allow multiple PdBIUVT_NAME
 #     2018-02-12 Copied from v7, corrected PdBIUVT_CVF_TYPE issue
+#     2018-11-30 fixed [CII] [CI] line rest freq bug
 # 
 
 
@@ -399,9 +400,10 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
                 if [[ x"$TEMP_LINE_NAME" == x*"CO109"* ]]; then TEMP_REST_FREQ="1151.9854520"; fi
             fi
             if     [[ x"$TEMP_LINE_NAME" == x*"CI"* ]]; then
-                if [[ x"$TEMP_LINE_NAME" == x*"CII"*"158"* ]]; then TEMP_REST_FREQ="1900.53690"; fi
                 if [[ x"$TEMP_LINE_NAME" == x*"CI"*"2-1"* ]]; then TEMP_REST_FREQ="809.34197"; fi
                 if [[ x"$TEMP_LINE_NAME" == x*"CI"*"1-0"* ]]; then TEMP_REST_FREQ="492.16065"; fi
+                if [[ x"$TEMP_LINE_NAME" == x*"CII"*"158"* ]]; then TEMP_REST_FREQ="1900.53690"; fi
+                if [[ x"$TEMP_LINE_NAME" == x*"CII"*"1-0"* ]]; then TEMP_REST_FREQ="1900.53690"; fi
             fi
             if     [[ x"$TEMP_LINE_NAME" == x*"H2O"* ]]; then
                 if [[ x"$TEMP_LINE_NAME" == x*"H2O"*"110-101"* ]]; then TEMP_REST_FREQ="556.93599"; fi
