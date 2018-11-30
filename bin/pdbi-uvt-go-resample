@@ -86,13 +86,16 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
         fi
     fi
     # 
-    # If the user input PdBIUVT_VWID is not complete for all input uv tables, then assume the missed ones are the same as the last given value. 
+    # If the user input PdBIUVT_UVRESAMPLE_VW is not complete for all input uv tables, then assume the missed ones are the same as the last given value. 
     # 
     if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -gt 0 ]]; then
         if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -le $tk ]]; then
             PdBIUVT_UVRESAMPLE_VW+=("${PdBIUVT_UVRESAMPLE_VW[${#PdBIUVT_UVRESAMPLE_VW[@]}-1]}")
         fi
     fi
+    # 
+    # If the user input PdBIUVT_VWID is not complete for all input uv tables, then assume the missed ones are the same as the last given value. 
+    # 
     #if [[ ${#PdBIUVT_VWID[@]} -gt 0 ]]; then
     #    if [[ ${#PdBIUVT_VWID[@]} -le $tk ]]; then
     #        PdBIUVT_VWID+=("${PdBIUVT_VWID[${#PdBIUVT_VWID[@]}-1]}")
