@@ -167,8 +167,9 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     # Prepare VRANGE list
     echo "Checking PdBIUVT_FMIN=${PdBIUVT_FMIN[@]}"
     echo "Checking PdBIUVT_FMAX=${PdBIUVT_FMAX[@]}"
-    echo "Checking PdBIUVT_CMIN=${PdBIUVT_VMIN[@]}"
-    echo "Checking PdBIUVT_CMAX=${PdBIUVT_VMAX[@]}"
+    echo "Checking PdBIUVT_FWID=${PdBIUVT_FWID[@]}"
+    echo "Checking PdBIUVT_CMIN=${PdBIUVT_CMIN[@]}"
+    echo "Checking PdBIUVT_CMAX=${PdBIUVT_CMAX[@]}"
     echo "Checking PdBIUVT_VMIN=${PdBIUVT_VMIN[@]}"
     echo "Checking PdBIUVT_VMAX=${PdBIUVT_VMAX[@]}"
     if [[ ${#PdBIUVT_VMIN[@]} -gt $tk && ${#PdBIUVT_VMAX[@]} -gt $tk ]]; then
