@@ -12,6 +12,7 @@
 #     2017-03-29 Add "-add-offset" argument.
 #     2017-03-30 Allow multiple PdBIUVT_NAME
 #     2018-02-12 Copied from v7, corrected PdBIUVT_CVF_TYPE issue
+#     2018-11-30 Try to adapt to pdbi-uvt-go-resample-v9, when input -crange 0 0, we still set PdBIUVT_CMIN PdBIUVT_CMAX etc
 # 
 
 
@@ -588,9 +589,9 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
             PdBIUVT_FWID[PdBIUVT_OBJI]="$TEMP_FWID" # GHz
             PdBIUVT_FCEN[PdBIUVT_OBJI]="$TEMP_FCEN" # GHz
         else
-            PdBIUVT_FMIN[PdBIUVT_OBJI]="$PdBIUVT_FREQ_MIN" # GHz
-            PdBIUVT_FMAX[PdBIUVT_OBJI]="$PdBIUVT_FREQ_MAX" # GHz
-            PdBIUVT_FWID[PdBIUVT_OBJI]="$PdBIUVT_FREQ_BIN" # GHz
+            PdBIUVT_FMIN[PdBIUVT_OBJI]=$(awk "BEGIN {print ($PdBIUVT_FREQ_MIN)/1000;}") # GHz
+            PdBIUVT_FMAX[PdBIUVT_OBJI]=$(awk "BEGIN {print ($PdBIUVT_FREQ_MAX)/1000;}") # GHz
+            PdBIUVT_FWID[PdBIUVT_OBJI]=$(awk "BEGIN {print ($PdBIUVT_FREQ_BIN)/1000;}") # GHz
             PdBIUVT_FCEN[PdBIUVT_OBJI]=$(awk "BEGIN {print (($PdBIUVT_FREQ_MIN)+($PdBIUVT_FREQ_MAX))/2.0/1000;}") # GHz
         fi
         # 
