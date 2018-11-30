@@ -265,8 +265,16 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     if [[ -f "${PdBIUVT_SAVE[tk]}.uvt" ]]; then
         echo "Successufully saved to \"${PdBIUVT_SAVE[tk]}.uvt\"!"
         echo "--"
-        if [[ -f "$PdBIUVT_TEMP_LOGT" ]]; then
-            rm "$PdBIUVT_TEMP_LOGT"
+        if [[ $PdBIUVT_UVMERGE_KEEP_FILE -eq 0 ]]; then
+            if [[ -f "$PdBIUVT_TEMP_LOGT" ]]; then
+                rm "$PdBIUVT_TEMP_LOGT"
+            fi
+            if [[ -f "$PdBIUVT_TEMP_EXEC" ]]; then
+                rm "$PdBIUVT_TEMP_EXEC"
+            fi
+            if [[ -f "$PdBIUVT_TEMP_INIT" ]]; then
+                rm "$PdBIUVT_TEMP_INIT"
+            fi
         fi
     else
         echo "Error! Failed to run GILDAS MAPPING UV_RESAMPLE and output \"${PdBIUVT_SAVE[tk]}.uvt\"!"
