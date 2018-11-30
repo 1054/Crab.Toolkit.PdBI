@@ -1,5 +1,0 @@
-TASK\FILE "Input formatted file" FILE$
-TASK\FILE "Output table" TABLE$
-TASK\INTEGER "Number of columns MUST be specified" COLUMNS$
-TASK\INTEGER "Number of lines (if 0 the program will guess)" LINES$
-TASK\GO
