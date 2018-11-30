@@ -113,7 +113,9 @@ while i < len(sys.argv):
         if i+1 < len(sys.argv):
             i = i + 1
             input_linename.append(sys.argv[i])
-    elif temp_argv == '-linewidth' or temp_argv == '-line-width' or temp_argv == '-line-fwhm' or temp_argv == '-line-fwzi':
+    elif temp_argv == '-linewidth' or temp_argv == '-line-width' or \
+         temp_argv == '-linefwhm' or temp_argv == '-line-fwhm' or \
+         temp_argv == '-linefwzi' or temp_argv == '-line-fwzi':
         if i+1 < len(sys.argv):
             i = i + 1
             input_lineFWHM.append(float(sys.argv[i]))
