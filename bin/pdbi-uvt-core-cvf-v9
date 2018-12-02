@@ -98,18 +98,19 @@ convert_channel_to_frequency () {
     awk "BEGIN {print ($1-($PdBIUVT_CHAN_REF))*($PdBIUVT_FREQ_BIN)+($PdBIUVT_FREQ_REF);}"
 }
 convert_velocity_to_channel () {
-    if [ -z "$1" ]; then echo "Error! Incorrect parameters for convert_velocity_to_channel!"; return 5; fi
-    if [ -z "$PdBIUVT_CHAN_REF" ]; then echo "Error! \$PdBIUVT_CHAN_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
-    if [ -z "$PdBIUVT_VELO_BIN" ]; then echo "Error! \$PdBIUVT_VELO_BIN was not defined before running convert_channel_to_velocity!"; return 5; fi
-    if [ -z "$PdBIUVT_VELO_REF" ]; then echo "Error! \$PdBIUVT_VELO_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
+    if [ -z "$1" ]; then echo "0"; echo "Error! Incorrect parameters for convert_velocity_to_channel!"; return 5; fi
+    if [ -z "$PdBIUVT_CHAN_REF" ]; then echo "0"; echo "Error! \$PdBIUVT_CHAN_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
+    if [ -z "$PdBIUVT_VELO_BIN" ]; then echo "0"; echo "Error! \$PdBIUVT_VELO_BIN was not defined before running convert_channel_to_velocity!"; return 5; fi
+    if [ -z "$PdBIUVT_VELO_REF" ]; then echo "0"; echo "Error! \$PdBIUVT_VELO_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
     ##echo "($1-($PdBIUVT_VELO_REF))/($PdBIUVT_VELO_BIN)+($PdBIUVT_CHAN_REF)" | bc -l
     awk "BEGIN {print ($1-($PdBIUVT_VELO_REF))/($PdBIUVT_VELO_BIN)+($PdBIUVT_CHAN_REF);}"
+    ##echo "convert_velocity_to_channel: ($1-($PdBIUVT_VELO_REF))/($PdBIUVT_VELO_BIN)+($PdBIUVT_CHAN_REF) = $(awk "BEGIN {print ($1-($PdBIUVT_VELO_REF))/($PdBIUVT_VELO_BIN)+($PdBIUVT_CHAN_REF);}")" 1>&2   #<debug><20181202><dzliu>#
 }
 convert_frequency_to_channel () {
-    if [ -z "$1" ]; then echo "Error! Incorrect parameters for convert_velocity_to_channel!"; return 5; fi
-    if [ -z "$PdBIUVT_CHAN_REF" ]; then echo "Error! \$PdBIUVT_CHAN_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
-    if [ -z "$PdBIUVT_FREQ_BIN" ]; then echo "Error! \$PdBIUVT_FREQ_BIN was not defined before running convert_channel_to_velocity!"; return 5; fi
-    if [ -z "$PdBIUVT_FREQ_REF" ]; then echo "Error! \$PdBIUVT_FREQ_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
+    if [ -z "$1" ]; then echo "0"; echo "Error! Incorrect parameters for convert_velocity_to_channel!"; return 5; fi
+    if [ -z "$PdBIUVT_CHAN_REF" ]; then echo echo "0"; "Error! \$PdBIUVT_CHAN_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
+    if [ -z "$PdBIUVT_FREQ_BIN" ]; then echo echo "0"; "Error! \$PdBIUVT_FREQ_BIN was not defined before running convert_channel_to_velocity!"; return 5; fi
+    if [ -z "$PdBIUVT_FREQ_REF" ]; then echo echo "0"; "Error! \$PdBIUVT_FREQ_REF was not defined before running convert_channel_to_velocity!"; return 5; fi
     ##echo "($1-($PdBIUVT_FREQ_REF))/($PdBIUVT_FREQ_BIN)+($PdBIUVT_CHAN_REF)" | bc -l
     awk "BEGIN {print ($1-($PdBIUVT_FREQ_REF))/($PdBIUVT_FREQ_BIN)+($PdBIUVT_CHAN_REF);}"
 }
@@ -331,8 +332,8 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         if [[ "${#PdBIUVT_CCEN[@]}" -le $PdBIUVT_OBJI ]]; then
             PdBIUVT_CCEN+=("0")
         fi
-        TEMP_CMIN=${PdBIUVT_CMIN[$PdBIUVT_OBJI]}
-        TEMP_CMAX=${PdBIUVT_CMAX[$PdBIUVT_OBJI]}
+        TEMP_CMIN=${PdBIUVT_CMIN[$PdBIUVT_OBJI]} # -crange
+        TEMP_CMAX=${PdBIUVT_CMAX[$PdBIUVT_OBJI]} # -crange
         TEMP_CWID=${PdBIUVT_CWID[$PdBIUVT_OBJI]}
         TEMP_CCEN=${PdBIUVT_CCEN[$PdBIUVT_OBJI]}
         # 
@@ -479,8 +480,8 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         # If CMIN CMAX are invalid, then compute from VMIN VMAX or FMIN FMAX or lineobsfreq linewidth
         if [[ "$TEMP_CMIN" == "0" || "$TEMP_CMAX" == "0" ]]; then
             if [[ "$TEMP_VMIN" != "0" && "$TEMP_VMAX" != "0" ]]; then
-                TEMP_CMIN=$(convert_velocity_to_channel $TEMP_VMIN)
-                TEMP_CMAX=$(convert_velocity_to_channel $TEMP_VMAX)
+                TEMP_CMIN=$(convert_velocity_to_channel $TEMP_VMIN | head -n 1)
+                TEMP_CMAX=$(convert_velocity_to_channel $TEMP_VMAX | head -n 1)
             elif [[ "$TEMP_FMIN" != "0" && "$TEMP_FMAX" != "0" ]]; then
                 TEMP_CMIN=$(convert_frequency_to_channel $TEMP_FMIN)
                 TEMP_CMAX=$(convert_frequency_to_channel $TEMP_FMAX)
@@ -489,8 +490,8 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
                 TEMP_VCEN=$(convert_channel_to_velocity $TEMP_CCEN)
                 TEMP_VMIN=$(awk "BEGIN {print ($TEMP_VCEN)-0.5*($TEMP_VWID);}")
                 TEMP_VMAX=$(awk "BEGIN {print ($TEMP_VCEN)+0.5*($TEMP_VWID);}")
-                TEMP_CMIN=$(convert_velocity_to_channel $TEMP_VMIN)
-                TEMP_CMAX=$(convert_velocity_to_channel $TEMP_VMAX)
+                TEMP_CMIN=$(convert_velocity_to_channel $TEMP_VMIN | head -n 1)
+                TEMP_CMAX=$(convert_velocity_to_channel $TEMP_VMAX | head -n 1)
                 # Debug
                 ## echo TEMP_VCEN=$TEMP_VCEN
                 ## echo TEMP_VMIN=$TEMP_VMIN
@@ -596,7 +597,10 @@ if [[ x"${PdBIUVT_CVF_TYPE}" == x"uvt" || x"${PdBIUVT_CVF_TYPE}" == x"UVT" ]]; t
         fi
         # 
         # Print the line window
-        if [[ "$TEMP_CMIN" != "0" && "$TEMP_CMAX" != "0" ]]; then
+        # <bug><fixed><20181202><dzliu> if [[ "$TEMP_CMIN" != "0" && "$TEMP_CMAX" != "0" ]] 
+        # <bug><fixed><20181202><dzliu> --> if [[ "$TEMP_CMIN" != "0" ]] || [[ "$TEMP_CMAX" != "0" ]]
+        # <bug><fixed><20181202><dzliu> that is, only when both -crange are 0 0 will we select all channels. 
+        if [[ "$TEMP_CMIN" != "0" ]] || [[ "$TEMP_CMAX" != "0" ]]; then
             printf "%s %16.10g %16.10g %10s\n" "Selecting Chan. range:" ${PdBIUVT_CMIN[PdBIUVT_OBJI]} ${PdBIUVT_CMAX[PdBIUVT_OBJI]} "      "
             printf "%s %16.10g %16.10g %10s\n" "Selecting Velo. range:" ${PdBIUVT_VMIN[PdBIUVT_OBJI]} ${PdBIUVT_VMAX[PdBIUVT_OBJI]} "[km/s]" # "(input $TEMP_VMIN $TEMP_VMAX [km/s])"
             printf "%s %16.10g %16.10g %10s\n" "Selecting Freq. range:" ${PdBIUVT_FMIN[PdBIUVT_OBJI]} ${PdBIUVT_FMAX[PdBIUVT_OBJI]} " [GHz]" # "(aligned to channel center)"
