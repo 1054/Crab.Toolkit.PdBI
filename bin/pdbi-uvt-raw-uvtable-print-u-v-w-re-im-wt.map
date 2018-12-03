@@ -7,7 +7,7 @@ define integer ire
 define integer iim
 define integer iwt
 sic output PDBIUVT_OUTPUT_FILE new
-say "#" "ivis" " " "ichan" " " "istokes" " " "u" " " "v" " " "w" " " "re" " " "im" " " "wt" /format A1 A11 A1 A12 A1 A12 A1 A14 A1 A14 A1 A14 A1 A14 A1 A14 A1 A14
+say "#" "ivis" " " "ichan" " " "istokes" " " "u" " " "v" " " "w" " " "re" " " "im" " " "wt" " " "amp" /format A1 A11 A1 A12 A1 A12 A1 A14 A1 A14 A1 A14 A1 A14 A1 A14 A1 A14 A1 A14
 for i 1 to UVT%NVISI
   for j 1 to UVT%NCHAN
     for k 1 to UVT%NSTOKES
@@ -17,7 +17,7 @@ for i 1 to UVT%NVISI
       let ire = 7+(j-1)*(UVT%NSTOKES)+k
       let iim = 7+(j-1)*(UVT%NSTOKES)+k+1
       let iwt = 7+(j-1)*(UVT%NSTOKES)+k+2
-      say 'i' " " 'j' " " 'k' " " 'uvt[iu,i]' " " 'uvt[iv,i]' " " 'uvt[iw,i]' " " 'uvt[ire,i]' " " 'uvt[iim,i]' " " 'uvt[iwt,i]' /format I12 A1 I12 A1 I12 A1 F14.3 A1 F14.3 A1 F14.3 A1 E14.3 A1 E14.3 A1 E14.3
+      say 'i' " " 'j' " " 'k' " " 'uvt[iu,i]' " " 'uvt[iv,i]' " " 'uvt[iw,i]' " " 'uvt[ire,i]' " " 'uvt[iim,i]' " " 'uvt[iwt,i]' " " 'sqrt(uvt[ire,i]*uvt[ire,i]+uvt[iim,i]*uvt[iim,i])' /format I12 A1 I12 A1 I12 A1 F14.3 A1 F14.3 A1 F14.3 A1 E14.3 A1 E14.3 A1 E14.3 A1 E14.3
     next
   next
   !if i.GT.2 break !debug

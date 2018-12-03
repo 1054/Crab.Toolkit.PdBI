@@ -61,6 +61,7 @@ for i_uvt in range(len(uvt_names)):
         os.system('echo "fits {0}.uvfits from {0}.uvt /style casa" | mapping -nw -nl > {0}.uvfits.stdout.txt'.format(uvt_name))
     if not os.path.isfile(uvt_name+'.uvfits'):
         print('Error! Failed to call GILDAS/mapping to convert "{0}.uvt" to "{0}.uvfits"!'.format(uvt_name))
+        sys.exit()
     # 
     # read uvfits 
     print('Reading '+uvt_name+'.uvfits')

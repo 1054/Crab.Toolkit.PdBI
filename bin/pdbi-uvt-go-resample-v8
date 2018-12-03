@@ -18,8 +18,6 @@ usage() {
     echo "  pdbi-uvt-go-resample -name UV_TABLE_NAME_1 -width 100 -vrange -1000 +1000 -out UV_TABLE_NEW"
     echo ""
     echo "  Note that \"-width\" is the velocity width in km/s, \"-vrange\" is the velocity range. We can also input \"-frange\" for frequency range in GHz."
-    echo "  set \"-width\" to 0 will keep the original velocity resolution."
-    echo "  set \"-overwrite\" to allow expanding the output velocity range wider than original velocity range."
     echo ""
 }
 
@@ -90,8 +88,10 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     # 
     # If the user input PdBIUVT_UVRESAMPLE_VW is not complete for all input uv tables, then assume the missed ones are the same as the last given value. 
     # 
-    if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -le $tk ]]; then
-        PdBIUVT_UVRESAMPLE_VW+=("${PdBIUVT_UVRESAMPLE_VW[${#PdBIUVT_UVRESAMPLE_VW[@]}-1]}")
+    if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -gt 0 ]]; then
+        if [[ ${#PdBIUVT_UVRESAMPLE_VW[@]} -le $tk ]]; then
+            PdBIUVT_UVRESAMPLE_VW+=("${PdBIUVT_UVRESAMPLE_VW[${#PdBIUVT_UVRESAMPLE_VW[@]}-1]}")
+        fi
     fi
     # 
     # If the user input PdBIUVT_VWID is not complete for all input uv tables, then assume the missed ones are the same as the last given value. 
@@ -107,11 +107,11 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     # 
     # SOURCE pdbi-uvt-core-cvf
     # 
-    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v9" ]]; then
-        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v9" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
+    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v8" ]]; then
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v8" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
     else
         echo ""
-        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v9\"!"
+        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v8\"!"
         echo ""
         exit 1
     fi
@@ -167,8 +167,6 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     # Prepare VRANGE list
     echo "Checking PdBIUVT_FMIN=${PdBIUVT_FMIN[@]}"
     echo "Checking PdBIUVT_FMAX=${PdBIUVT_FMAX[@]}"
-    echo "Checking PdBIUVT_CMIN=${PdBIUVT_CMIN[@]}"
-    echo "Checking PdBIUVT_CMAX=${PdBIUVT_CMAX[@]}"
     echo "Checking PdBIUVT_VMIN=${PdBIUVT_VMIN[@]}"
     echo "Checking PdBIUVT_VMAX=${PdBIUVT_VMAX[@]}"
     if [[ ${#PdBIUVT_VMIN[@]} -gt $tk && ${#PdBIUVT_VMAX[@]} -gt $tk ]]; then
@@ -206,17 +204,20 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     # Compute VCENTER
     TEMP_VCENTER=$(awk "BEGIN {print ((${TEMP_VRANGE[0]})+(${TEMP_VRANGE[1]}))/2.0;}") # this determines the real resample center
     # 
-    # Prepare VWIDTH -- if ${PdBIUVT_UVRESAMPLE_VW[$tk]} > 0 then 
-    if [[ $(awk "BEGIN {if(${PdBIUVT_UVRESAMPLE_VW[$tk]}>0) print 1; else print 0;}") -eq 1 ]]; then
-        # read channel velocity width from user input
+    # Prepare VWIDTH list -- ${#TEMP_VWIDTH[0]} checks if TEMP_VWIDTH defined or not
+    if [[ ${#TEMP_VWIDTH[0]} -gt $tk ]]; then
+        # read width from user input
         TEMP_VWIDTH=${PdBIUVT_UVRESAMPLE_VW[$tk]}
     else
-        # if the user input channel velocity width is zero, then keep the original velocity resolution
-        TEMP_VWIDTH=$(echo ${PdBIUVT_VELO_BIN} | sed -e 's/^-//g')
+        # if the input width list is shorter than the input uvt list, repeat the last width choice
+        TEMP_VWIDTH=${PdBIUVT_UVRESAMPLE_VW[${#PdBIUVT_UVRESAMPLE_VW[@]}-1]}
     fi
     # 
-    # calc TEMP_FWIDTH
-    TEMP_FWIDTH=$(awk "BEGIN {print (${PdBIUVT_FREQ_BIN})/(${PdBIUVT_VELO_BIN})*(${TEMP_VWIDTH});}")
+    # check velocity width
+    if [[ $(awk "BEGIN {if(($TEMP_VWIDTH)>0) print 1; else print 0;}") -eq 0 ]]; then
+        echo "Error! The input velocity width \"$TEMP_VWIDTH\" is non-positive! Will not run uv_resample for this uv table \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"!"
+        continue
+    fi
     # 
     # Compute output channel number from vrange and vwidth
     TEMP_CNUMBER=$(awk "BEGIN {print ((${TEMP_VRANGE[1]})-(${TEMP_VRANGE[0]}))/($TEMP_VWIDTH);}")
@@ -232,18 +233,11 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     #    TEMP_CREF=$(awk "BEGIN {printf \"%0.5f\", ($TEMP_VREF)/($TEMP_VWIDTH);}")
     #fi
     # 
-    # check velocity width
-    if [[ $(awk "BEGIN {if(($TEMP_CNUMBER)>0) print 1; else print 0;}") -eq 0 ]]; then
-        echo "Error! The computed output channel number \"$TEMP_CNUMBER\" is non-positive! Will not run uv_resample for this uv table \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"!"
-        continue
-    fi
-    # 
     # Print info
     #echo ""
-    printf "%s %-12.5f %-12.5f %s\n" "Checking VRANGE: " ${TEMP_VRANGE[@]}  "(the velocity range)"
-    printf "%s %-25.5f %s\n"         "Checking VWIDTH: " $TEMP_VWIDTH       "(the velocity width for each channel)"
-    printf "%s %-25.5f %s\n"         "Checking VCENTER:" $TEMP_VCENTER      "(will register the reference channel of the output data cube to this channel in the input data cube)"
-    printf "%s %-25.6f %s\n"         "Checking FWIDTH: " $TEMP_FWIDTH       "(the frequency width for each channel)"
+    printf "%s %-12.5f %-12.5f %s\n" "Checking VRANGE: " ${TEMP_VRANGE[@]}  "(the input velocity range)"
+    printf "%s %-25.5f %s\n"         "Checking VWIDTH: " $TEMP_VWIDTH       "(the input velocity width for each channel)"
+    printf "%s %-25.5f %s\n"         "Checking VCENTER:" $TEMP_VCENTER      "(will be registered to the output reference channel)"
     printf "%s %-25d %s\n"           "Checking CNUMBER:" $TEMP_CNUMBER      "(the channel number of the output data cube)"
     printf "%s %-25d %s\n"           "Checking CCENTER:" $TEMP_CCENTER      "(the central channel of the output data cube)"
     printf "%s %-25.5f %s\n"         "Checking CREF:   " $TEMP_CREF         "(the reference channel of the output data cube, should be consistent with original data cube)"
