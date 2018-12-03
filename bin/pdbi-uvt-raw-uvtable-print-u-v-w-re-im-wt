@@ -112,8 +112,10 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         echo "\"$PdBIUVT_TEMP_EXEC\""
     else
         echo "Successfully output to \"${PdBIUVT_SAVE[tk]}.txt\"!"
-        rm "$PdBIUVT_TEMP_LOGT"
-        rm "$PdBIUVT_TEMP_EXEC"
+        if [[ $PdBIUVT_UVMERGE_KEEP_FILE -eq 0 ]]; then
+            if [[ -f "$PdBIUVT_TEMP_LOGT" ]]; then rm "$PdBIUVT_TEMP_LOGT"; fi
+            if [[ -f "$PdBIUVT_TEMP_EXEC" ]]; then rm "$PdBIUVT_TEMP_EXEC"; fi
+        fi
     fi
     
     

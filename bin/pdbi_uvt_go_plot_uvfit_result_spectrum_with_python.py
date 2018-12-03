@@ -9,6 +9,7 @@ for i in range(len(sys.path)):
         sys.path[i] = ''
 import numpy, matplotlib, astropy
 import astropy.io.ascii as asciitable
+from astropy.table import Table
 import matplotlib.pyplot as plt
 import scipy.interpolate as interpolate
 
@@ -261,17 +262,18 @@ if input_names == []:
 if len(input_linename) > 0:
     if len(input_linefreq) == 0:
         for kk in range(len(input_linename)):
-            jkk = []
-            for ikk in range(len(lib_linename)):
-                if lib_linename[ikk] == input_linename[kk]:
-                    jkk.append(ikk)
-            #jkk = numpy.argwhere(lib_linename == input_linename[kk]).flatten().tolist()
-            #print(jkk)
-            if len(jkk) > 0:
-                input_linefreq.append(lib_linefreq[jkk[0]])
-            else:
-                print('Error! Could not find line name "%s" in our library! Please input its rest-frequency in GHz with the "-linefreq" option!'%(input_linename[kk]))
-                sys.exit()
+            if input_linename[kk] != '':
+                jkk = []
+                for ikk in range(len(lib_linename)):
+                    if lib_linename[ikk] == input_linename[kk]:
+                        jkk.append(ikk)
+                #jkk = numpy.argwhere(lib_linename == input_linename[kk]).flatten().tolist()
+                #print(jkk)
+                if len(jkk) > 0:
+                    input_linefreq.append(lib_linefreq[jkk[0]])
+                else:
+                    print('Error! Could not find line name "%s" in our library! Please input its rest-frequency in GHz with the "-linefreq" option!'%(input_linename[kk]))
+                    sys.exit()
 # 
 # Check input input_continuum
 if len(input_continuum) > 0:
@@ -318,6 +320,7 @@ for i in range(len(input_names)):
     input_name = input_names[i]
     # 
     # Read input data table
+    #input_table = Table.read(input_name, format='ascii.commented_header')
     input_table = asciitable.read(input_name)
     #input_table_header = asciitable.read(input_name, data_start = 0, data_end = 1)
     #print(input_table_header)
@@ -463,6 +466,7 @@ for i in range(len(input_names)):
                 #print('dataset %d linewidth = %s'%(i+1, linewidth))
                 # 
                 #ax.bar(x, y, width=2.0*x_left_width, align='center', fill=False, edgecolor='#1e90ff', alpha=1.0)
+                #print(list(zip(x_plot, y_plot)))
                 spec_plot = ax.errorbar(x_plot, y_plot, linestyle='-', color='blue', alpha=1.0, linewidth=linewidth) # color='#1e90ff'
                 global_spec_list.append(spec_plot)
                 global_x_arr.extend(x) # add to global_x_arr
@@ -517,9 +521,62 @@ if len(set_yrange) == 2:
 global_y_min, global_y_max = ax.get_ylim()
 
 
+
+# 
+# adjust plot line thickness
+for spec_plot in global_spec_list:
+    # see https://matplotlib.org/api/container_api.html#matplotlib.container.ErrorbarContainer
+    spec_plot_data_line, spec_plot_caplines, spec_plot_barlinecols = spec_plot
+    spec_plot_data_line.set_linewidth(global_linewidth)
+    for spec_plot_capline in spec_plot_caplines: 
+        spec_plot_capline.set_linewidth(global_linewidth)
+        #spec_plot_capline.markersize = global_capsize #<TODO>#
+        #print(spec_plot_capline.markersize)
+
+
+# 
+# xy label
+if numpy.isnan(set_xtickinterval):
+    set_xtickinterval2 = numpy.log10((global_x_max-global_x_min)/10.0)
+    if set_xtickinterval2 > 0:
+        set_xtickinterval = numpy.power(10, float(int(set_xtickinterval2)) )
+    else:
+        set_xtickinterval = numpy.power(10, float(int(set_xtickinterval2)-1) )
+    set_xtickinterval = float(int((global_x_max-global_x_min)/10.0 / set_xtickinterval)) * set_xtickinterval
+print('set_xtickinterval = %s'%(set_xtickinterval))
+ax.xaxis.set_major_locator(matplotlib.ticker.MultipleLocator(base=set_xtickinterval))
+ax.xaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(base=set_xtickinterval/10.0))
+if ~numpy.isnan(set_ytickinterval):
+    ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(base=set_ytickinterval))
+    ax.yaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(base=set_ytickinterval/10.0))
+ax.tick_params(axis='both', which='both', direction='in')
+ax.grid(True, ls='dotted', lw=0.8, color='darkgray')
+plt.xticks(fontsize=set_xtickfontsize)
+plt.yticks(fontsize=set_ytickfontsize)
+plt.xlabel('Observing Frequency', fontsize=set_xtitlefontsize)
+plt.ylabel('Flux Density', fontsize=set_ytitlefontsize)
+if set_plot_title != '':
+    title_plot = set_plot_title
+else:
+    title_plot = os.path.basename(input_names[0])
+    if len(input_names)>1:
+        title_plot = title_plot + ' and %d files'%(len(input_names)-1)
+plt.title(title_plot, fontsize = set_plot_title_fontsize) # , pad = set_plot_title_pad <TODO>
+
+# 
+# adjust margin
+if set_plot_margin_top is not None or \
+   set_plot_margin_bottom is not None or \
+   set_plot_margin_left is not None or \
+   set_plot_margin_right is not None:
+    plt.subplots_adjust(bottom=set_plot_margin_bottom, top=1.0-set_plot_margin_top, left=set_plot_margin_left, right=1.0-set_plot_margin_right)
+else:
+    plt.tight_layout()
+
+
 # 
 # Annotate lines
-# 
+# (must after tight_layout()
 loop_linefreq = []
 loop_linename = []
 if set_no_liblines:
@@ -569,57 +626,6 @@ for j in range(len(loop_linefreq)):
                         color=color, 
                     )
         print('annotating line %s at %s GHz'%(linename, linefreq))
-
-
-
-# 
-# adjust plot line thickness
-for spec_plot in global_spec_list:
-    # see https://matplotlib.org/api/container_api.html#matplotlib.container.ErrorbarContainer
-    spec_plot_data_line, spec_plot_caplines, spec_plot_barlinecols = spec_plot
-    spec_plot_data_line.set_linewidth(global_linewidth)
-    for spec_plot_capline in spec_plot_caplines: 
-        spec_plot_capline.set_linewidth(global_linewidth)
-        #spec_plot_capline.markersize = global_capsize #<TODO>#
-        print(spec_plot_capline.markersize)
-
-
-# 
-# xy label
-if numpy.isnan(set_xtickinterval):
-    set_xtickinterval2 = numpy.log10((global_x_max-global_x_min)/10.0)
-    if set_xtickinterval2 > 0:
-        set_xtickinterval = numpy.power(10, float(int(set_xtickinterval2)) )
-    else:
-        set_xtickinterval = numpy.power(10, float(int(set_xtickinterval2)-1) )
-    set_xtickinterval = float(int((global_x_max-global_x_min)/10.0 / set_xtickinterval)) * set_xtickinterval
-print('set_xtickinterval = %s'%(set_xtickinterval))
-ax.xaxis.set_major_locator(matplotlib.ticker.MultipleLocator(base=set_xtickinterval))
-ax.xaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(base=set_xtickinterval/10.0))
-if ~numpy.isnan(set_ytickinterval):
-    ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(base=set_ytickinterval))
-    ax.yaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(base=set_ytickinterval/10.0))
-ax.tick_params(axis='both', which='both', direction='in')
-ax.grid(True, ls='dotted', lw=0.8, color='darkgray')
-plt.xticks(fontsize=set_xtickfontsize)
-plt.yticks(fontsize=set_ytickfontsize)
-plt.xlabel('Observing Frequency', fontsize=set_xtitlefontsize)
-plt.ylabel('Flux Density', fontsize=set_ytitlefontsize)
-if set_plot_title != '':
-    title_plot = set_plot_title
-else:
-    title_plot = os.path.basename(input_names[0])
-    if len(input_names)>1:
-        title_plot = title_plot + ' and %d files'%(len(input_names)-1)
-plt.title(title_plot, fontsize = set_plot_title_fontsize) # , pad = set_plot_title_pad <TODO>
-
-if set_plot_margin_top is not None or \
-   set_plot_margin_bottom is not None or \
-   set_plot_margin_left is not None or \
-   set_plot_margin_right is not None:
-    plt.subplots_adjust(bottom=set_plot_margin_bottom, top=1.0-set_plot_margin_top, left=set_plot_margin_left, right=1.0-set_plot_margin_right)
-else:
-    plt.tight_layout()
 
 # 
 # Save figure
