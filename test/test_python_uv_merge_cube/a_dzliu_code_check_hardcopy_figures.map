@@ -1,0 +1,18 @@
+let name merged
+let size 1.5
+go uvmap
+go view
+hardcopy 1-'name'.eps /overwrite
+
+let name dataset_11_datacube_4_resample
+let size 1.5
+go uvmap
+go view
+hardcopy 1-'name'.eps /overwrite
+
+let name dataset_11_datacube_3_resample
+let size 1.5
+go uvmap
+go view
+hardcopy 1-'name'.eps /overwrite
+

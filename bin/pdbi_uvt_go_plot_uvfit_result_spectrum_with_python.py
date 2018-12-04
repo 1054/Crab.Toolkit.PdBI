@@ -331,6 +331,11 @@ for i in range(len(input_names)):
     yerr = None
     SNR = None
     if 'freq' in input_table.colnames:
+        # Find out invalid data with '***'
+        invalid_mask = [True if '*' in str(t) else False for t in input_table['freq']]
+        if numpy.count_nonzero(invalid_mask) > 0:
+            input_table['freq'][invalid_mask] = 'NaN'
+    if 'freq' in input_table.colnames:
         x = numpy.array(input_table['freq']).astype(float)
     if 'frequency' in input_table.colnames:
         x = numpy.array(input_table['frequency']).astype(float)
@@ -339,7 +344,7 @@ for i in range(len(input_names)):
     if 'flux_err' in input_table.colnames:
         yerr = numpy.array(input_table['flux_err']).astype(float)
     if 'SNR' in input_table.colnames:
-        SNR = numpy.array(input_table['SNR'])
+        SNR = numpy.array(input_table['SNR']).astype(float)
         SNR_mask = (numpy.isnan(SNR)) # excluding NaN
         if x is not None: x[SNR_mask] = numpy.nan
         if y is not None: y[SNR_mask] = numpy.nan

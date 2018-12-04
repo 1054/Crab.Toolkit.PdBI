@@ -290,10 +290,12 @@ while [[ "$#" -gt 0 ]]; do
         "-fixed-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(0);;
 
           "-varysize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);;
+        "-variedsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);;
        "-varyobjsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);;
     "-varysourcesize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);;
 
            "-fixsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(0);;
+         "-fixedsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(0);;
         "-fixobjsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(0);;
      "-fixsourcesize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(0);;
 
