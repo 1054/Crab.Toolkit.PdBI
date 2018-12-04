@@ -181,181 +181,201 @@ while [[ "$#" -gt 0 ]]; do
     
     case "$PdBIUVT_TSTR" in
       
-              "-name") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="name";;
-             "-input") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="name";;
-               "-uvt") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="name";;
+                "-name") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="name";;
+               "-input") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="name";;
+                 "-uvt") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="name";;
 
-              "-type") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="type";;
+                "-type") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="type";;
 
-               "-res") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="residual";;
-          "-residual") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="residual";;
-          
-              "-cont") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="continuum";;
-         "-continuum") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="continuum";;
-
-               "-out") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="save";;
-            "-output") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="save";;
-              "-save") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="save";;
-
-         "-overwrite") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OVERWRITE="YES";; # argument with no value, no shift;
-
-           "-mapsize") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
-          "-map_size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
-          "-map-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
-           "-mapcell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_cell";;
-          "-map_cell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_cell";;
-          "-map-cell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_cell";;
-
-          "-pointing") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="pointing";;
-      "-phase-center") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="pointing";;
-
-           "-uvrange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvrange";; # meter
-
-            "-crange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="crange";; # channel range pairs
-            "-vrange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="vrange";; # km/s
-            "-frange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="frange";; # GHz
-          "-redshift") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="redshift";;
-
-          "-freq-ref") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="freq_ref";; # MHz
-          "-ref-freq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="freq_ref";; # MHz
-           "-ch0-mhz") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="freq_ref";; # MHz
-          
-           "-contour") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_contours";; # (TODO: 20180214)
-          "-contours") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_contours";; # (TODO: 20180214)
-    "-uvmap-contours") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_contours";; # (TODO: 20180214)
-           "-spacing") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_spacing";; # in unit of 'noise'
-   "-contour-spacing") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_spacing";; # in unit of 'noise'
-     "-uvmap-spacing") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_spacing";; # in unit of 'noise'
-
-             "-ctime") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uv_ctime";; # 
-     "-time-interval") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uv_ctime";; # 
-
-             "-radec") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="radec";;  # object coordinate pairs
-
-            "-offset") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="offset";;  # object offset pairs
-               "-off") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="offset";;
+                 "-res") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="residual";;
+            "-residual") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="residual";;
             
-           "-add-off") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="additional-offset";; # object additional offset pairs
-        "-add-offset") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="additional-offset";; # object additional offset pairs
+                "-cont") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="continuum";;
+           "-continuum") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="continuum";;
 
-             "-point") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("POINT");;
-             "-gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("E_GAUSS");;
-            "-egauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("E_GAUSS");;
-            "-cgauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("C_GAUSS");;
-           "-e_gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("E_GAUSS");;
-           "-c_gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("C_GAUSS");;
-              "-disk") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("E_DISK");;
-             "-edisk") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("E_DISK");;
-             "-cdisk") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("C_DISK");;
-            "-e_disk") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("E_DISK");;
-            "-c_disk") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("C_DISK");;
-              "-expo") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("EXPO");;
+                 "-out") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="save";;
+              "-output") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="save";;
+                "-save") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="save";;
 
-               "-obj") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
-           "-objname") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
-          "-obj-name") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
-            "-object") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
-            "-source") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
-            "-target") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
+           "-overwrite") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OVERWRITE="YES";; # argument with no value, no shift;
 
-              "-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_SIZE";;
-          "-obj-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_SIZE";;
+             "-mapsize") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
+            "-map_size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
+            "-map-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_size";;
+             "-mapcell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_cell";;
+            "-map_cell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_cell";;
+            "-map-cell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_cell";;
 
-              "-flux") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_FLUX";;
-          "-obj-flux") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_FLUX";;
+            "-pointing") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="pointing";;
+        "-phase-center") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="pointing";;
 
-             "-angle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
-          "-posangle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
-         "-obj-angle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
-      "-obj-posangle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
+             "-uvrange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvrange";; # meter
+
+              "-crange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="crange";; # channel range pairs
+              "-vrange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="vrange";; # km/s
+              "-frange") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="frange";; # GHz
+            "-redshift") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="redshift";;
+
+            "-freq-ref") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="freq_ref";; # MHz
+            "-ref-freq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="freq_ref";; # MHz
+             "-ch0-mhz") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="freq_ref";; # MHz
+            
+             "-contour") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_contours";; # (TODO: 20180214)
+            "-contours") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_contours";; # (TODO: 20180214)
+      "-uvmap-contours") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_contours";; # (TODO: 20180214)
+             "-spacing") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_spacing";; # in unit of 'noise'
+     "-contour-spacing") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_spacing";; # in unit of 'noise'
+       "-uvmap-spacing") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_spacing";; # in unit of 'noise'
+
+               "-ctime") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uv_ctime";; # 
+       "-time-interval") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uv_ctime";; # 
+
+               "-radec") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="radec";;  # object coordinate pairs
+
+              "-offset") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="offset";;  # object offset pairs
+                 "-off") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="offset";;
+              
+             "-add-off") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="additional-offset";; # object additional offset pairs
+          "-add-offset") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="additional-offset";; # object additional offset pairs
+
+               "-point") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("POINT");;
+               "-gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("E_GAUSS");;
+              "-egauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("E_GAUSS");;
+              "-cgauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("C_GAUSS");;
+             "-e_gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("E_GAUSS");;
+             "-c_gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("C_GAUSS");;
+                "-disk") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("E_DISK");;
+               "-edisk") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("E_DISK");;
+               "-cdisk") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("C_DISK");;
+              "-e_disk") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("E_DISK");;
+              "-c_disk") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("C_DISK");;
+                "-expo") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_FUNC+=("EXPO");;
+
+                 "-obj") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
+             "-objname") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
+            "-obj-name") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
+              "-object") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
+              "-source") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
+              "-target") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
+
+                "-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_SIZE";;
+            "-obj-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_SIZE";;
+
+                "-flux") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_FLUX";;
+            "-obj-flux") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_FLUX";;
+
+               "-angle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
+            "-posangle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
+           "-obj-angle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
+        "-obj-posangle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
   
-              "-vary") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(1);; # does not accept input value
-           "-varypos") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(1);;
-         "-variedpos") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(1);;
-      "-varyposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(1);;
+                "-vary") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(1);; # does not accept input value
+             "-varypos") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(1);; # does not accept input value
+        "-varyposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(1);; # does not accept input value
+              "-varied") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(1);; # does not accept input value
+           "-variedpos") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(1);; # does not accept input value
+      "-variedposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(1);; # does not accept input value
 
-               "-fix") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);; # does not accept input value
-            "-fixpos") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);;
-          "-fixedpos") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);;
-       "-fixposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);;
+                 "-fix") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);; # does not accept input value
+              "-fixpos") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);; # does not accept input value
+         "-fixposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);; # does not accept input value
+               "-fixed") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);; # does not accept input value
+            "-fixedpos") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);; # does not accept input value
+       "-fixedposition") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_POS+=(0);; # does not accept input value
 
-          "-varyflux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(1);; # does not accept input value
-         "-vary-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(1);;
-        "-variedflux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(1);; # does not accept input value
-       "-varied-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(1);;
+            "-varyflux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(1);; # does not accept input value
+           "-vary-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(1);; # does not accept input value
+          "-variedflux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(1);; # does not accept input value
+         "-varied-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(1);; # does not accept input value
 
-           "-fixflux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(0);; # does not accept input value
-          "-fix-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(0);;
-         "-fixedflux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(0);; # does not accept input value
-        "-fixed-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(0);;
+             "-fixflux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(0);; # does not accept input value
+            "-fix-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(0);; # does not accept input value
+           "-fixedflux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(0);; # does not accept input value
+          "-fixed-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_FLUX+=(0);; # does not accept input value
 
-          "-varysize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);;
-        "-variedsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);;
-       "-varyobjsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);;
-    "-varysourcesize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);;
-
-           "-fixsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(0);;
-         "-fixedsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(0);;
-        "-fixobjsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(0);;
-     "-fixsourcesize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(0);;
-
-         "-varyangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(1);;
-      "-varyposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(1);;
-   "-varyobjposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(1);;
-"-varysourceposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(1);;
-
-          "-fixangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(0);;
-       "-fixposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(0);;
-    "-fixobjposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(0);;
- "-fixsourceposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(0);;
-
-          "-subtract") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_RSUB="YES";;
-
-         "-linewidth") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linewidth";; # km/s
-          "-linefreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="lineobsfreq";; # GHz
-       "-lineobsfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="lineobsfreq";; # GHz
-          "-restfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linerestfreq";;
-      "-linerestfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linerestfreq";;
-          "-linename") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linename";;
-        
-    "-continuum-mode") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_CONT_MODE=1;; # argument with no value, no shift;
-         "-cont-mode") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_CONT_MODE=1;; # argument with no value, no shift;
-         "-keep-file") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
-        "-keep-files") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
-          "-keepfile") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
-         "-keepfiles") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
-        "-clean-file") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
-       "-clean-files") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
-         "-cleanfile") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
-        "-cleanfiles") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
-            "-weight") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_weight";;
-         "-weighting") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_weight";;
-            "-factor") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_factor";;
-           "-scaling") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_factor";;
-            
-            "-stokes") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvsplit_stokes";;
+            "-varysize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);; # does not accept input value
+         "-varyobjsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);; # does not accept input value
+      "-varysourcesize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);; # does not accept input value
   
-             "-width") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvcompress_nc";;
-              "-step") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="step";;
-             "-sigma") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="sigma";;
-             "-blend") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="blend";;
-            "-maxnum") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="maxnum";;
-               "-fov") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
-           "-fovsize") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
-          "-fov-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
-          "-fov_size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
-       "-show_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
-       "-show-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
-         "-do_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
-         "-do-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
-       "-hide_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
-       "-hide-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
-         "-no_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
-         "-no-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
-  "-plot-channel-map") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PLOT_CHANNEL_MAP="YES";;
-            
-      "-simultaneous") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run
-          "-parallel") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run
+          "-variedsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);; # does not accept input value
+       "-variedobjsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);; # does not accept input value
+    "-variedsourcesize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);; # does not accept input value
+          "-variedsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);; # does not accept input value
+       "-variedobjsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);; # does not accept input value
+    "-variedsourcesize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(1);; # does not accept input value
+
+             "-fixsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(0);; # does not accept input value
+          "-fixobjsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(0);; # does not accept input value
+       "-fixsourcesize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(0);; # does not accept input value
+           "-fixedsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(0);; # does not accept input value
+        "-fixedobjsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(0);; # does not accept input value
+     "-fixedsourcesize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_SIZE+=(0);; # does not accept input value
+
+           "-varyangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(1);; # does not accept input value
+        "-varyposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(1);; # does not accept input value
+     "-varyobjposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(1);; # does not accept input value
+  "-varysourceposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(1);; # does not accept input value
+         "-variedangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(1);; # does not accept input value
+      "-variedposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(1);; # does not accept input value
+   "-variedobjposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(1);; # does not accept input value
+"-variedsourceposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(1);; # does not accept input value
+
+            "-fixangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(0);; # does not accept input value
+         "-fixposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(0);; # does not accept input value
+      "-fixobjposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(0);; # does not accept input value
+   "-fixsourceposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(0);; # does not accept input value
+          "-fixedangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(0);; # does not accept input value
+       "-fixedposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(0);; # does not accept input value
+    "-fixedobjposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(0);; # does not accept input value
+ "-fixedsourceposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_OBJ_VARY_ANGLE+=(0);; # does not accept input value
+
+            "-subtract") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_RSUB="YES";;
+
+           "-linewidth") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linewidth";; # km/s
+            "-linefreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="lineobsfreq";; # GHz
+         "-lineobsfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="lineobsfreq";; # GHz
+            "-restfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linerestfreq";;
+        "-linerestfreq") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linerestfreq";;
+            "-linename") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="linename";;
+          
+      "-continuum-mode") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_CONT_MODE=1;; # argument with no value, no shift;
+           "-cont-mode") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_CONT_MODE=1;; # argument with no value, no shift;
+           "-keep-file") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
+          "-keep-files") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
+            "-keepfile") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
+           "-keepfiles") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=1;; # argument with no value, no shift;
+          "-clean-file") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
+         "-clean-files") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
+           "-cleanfile") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
+          "-cleanfiles") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
+              "-weight") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_weight";;
+           "-weighting") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_weight";;
+              "-factor") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_factor";;
+             "-scaling") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_factor";;
+              
+              "-stokes") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvsplit_stokes";;
+    
+               "-width") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvcompress_nc";;
+                "-step") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="step";;
+               "-sigma") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="sigma";;
+               "-blend") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="blend";;
+              "-maxnum") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="maxnum";;
+                 "-fov") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
+             "-fovsize") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
+            "-fov-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
+            "-fov_size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
+         "-show_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
+         "-show-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
+           "-do_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
+           "-do-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
+         "-hide_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
+         "-hide-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
+           "-no_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
+           "-no-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="NO";;
+    "-plot-channel-map") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PLOT_CHANNEL_MAP="YES";;
+              
+        "-simultaneous") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run
+            "-parallel") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_PARALLELS=1;; #<TODO># allow simultaneous uv_fit to run
 
     esac
     
