@@ -9,6 +9,7 @@ import astropy
 from astropy.table import Table
 from astropy.io import fits
 from copy import copy
+import itertools
 
 # 
 # read user input
@@ -41,9 +42,14 @@ while iarg < len(sys.argv):
 # 
 # print usage
 if len(uvt_names) == 0 or out_name == '':
+    print('')
     print('Usage: ')
-    print('  pdbi-uvt-raw-uvtable-print-u-v-w-re-im-wt.py -name uvtable_spw1_resampled.uvt -out output_u_v_w_re_im_wt_table.txt')
+    print('  pdbi-uvt-raw-uvtable-print-u-v-w-re-im-wt.py -name uvtable_spw1_example.uvt -out output_u_v_w_re_im_wt_table.fits')
+    print('')
+    print('Notes:')
     print('  -- this code allows to input *.uvt or *.uvfits, but uvfits must be generated in CASA data structure type. ')
+    print('  -- The output file format can be either *.fits or *.txt or *.csv. ')
+    print('')
     sys.exit()
 
 
@@ -60,6 +66,8 @@ global_data_dict['re'] = []
 global_data_dict['im'] = []
 global_data_dict['wt'] = []
 global_data_dict['amp'] = []
+global_data_dict['date'] = []
+global_data_dict['time'] = []
 for i_uvt in range(len(uvt_names)):
     uvt_name = uvt_names[i_uvt]
     uvt_type = 'none'
@@ -90,7 +98,7 @@ for i_uvt in range(len(uvt_names)):
         print('Error! The uvfits file "{0}.uvfits" is not fits.GroupsHDU type!'.format(uvt_name))
         sys.exit()
     tb = hdu[0]
-    #print(tb.columns)
+    print(tb.columns)
     #print(len(tb.data))
     #print(tb.data.shape)
     #print(len(tb.data[0]))
@@ -101,29 +109,72 @@ for i_uvt in range(len(uvt_names)):
     # 
     # read data array 
     data_array = tb.data['DATA']
-    print(data_array.shape)
+    print('DATA shape', data_array.shape)
+    #print(tb.data['DATE'][0])
+    #print(tb.data['DATE'][1])
+    #print(tb.data['_DATE'][0])
+    #print(tb.data['_DATE'][1])
+    #print(tb.data['FREQSEL'][0])
+    #print(tb.data['FREQSEL'][1])
     n_visi = data_array.shape[0]
     n_chan = data_array.shape[4]
     n_stokes = data_array.shape[5]
-    i_visi = 
     # 
-    # debug: dump the sorted uvw data
-    #dump_uvw_data_dict = {}
-    #dump_uvw_data_dict['u'] = tb.data['UU']
-    #dump_uvw_data_dict['v'] = tb.data['VV']
-    #dump_uvw_data_dict['w'] = tb.data['WW']
-    #dump_uvw_data_table = Table(dump_uvw_data_dict)
-    #dump_uvw_data_table['u'].format = '%0.3e'
-    #dump_uvw_data_table['v'].format = '%0.3e'
-    #dump_uvw_data_table['w'].format = '%0.3e'
-    #dump_uvw_data_table.write('dump_uvw_of_i_uvt_%d.txt'%(i_uvt), format='ascii.fixed_width', overwrite=True)
-    #current_u_values = tb.data['UU']
-    #current_v_values = tb.data['VV']
-    #current_w_values = tb.data['WW']
+    x_vis, x_chan, x_stokes = np.array(\
+                                        list(\
+                                            itertools.product(\
+                                                                np.linspace(1, n_visi, num=n_visi, endpoint=True), 
+                                                                np.linspace(1, n_chan, num=n_chan, endpoint=True), 
+                                                                np.linspace(1, n_stokes, num=n_stokes, endpoint=True)
+                                            )
+                                        )
+                                    ).T
+    global_data_dict['ivis'].extend(x_vis.flatten().tolist())
+    global_data_dict['ichan'].extend(x_chan.flatten().tolist())
+    global_data_dict['istokes'].extend(x_stokes.flatten().tolist())
+    global_data_dict['u'].extend(np.repeat(tb.data['UU'], n_chan*n_stokes).flatten().tolist())
+    global_data_dict['v'].extend(np.repeat(tb.data['VV'], n_chan*n_stokes).flatten().tolist())
+    global_data_dict['w'].extend(np.repeat(tb.data['WW'], n_chan*n_stokes).flatten().tolist())
+    global_data_dict['re'].extend(tb.data['DATA'].flatten().tolist()[0::3])
+    global_data_dict['im'].extend(tb.data['DATA'].flatten().tolist()[1::3])
+    global_data_dict['wt'].extend(tb.data['DATA'].flatten().tolist()[2::3])
+    global_data_dict['amp'].extend(np.sqrt(np.array(global_data_dict['re'])**2 + np.array(global_data_dict['im'])**2).tolist())
+    global_data_dict['date'].extend(np.repeat(tb.data['DATE'], n_chan*n_stokes).flatten().tolist())
+    global_data_dict['time'].extend(np.repeat(tb.data['_DATE'], n_chan*n_stokes).flatten().tolist())
 
 
+for i in ['ivis', 'ichan', 'istokes', 'u', 'v', 'w', 're', 'im', 'wt', 'amp', 'date', 'time']:
+    print('len(global_data_dict[%s]) = %d'%(i, len(global_data_dict[i])))
 tbout = Table(global_data_dict)
 tbout['u'].format = '%0.3e'
 tbout['v'].format = '%0.3e'
 tbout['w'].format = '%0.3e'
+tbout['re'].format = '%0.3e'
+tbout['im'].format = '%0.3e'
+tbout['wt'].format = '%0.3e'
 tbout['amp'].format = '%0.3e'
+
+regex_pattern = re.compile(r'^(.+)\.(fits|txt|csv)$')
+if regex_pattern.match(out_name):
+    out_base = regex_pattern.sub(r'\1', out_name)
+    out_type = regex_pattern.sub(r'\2', out_name)
+else:
+    out_base = out_name
+    out_type = 'fits'
+
+if out_type.lower() == 'txt':
+    out_format = 'ascii.fixed_width'
+    tbout.write(out_base+'.'+out_type, format=out_format, delimiter=' ', bookend=True, overwrite=True)
+    with open(out_base+'.'+out_type, 'r+') as fp:
+        fp.seek(0)
+        fp.write('#')
+else:
+    out_format = out_type.lower()
+    tbout.write(out_base+'.'+out_type, format=out_format, overwrite=True)
+
+print('Output to "%s"!'%(out_base+'.'+out_type))
+
+
+
+
+

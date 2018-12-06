@@ -17,9 +17,12 @@ for i 1 to UVT%NVISI
     let iw = 3 ! first 7 columns are u,v,w,date,date,n1,n2, then followed by visibilities re im wt
     ! if the uv table has only one channel and one stokes, then we also output re im wt amp
     if (UVT%NCHAN.EQ.1).AND.(UVT%NSTOKES.EQ.1) then
-        let ire = 7+(1-1)*(UVT%NSTOKES)+1
-        let iim = 7+(1-1)*(UVT%NSTOKES)+1+1
-        let iwt = 7+(1-1)*(UVT%NSTOKES)+1+2
+        !let ire = 7+(1-1)*(UVT%NSTOKES)+1
+        !let iim = 7+(1-1)*(UVT%NSTOKES)+1+1
+        !let iwt = 7+(1-1)*(UVT%NSTOKES)+1+2
+        let ire = 7+((1-1)*(UVT%NSTOKES)+(1-1))*3+1
+        let iim = 7+((1-1)*(UVT%NSTOKES)+(1-1))*3+2
+        let iwt = 7+((1-1)*(UVT%NSTOKES)+(1-1))*3+3
         if i.EQ.1 then
             say "#" "ivis" " " "u" " " "v" " " "w" " " "re" " " "im" " " "wt" " " "amp" /format A1 A11 A1 A14 A1 A14 A1 A14 A1 A14 A1 A14 A1 A14 A1 A14
         endif

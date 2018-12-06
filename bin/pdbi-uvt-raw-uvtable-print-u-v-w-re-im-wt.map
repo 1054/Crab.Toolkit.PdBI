@@ -14,9 +14,9 @@ for i 1 to UVT%NVISI
       let iu = 1 ! first 7 columns are u,v,w,date,date,n1,n2, then followed by visibilities re im wt
       let iv = 2 ! first 7 columns are u,v,w,date,date,n1,n2, then followed by visibilities re im wt
       let iw = 3 ! first 7 columns are u,v,w,date,date,n1,n2, then followed by visibilities re im wt
-      let ire = 7+(j-1)*(UVT%NSTOKES)+k
-      let iim = 7+(j-1)*(UVT%NSTOKES)+k+1
-      let iwt = 7+(j-1)*(UVT%NSTOKES)+k+2
+      let ire = 7+((j-1)*(UVT%NSTOKES)+(k-1))*3+1
+      let iim = 7+((j-1)*(UVT%NSTOKES)+(k-1))*3+2
+      let iwt = 7+((j-1)*(UVT%NSTOKES)+(k-1))*3+3
       say 'i' " " 'j' " " 'k' " " 'uvt[iu,i]' " " 'uvt[iv,i]' " " 'uvt[iw,i]' " " 'uvt[ire,i]' " " 'uvt[iim,i]' " " 'uvt[iwt,i]' " " 'sqrt(uvt[ire,i]*uvt[ire,i]+uvt[iim,i]*uvt[iim,i])' /format I12 A1 I12 A1 I12 A1 F14.3 A1 F14.3 A1 F14.3 A1 E14.3 A1 E14.3 A1 E14.3 A1 E14.3
     next
   next
