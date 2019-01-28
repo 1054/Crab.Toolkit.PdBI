@@ -9,6 +9,7 @@ import astropy
 from astropy.table import Table
 from astropy.io import fits
 from copy import copy
+import shutil
 import itertools
 
 # 
@@ -85,6 +86,11 @@ for i_uvt in range(len(uvt_names)):
     # 
     # convert uvt to uvfits
     if uvt_type == 'uvt':
+        # check existing file
+        if os.path.isfile(out_name+'.uvfits'):
+            print('Found existing "{0}.uvfits"! Backup it as "{0}.uvfits.backup"!'.format(out_name))
+            shutil.move(out_name+'.uvfits', out_name+'.uvfits.backup')
+        # run gildas/mapping
         print('Running: echo "fits {0}.uvfits from {0}.uvt /style casa" | mapping -nw -nl > {0}.uvfits.stdout.txt'.format(uvt_name))
         os.system('echo "fits {0}.uvfits from {0}.uvt /style casa" | mapping -nw -nl > {0}.uvfits.stdout.txt'.format(uvt_name))
         if not os.path.isfile(uvt_name+'.uvfits'):

@@ -1,12 +1,14 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # 
 
+from __future__ import print_function
 import os, sys, re
 import numpy as np
 import astropy
 from astropy.table import Table
 from astropy.io import fits
 from copy import copy
+import shutil
 
 # 
 # read user input
@@ -37,7 +39,7 @@ while iarg < len(sys.argv):
 # print usage
 if len(uvt_names) == 0 or out_name == '':
     print('Usage: ')
-    print('  pdbi-uvt-merge-two-data-cube-spw-channel-by-channel.py -name uvtable_spw1_resampled.uvt uvtable_spw2_resampled.uvt uvtable_spw3_resampled.uvt -out output_merged_data_cube.uvt')
+    print('  pdbi-uvt-raw-uvtable-do-average-channel-by-channel.py -name uvtable_spw1_resampled.uvt uvtable_spw2_resampled.uvt uvtable_spw3_resampled.uvt -out output_merged_data_cube.uvt')
     print('  -- this code will merge data cubes with exactly the same channel number and visibilities, i.e., difference spectral window (spw) data from the same observation but after running pdbi-uvt-go-resample to a common frequency grid.')
     sys.exit()
 
@@ -96,15 +98,15 @@ for i_uvt in range(len(uvt_names)):
         sys.exit()
     # 
     # debug: dump the sorted uvw data
-    dump_uvw_data_dict = {}
-    dump_uvw_data_dict['u'] = tb.data['UU']
-    dump_uvw_data_dict['v'] = tb.data['VV']
-    dump_uvw_data_dict['w'] = tb.data['WW']
-    dump_uvw_data_table = Table(dump_uvw_data_dict)
-    dump_uvw_data_table['u'].format = '%0.3e'
-    dump_uvw_data_table['v'].format = '%0.3e'
-    dump_uvw_data_table['w'].format = '%0.3e'
-    dump_uvw_data_table.write('dump_uvw_of_i_uvt_%d.txt'%(i_uvt), format='ascii.fixed_width', overwrite=True)
+    #dump_uvw_data_dict = {}
+    #dump_uvw_data_dict['u'] = tb.data['UU']
+    #dump_uvw_data_dict['v'] = tb.data['VV']
+    #dump_uvw_data_dict['w'] = tb.data['WW']
+    #dump_uvw_data_table = Table(dump_uvw_data_dict)
+    #dump_uvw_data_table['u'].format = '%0.3e'
+    #dump_uvw_data_table['v'].format = '%0.3e'
+    #dump_uvw_data_table['w'].format = '%0.3e'
+    #dump_uvw_data_table.write('dump_uvw_of_i_uvt_%d.txt'%(i_uvt), format='ascii.fixed_width', overwrite=True)
     current_u_values = tb.data['UU']
     current_v_values = tb.data['VV']
     current_w_values = tb.data['WW']
@@ -324,22 +326,42 @@ global_data_array[global_mask_array] = global_data_array[global_mask_array] / gl
 
 
 # 
-# Save as new uvfits
+# store the data array
 global_tbout.data['DATA'] = global_data_array
-global_tbout.writeto(out_name+'.uvfits', overwrite=True)
+
+
+# 
+# Save as new uvfits and uvt
 if os.path.isfile(out_name+'.uvfits'):
+    print('Found existing "{0}"! Backup it as "{0}.uvfits.backup"!'.format(out_name))
+    shutil.move(out_name+'.uvfits', out_name+'.uvfits.backup')
+global_tbout.writeto(out_name+'.uvfits', overwrite=True)
+# then convert uvfits to uvt
+if os.path.isfile(out_name+'.uvfits'):
+    print('Output to "{0}.uvfits"!'.format(out_name))
+    # check existing file
     if os.path.isfile(out_name+'.uvt'):
         print('Backing-up existing {0}.uvt as {0}.uvt.backup'.format(out_name))
         os.system('mv {0}.uvt {0}.uvt.backup'.format(out_name))
+    # run gildas/mapping
     if os.path.isfile(out_name+'.uvfits'):
         print('Running: echo "fits {0}.uvfits to {0}.uvt /style casa" | mapping -nw -nl > {0}.uvfits.stdout.txt'.format(out_name))
         os.system('echo "fits {0}.uvfits to {0}.uvt /style casa" | mapping -nw -nl > {0}.uvfits.stdout.txt'.format(out_name))
+    # check output file
     if os.path.isfile(out_name+'.uvt'):
-        print('Output to {0}.uvt!'.format(out_name))
+        print('Output to "{0}.uvt"!'.format(out_name))
         print('Done!')
     else:
         print('Error! Failed to output {0}.uvt!'.format(out_name))
 else:
     print('Error! Failed to output {0}.uvfits!'.format(out_name))
+
+
+
+
+
+
+
+
 
 

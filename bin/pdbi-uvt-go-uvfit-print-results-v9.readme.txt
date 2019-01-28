@@ -1,0 +1,17 @@
+20190128
+found a bug!
+for multi-source fitting, the 2nd and later sources could not get their results correctly printed
+this is because rf_func_num problem!
+rf_func_num is only valid for the 1st source, while is 0 for 2nd and later sources, 
+so we have to only set rf_func_num once!!!
+
+bug fixed:
+
+[1]
+echo "let rf_func_num 0 ! number of functions, initialize it to 0"  >> "$PdBIUVT_SAVE.result.map"
+-->(moved to the place before the loop)
+
+[2]
+echo "    if (rf_2.GT.0.AND.rf_2.LE.100.AND.rf_7.GE.0.AND.rf_7.LE.10) let rf_func_num INT(rf_2) ! number of functions, only valid when rf_2<=100 and rf_7<=10"  >> "$PdBIUVT_SAVE.result.map"
+-->
+echo "    if (rf_func_num.EQ.0.AND.rf_2.GT.0.AND.rf_2.LE.100.AND.rf_7.GE.0.AND.rf_7.LE.10) let rf_func_num INT(rf_2) ! number of functions, only valid when rf_2<=100 and rf_7<=10"  >> "$PdBIUVT_SAVE.result.map"
