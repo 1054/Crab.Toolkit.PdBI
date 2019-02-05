@@ -21,13 +21,15 @@ if len(sys.argv) <= 1:
 
 # 
 # extrap1d -- from https://stackoverflow.com/questions/2745329/how-to-make-scipy-interpolate-give-an-extrapolated-result-beyond-the-input-range
-def extrap1d(interpolator):
+def extrap1d(interpolator, nearest=False):
     xs = interpolator.x
     ys = interpolator.y
     def pointwise(x):
         if x < xs[0]:
+            if nearest == True: return ys[0]
             return ys[0]+(x-xs[0])*(ys[1]-ys[0])/(xs[1]-xs[0])
         elif x > xs[-1]:
+            if nearest == True: return ys[0]
             return ys[-1]+(x-xs[-1])*(ys[-1]-ys[-2])/(xs[-1]-xs[-2])
         else:
             return interpolator(x)
@@ -280,9 +282,12 @@ if len(input_linename) > 0:
 if len(input_continuum) > 0:
     print('input_continuum: %s'%(input_continuum))
     if len(input_continuum) >= 2 and len(input_continuum) % 2 != 0:
-        input_continuum = input_continuum[:-1]
-    if len(input_continuum) >= 4:
-        interp_continuum = interpolate.interp1d(input_continuum[::2], input_continuum[1:][::2])
+        input_continuum = input_continuum[:-1] # chop the last item if the total number is odd, so that the input is a list of paired (freq,flux)
+    elif len(input_continuum) >= 4 and len(input_continuum) < 8:
+        interp_continuum = interpolate.interp1d(input_continuum[::2], input_continuum[1:][::2]) # the input is a list of paired (freq,flux)
+        extrap_continuum = extrap1d(interp_continuum, nearest=True) # see https://stackoverflow.com/questions/2745329/how-to-make-scipy-interpolate-give-an-extrapolated-result-beyond-the-input-range
+    elif len(input_continuum) >= 8:
+        interp_continuum = interpolate.interp1d(input_continuum[::2], input_continuum[1:][::2]) # the input is a list of paired (freq,flux)
         extrap_continuum = extrap1d(interp_continuum) # see https://stackoverflow.com/questions/2745329/how-to-make-scipy-interpolate-give-an-extrapolated-result-beyond-the-input-range
         
 
