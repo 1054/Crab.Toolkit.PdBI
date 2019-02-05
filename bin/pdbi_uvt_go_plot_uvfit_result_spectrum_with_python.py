@@ -514,8 +514,8 @@ global_y_rms = numpy.std(global_y_arr)
 print('global channel rms = %0.6g'%(global_y_rms))
 ax.text(0.01, 0.04, 'global channel rms: %0.6g'%(global_y_rms), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
 
-print('global_x_min = ', global_x_min)
-print('global_x_max = ', global_x_max)
+print('global_x_min = %s'%(global_x_min))
+print('global_x_max = %s'%(global_x_max))
 baseline_x = numpy.linspace(global_x_min-0.1*(global_x_max-global_x_min), global_x_max+0.1*(global_x_max-global_x_min), num=100, endpoint=True)
 baseline_y = getbaseline(baseline_x, input_continuum)
 ax.plot(baseline_x, 
@@ -529,6 +529,8 @@ if len(set_xrange) == 2:
 if len(set_yrange) == 2:
     ax.set_ylim(set_yrange)
 global_y_min, global_y_max = ax.get_ylim()
+print('global_y_min = %s'%(global_y_min))
+print('global_y_max = %s'%(global_y_max))
 
 
 
