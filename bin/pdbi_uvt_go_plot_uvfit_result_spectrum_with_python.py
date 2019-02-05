@@ -368,10 +368,10 @@ for i in range(len(input_names)):
             # clip sigma
             if input_clip_sigma > 0.0:
                 y_rms = numpy.std(y)
-                sig_mask_1 = (numpy.abs(y)-numpy.median(y) <= 3.0*y_rms) # using internal 3-sigma to compute rms again
+                sig_mask_1 = (numpy.abs(y-numpy.median(y)) <= 3.0*y_rms) # using internal 3-sigma to compute rms again
                 y_rms_1 = numpy.std(y[sig_mask_1])
                 y_rms = y_rms_1
-                sig_mask = (numpy.abs(y)-numpy.median(y) <= input_clip_sigma*y_rms)
+                sig_mask = (numpy.abs(y-numpy.median(y)) <= input_clip_sigma*y_rms)
                 print('clipping %s sigma %s excessing median %s'%(input_clip_sigma, input_clip_sigma*y_rms, numpy.median(y)))
                 x = x[sig_mask]
                 y = y[sig_mask]
