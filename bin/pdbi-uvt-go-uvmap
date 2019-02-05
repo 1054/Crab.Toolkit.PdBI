@@ -8,6 +8,7 @@
 #    2017-03-30 using "pdbi-uvt-core-arg-v5"
 #    2017-04-09 Now output "*.lmv.fits"
 #    2018-02-14 Now using "pdbi-uvt-core-arg-v8"
+#    2019-02-01 Now using "pdbi-uvt-core-arg-v9", and modified this code to support "-FoV" (PdBIUVT_FOV_SIZE)
 # 
 # 
 
@@ -27,11 +28,11 @@ usage() {
 # 
 # SOURCE pdbi-uvt-core-arg
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v9" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v9" "$@"
 else
     echo ""
-    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8\"!"
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v9\"!"
     echo ""
     exit 1
 fi
@@ -127,6 +128,9 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         
         if [[ ${#PdBIUVT_SIZE[@]} -gt $i ]]; then 
             echo "let size ${PdBIUVT_SIZE[$i]}"                 >> "$PdBIUVT_EXE"
+        fi
+        if [[ ${#PdBIUVT_FOV_SIZE[@]} -gt $i ]]; then 
+            echo "let size ${PdBIUVT_FOV_SIZE[$i]}"             >> "$PdBIUVT_EXE"
         fi
         if [[ ${#PdBIUVT_MAP_SIZE[@]} -gt $i ]]; then 
             echo "let map_size ${PdBIUVT_MAP_SIZE[$i]}"         >> "$PdBIUVT_EXE"
