@@ -372,7 +372,7 @@ for i in range(len(input_names)):
                 y_rms_1 = numpy.std(y[sig_mask_1])
                 y_rms = y_rms_1
                 sig_mask = (numpy.abs(y-numpy.median(y)) <= input_clip_sigma*y_rms)
-                print('clipping %s sigma = %s, 1 sigma = %s, median = %s'%(input_clip_sigma, input_clip_sigma*y_rms, y_rms, numpy.median(y)))
+                print('clipping %d data points with %s sigma = %s, 1 sigma = %s, median = %s'%(numpy.count_nonzero(~sig_mask), input_clip_sigma, input_clip_sigma*y_rms, y_rms, numpy.median(y)))
                 x = x[sig_mask]
                 y = y[sig_mask]
                 if yerr is not None: yerr = yerr[sig_mask]
