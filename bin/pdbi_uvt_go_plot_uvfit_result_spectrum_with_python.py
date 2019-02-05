@@ -369,6 +369,7 @@ for i in range(len(input_names)):
             if input_clip_sigma > 0.0:
                 y_rms = numpy.std(y)
                 sig_mask = (numpy.abs(y)-numpy.median(y) <= input_clip_sigma*y_rms)
+                print('clipping %s sigma %s excessing median %s'%(input_clip_sigma, input_clip_sigma*y_rms, numpy.median(y)))
                 x = x[sig_mask]
                 y = y[sig_mask]
                 if yerr is not None: yerr = yerr[sig_mask]
