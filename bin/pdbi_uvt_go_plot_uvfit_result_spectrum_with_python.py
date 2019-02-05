@@ -345,7 +345,7 @@ for i in range(len(input_names)):
         yerr = numpy.array(input_table['flux_err']).astype(float)
     if 'SNR' in input_table.colnames:
         SNR = numpy.array(input_table['SNR']).astype(float)
-        SNR_mask = numpy.logical_or(numpy.isnan(SNR), np.logical_and(y==0, yerr<0) # excluding NaN and (zero flux and negative flux error)
+        SNR_mask = numpy.logical_or(numpy.isnan(SNR), np.logical_and(y==0, yerr<0)) # excluding NaN and (zero flux and negative flux error)
         if x is not None: x[SNR_mask] = numpy.nan
         if y is not None: y[SNR_mask] = numpy.nan
         if yerr is not None: yerr[SNR_mask] = numpy.nan
