@@ -202,6 +202,7 @@ while i < len(sys.argv):
         if i+1 < len(sys.argv):
             i = i + 1
             input_clip_sigma = float(sys.argv[i])
+            print('input_clip_sigma = %s'%(input_clip_sigma))
     elif temp_argv == '-continuum':
         # should be either one value
         # or pairs of values
