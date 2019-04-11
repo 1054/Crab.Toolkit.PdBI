@@ -61,6 +61,7 @@ input_linename = []
 input_linefreq = [] # rest-frame
 input_lineFWHM = [] # km/s
 input_clip_sigma = 0.0
+input_clip_nchan = 0 # 20190411 clip nchan at both ends
 set_figure_size = [12.0,5.0]
 set_no_errorbar = False
 set_no_liblines = False
@@ -205,6 +206,11 @@ while i < len(sys.argv):
             i = i + 1
             input_clip_sigma = float(sys.argv[i])
             print('input_clip_sigma = %s'%(input_clip_sigma))
+    elif temp_argv == '-clip-nchan':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            input_clip_nchan = int(sys.argv[i])
+            print('input_clip_nchan = %s'%(input_clip_nchan))
     elif temp_argv == '-continuum':
         # should be either one value
         # or pairs of values
@@ -387,6 +393,17 @@ for i in range(len(input_names)):
                 y = y[sig_mask]
                 if yerr is not None: yerr = yerr[sig_mask]
                 if SNR is not None: SNR = SNR[sig_mask]
+            # 
+            # clip nchan
+            if input_clip_nchan > 0:
+                if len(x) > 2*input_clip_nchan:
+                    print('clipping %d channels at both ends'%(input_clip_nchan))
+                    x = x[input_clip_nchan:-input_clip_nchan]
+                    y = y[input_clip_nchan:-input_clip_nchan]
+                    if yerr is not None: yerr = yerr[input_clip_nchan:-input_clip_nchan]
+                    if SNR is not None: SNR = SNR[input_clip_nchan:-input_clip_nchan]
+                else:
+                    print('Error! Could not clip %d channels at both ends! Too many to clip!'%(input_clip_nchan))
             # 
             # check array size
             if len(x) > 1 and len(y) == len(x):
