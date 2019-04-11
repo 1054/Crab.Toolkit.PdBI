@@ -341,6 +341,11 @@ for i in range(len(input_names)):
         invalid_mask = [True if '*' in str(t) else False for t in input_table['freq']]
         if numpy.count_nonzero(invalid_mask) > 0:
             input_table['freq'][invalid_mask] = 'NaN'
+    if 'SNR' in input_table.colnames:
+        # Find out invalid data with '***'
+        invalid_mask = [True if '*' in str(t) else False for t in input_table['SNR']]
+        if numpy.count_nonzero(invalid_mask) > 0:
+            input_table['SNR'][invalid_mask] = 'NaN'
     if 'freq' in input_table.colnames:
         x = numpy.array(input_table['freq']).astype(float)
     if 'frequency' in input_table.colnames:

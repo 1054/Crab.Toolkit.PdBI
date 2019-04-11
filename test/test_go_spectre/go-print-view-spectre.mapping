@@ -1,0 +1,10 @@
+
+        define image f view-spectre.tab read /global
+        sic output view-spectre.txt new
+        say "#" " " "velocity" " " "flux" " " "flux_err" /format A1 A1 A13 A1 A15 A1 A15
+        for ichan 1 to 'f%dim[1]'
+            say 'f[ichan,1]' " " 'f[ichan,2]' " " 'f[ichan,3]' /format ES15.6 A1 ES15.6 A1 ES15.6
+        next ichan
+        sic output
+        delete /variable f
+        say "Output to view-spectre.txt!"
