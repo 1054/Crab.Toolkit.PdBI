@@ -1,0 +1,10 @@
+
+define uvtable f PDBIUVT_INPUT_FILE read
+
+exam f%
+
+exam f%dim
+
+delete /variable f
+
+say "Output to view-spectre.txt!"

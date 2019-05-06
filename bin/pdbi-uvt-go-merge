@@ -154,6 +154,8 @@ for (( i=1; i<${#PdBIUVT_NAME[@]}; i++ )); do
         echo  'TASK\CHARACTER "UV table 2"                 TABLE_REF$      "'$PdBIUVT_TEMP_TAB2'"'            >> $PdBIUVT_TEMP_INIT
         echo  'TASK\CHARACTER "UV table out"               TABLE_OUT$      "'$PdBIUVT_TEMP_TAB3'"'            >> $PdBIUVT_TEMP_INIT
         echo  'TASK\INTEGER   "Continuum Mode"                  MODE$       ' $PdBIUVT_UVMERGE_CONT_MODE      >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\REAL      "Spectral Index"                 ALPHA$       ' 0.0                             >> $PdBIUVT_TEMP_INIT #<TODO><20190425># Introduced since GILDAS Version around 08mar19, here I just set to 0.0 i.e. no spectral index to apply for continuum merging. 
+        echo  'TASK\REAL      "Spectral Index Test"        ALPHATEST$       ' 0.0                             >> $PdBIUVT_TEMP_INIT #<TODO><20190425># Test whether setting one more useless variable will affect result or not. 
         echo  'TASK\GO'                                                                                       >> $PdBIUVT_TEMP_INIT
         echo  "run uv_merge $PdBIUVT_TEMP_INIT /NOWINDOW" > $PdBIUVT_TEMP_EXEC
         # or apply the last "-factor" if it is not 1.0

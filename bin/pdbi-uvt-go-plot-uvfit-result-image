@@ -1,6 +1,8 @@
 #!/bin/bash
 # 
 # plot image using GILDAS GREG
+# 
+# 20190501: GILDAS now does not allow white space in '' quoted expression..
 
 
 if [[ $# -lt 1 ]]; then
@@ -204,7 +206,7 @@ if [[ $* == *"-radec "* ]]; then
         echo "LET OBJ_BOX_SIZE = 2.0 ! draw box with size 2 arcsec" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "IF (OBJ_BOX_SIZE.LT.(SIZE[1]/15.0)) LET OBJ_BOX_SIZE = (SIZE[1]/15) ! prevent box size to be too small" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "IF (OBJ_BOX_SIZE.LT.(SIZE[2]/15.0)) LET OBJ_BOX_SIZE = (SIZE[2]/15) ! prevent box size to be too small" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "LET OBJ_BOX_SIZE = 'OBJ_BOX_SIZE / 3600.0 / 180.0 * 3.14159265358979' ! convert box size to radian" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_BOX_SIZE = 'OBJ_BOX_SIZE/3600.0/180.0*3.14159265358979' ! convert box size to radian" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM PHASE_CENTER_RA" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM PHASE_CENTER_DEC" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_RA_RAD" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
@@ -253,12 +255,12 @@ if [[ $* == *"-offset "* ]] || [[ $* == *"-offset-per-object "* ]]; then
         echo "FOR offset_in_panel_y 1 TO NY_BOX" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "SAY \"find_window_position \"'offset_in_panel_x'\" \"'offset_in_panel_y'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "@ find_window_position 'offset_in_panel_x' 'NY_BOX-offset_in_panel_y+1' ! see p_plotfit.map find_window_position ! IMPORTANT <20180215> I verified that the first panel is at bottom-right, but the first channel is at top-left!" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "LET OBJ_DEC_OFF = '($dec_offset_per_object) / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "LET OBJ_RA_OFF = '($ra_offset_per_object) / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_DEC_OFF = '($dec_offset_per_object)/3600.0/180.0*3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_RA_OFF = '($ra_offset_per_object)/3600.0/180.0*3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "LET OBJ_BOX_SIZE = 2.0 ! draw box with size 2 arcsec" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "IF (OBJ_BOX_SIZE.LT.(SIZE[1]/15.0)) LET OBJ_BOX_SIZE = (SIZE[1]/15) ! prevent box size to be too small" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "IF (OBJ_BOX_SIZE.LT.(SIZE[2]/15.0)) LET OBJ_BOX_SIZE = (SIZE[2]/15) ! prevent box size to be too small" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "LET OBJ_BOX_SIZE = 'OBJ_BOX_SIZE / 3600.0 / 180.0 * 3.14159265358979' ! convert box size to radian" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_BOX_SIZE = 'OBJ_BOX_SIZE/3600.0/180.0*3.14159265358979' ! convert box size to radian" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_RA_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_DEC_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_BOX_SIZE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
@@ -308,12 +310,12 @@ if [[ $* == *"-offset-per-channel "* ]]; then
         echo "NEXT" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "SAY \"find_window_position \"'OBJ_PANEL_X'\" \"'OBJ_PANEL_Y'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "@ find_window_position 'OBJ_PANEL_X' 'NY_BOX-OBJ_PANEL_Y+1' ! see p_plotfit.map find_window_position ! IMPORTANT <20180215> I verified that the first panel is at bottom-right, but the first channel is at top-left!" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "LET OBJ_DEC_OFF = '($dec_offset_per_channel) / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "LET OBJ_RA_OFF = '($ra_offset_per_channel) / 3600.0 / 180.0 * 3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_DEC_OFF = '($dec_offset_per_channel)/3600.0/180.0*3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_RA_OFF = '($ra_offset_per_channel)/3600.0/180.0*3.14159265358979'" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "LET OBJ_BOX_SIZE = 2.0 ! draw box with size 2 arcsec" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "IF (OBJ_BOX_SIZE.LT.(SIZE[1]/15.0)) LET OBJ_BOX_SIZE = (SIZE[1]/15) ! prevent box size to be too small" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "IF (OBJ_BOX_SIZE.LT.(SIZE[2]/15.0)) LET OBJ_BOX_SIZE = (SIZE[2]/15) ! prevent box size to be too small" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
-        echo "LET OBJ_BOX_SIZE = 'OBJ_BOX_SIZE / 3600.0 / 180.0 * 3.14159265358979' ! convert box size to radian" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+        echo "LET OBJ_BOX_SIZE = 'OBJ_BOX_SIZE/3600.0/180.0*3.14159265358979' ! convert box size to radian" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_RA_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_DEC_OFF" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
         echo "EXAM OBJ_BOX_SIZE" >> "pdbi_uvt_go_plot_uvfit_result_image.map"

@@ -34,7 +34,10 @@ def extrap1d(interpolator, nearest=False):
         else:
             return interpolator(x)
     def ufunclike(xs):
-        return numpy.array(map(pointwise, numpy.array(xs)))
+        if sys.version_info.major >= 3:
+            return numpy.array(list(map(pointwise, numpy.array(xs)))) # fixed Python 3 issue
+        else:
+            return numpy.array(map(pointwise, numpy.array(xs)))
     return ufunclike
 
 # 
@@ -137,27 +140,27 @@ while i < len(sys.argv):
             set_figure_size[0] = float(sys.argv[i])
             i = i + 1
             set_figure_size[1] = float(sys.argv[i])
-    elif temp_argv == '-plot-xtick-interval' or temp_argv == '-xtickinterval':
+    elif temp_argv == '-plot-xtick-interval' or temp_argv == '-plot-xtickinterval' or temp_argv == '-xtickinterval':
         if i+1 < len(sys.argv):
             i = i + 1
             set_xtickinterval = float(sys.argv[i])
-    elif temp_argv == '-plot-ytick-interval' or temp_argv == '-ytickinterval':
+    elif temp_argv == '-plot-ytick-interval' or temp_argv == '-plot-ytickinterval' or temp_argv == '-ytickinterval':
         if i+1 < len(sys.argv):
             i = i + 1
             set_ytickinterval = float(sys.argv[i])
-    elif temp_argv == '-plot-xtick-fontsize' or temp_argv == '-xtickfontsize':
+    elif temp_argv == '-plot-xtick-fontsize' or temp_argv == '-plot-xtickfontsize' or temp_argv == '-xtickfontsize':
         if i+1 < len(sys.argv):
             i = i + 1
             set_xtickfontsize = float(sys.argv[i])
-    elif temp_argv == '-plot-ytick-fontsize' or temp_argv == '-ytickfontsize':
+    elif temp_argv == '-plot-ytick-fontsize' or temp_argv == '-plot-ytickfontsize' or temp_argv == '-ytickfontsize':
         if i+1 < len(sys.argv):
             i = i + 1
             set_ytickfontsize = float(sys.argv[i])
-    elif temp_argv == '-plot-xtitle-fontsize' or temp_argv == '-xtitlefontsize':
+    elif temp_argv == '-plot-xtitle-fontsize' or temp_argv == '-plot-xtitlefontsize' or temp_argv == '-xtitlefontsize':
         if i+1 < len(sys.argv):
             i = i + 1
             set_xtitlefontsize = float(sys.argv[i])
-    elif temp_argv == '-plot-ytitle-fontsize' or temp_argv == '-ytitlefontsize':
+    elif temp_argv == '-plot-ytitle-fontsize' or temp_argv == '-plot-ytitlefontsize' or temp_argv == '-ytitlefontsize':
         if i+1 < len(sys.argv):
             i = i + 1
             set_ytitlefontsize = float(sys.argv[i])
@@ -322,6 +325,7 @@ global_y_arr = []
 global_linewidth = 2.0
 global_capsize = 12.0
 global_spec_list = []
+global_highlight_count = 0
 
 
 # 
@@ -448,8 +452,9 @@ for i in range(len(input_names)):
                 y_plot = []
                 x_highlights = []
                 y_highlights = []
-                sum_highlights = 0.0
-                cnt_highlights = 0.0
+                nom_highlights = 'highlighted channels' # name
+                sum_highlights = 0.0 # flux sum
+                cnt_highlights = 0.0 # channel count
                 # 
                 # draw connect points 
                 for j in range(len(x)):
@@ -489,6 +494,7 @@ for i in range(len(input_names)):
                                     y_highlights.append([y[j],y[j]])
                                     sum_highlights+=y[j]
                                     cnt_highlights+=1
+                                    nom_highlights=input_linename[kk]
                                     #print('highlighting input spectral line %d between %0.6f and %0.6f GHz'%(kk+1,x[j]-x_left_width[j],x[j]+x_right_width[j]))
                                 #x_highlights.append([(1.0-input_lineFWHM[kk]/2.99792458e5)*input_linefreq[kk]/(1.0+input_redshift)-x_left_width[j],
                                 #                     (1.0+input_lineFWHM[kk]/2.99792458e5)*input_linefreq[kk]/(1.0+input_redshift)+x_right_width[j]])
@@ -517,12 +523,23 @@ for i in range(len(input_names)):
                 # 
                 # label sum_highlights
                 if cnt_highlights > 0:
-                    ax.text(0.01, 0.22, 'sum of highlighted channels: %0.6g'%(sum_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
-                    ax.text(0.01, 0.16, 'avg of highlighted channels: %0.6g'%(sum_highlights/cnt_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
-                    ax.text(0.01, 0.10, 'channel velocity resolution: %0.6g'%(numpy.abs(x[1]-x[0])/numpy.abs(x[0])*2.99792458e5), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
-                    print('sum of highlighted channels = %0.6g'%(sum_highlights))
-                    print('avg of highlighted channels = %0.6g'%(sum_highlights/cnt_highlights))
-                    print('channel velocity resolution = %0.5f'%(numpy.abs(x[1]-x[0])/numpy.abs(x[0])*2.99792458e5))
+                    if global_highlight_count == 0:
+                        ax.text(0.01, 0.22, 'sum of %s: %0.6g'%(nom_highlights, sum_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                        ax.text(0.01, 0.16, 'avg of %s: %0.6g'%(nom_highlights, sum_highlights/cnt_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                        ax.text(0.01, 0.10, 'channel velocity resolution: %0.6g'%(numpy.abs(x[1]-x[0])/numpy.abs(x[0])*2.99792458e5), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                        print('name of highlighted channels = %s'%(nom_highlights))
+                        print('sum of highlighted channels = %0.6g'%(sum_highlights))
+                        print('avg of highlighted channels = %0.6g'%(sum_highlights/cnt_highlights))
+                        print('channel velocity resolution = %0.5f'%(numpy.abs(x[1]-x[0])/numpy.abs(x[0])*2.99792458e5))
+                    #else:
+                    #    ax.text(0.01, 0.22, 'sum of highlighted channels: %0.6g'%(sum_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                    #    ax.text(0.01, 0.16, 'avg of highlighted channels: %0.6g'%(sum_highlights/cnt_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                    #    ax.text(0.01, 0.10, 'channel velocity resolution: %0.6g'%(numpy.abs(x[1]-x[0])/numpy.abs(x[0])*2.99792458e5), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                    #    print('sum of highlighted channels = %0.6g'%(sum_highlights))
+                    #    print('avg of highlighted channels = %0.6g'%(sum_highlights/cnt_highlights))
+                    #    print('channel velocity resolution = %0.5f'%(numpy.abs(x[1]-x[0])/numpy.abs(x[0])*2.99792458e5))
+                    #<TODO># what if multiple lines?
+                    global_highlight_count += 1
                     
                 # 
                 # capsize
