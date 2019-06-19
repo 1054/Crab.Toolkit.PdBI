@@ -9,6 +9,7 @@
 #    2017-04-09 Now output "*.lmv.fits"
 #    2018-02-14 Now using "pdbi-uvt-core-arg-v8"
 #    2019-02-01 Now using "pdbi-uvt-core-arg-v9", and modified this code to support "-FoV" (PdBIUVT_FOV_SIZE)
+#    2019-05-09 added "map_beam_step" so that if the input is a cube, we produce beam per single channel.
 # 
 # 
 
@@ -140,6 +141,8 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         if [[ ${#PdBIUVT_MAP_CELL[@]} -gt $i ]]; then 
             echo "let map_cell ${PdBIUVT_MAP_CELL[$i]}"         >> "$PdBIUVT_EXE"
         fi
+        
+        echo "let map_beam_step 1"                              >> "$PdBIUVT_EXE"
         
         if [[ $PdBIUVT_PARALLELS -eq 1 ]]; then
             echo "let type lmv"                                 >> "$PdBIUVT_EXE"

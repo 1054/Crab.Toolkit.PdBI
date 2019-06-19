@@ -3,6 +3,7 @@
 # plot image using GILDAS GREG
 # 
 # 20190501: GILDAS now does not allow white space in '' quoted expression..
+# 20190606: fix new GILDAS missing telescope issue "GO TELES noema|alma|aca|..."
 
 
 if [[ $# -lt 1 ]]; then
@@ -42,6 +43,15 @@ function Is_Float_Number() {
 uv_filename=$(echo $1 | sed -e 's/\.uvt$//g')
 
 echo "! GILDAS MAPPING SCRIPT" > "pdbi_uvt_go_plot_uvfit_result_image.map"
+
+# 20190606 fix new GILDAS missing telescope issue "GO TELES noema|alma|aca|..."
+echo "define header UVT_HEADER 'name'.uvt read" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "if (UVT_HEADER%NTEL.EQ.0) then" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "say \"Warning! No Telescope information found in the uvtable! Assuming NOEMA!\"" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "go teles noema" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "endif" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+echo "delete /variable UVT_HEADER" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+
 echo "let name \"$uv_filename\"" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "let map_size 1024" >> "pdbi_uvt_go_plot_uvfit_result_image.map" #<Added><20170909># 
 echo "let uv_shift no" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
@@ -68,7 +78,7 @@ fi
 # 
 echo "go uvmap" >> "pdbi_uvt_go_plot_uvfit_result_image.map" #<Added><20170816># 
 # 
-echo "!define header UVT_HEADER 'name'.uvt read" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
+#echo "!define header UVT_HEADER 'name'.uvt read" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "define real PHASE_CENTER_RA" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 echo "define real PHASE_CENTER_DEC" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
 #echo "let PHASE_CENTER_RA = SETUP%INT%A0%RAD" >> "pdbi_uvt_go_plot_uvfit_result_image.map"
