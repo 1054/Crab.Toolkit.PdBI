@@ -376,6 +376,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
                     data = tb4.getcol(data_column)[:,:,0] # DATA shape (nrow, nchan, nstokes) and nstokes==1
                 else:
                     data = tb4.getcol(data_column)[:,:] # DATA shape (nrow, nchan), no stokes dimension
+                print('data_array.shape', data_array.shape)
                 data_abs = np.absolute(data)
                 data_abs_mean = np.mean(data_abs, axis=0)
                 data_rms_per_chan = np.std(data_abs - data_abs_mean, axis=0)
@@ -392,12 +393,12 @@ def grab_interferometry_info(vis, info_dict_file = ''):
                 info_dict[fieldKey]['SPW']['NUM_SCAN_X_BASELINE'].append( len( exposure ) )
                 info_dict[fieldKey]['SPW']['NUM_SCAN_X_ALL'].append( len( exposure ) )
                 info_dict[fieldKey]['SPW']['NUM_STOKES'].append( number_of_stokes )
-                # 
-                # calc BMAJ BMIN for each CHAN of each SPW of each field
-                # interferometry: Fourier Transform is exp( 2 * pi * 1j * (u_m * x_rad + v_m * y_rad) / lambda_m )
-                # "2.0*np.sqrt(2.0*np.log(2.0))" converts Gaussian sigma to FWHM
-                info_dict[fieldKey]['SPW']['CHAN_BMAJ'].append( 2.99792458e8 / np.array(info_dict['SPW']['CHAN_FREQ'][ispw]) / info_dict[fieldKey]['UVW']['U_MAX'] / np.pi * 180.0) # in units of degrees
-                info_dict[fieldKey]['SPW']['CHAN_BMIN'].append( 2.99792458e8 / np.array(info_dict['SPW']['CHAN_FREQ'][ispw]) / info_dict[fieldKey]['UVW']['V_MAX'] / np.pi * 180.0) # in units of degrees
+            # 
+            # calc BMAJ BMIN for each CHAN of each SPW of each field
+            # interferometry: Fourier Transform is exp( 2 * pi * 1j * (u_m * x_rad + v_m * y_rad) / lambda_m )
+            # "2.0*np.sqrt(2.0*np.log(2.0))" converts Gaussian sigma to FWHM
+            info_dict[fieldKey]['SPW']['CHAN_BMAJ'].append( 2.99792458e8 / np.array(info_dict['SPW']['CHAN_FREQ'][ispw]) / info_dict[fieldKey]['UVW']['U_MAX'] / np.pi * 180.0) # in units of degrees
+            info_dict[fieldKey]['SPW']['CHAN_BMIN'].append( 2.99792458e8 / np.array(info_dict['SPW']['CHAN_FREQ'][ispw]) / info_dict[fieldKey]['UVW']['V_MAX'] / np.pi * 180.0) # in units of degrees
             # 
             # calc BMAJ BMIN for each SPW of each field, taking the min of CHAN_FREQ
             info_dict[fieldKey]['SPW']['BMAJ'].append( np.min(info_dict[fieldKey]['SPW']['CHAN_BMAJ']) )
