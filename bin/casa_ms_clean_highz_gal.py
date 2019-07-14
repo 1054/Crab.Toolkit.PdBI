@@ -318,6 +318,26 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             info_dict[fieldKey]['SPW']['PRIMARY_BEAM'].append( info_dict['SPW']['PRIMARY_BEAM'][ispw] )
             info_dict[fieldKey]['SPW']['CHAN_PRIMARY_BEAM'].append( info_dict['SPW']['CHAN_PRIMARY_BEAM'][ispw] )
             # 
+            # check nrows
+            if tb4.nrows() <= 0:
+                info_dict[fieldKey]['SPW']['RMS'].append( -99 )
+                info_dict[fieldKey]['SPW']['CHAN_RMS'].append( [] )
+                if number_of_stokes >= 1:
+                    info_dict[fieldKey]['SPW']['RMS_STOKES_RR'].append( -99 )
+                    info_dict[fieldKey]['SPW']['RMS_STOKES_LL'].append( -99 )
+                    info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_RR'].append( [] )
+                    info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_LL'].append( [] )
+                info_dict[fieldKey]['SPW']['EXPOSURE_X_BASELINE'].append( -99 )
+                info_dict[fieldKey]['SPW']['NUM_SCAN_X_BASELINE'].append( -99 )
+                info_dict[fieldKey]['SPW']['NUM_SCAN_X_ALL'].append( -99 )
+                info_dict[fieldKey]['SPW']['NUM_STOKES'].append( -99 )
+                info_dict[fieldKey]['SPW']['BMAJ'].append( -99 )
+                info_dict[fieldKey]['SPW']['BMIN'].append( -99 )
+                info_dict[fieldKey]['SPW']['CHAN_BMAJ'].append( [] )
+                info_dict[fieldKey]['SPW']['CHAN_BMIN'].append( [] )
+                tb4.close() # close table on error
+                continue
+            # 
             # calc rms per spw per channel
             if number_of_stokes == 2:
                 data_array = tb4.getcol(data_column)
