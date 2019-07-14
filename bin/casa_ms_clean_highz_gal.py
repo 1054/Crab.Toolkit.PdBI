@@ -307,36 +307,23 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             print('Looping ispw %d spw %d spw name %s'%(ispw, info_dict['SPW']['ID'][ispw], info_dict['SPW']['NAME'][ispw]))
             # 
             # select spw
+            if len(info_dict['SPW']['DATA_DESC_ID'][ispw]) <= 0:
+                continue
             query_where_str4 = '(DATA_DESC_ID in [%s])'%( ','.join( map( str, info_dict['SPW']['DATA_DESC_ID'][ispw] ) ) )
             tb4 = taql("SELECT * FROM $tb3 WHERE ("+query_where_str4+")") # open table tb4
             print('Selected %d rows with "%s" (ispw==%d, spw=%d)'%(tb4.nrows(), query_where_str4, ispw, info_dict['SPW']['ID'][ispw] ) )
             # 
-            # copy SPW PRIMARY_BEAM CHAN_PRIMARY_BEAM
+            # check nrows
+            if tb4.nrows() <= 0:
+                tb4.close() # close table on error
+                continue
+            # 
+            # copy SPW ID NAME CHAN_FREQ PRIMARY_BEAM CHAN_PRIMARY_BEAM
             info_dict[fieldKey]['SPW']['ID'].append( info_dict['SPW']['ID'][ispw] )
             info_dict[fieldKey]['SPW']['NAME'].append( info_dict['SPW']['NAME'][ispw] )
             info_dict[fieldKey]['SPW']['CHAN_FREQ'].append( info_dict['SPW']['CHAN_FREQ'][ispw] )
             info_dict[fieldKey]['SPW']['PRIMARY_BEAM'].append( info_dict['SPW']['PRIMARY_BEAM'][ispw] )
             info_dict[fieldKey]['SPW']['CHAN_PRIMARY_BEAM'].append( info_dict['SPW']['CHAN_PRIMARY_BEAM'][ispw] )
-            # 
-            # check nrows
-            if tb4.nrows() <= 0:
-                info_dict[fieldKey]['SPW']['RMS'].append( -99 )
-                info_dict[fieldKey]['SPW']['CHAN_RMS'].append( [] )
-                if number_of_stokes >= 1:
-                    info_dict[fieldKey]['SPW']['RMS_STOKES_RR'].append( -99 )
-                    info_dict[fieldKey]['SPW']['RMS_STOKES_LL'].append( -99 )
-                    info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_RR'].append( [] )
-                    info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_LL'].append( [] )
-                info_dict[fieldKey]['SPW']['EXPOSURE_X_BASELINE'].append( -99 )
-                info_dict[fieldKey]['SPW']['NUM_SCAN_X_BASELINE'].append( -99 )
-                info_dict[fieldKey]['SPW']['NUM_SCAN_X_ALL'].append( -99 )
-                info_dict[fieldKey]['SPW']['NUM_STOKES'].append( -99 )
-                info_dict[fieldKey]['SPW']['BMAJ'].append( -99 )
-                info_dict[fieldKey]['SPW']['BMIN'].append( -99 )
-                info_dict[fieldKey]['SPW']['CHAN_BMAJ'].append( [] )
-                info_dict[fieldKey]['SPW']['CHAN_BMIN'].append( [] )
-                tb4.close() # close table on error
-                continue
             # 
             # calc rms per spw per channel
             if number_of_stokes == 2:
