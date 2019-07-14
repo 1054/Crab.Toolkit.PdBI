@@ -394,15 +394,15 @@ def grab_interferometry_info(vis, info_dict_file = ''):
                 info_dict[fieldKey]['SPW']['NUM_SCAN_X_ALL'].append( len( exposure ) )
                 info_dict[fieldKey]['SPW']['NUM_STOKES'].append( number_of_stokes )
             # 
-            # calc BMAJ BMIN for each CHAN of each SPW of each field
+            # calc BMAJ BMIN for each CHAN of each SPW of each field (array operation)
             # interferometry: Fourier Transform is exp( 2 * pi * 1j * (u_m * x_rad + v_m * y_rad) / lambda_m )
             # "2.0*np.sqrt(2.0*np.log(2.0))" converts Gaussian sigma to FWHM
             info_dict[fieldKey]['SPW']['CHAN_BMAJ'].append( 2.99792458e8 / np.array(info_dict['SPW']['CHAN_FREQ'][ispw]) / info_dict[fieldKey]['UVW']['U_MAX'] / np.pi * 180.0) # in units of degrees
             info_dict[fieldKey]['SPW']['CHAN_BMIN'].append( 2.99792458e8 / np.array(info_dict['SPW']['CHAN_FREQ'][ispw]) / info_dict[fieldKey]['UVW']['V_MAX'] / np.pi * 180.0) # in units of degrees
             # 
             # calc BMAJ BMIN for each SPW of each field, taking the min of CHAN_FREQ
-            info_dict[fieldKey]['SPW']['BMAJ'].append( np.min(info_dict[fieldKey]['SPW']['CHAN_BMAJ']) )
-            info_dict[fieldKey]['SPW']['BMIN'].append( np.min(info_dict[fieldKey]['SPW']['CHAN_BMIN']) )
+            info_dict[fieldKey]['SPW']['BMAJ'].append( np.min(info_dict[fieldKey]['SPW']['CHAN_BMAJ'][ispw]) )
+            info_dict[fieldKey]['SPW']['BMIN'].append( np.min(info_dict[fieldKey]['SPW']['CHAN_BMIN'][ispw]) )
             # 
             # close table
             tb4.close()
