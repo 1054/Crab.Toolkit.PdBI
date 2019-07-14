@@ -248,7 +248,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         # get (u,v,w)
         print('Getting UVW info')
         data_UVW = tb3.getcol('UVW')
-        info_dict[fieldKey]['UVW']['U_MAX'] = np.max([:,0])
+        info_dict[fieldKey]['UVW']['U_MAX'] = np.max(data_UVW[:,0])
         info_dict[fieldKey]['UVW']['U_MIN'] = np.max(data_UVW[:,1])
         info_dict[fieldKey]['UVW']['V_MAX'] = np.max(data_UVW[:,2])
         info_dict[fieldKey]['UVW']['V_MIN'] = np.min(data_UVW[:,0])
