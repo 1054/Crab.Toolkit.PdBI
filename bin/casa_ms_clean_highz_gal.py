@@ -176,6 +176,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         data_column = 'CORRECTED_DATA'
     else:
         data_column = 'DATA'
+    print('Data column is "%s"'%(data_column))
     # 
     # determine query_str
     query_where_str = "(FLAG_ROW==FALSE)"
@@ -320,6 +321,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             # calc rms per spw per channel
             if number_of_stokes == 2:
                 data_array = tb4.getcol(data_column)
+                print('data_array.shape', data_array.shape)
                 data_stokesLL = data_array[:,:,0] # DATA shape (nrow, nchan, nstokes) and nstokes==2
                 data_stokesRR = data_array[:,:,1] # DATA shape (nrow, nchan, nstokes) and nstokes==2
                 data_stokesLL_abs = np.absolute(data_stokesLL)
