@@ -308,7 +308,10 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             # 
             # select spw
             if len(info_dict['SPW']['DATA_DESC_ID'][ispw]) <= 0:
+                print('Skipped ispw %d spw %d due to no data for the field %s'%(ispw, info_dict['SPW']['ID'][ispw], field))
                 continue
+            # 
+            # select spw data
             query_where_str4 = '(DATA_DESC_ID in [%s])'%( ','.join( map( str, info_dict['SPW']['DATA_DESC_ID'][ispw] ) ) )
             tb4 = taql("SELECT * FROM $tb3 WHERE ("+query_where_str4+")") # open table tb4
             print('Selected %d rows with "%s" (ispw==%d, spw=%d)'%(tb4.nrows(), query_where_str4, ispw, info_dict['SPW']['ID'][ispw] ) )
@@ -316,6 +319,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             # check nrows
             if tb4.nrows() <= 0:
                 tb4.close() # close table on error
+                print('Skipped ispw %d spw %d due to no data for the field %s'%(ispw, info_dict['SPW']['ID'][ispw], field))
                 continue
             # 
             # copy SPW ID NAME CHAN_FREQ PRIMARY_BEAM CHAN_PRIMARY_BEAM
@@ -384,12 +388,12 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             # calc BMAJ BMIN for each CHAN of each SPW of each field (array operation)
             # interferometry: Fourier Transform is exp( 2 * pi * 1j * (u_m * x_rad + v_m * y_rad) / lambda_m )
             # "2.0*np.sqrt(2.0*np.log(2.0))" converts Gaussian sigma to FWHM
-            info_dict[fieldKey]['SPW']['CHAN_BMAJ'].append( 2.99792458e8 / np.array(info_dict['SPW']['CHAN_FREQ'][ispw]) / info_dict[fieldKey]['UVW']['U_MAX'] / np.pi * 180.0) # in units of degrees
-            info_dict[fieldKey]['SPW']['CHAN_BMIN'].append( 2.99792458e8 / np.array(info_dict['SPW']['CHAN_FREQ'][ispw]) / info_dict[fieldKey]['UVW']['V_MAX'] / np.pi * 180.0) # in units of degrees
+            info_dict[fieldKey]['SPW']['CHAN_BMAJ'].append( 2.99792458e8 / np.array(info_dict['SPW'][fieldKey]['CHAN_FREQ'][-1]) / info_dict[fieldKey]['UVW']['U_MAX'] / np.pi * 180.0) # in units of degrees
+            info_dict[fieldKey]['SPW']['CHAN_BMIN'].append( 2.99792458e8 / np.array(info_dict['SPW'][fieldKey]['CHAN_FREQ'][-1]) / info_dict[fieldKey]['UVW']['V_MAX'] / np.pi * 180.0) # in units of degrees
             # 
             # calc BMAJ BMIN for each SPW of each field, taking the min of CHAN_FREQ
-            info_dict[fieldKey]['SPW']['BMAJ'].append( np.min(info_dict[fieldKey]['SPW']['CHAN_BMAJ'][ispw]) )
-            info_dict[fieldKey]['SPW']['BMIN'].append( np.min(info_dict[fieldKey]['SPW']['CHAN_BMIN'][ispw]) )
+            info_dict[fieldKey]['SPW']['BMAJ'].append( np.min(info_dict[fieldKey]['SPW']['CHAN_BMAJ'][-1]) )
+            info_dict[fieldKey]['SPW']['BMIN'].append( np.min(info_dict[fieldKey]['SPW']['CHAN_BMIN'][-1]) )
             # 
             # close table
             tb4.close()
