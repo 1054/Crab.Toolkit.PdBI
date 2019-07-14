@@ -666,14 +666,24 @@ def clean_highz_gal(my_clean_mode = 'cube',
     if spw == '':
         selectdata = False
         spw_list = []
+        ispw_list = []
         for ispw in range(len(info_dict['FIELD_'+field]['SPW']['ID'])):
             if (not info_dict['FIELD_'+field]['SPW']['NAME'][ispw].startswith('WVR')) \
                and info_dict['FIELD_'+field]['SPW']['NAME'][ispw].find('ALMA') > 0 \
                and info_dict['FIELD_'+field]['SPW']['NAME'][ispw].find('FULL_RES') > 0:
-                spw_list.append(ispw) # ispw is the index for info_dict['FIELD_'+field]['SPW']['ID'] array
+                ispw_list.append(ispw) # ispw is the index for info_dict['FIELD_'+field]['SPW']['ID'] array
+                spw_list.append(info_dict['FIELD_'+field]['SPW']['ID'][ispw])
     else:
         selectdata = True
         spw_list = parseIntSet(spw)
+        ispw_list = []
+        for ispw in range(len(spw_list)):
+            if spw_list[ispw] in info_dict['FIELD_'+field]['SPW']['ID']:
+                ispw_list.append(info_dict['FIELD_'+field]['SPW']['ID'].index(spw_list[ispw]))
+            else:
+                print('Error! The input spw %d is not in the info_dict of the data "%s"!'%(vis))
+                print('       Available spws are: %s'%(spw_list[ispw], info_dict['FIELD_'+field]['SPW']['ID']))
+                sys.exit()
     # 
     # set reffreq and restfreq if no input. 
     # -- reffreq is the Reference frequency for MFS (relevant only if nterms > 1)
@@ -687,13 +697,13 @@ def clean_highz_gal(my_clean_mode = 'cube',
                 sys.stdout.write('Computing reffreq as the centroid frequency of the input spws:')
                 sys.stdout.flush()
             # loop spw_list and print frequency info
-            for ispw in spw_list:
-                sys.stdout.write(' %d (ID %d, freq %.6f-%.6f GHz)'%(ispw, info_dict['FIELD_'+field]['SPW']['ID'][ispw], info_dict['SPW']['CHAN_FREQ'][ispw][0] / 1e9, info_dict['SPW']['CHAN_FREQ'][ispw][-1] / 1e9))
+            for ispw in ispw_list:
+                sys.stdout.write(' %d (%.6f-%.6f GHz)'%(info_dict['FIELD_'+field]['SPW']['ID'][ispw], info_dict['SPW']['CHAN_FREQ'][ispw][0] / 1e9, info_dict['SPW']['CHAN_FREQ'][ispw][-1] / 1e9))
                 sys.stdout.flush()
             sys.stdout.write('\n')
             sys.stdout.flush()
             # 
-            reffreq = '%0.9f GHz'%(np.mean(np.array(info_dict['SPW']['CHAN_FREQ'])[np.array(spw_list)][0]) / 1e9)
+            reffreq = '%0.9f GHz'%(np.mean(np.array(info_dict['SPW']['CHAN_FREQ'])[np.array(ispw_list)][0]) / 1e9)
         
     # 
     # set channel width if no input
@@ -708,24 +718,24 @@ def clean_highz_gal(my_clean_mode = 'cube',
     # set clean threshold
     if threshold == '':
         if spw == '':
-            sys.stdout.write('Computing restfreq as the average of all spws:')
+            sys.stdout.write('Computing threshold from all spws:')
             sys.stdout.flush()
         else:
-            sys.stdout.write('Computing restfreq as the average of the input spws:')
+            sys.stdout.write('Computing threshold from the input spws:')
             sys.stdout.flush()
-        # loop spw_list and print rms info
-        for ispw in spw_list:
-            sys.stdout.write(' %d (ID %d, RMS %.6f mJy/beam)'%(ispw, info_dict['FIELD_'+field]['SPW']['ID'][ispw], info_dict['FIELD_'+field]['SPW']['RMS'][ispw] * 1e3))
+        # loop spw and print rms info
+        for ispw in ispw_list:
+            sys.stdout.write(' %d (RMS %.6f mJy/beam)'%(info_dict['FIELD_'+field]['SPW']['ID'][ispw], info_dict['FIELD_'+field]['SPW']['RMS'][ispw] * 1e3))
             sys.stdout.flush()
         sys.stdout.write('\n')
         sys.stdout.flush()
         # 
         # image plane rms = visibility rms / sqrt( N_ant * (N_ant-1) * (t_source / t_interval) * n_polar ) -- see https://casaguides.nrao.edu/index.php/DataWeightsAndCombination
-        #image_plane_rms_mJy_per_beam = np.mean(np.array(info_dict['SPW']['RMS'])[spw_list]) / np.sqrt( len(info_dict['ANTENNA']['ID']) * (len(info_dict['ANTENNA']['ID'])-1) ) * 1e3 # in units of mJy/beam
+        #image_plane_rms_mJy_per_beam = np.mean(np.array(info_dict['SPW']['RMS'])[ispw_list]) / np.sqrt( len(info_dict['ANTENNA']['ID']) * (len(info_dict['ANTENNA']['ID'])-1) ) * 1e3 # in units of mJy/beam
         # now we use NUM_SCAN_X_BASELINE == N_ant * (N_ant-1) * (t_source / t_interval), so image plane rms is as below
         # now we use NUM_SCAN_X_ALL == N_ant * (N_ant-1) * (t_source / t_interval) * n_polar, so image plane rms is as below
-        image_plane_rms_mJy_per_beam = np.mean(np.array(info_dict['FIELD_'+field]['SPW']['RMS'])[spw_list]) \
-                                       / np.sqrt( np.array(info_dict['FIELD_'+field]['SPW']['NUM_SCAN_X_ALL'])[spw_list] ) \
+        image_plane_rms_mJy_per_beam = np.mean(np.array(info_dict['FIELD_'+field]['SPW']['RMS'])[ispw_list]) \
+                                       / np.sqrt( np.array(info_dict['FIELD_'+field]['SPW']['NUM_SCAN_X_ALL'])[ispw_list] ) \
                                        * 1e3 # in units of mJy/beam
         if np.isnan(clean_to_nsigma):
             clean_to_nsigma = 3.0 #<TODO># clean to how many sigma
@@ -744,11 +754,11 @@ def clean_highz_gal(my_clean_mode = 'cube',
     #start = ''
     #nchan = ''
     synthesized_beam_sampling_factor = 5.0
-    cell_arcsec = np.min([np.array(info_dict['FIELD_'+field]['SPW']['BMAJ'])[spw_list]*3600.0, \
-                          np.array(info_dict['FIELD_'+field]['SPW']['BMIN'])[spw_list]*3600.0]) \
+    cell_arcsec = np.min([np.array(info_dict['FIELD_'+field]['SPW']['BMAJ'])[ispw_list]*3600.0, \
+                          np.array(info_dict['FIELD_'+field]['SPW']['BMIN'])[ispw_list]*3600.0]) \
                   / synthesized_beam_sampling_factor # in units of arcsec
     cell = '%0.6f arcsec'%(cell_arcsec) # in units of arcsec
-    imsize = np.max(np.array(info_dict['FIELD_'+field]['SPW']['PRIMARY_BEAM'])[spw_list])*3600.0 * 2.0 / cell_arcsec # 2.0 * PB, in units of pixel
+    imsize = np.max(np.array(info_dict['FIELD_'+field]['SPW']['PRIMARY_BEAM'])[ispw_list])*3600.0 * 2.0 / cell_arcsec # 2.0 * PB, in units of pixel
     imsize = get_optimized_imsize(imsize)
     # 
     if my_clean_mode.startswith('cube'):
