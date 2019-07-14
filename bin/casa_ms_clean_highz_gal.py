@@ -149,17 +149,26 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         info_dict['SPW']['NAME'] = tb2.getcol('NAME')
         info_dict['SPW']['NUM_CHAN'] = tb2.getcol('NUM_CHAN')
         info_dict['SPW']['DATA_DESC_ID'] = []
-        info_dict['SPW']['PRIMARY_BEAM'] = []
-        info_dict['SPW']['CHAN_PRIMARY_BEAM'] = [] # in units of arcsec, should be a 2D array
+        info_dict['SPW']['PRIMARY_BEAM'] = [] # in units of degrees
+        info_dict['SPW']['CHAN_PRIMARY_BEAM'] = [] # in units of degrees, should be a 2D array
         info_dict['SPW']['CHAN_FREQ'] = [] # should be a 2D array. 
         for k2 in range(tb2.nrows()):
             info_dict['SPW']['DATA_DESC_ID'].append( np.argwhere( info_dict['DATA_DESC']['SPW_ID'] == k2 ).flatten() ) # indicates which DATA_DESC_ID(s) correspond to current SPW_ID
             info_dict['SPW']['CHAN_FREQ'].append( tb2.getcell('CHAN_FREQ', k2) ) # in units of Hz
-            info_dict['SPW']['CHAN_PRIMARY_BEAM'].append( 1.13  * (2.99792458e8/info_dict['SPW']['CHAN_FREQ'][k2]) / (np.min(info_dict['ANTENNA']['DISH_DIAMETER'])) / np.pi * 180.0 * 3600.0 ) # arcsec
+            info_dict['SPW']['CHAN_PRIMARY_BEAM'].append( 1.13  * (2.99792458e8/info_dict['SPW']['CHAN_FREQ'][k2]) / (np.min(info_dict['ANTENNA']['DISH_DIAMETER'])) / np.pi * 180.0 ) # in units of degrees
             info_dict['SPW']['PRIMARY_BEAM'].append( np.mean( info_dict['SPW']['CHAN_PRIMARY_BEAM'][-1] ) )
         tb2.close() # close table tb2
     else:
         missing_keywords.append('SPECTRAL_WINDOW')
+    # 
+    # check missing_keywords and exit on error
+    if len(missing_keywords) > 0:
+        print('Error! Could not find following keywords in the input vis "%s":'%(vis))
+        print('    ' + ', '.join(missing_keywords))
+        tb.close() # close table on error
+        sys.exit() # exit on error
+    # 
+    # 
     # 
     # determine data column
     #print(tb.colnames())
@@ -182,6 +191,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
     # 
     # loop field
     for field in field_list:
+        print('Looping field %s in the field_list %s'%(field, field_list))
         # 
         # check field name
         if field in info_dict['FIELD']['NAME']:
@@ -194,7 +204,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         # 
         # select rows
         tb3 = taql("SELECT UVW, "+data_column+", DATA_DESC_ID, EXPOSURE, TIME FROM $tb WHERE ("+query_where_str3+")") # open table tb3
-        print('Selected %d rows with "%s"'%(tb3.nrows(), query_where_str3 ) )
+        print('Selected %d rows with "%s" (field=%s)'%(tb3.nrows(), query_where_str3, field ) )
         if tb3.nrows() <= 0:
             print('Error! No data found with "%s"!'%(query_where_str3))
             tb3.close() # close table on error
@@ -235,6 +245,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         info_dict[fieldKey]['SPW'] = {}
         # 
         # get (u,v,w)
+        print('Getting UVW info')
         info_dict[fieldKey]['UVW']['U_MAX'] = np.max(tb3.getcol('UVW')[:,0])
         info_dict[fieldKey]['UVW']['U_MIN'] = np.max(tb3.getcol('UVW')[:,1])
         info_dict[fieldKey]['UVW']['V_MAX'] = np.max(tb3.getcol('UVW')[:,2])
@@ -249,22 +260,28 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         info_dict[fieldKey]['UVW']['W_ABSMIN'] = np.min( np.abs(tb3.getcol('UVW')[:,2]) )
         # 
         # loop spw and calc rms per channel
+        print('Getting SPW info')
         info_dict[fieldKey]['SPW']['ID'] = []
-        info_dict[fieldKey]['SPW']['CHAN_FREQ'] = [] # should be a 2D array
-        info_dict[fieldKey]['SPW']['PRIMARY_BEAM'] = []
-        info_dict[fieldKey]['SPW']['CHAN_PRIMARY_BEAM'] = [] # should be a 2D array
+        info_dict[fieldKey]['SPW']['CHAN_FREQ'] = [] # in units of Hz, should be a 2D array
+        info_dict[fieldKey]['SPW']['PRIMARY_BEAM'] = [] # in units of degrees
+        info_dict[fieldKey]['SPW']['CHAN_PRIMARY_BEAM'] = []  # in units of degrees, should be a 2D array
         info_dict[fieldKey]['SPW']['RMS'] = [] # in units of Jy/beam
-        info_dict[fieldKey]['SPW']['CHAN_RMS'] = [] # in units of Jy/beam
+        info_dict[fieldKey]['SPW']['CHAN_RMS'] = [] # in units of Jy/beam, should be a 2D array
         if number_of_stokes >= 1:
-            info_dict[fieldKey]['SPW']['RMS_STOKES_RR'] = []
-            info_dict[fieldKey]['SPW']['RMS_STOKES_LL'] = []
-            info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_RR'] = [] # should be a 2D array
-            info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_LL'] = [] # should be a 2D array
+            info_dict[fieldKey]['SPW']['RMS_STOKES_RR'] = [] # in units of Jy/beam
+            info_dict[fieldKey]['SPW']['RMS_STOKES_LL'] = [] # in units of Jy/beam
+            info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_RR'] = [] #in units of Jy/beam,  should be a 2D array
+            info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_LL'] = [] #in units of Jy/beam,  should be a 2D array
         info_dict[fieldKey]['SPW']['EXPOSURE_X_BASELINE'] = []
         info_dict[fieldKey]['SPW']['NUM_SCAN_X_BASELINE'] = []
         info_dict[fieldKey]['SPW']['NUM_SCAN_X_ALL'] = []
         info_dict[fieldKey]['SPW']['NUM_STOKES'] = []
+        info_dict[fieldKey]['SPW']['BMAJ'] = [] # in units of degrees
+        info_dict[fieldKey]['SPW']['BMIN'] = [] # in units of degrees
+        info_dict[fieldKey]['SPW']['CHAN_BMAJ'] = [] # in units of degrees, should be a 2D array
+        info_dict[fieldKey]['SPW']['CHAN_BMIN'] = [] # in units of degrees, should be a 2D array
         for ispw in range(len(info_dict['SPW']['ID'])):
+            print('Looping ispw %d spw %d spw name %s'%(ispw, info_dict['SPW']['ID'][ispw], info_dict['SPW']['NAME'][ispw]))
             # 
             # select spw
             query_where_str4 = '(DATA_DESC_ID in [%s])'%( ','.join( map( str, info_dict['SPW']['DATA_DESC_ID'][ispw] ) ) )
@@ -329,6 +346,16 @@ def grab_interferometry_info(vis, info_dict_file = ''):
                 info_dict[fieldKey]['SPW']['NUM_SCAN_X_BASELINE'].append( len( exposure ) )
                 info_dict[fieldKey]['SPW']['NUM_SCAN_X_ALL'].append( len( exposure ) )
                 info_dict[fieldKey]['SPW']['NUM_STOKES'].append( number_of_stokes )
+                # 
+                # calc BMAJ BMIN for each CHAN of each SPW of each field
+                # interferometry: Fourier Transform is exp( 2 * pi * 1j * (u_m * x_rad + v_m * y_rad) / lambda_m )
+                # "2.0*np.sqrt(2.0*np.log(2.0))" converts Gaussian sigma to FWHM
+                info_dict[fieldKey]['SPW']['CHAN_BMAJ'].append( 2.99792458e8 / np.array(info_dict['SPW']['CHAN_FREQ'][ispw]) / info_dict[fieldKey]['UVW']['U_MAX'] / np.pi * 180.0) # in units of degrees
+                info_dict[fieldKey]['SPW']['CHAN_BMIN'].append( 2.99792458e8 / np.array(info_dict['SPW']['CHAN_FREQ'][ispw]) / info_dict[fieldKey]['UVW']['V_MAX'] / np.pi * 180.0) # in units of degrees
+            # 
+            # calc BMAJ BMIN for each SPW of each field, taking the min of CHAN_FREQ
+            info_dict[fieldKey]['SPW']['BMAJ'].append( np.min(info_dict[fieldKey]['SPW']['CHAN_BMAJ']) )
+            info_dict[fieldKey]['SPW']['BMIN'].append( np.min(info_dict[fieldKey]['SPW']['CHAN_BMIN']) )
             # 
             # close table
             tb4.close()
@@ -341,19 +368,6 @@ def grab_interferometry_info(vis, info_dict_file = ''):
     # 
     # close table
     tb.close() # # close table tb1
-    # 
-    # check missing_keywords
-    if len(missing_keywords) > 0:
-        print('Error! Could not find following keywords in the input vis "%s":'%(vis))
-        print('    ' + ', '.join(missing_keywords))
-        sys.exit()
-    # 
-    # calc XRAD YRAD MIN MAX for each SPW
-    for k in range(len(info_dict['SPW']['ID'])):
-        # interferometry: Fourier Transform is exp( 2 * pi * 1j * (u_m * x_rad + v_m * y_rad) / lambda_m )
-        # "2.0*np.sqrt(2.0*np.log(2.0))" converts Gaussian sigma to FWHM
-        info_dict[fieldKey]['SPW']['BMAJ_ARCSEC'] = 2.99792458e8 / np.min(info_dict['SPW']['CHAN_FREQ'][k]) / info_dict[fieldKey]['UVW']['U_MAX'] / np.pi * 180.0 * 3600.0
-        info_dict[fieldKey]['SPW']['BMIN_ARCSEC'] = 2.99792458e8 / np.min(info_dict['SPW']['CHAN_FREQ'][k]) / info_dict[fieldKey]['UVW']['V_MAX'] / np.pi * 180.0 * 3600.0
     # 
     # store into info_dict_file
     with open(info_dict_file, 'w') as fp:
@@ -692,11 +706,11 @@ def clean_highz_gal(my_clean_mode = 'cube',
     #start = ''
     #nchan = ''
     synthesized_beam_sampling_factor = 5.0
-    cell_arcsec = np.min([info_dict['FIELD_'+field]['SPW']['BMAJ_ARCSEC'], \
-                          info_dict['FIELD_'+field]['SPW']['BMIN_ARCSEC']]) \
+    cell_arcsec = np.min([info_dict['FIELD_'+field]['SPW']['BMAJ']*3600.0, \
+                          info_dict['FIELD_'+field]['SPW']['BMIN']*3600.0]) \
                   / synthesized_beam_sampling_factor # in units of arcsec
     cell = '%0.6f arcsec'%(cell_arcsec) # in units of arcsec
-    imsize = np.max(info_dict['FIELD_'+field]['SPW']['PRIMARY_BEAM']) * 2.0 / cell_arcsec # 2.0 * PB, in units of pixel
+    imsize = np.max(info_dict['FIELD_'+field]['SPW']['PRIMARY_BEAM'])*3600.0 * 2.0 / cell_arcsec # 2.0 * PB, in units of pixel
     imsize = get_optimized_imsize(imsize)
     # 
     if my_clean_mode.startswith('cube'):
