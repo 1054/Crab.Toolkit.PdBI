@@ -217,21 +217,22 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         # 
         # check stokes
         number_of_stokes = -1
-        if len(tb3.getcol('DATA').shape) < 2:
-            print('Error! Data has a wrong dimension of %s!'%(tb3.getcol('DATA').shape))
+        data_shape = tb3.getcol('DATA').shape
+        if len(data_shape) < 2:
+            print('Error! Data has a wrong dimension of %s!'%(data_shape))
             tb3.close() # close table on error
             tb.close() # close table on error
             sys.exit()
-        elif len(tb3.getcol('DATA').shape) == 2:
-            print('Warning! Data has a dimension of %s and no polarization dimension!'%(tb3.getcol('DATA').shape))
+        elif len(data_shape) == 2:
+            print('Warning! Data has a dimension of %s and no polarization dimension!'%(data_shape))
             number_of_stokes = 0
         else:
-            if tb3.getcol('DATA').shape[2] == 1:
+            if data_shape[2] == 1:
                 number_of_stokes = 1
-            elif tb3.getcol('DATA').shape[2] == 2:
+            elif data_shape[2] == 2:
                 number_of_stokes = 2
             else:
-                print('Error! Data has a wrong polarization dimension of %s which should be 1 or 2!'%(tb3.getcol('DATA').shape[2]))
+                print('Error! Data has a wrong polarization dimension of %s which should be 1 or 2!'%(data_shape[2]))
                 tb3.close() # close table on error
                 tb.close() # close table on error
                 sys.exit()
@@ -246,18 +247,19 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         # 
         # get (u,v,w)
         print('Getting UVW info')
-        info_dict[fieldKey]['UVW']['U_MAX'] = np.max(tb3.getcol('UVW')[:,0])
-        info_dict[fieldKey]['UVW']['U_MIN'] = np.max(tb3.getcol('UVW')[:,1])
-        info_dict[fieldKey]['UVW']['V_MAX'] = np.max(tb3.getcol('UVW')[:,2])
-        info_dict[fieldKey]['UVW']['V_MIN'] = np.min(tb3.getcol('UVW')[:,0])
-        info_dict[fieldKey]['UVW']['W_MAX'] = np.min(tb3.getcol('UVW')[:,1])
-        info_dict[fieldKey]['UVW']['W_MIN'] = np.min(tb3.getcol('UVW')[:,2])
-        info_dict[fieldKey]['UVW']['U_ABSMAX'] = np.max( np.abs(tb3.getcol('UVW')[:,0]) )
-        info_dict[fieldKey]['UVW']['U_ABSMIN'] = np.max( np.abs(tb3.getcol('UVW')[:,1]) )
-        info_dict[fieldKey]['UVW']['V_ABSMAX'] = np.max( np.abs(tb3.getcol('UVW')[:,2]) )
-        info_dict[fieldKey]['UVW']['V_ABSMIN'] = np.min( np.abs(tb3.getcol('UVW')[:,0]) )
-        info_dict[fieldKey]['UVW']['W_ABSMAX'] = np.min( np.abs(tb3.getcol('UVW')[:,1]) )
-        info_dict[fieldKey]['UVW']['W_ABSMIN'] = np.min( np.abs(tb3.getcol('UVW')[:,2]) )
+        data_UVW = tb3.getcol('UVW')
+        info_dict[fieldKey]['UVW']['U_MAX'] = np.max([:,0])
+        info_dict[fieldKey]['UVW']['U_MIN'] = np.max(data_UVW[:,1])
+        info_dict[fieldKey]['UVW']['V_MAX'] = np.max(data_UVW[:,2])
+        info_dict[fieldKey]['UVW']['V_MIN'] = np.min(data_UVW[:,0])
+        info_dict[fieldKey]['UVW']['W_MAX'] = np.min(data_UVW[:,1])
+        info_dict[fieldKey]['UVW']['W_MIN'] = np.min(data_UVW[:,2])
+        info_dict[fieldKey]['UVW']['U_ABSMAX'] = np.max( np.abs(data_UVW[:,0]) )
+        info_dict[fieldKey]['UVW']['U_ABSMIN'] = np.max( np.abs(data_UVW[:,1]) )
+        info_dict[fieldKey]['UVW']['V_ABSMAX'] = np.max( np.abs(data_UVW[:,2]) )
+        info_dict[fieldKey]['UVW']['V_ABSMIN'] = np.min( np.abs(data_UVW[:,0]) )
+        info_dict[fieldKey]['UVW']['W_ABSMAX'] = np.min( np.abs(data_UVW[:,1]) )
+        info_dict[fieldKey]['UVW']['W_ABSMIN'] = np.min( np.abs(data_UVW[:,2]) )
         # 
         # loop spw and calc rms per channel
         print('Getting SPW info')
@@ -296,8 +298,9 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             # 
             # calc rms per spw per channel
             if number_of_stokes == 2:
-                data_stokesLL = tb4.getcol('DATA')[:,:,0] # DATA shape (nrow, nchan, nstokes) and nstokes==2
-                data_stokesRR = tb4.getcol('DATA')[:,:,1] # DATA shape (nrow, nchan, nstokes) and nstokes==2
+                data_array = tb4.getcol('DATA')
+                data_stokesLL = data_array[:,:,0] # DATA shape (nrow, nchan, nstokes) and nstokes==2
+                data_stokesRR = data_array[:,:,1] # DATA shape (nrow, nchan, nstokes) and nstokes==2
                 data_stokesLL_abs = np.absolute(data_stokesLL)
                 data_stokesRR_abs = np.absolute(data_stokesRR)
                 data_stokesLL_abs_mean = np.mean(data_stokesLL_abs, axis=0)
