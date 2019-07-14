@@ -729,7 +729,7 @@ def clean_highz_gal(my_clean_mode = 'cube',
                                        * 1e3 # in units of mJy/beam
         if np.isnan(clean_to_nsigma):
             clean_to_nsigma = 3.0 #<TODO># clean to how many sigma
-        threshold = '%0.6f mJy'%(image_plane_rms_mJy_per_beam * clean_to_nsigma) # in units of mJy/beam
+        threshold = '%0.6f mJy'%(np.min(image_plane_rms_mJy_per_beam) * clean_to_nsigma) # in units of mJy/beam
     # 
     # set stokes
     if stokes == '':
