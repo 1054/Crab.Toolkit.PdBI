@@ -217,7 +217,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         # 
         # check stokes
         number_of_stokes = -1
-        #data_shape = tb3.getcol('DATA').shape
+        #data_shape = tb3.getcol(data_column).shape
         #if len(data_shape) < 2:
         #    print('Error! Data has a wrong dimension of %s!'%(data_shape))
         #    tb3.close() # close table on error
@@ -236,7 +236,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         #        tb3.close() # close table on error
         #        tb.close() # close table on error
         #        sys.exit()
-        data_shape = tb3.getcell('DATA', int(tb3.nrows()/2) ).shape # this is faster than getting the full 'DATA' column
+        data_shape = tb3.getcell(data_column, int(tb3.nrows()/2) ).shape # this is faster than getting the full data_column column
         if len(data_shape) == 1:
             print('Warning! Data cell has a dimension of %s and no polarization dimension!'%(data_shape))
             number_of_stokes = 0
@@ -319,7 +319,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             # 
             # calc rms per spw per channel
             if number_of_stokes == 2:
-                data_array = tb4.getcol('DATA')
+                data_array = tb4.getcol(data_column)
                 data_stokesLL = data_array[:,:,0] # DATA shape (nrow, nchan, nstokes) and nstokes==2
                 data_stokesRR = data_array[:,:,1] # DATA shape (nrow, nchan, nstokes) and nstokes==2
                 data_stokesLL_abs = np.absolute(data_stokesLL)
@@ -351,9 +351,9 @@ def grab_interferometry_info(vis, info_dict_file = ''):
                 info_dict[fieldKey]['SPW']['NUM_STOKES'].append( number_of_stokes )
             else:
                 if number_of_stokes == 1:
-                    data = tb4.getcol('DATA')[:,:,0] # DATA shape (nrow, nchan, nstokes) and nstokes==1
+                    data = tb4.getcol(data_column)[:,:,0] # DATA shape (nrow, nchan, nstokes) and nstokes==1
                 else:
-                    data = tb4.getcol('DATA')[:,:] # DATA shape (nrow, nchan), no stokes dimension
+                    data = tb4.getcol(data_column)[:,:] # DATA shape (nrow, nchan), no stokes dimension
                 data_abs = np.absolute(data)
                 data_abs_mean = np.mean(data_abs, axis=0)
                 data_rms_per_chan = np.std(data_abs - data_abs_mean, axis=0)
