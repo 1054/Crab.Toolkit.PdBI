@@ -217,7 +217,8 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         # 
         # check stokes
         number_of_stokes = -1
-        data_shape = tb3.getcol('DATA').shape
+        #data_shape = tb3.getcol('DATA').shape
+        data_shape = tb3.getcell('DATA', int(tb3.nrows()/2) ) # this is faster than getting the full 'DATA' column
         if len(data_shape) < 2:
             print('Error! Data has a wrong dimension of %s!'%(data_shape))
             tb3.close() # close table on error
