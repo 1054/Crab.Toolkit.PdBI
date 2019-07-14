@@ -151,9 +151,10 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         info_dict['SPW']['DATA_DESC_ID'] = []
         info_dict['SPW']['PRIMARY_BEAM'] = 0.0
         info_dict['SPW']['CHAN_PRIMARY_BEAM'] = [] # in units of arcsec
-        info_dict['SPW']['CHAN_FREQ'] = tb2.getcol('CHAN_FREQ') # in units of Hz
+        info_dict['SPW']['CHAN_FREQ'] = [] # CHAN_FREQ varies, so we need to get it one by one
         for k2 in range(tb2.nrows()):
             info_dict['SPW']['DATA_DESC_ID'].append( np.argwhere( info_dict['DATA_DESC']['SPW_ID'] == k2 ).flatten() ) # indicates which DATA_DESC_ID(s) correspond to current SPW_ID
+            info_dict['SPW']['CHAN_FREQ'].append( tb2.getcell('CHAN_FREQ', k2) ) # in units of Hz
             info_dict['SPW']['CHAN_PRIMARY_BEAM'].append( 1.13  * (2.99792458e8/info_dict['SPW']['CHAN_FREQ'][k2]) / (np.min(info_dict['ANTENNA']['DISH_DIAMETER'])) / np.pi * 180.0 * 3600.0 ) # arcsec
         info_dict['SPW']['PRIMARY_BEAM'] = np.mean(info_dict['SPW']['CHAN_PRIMARY_BEAM'])
         tb2.close() # close table tb2
