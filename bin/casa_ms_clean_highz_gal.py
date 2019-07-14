@@ -667,9 +667,9 @@ def clean_highz_gal(my_clean_mode = 'cube',
         selectdata = False
         spw_list = []
         for ispw in range(len(info_dict['FIELD_'+field]['SPW']['ID'])):
-            if (not info_dict['FIELD_'+field]['SPW']['NAME'].startswith('WVR')) \
-               and info_dict['FIELD_'+field]['SPW']['NAME'].find('ALMA') > 0 \
-               and info_dict['FIELD_'+field]['SPW']['NAME'].find('FULL_RES') > 0:
+            if (not info_dict['FIELD_'+field]['SPW']['NAME'][ispw].startswith('WVR')) \
+               and info_dict['FIELD_'+field]['SPW']['NAME'][ispw].find('ALMA') > 0 \
+               and info_dict['FIELD_'+field]['SPW']['NAME'][ispw].find('FULL_RES') > 0:
                 spw_list.append(ispw) # ispw is the index for info_dict['FIELD_'+field]['SPW']['ID'] array
     else:
         selectdata = True
