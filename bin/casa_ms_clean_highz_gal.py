@@ -149,14 +149,14 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         info_dict['SPW']['NAME'] = tb2.getcol('NAME')
         info_dict['SPW']['NUM_CHAN'] = tb2.getcol('NUM_CHAN')
         info_dict['SPW']['DATA_DESC_ID'] = []
-        info_dict['SPW']['PRIMARY_BEAM'] = 0.0
-        info_dict['SPW']['CHAN_PRIMARY_BEAM'] = [] # in units of arcsec
-        info_dict['SPW']['CHAN_FREQ'] = [] # CHAN_FREQ varies, so we need to get it one by one
+        info_dict['SPW']['PRIMARY_BEAM'] = []
+        info_dict['SPW']['CHAN_PRIMARY_BEAM'] = [] # in units of arcsec, should be a 2D array
+        info_dict['SPW']['CHAN_FREQ'] = [] # should be a 2D array. 
         for k2 in range(tb2.nrows()):
             info_dict['SPW']['DATA_DESC_ID'].append( np.argwhere( info_dict['DATA_DESC']['SPW_ID'] == k2 ).flatten() ) # indicates which DATA_DESC_ID(s) correspond to current SPW_ID
             info_dict['SPW']['CHAN_FREQ'].append( tb2.getcell('CHAN_FREQ', k2) ) # in units of Hz
             info_dict['SPW']['CHAN_PRIMARY_BEAM'].append( 1.13  * (2.99792458e8/info_dict['SPW']['CHAN_FREQ'][k2]) / (np.min(info_dict['ANTENNA']['DISH_DIAMETER'])) / np.pi * 180.0 * 3600.0 ) # arcsec
-        info_dict['SPW']['PRIMARY_BEAM'] = np.mean(info_dict['SPW']['CHAN_PRIMARY_BEAM'])
+            info_dict['SPW']['PRIMARY_BEAM'].append( np.mean( info_dict['SPW']['CHAN_PRIMARY_BEAM'][-1] ) )
         tb2.close() # close table tb2
     else:
         missing_keywords.append('SPECTRAL_WINDOW')
@@ -249,13 +249,17 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         info_dict[fieldKey]['UVW']['W_ABSMIN'] = np.min( np.abs(tb3.getcol('UVW')[:,2]) )
         # 
         # loop spw and calc rms per channel
+        info_dict[fieldKey]['SPW']['ID'] = []
+        info_dict[fieldKey]['SPW']['CHAN_FREQ'] = [] # should be a 2D array
+        info_dict[fieldKey]['SPW']['PRIMARY_BEAM'] = []
+        info_dict[fieldKey]['SPW']['CHAN_PRIMARY_BEAM'] = [] # should be a 2D array
         info_dict[fieldKey]['SPW']['RMS'] = [] # in units of Jy/beam
         info_dict[fieldKey]['SPW']['CHAN_RMS'] = [] # in units of Jy/beam
         if number_of_stokes >= 1:
             info_dict[fieldKey]['SPW']['RMS_STOKES_RR'] = []
             info_dict[fieldKey]['SPW']['RMS_STOKES_LL'] = []
-            info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_RR'] = []
-            info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_LL'] = []
+            info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_RR'] = [] # should be a 2D array
+            info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_LL'] = [] # should be a 2D array
         info_dict[fieldKey]['SPW']['EXPOSURE_X_BASELINE'] = []
         info_dict[fieldKey]['SPW']['NUM_SCAN_X_BASELINE'] = []
         info_dict[fieldKey]['SPW']['NUM_SCAN_X_ALL'] = []
@@ -265,13 +269,13 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             # select spw
             query_where_str4 = '(DATA_DESC_ID in [%s])'%( ','.join( map( str, info_dict['SPW']['DATA_DESC_ID'][ispw] ) ) )
             tb4 = taql("SELECT * FROM $tb3 WHERE ("+query_where_str4+")") # open table tb4
-            print('Selected %d rows with "%s" (ispw==%d)'%(tb4.nrows(), query_where_str4, ispw ) )
+            print('Selected %d rows with "%s" (ispw==%d, spw=%d)'%(tb4.nrows(), query_where_str4, ispw, info_dict['SPW']['ID'][ispw] ) )
             # 
             # copy SPW PRIMARY_BEAM CHAN_PRIMARY_BEAM
-            info_dict[fieldKey]['SPW']['ID'] = copy.copy(info_dict['SPW']['ID'])
-            info_dict[fieldKey]['SPW']['CHAN_FREQ'] = copy.copy(info_dict['SPW']['CHAN_FREQ'])
-            info_dict[fieldKey]['SPW']['PRIMARY_BEAM'] = copy.copy(info_dict['SPW']['PRIMARY_BEAM'])
-            info_dict[fieldKey]['SPW']['CHAN_PRIMARY_BEAM'] = copy.copy(info_dict['SPW']['CHAN_PRIMARY_BEAM'])
+            info_dict[fieldKey]['SPW']['ID'].append( info_dict['SPW']['ID'][ispw] )
+            info_dict[fieldKey]['SPW']['CHAN_FREQ'].append( info_dict['SPW']['CHAN_FREQ'][ispw] )
+            info_dict[fieldKey]['SPW']['PRIMARY_BEAM'].append( info_dict['SPW']['PRIMARY_BEAM'][ispw] )
+            info_dict[fieldKey]['SPW']['CHAN_PRIMARY_BEAM'].append( info_dict['SPW']['CHAN_PRIMARY_BEAM'][ispw] )
             # 
             # calc rms per spw per channel
             if number_of_stokes == 2:
@@ -609,7 +613,12 @@ def clean_highz_gal(my_clean_mode = 'cube',
     # set spw selection according to the input
     if spw == '':
         selectdata = False
-        spw_list = info_dict['FIELD_'+field]['SPW']['ID']
+        spw_list = []
+        for ispw in range(len(info_dict['FIELD_'+field]['SPW']['ID'])):
+            if (not info_dict['FIELD_'+field]['SPW']['NAME'].startswith('WVR')) \
+               and info_dict['FIELD_'+field]['SPW']['NAME'].find('ALMA') > 0 \
+               and info_dict['FIELD_'+field]['SPW']['NAME'].find('FULL_RES') > 0:
+                spw_list.append(ispw) # ispw is the index for info_dict['FIELD_'+field]['SPW']['ID'] array
     else:
         selectdata = True
         spw_list = parseIntSet(spw)
@@ -626,8 +635,8 @@ def clean_highz_gal(my_clean_mode = 'cube',
                 sys.stdout.write('Computing reffreq as the centroid frequency of the input spws:')
                 sys.stdout.flush()
             # loop spw_list and print frequency info
-            for ispw in range(len(spw_list)):
-                sys.stdout.write(' %d (%.6f-%.6f GHz)'%(spw_list[ispw], info_dict['SPW']['CHAN_FREQ'][spw_list[ispw]][0] / 1e9, info_dict['SPW']['CHAN_FREQ'][spw_list[ispw]][-1] / 1e9))
+            for ispw in spw_list:
+                sys.stdout.write(' %d (ID %d, freq %.6f-%.6f GHz)'%(ispw, info_dict['FIELD_'+field]['SPW']['ID'][ispw], info_dict['SPW']['CHAN_FREQ'][ispw][0] / 1e9, info_dict['SPW']['CHAN_FREQ'][ispw][-1] / 1e9))
                 sys.stdout.flush()
             sys.stdout.write('\n')
             sys.stdout.flush()
@@ -653,8 +662,8 @@ def clean_highz_gal(my_clean_mode = 'cube',
             sys.stdout.write('Computing restfreq as the average of the input spws:')
             sys.stdout.flush()
         # loop spw_list and print rms info
-        for ispw in range(len(spw_list)):
-            sys.stdout.write(' %d (RMS %.6f mJy/beam)'%(spw_list[ispw], info_dict['FIELD_'+field]['SPW']['RMS'][spw_list[ispw]] * 1e3))
+        for ispw in spw_list:
+            sys.stdout.write(' %d (ID %d, RMS %.6f mJy/beam)'%(ispw, info_dict['FIELD_'+field]['SPW']['ID'][ispw], info_dict['FIELD_'+field]['SPW']['RMS'][ispw] * 1e3))
             sys.stdout.flush()
         sys.stdout.write('\n')
         sys.stdout.flush()
@@ -687,7 +696,7 @@ def clean_highz_gal(my_clean_mode = 'cube',
                           info_dict['FIELD_'+field]['SPW']['BMIN_ARCSEC']]) \
                   / synthesized_beam_sampling_factor # in units of arcsec
     cell = '%0.6f arcsec'%(cell_arcsec) # in units of arcsec
-    imsize = np.max(info_dict['SPW']['PRIMARY_BEAM']) * 2.0 / cell_arcsec # 2.0 * PB, in units of pixel
+    imsize = np.max(info_dict['FIELD_'+field]['SPW']['PRIMARY_BEAM']) * 2.0 / cell_arcsec # 2.0 * PB, in units of pixel
     imsize = get_optimized_imsize(imsize)
     # 
     if my_clean_mode.startswith('cube'):
