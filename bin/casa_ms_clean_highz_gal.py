@@ -713,7 +713,10 @@ def clean_highz_gal(my_clean_mode = 'cube',
     # 
     # set imagename if no input
     if imagename == '':
-        imagename = '%s_%s'%(re.sub(r'\.ms$', r'', vis, re.IGNORECASE), re.sub(r'[^a-zA-Z0-9_+-]', r'_', field))
+        if my_clean_mode.startswith('cube'):
+            imagename = '%s_%s_cube'%(re.sub(r'\.ms$', r'', vis, re.IGNORECASE), re.sub(r'[^a-zA-Z0-9_+-]', r'_', field))
+        else:
+            imagename = '%s_%s_continuum'%(re.sub(r'\.ms$', r'', vis, re.IGNORECASE), re.sub(r'[^a-zA-Z0-9_+-]', r'_', field))
     # 
     # set clean threshold
     if threshold == '':
