@@ -218,25 +218,43 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         # check stokes
         number_of_stokes = -1
         #data_shape = tb3.getcol('DATA').shape
-        data_shape = tb3.getcell('DATA', int(tb3.nrows()/2) ) # this is faster than getting the full 'DATA' column
-        if len(data_shape) < 2:
-            print('Error! Data has a wrong dimension of %s!'%(data_shape))
-            tb3.close() # close table on error
-            tb.close() # close table on error
-            sys.exit()
-        elif len(data_shape) == 2:
-            print('Warning! Data has a dimension of %s and no polarization dimension!'%(data_shape))
+        #if len(data_shape) < 2:
+        #    print('Error! Data has a wrong dimension of %s!'%(data_shape))
+        #    tb3.close() # close table on error
+        #    tb.close() # close table on error
+        #    sys.exit()
+        #elif len(data_shape) == 2:
+        #    print('Warning! Data has a dimension of %s and no polarization dimension!'%(data_shape))
+        #    number_of_stokes = 0
+        #else:
+        #    if data_shape[2] == 1:
+        #        number_of_stokes = 1
+        #    elif data_shape[2] == 2:
+        #        number_of_stokes = 2
+        #    else:
+        #        print('Error! Data has a wrong polarization dimension of %s which should be 1 or 2!'%(data_shape[2]))
+        #        tb3.close() # close table on error
+        #        tb.close() # close table on error
+        #        sys.exit()
+        data_shape = tb3.getcell('DATA', int(tb3.nrows()/2) ).shape # this is faster than getting the full 'DATA' column
+        if len(data_shape) == 1:
+            print('Warning! Data cell has a dimension of %s and no polarization dimension!'%(data_shape))
             number_of_stokes = 0
-        else:
-            if data_shape[2] == 1:
+        elif len(data_shape) == 2:
+            if data_shape[-1] == 1:
                 number_of_stokes = 1
-            elif data_shape[2] == 2:
+            elif data_shape[-1] == 2:
                 number_of_stokes = 2
             else:
-                print('Error! Data has a wrong polarization dimension of %s which should be 1 or 2!'%(data_shape[2]))
+                print('Error! Data cell has a wrong polarization dimension of %s which should be 1 or 2!'%(data_shape[-1]))
                 tb3.close() # close table on error
                 tb.close() # close table on error
                 sys.exit()
+        else:
+            print('Error! Data cell has a wrong dimension of %s which should be (Nchan, Nstokes)!'%(data_shape))
+            tb3.close() # close table on error
+            tb.close() # close table on error
+            sys.exit()
         # 
         # prepare dict entry
         # -- each FIELD has its own UV coverage (due to flagging)
@@ -265,6 +283,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         # loop spw and calc rms per channel
         print('Getting SPW info')
         info_dict[fieldKey]['SPW']['ID'] = []
+        info_dict[fieldKey]['SPW']['NAME'] = []
         info_dict[fieldKey]['SPW']['CHAN_FREQ'] = [] # in units of Hz, should be a 2D array
         info_dict[fieldKey]['SPW']['PRIMARY_BEAM'] = [] # in units of degrees
         info_dict[fieldKey]['SPW']['CHAN_PRIMARY_BEAM'] = []  # in units of degrees, should be a 2D array
@@ -293,6 +312,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             # 
             # copy SPW PRIMARY_BEAM CHAN_PRIMARY_BEAM
             info_dict[fieldKey]['SPW']['ID'].append( info_dict['SPW']['ID'][ispw] )
+            info_dict[fieldKey]['SPW']['NAME'].append( info_dict['SPW']['NAME'][ispw] )
             info_dict[fieldKey]['SPW']['CHAN_FREQ'].append( info_dict['SPW']['CHAN_FREQ'][ispw] )
             info_dict[fieldKey]['SPW']['PRIMARY_BEAM'].append( info_dict['SPW']['PRIMARY_BEAM'][ispw] )
             info_dict[fieldKey]['SPW']['CHAN_PRIMARY_BEAM'].append( info_dict['SPW']['CHAN_PRIMARY_BEAM'][ispw] )
