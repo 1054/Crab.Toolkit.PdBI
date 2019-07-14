@@ -744,11 +744,11 @@ def clean_highz_gal(my_clean_mode = 'cube',
     #start = ''
     #nchan = ''
     synthesized_beam_sampling_factor = 5.0
-    cell_arcsec = np.min([info_dict['FIELD_'+field]['SPW']['BMAJ']*3600.0, \
-                          info_dict['FIELD_'+field]['SPW']['BMIN']*3600.0]) \
+    cell_arcsec = np.min([info_dict['FIELD_'+field]['SPW']['BMAJ'][spw_list]*3600.0, \
+                          info_dict['FIELD_'+field]['SPW']['BMIN'][spw_list]*3600.0]) \
                   / synthesized_beam_sampling_factor # in units of arcsec
     cell = '%0.6f arcsec'%(cell_arcsec) # in units of arcsec
-    imsize = np.max(info_dict['FIELD_'+field]['SPW']['PRIMARY_BEAM'])*3600.0 * 2.0 / cell_arcsec # 2.0 * PB, in units of pixel
+    imsize = np.max(info_dict['FIELD_'+field]['SPW']['PRIMARY_BEAM'][spw_list])*3600.0 * 2.0 / cell_arcsec # 2.0 * PB, in units of pixel
     imsize = get_optimized_imsize(imsize)
     # 
     if my_clean_mode.startswith('cube'):
