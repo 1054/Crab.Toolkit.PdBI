@@ -116,9 +116,11 @@ if [[ $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
     echo ""
     exit
 else
-    echo "Running casa, please wait"
+    echo ""
+    echo "Running casa at "$(date +"%Y%m%d %Hh%Mm%Ss %Z")", please wait ..."
     casa --nologfile --nogui -c "${CASAMS_FPY}"
-    echo "Finished casa, now reading listobs text file"
+    echo "Finished casa at "$(date +"%Y%m%d %Hh%Mm%Ss %Z")", now reading listobs text file ..."
+    echo ""
     cat ${CASAMS_OUT} | awk '/Fields: /,/Spectral Windows: /' | head -n -1
     cat ${CASAMS_OUT} | awk '/Spectral Windows: /,/Sources: /' | head -n -1
 fi

@@ -75,7 +75,7 @@ echo "inp(mstransform)"                                   >> "$CASAMS_EXE"
 echo "mstransform()"                                      >> "$CASAMS_EXE"
 echo ""                                                   >> "$CASAMS_EXE"
 echo "Wrote to python script: ${CASAMS_EXE}"
-echo "Please run bash -c 'casa --nologfile --nogui -c \"${CASAMS_EXE}\"'"
+echo "Please run bash -c 'casa --nologfile --nogui -c \"${CASAMS_EXE}\"' | tee \"${CASAMS_LOG}\""
 
 
 
@@ -120,11 +120,11 @@ if [[ $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
     echo ""
     exit
 else
-    echo "Running casa, please wait"
-    casa --nologfile --nogui -c "${CASAMS_EXE}"
-    echo "Finished casa, now reading listobs text file"
-    cat ${CASAMS_OUT} | awk '/Fields: /,/Spectral Windows: /' | head -n -1
-    cat ${CASAMS_OUT} | awk '/Spectral Windows: /,/Sources: /' | head -n -1
+    echo ""
+    echo "Running casa at "$(date +"%Y%m%d %Hh%Mm%Ss %Z")", please wait ..."
+    casa --nologfile --nogui -c "${CASAMS_EXE}" | tee "${CASAMS_LOG}"
+    echo "Finished casa at "$(date +"%Y%m%d %Hh%Mm%Ss %Z")"!"
+    echo ""
 fi
 
 
