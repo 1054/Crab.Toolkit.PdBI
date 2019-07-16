@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # 
-# This code must be run in CASA
+# This code NOT REALLY must be run in CASA
 # 
 
 from __future__ import print_function
@@ -718,6 +718,11 @@ def clean_highz_gal(my_clean_mode = 'cube',
         else:
             imagename = '%s_%s_continuum'%(re.sub(r'\.ms$', r'', vis, re.IGNORECASE), re.sub(r'[^a-zA-Z0-9_+-]', r'_', field))
     # 
+    # check imagename existence
+    if os.path.isdir(imagename+'.image'):
+        print('Error! The output data "%s" already exists!'%(imagename+'.image'))
+        sys.exit()
+    # 
     # set clean threshold
     if threshold == '':
         if spw == '':
@@ -824,13 +829,14 @@ def clean_highz_gal(my_clean_mode = 'cube',
     # then run casa
     try: 
         __IPYTHON__
-        type(tclean)
-        print('Currently we are in CASA IPython! Running CASA `clean`!')
-        saveinputs(tclean, 'run_casa_ms_clean_highz_cal_cube.tclean.saveinputs.txt') # store parameters in file
-        print('Saved tclean parameters to "%s"!'%('run_casa_ms_clean_highz_cal_cube.tclean.saveinputs.txt'))
-        #tget(clean, parfile) # restore parameters from file
-        inp(tclean)
-        tclean()
+        if 'casa' in globals() and 'tclean' in globals():
+            type(tclean)
+            print('Currently we are in CASA IPython! Running CASA `clean`!')
+            saveinputs(tclean, 'run_casa_ms_clean_highz_cal_cube.tclean.saveinputs.txt') # store parameters in file
+            print('Saved tclean parameters to "%s"!'%('run_casa_ms_clean_highz_cal_cube.tclean.saveinputs.txt'))
+            #tget(clean, parfile) # restore parameters from file
+            inp(tclean)
+            tclean()
     except:
         print('Currently we are not in CASA IPython! Please run the output script within CASA by yourself!')
         print('e.g., casa -c "execfile(\'run_casa_ms_clean_highz_cal_cube.py\')"')

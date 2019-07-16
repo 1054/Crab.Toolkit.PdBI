@@ -1,17 +1,17 @@
 #!/bin/bash
 # 
 # Input field or name
-# Output python script file which runs CASA concat() task
+# Output python script file which runs CASA mstransform(timebin='30s') task
 # 
 # Last update:
-#    2016-02-09 created, copied from casa-ms-uvmodelfit
+#    2019-07-16 created, copied from casa-ms-concat
 # 
 
 
 
 # Function to print usage
 function usage() {
-    echo "Usage: casa-ms-concat -vis a1.ms a2.ms a3.ms -out aaa.ms"
+    echo "Usage: casa-ms-timebin -vis a1.ms a2.ms a3.ms -out aaa.ms -timebin 30s"
 }
 
 
@@ -31,36 +31,48 @@ if [[ ${#CASA_INP_VIS[@]} -eq 0 ]]; then usage; exit; fi
 
 
 # 
-# Write run_casa_ms_concat.py
+# Write run_casa_ms_timebin.py
 # 
 CASAMS_UTC=$(date +%Y%m%d.%Hh%Mm%Ss.%Z)
-CASAMS_EXE="run_casa_ms_concat.$CASAMS_UTC.py"
-CASAMS_LOG="run_casa_ms_concat.$CASAMS_UTC.log"
+CASAMS_EXE="run_casa_ms_timebin.$CASAMS_UTC.py"
+CASAMS_LOG="run_casa_ms_timebin.$CASAMS_UTC.log"
 echo "#!/bin/python" > "$CASAMS_EXE"
-TempInput="['${CASA_INP_VIS[0]}'"
-for (( i=1; i<${#CASA_INP_VIS[@]}; i++ )); do
-    TempInput="$TempInput, '${CASA_INP_VIS[i]}'"
-done
-TempInput="$TempInput]"
-#echo "$TempInput"
+echo "#" >> "$CASAMS_EXE"
+# 
+# write into script to check casa environment
+echo "" >> "$CASAMS_EXE"
+echo "from __future__ import print_function" >> "$CASAMS_EXE"
+echo "import os, sys" >> "$CASAMS_EXE"
+echo "" >> "$CASAMS_EXE"
+echo "if not ('casa' in globals() and 'mstransform' in globals()):" >> "$CASAMS_EXE"
+echo "    print('Error! We are not in CASA environment!')" >> "$CASAMS_EXE"
+echo "    sys.exit()" >> "$CASAMS_EXE"
+echo "" >> "$CASAMS_EXE"
+# 
+# set input name
+TempInput="${CASA_INP_VIS[0]}'"
+# 
+# set output name
 if [[ ${#CASA_INP_OUTPUT[@]} -gt 0 ]]; then
     TempOutput=${CASA_INP_OUTPUT[0]}
 else
-    TempOutput=$(basename "${CASA_INP_VIS[0]//'.ms'//}_concat.ms")
+    TempOutput=$(basename "${CASA_INP_VIS[0]//'.ms'//}_timebin.ms")
 fi
-echo "vis            = $TempInput"                        >> "$CASAMS_EXE"
-echo "concatvis      = '$TempOutput'"                     >> "$CASAMS_EXE"
+# 
+# write into script
+echo "vis            = '$TempInput'"                      >> "$CASAMS_EXE"
+echo "outputvis      = '$TempOutput'"                     >> "$CASAMS_EXE"
 
-if [[ ${#CASA_INP_CONCAT_FREQTOL} -gt 0 ]]; then
-echo "freqtol        = '${CASA_INP_CONCAT_FREQTOL[0]}'"   >> "$CASAMS_EXE"   # default is 1 Hz
+if [[ ${#CASA_INP_SPLIT_TIMEBIN} -gt 0 ]]; then
+echo "timeaverage    = True"                             >> "$CASAMS_EXE"
+echo "timebin        = '${CASA_INP_SPLIT_TIMEBIN[0]}'"   >> "$CASAMS_EXE"
+else
+echo "timeaverage    = True"                             >> "$CASAMS_EXE"
+echo "timebin        = '30s'"                            >> "$CASAMS_EXE"
 fi
 
-if [[ ${#CASA_INP_CONCAT_DIRTOL} -gt 0 ]]; then
-echo "dirtol         = '${CASA_INP_CONCAT_DIRTOL[0]}'"    >> "$CASAMS_EXE"
-fi
-
-echo "inp(concat)"                                        >> "$CASAMS_EXE"
-echo "concat()"                                           >> "$CASAMS_EXE"
+echo "inp(mstransform)"                                   >> "$CASAMS_EXE"
+echo "mstransform()"                                      >> "$CASAMS_EXE"
 echo ""                                                   >> "$CASAMS_EXE"
 echo "Wrote to python script: ${CASAMS_EXE}"
 echo "Please run bash -c 'casa --nologfile --nogui -c \"${CASAMS_EXE}\"'"
@@ -79,8 +91,8 @@ echo "Please run bash -c 'casa --nologfile --nogui -c \"${CASAMS_EXE}\"'"
 #        echo "Launching casa "
 #    fi
 #    if [[ x"$CASAMS_GOO" == x"y"* || x"$CASAMS_GOO" == x"Y"* ]]; then
-#    	echo "casa --nogui --nologfile -c ${CASAMS_EXE} | tee ${CASAMS_LOG}"
-#    	      casa --nogui --nologfile -c "${CASAMS_EXE}" | tee "${CASAMS_LOG}"
+#       echo "casa --nogui --nologfile -c ${CASAMS_EXE} | tee ${CASAMS_LOG}"
+#             casa --nogui --nologfile -c "${CASAMS_EXE}" | tee "${CASAMS_LOG}"
 #    fi
 #    
 #    # copy EXE and LOG
