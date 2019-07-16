@@ -6,15 +6,6 @@ import os, sys, re, json, copy, time, datetime, shutil, pprint
 import numpy as np
 import astropy
 from astropy.io import fits
-try:
-    import casacore # pip install python-casacore # documentation: http://casacore.github.io/python-casacore/
-except:
-    raise ImportError('Could not import casacore! Please install it via \'pip install python-casacore!\'')
-
-from casacore.tables import table, taql
-
-
-
 
 
 
