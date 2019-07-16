@@ -618,6 +618,8 @@ def clean_highz_gal(my_clean_mode = 'cube',
                     uvtaper = [], 
                     clean_to_nsigma = 3.0, 
                     info_dict_file = '',
+                    script_file = 'run_casa_ms_clean_highz_gal.py', 
+                    is_dry_run = False, 
                    ):
     # 
     # check_ok
@@ -688,7 +690,7 @@ def clean_highz_gal(my_clean_mode = 'cube',
     # set reffreq and restfreq if no input. 
     # -- reffreq is the Reference frequency for MFS (relevant only if nterms > 1)
     # -- restfreq is for translation of velocities. When no input, CASA tclean() will set it to the center of spw automatically.
-    if my_clean_mode == 'continuum':
+    if my_clean_mode.startswith('cont'):
         if reffreq == '':
             if spw == '':
                 sys.stdout.write('Computing reffreq as the centroid frequency of all spws:')
@@ -805,10 +807,10 @@ def clean_highz_gal(my_clean_mode = 'cube',
 
     # 
     # write script
-    if os.path.isfile('run_casa_ms_clean_highz_cal_cube.py'):
-        print('Found existing "%s"! Backing it up as "%s"'%('run_casa_ms_clean_highz_cal_cube.py', 'run_casa_ms_clean_highz_cal_cube.py.backup'))
-        shutil.move('run_casa_ms_clean_highz_cal_cube.py', 'run_casa_ms_clean_highz_cal_cube.py.backup')
-    with open('run_casa_ms_clean_highz_cal_cube.py', 'w') as fp:
+    if os.path.isfile(script_file):
+        print('Found existing "%s"! Backing it up as "%s"'%(script_file, script_file+'.backup'))
+        shutil.move(script_file, script_file+'.backup')
+    with open(script_file, 'w') as fp:
         t_local_vals = locals()
         for t in get_tclean_parameter_list():
             if t in t_local_vals:
@@ -824,22 +826,26 @@ def clean_highz_gal(my_clean_mode = 'cube',
         fp.write('\n')
         fp.write('tclean()\n')
         fp.write('\n')
-        print('Output to "%s"!'%('run_casa_ms_clean_highz_cal_cube.py'))
+        print('Output to "%s"!'%(script_file))
     # 
     # then run casa
-    try: 
-        __IPYTHON__
-        if 'casa' in globals() and 'tclean' in globals():
-            type(tclean)
-            print('Currently we are in CASA IPython! Running CASA `clean`!')
-            saveinputs(tclean, 'run_casa_ms_clean_highz_cal_cube.tclean.saveinputs.txt') # store parameters in file
-            print('Saved tclean parameters to "%s"!'%('run_casa_ms_clean_highz_cal_cube.tclean.saveinputs.txt'))
-            #tget(clean, parfile) # restore parameters from file
-            inp(tclean)
-            tclean()
-    except:
-        print('Currently we are not in CASA IPython! Please run the output script within CASA by yourself!')
-        print('e.g., casa -c "execfile(\'run_casa_ms_clean_highz_cal_cube.py\')"')
+    if is_dry_run == False:
+        try: 
+            __IPYTHON__
+            if 'casa' in globals() and 'tclean' in globals():
+                type(tclean)
+                print('Currently we are in CASA IPython! Running CASA `clean`!')
+                saveinputs(tclean, script_file+'.tclean.saveinputs.txt') # store parameters in file
+                print('Saved tclean parameters to "%s"!'%(script_file+'tclean.saveinputs.txt'))
+                #tget(clean, parfile) # restore parameters from file
+                inp(tclean)
+                tclean()
+        except:
+            print('Currently we are not in CASA IPython! Please run the output script within CASA by yourself!')
+            print('e.g., casa -c "execfile(\'%s\')"'%(script_file))
+    else:
+        print('This is a dry run!Please run the output script within CASA by yourself!')
+        print('e.g., casa -c "execfile(\'%s\')"'%(script_file))
 
 
     
@@ -853,7 +859,7 @@ def clean_highz_gal(my_clean_mode = 'cube',
 # 
 def usage():
     print('Usage:')
-    print('    %s "Your_input_vis.ms" "Your_galaxy_name"'%(os.path.dirname(__file__) ) )
+    print('    %s -vis "Your_input_vis.ms" -gal "Your_galaxy_name" [-dry-run] [-spw "0,1,2,3"] [-width "30km/s"]'%(os.path.dirname(__file__) ) )
 
 
 
@@ -868,14 +874,46 @@ if __name__ == '__main__':
     # 
     # read user input
     vis = ''
+    out = ''
     gal = ''
-    i = 1
-    while i < len(sys.argv):
-        if vis == '':
-            vis = sys.argv[i]
-        elif gal == '':
-            gal = sys.argv[i]
-        i += 1
+    spw = ''
+    width = ''
+    clean_mode = ''
+    script_file = ''
+    is_dry_run = False
+    iarg = 1
+    while iarg < len(sys.argv):
+        istr = re.sub(r'[-]+', r'-', sys.argv[iarg]).lower()
+        if istr == '-vis' or istr == '-ms':
+            if iarg+1 < len(sys.argv):
+                iarg += 1
+                vis = sys.argv[iarg]
+        elif istr == '-gal' or istr == '-field':
+            if iarg+1 < len(sys.argv):
+                iarg += 1
+                gal = sys.argv[iarg]
+        elif istr == '-out' or istr == '-output':
+            if iarg+1 < len(sys.argv):
+                iarg += 1
+                out = sys.argv[iarg]
+        elif istr == '-spw':
+            if iarg+1 < len(sys.argv):
+                iarg += 1
+                spw = sys.argv[iarg]
+        elif istr == '-width':
+            if iarg+1 < len(sys.argv):
+                iarg += 1
+                width = sys.argv[iarg]
+        elif istr == '-dry-run':
+            is_dry_run = True
+        else:
+            if vis == '':
+                vis = sys.argv[iarg]
+            elif gal == '':
+                gal = sys.argv[iarg]
+            elif spw == '':
+                spw = sys.argv[iarg]
+        iarg += 1
     
     # 
     # check user input
@@ -885,9 +923,20 @@ if __name__ == '__main__':
         sys.exit()
     
     # 
+    # determine clean_mode
+    clean_mode = 'cube'
+    if width == '0':
+        clean_mode = 'continuum'
+        width = ''
+    
+    # 
     # print message
     print('vis = %s'%(vis))
     print('gal = %s'%(gal))
+    print('spw = %s'%(spw))
+    print('width = %s'%(width))
+    print('clean_mode = %s'%(clean_mode))
+    print('is_dry_run = %s'%(is_dry_run))
     
     # 
     # test subroutine
@@ -911,7 +960,23 @@ if __name__ == '__main__':
     # 
     # run test 
     #grab_interferometry_info(vis)
-    clean_highz_gal('cube', vis, gal)
+    if clean_mode == 'cube':
+        # 
+        if script_file == '':
+            script_file = 'run_casa_ms_clean_highz_gal_cube.py'
+        # 
+        clean_highz_gal(my_clean_mode = 'cube', vis = vis, field = gal, imagename = out, \
+                        spw = spw, width = width, 
+                        script_file = script_file)
+    else:
+        # 
+        if script_file == '':
+            script_file = 'run_casa_ms_clean_highz_gal_continuum.py'
+        # 
+        clean_highz_gal(my_clean_mode = 'continuum', vis = vis, field = gal, imagename = out, \
+                        spw = spw, width = width, 
+                        script_file = script_file)
+        
 
 
 
