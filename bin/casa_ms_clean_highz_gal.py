@@ -168,7 +168,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         info_dict['ANTENNA']['OFFSET'] = tb2.getcol('OFFSET').tolist()
         info_dict['ANTENNA']['POSITION'] = tb2.getcol('POSITION').tolist()
         info_dict['ANTENNA']['DISH_DIAMETER'] = tb2.getcol('DISH_DIAMETER').tolist()
-        print(type(info_dict['ANTENNA']['OFFSET']), info_dict['ANTENNA']['OFFSET'].shape).tolist()
+        #print(type(info_dict['ANTENNA']['OFFSET']), np.array(info_dict['ANTENNA']['OFFSET']).shape)
         tb2.close() # close table tb2
     else:
         missing_keywords.append('ANTENNA')
@@ -179,7 +179,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         #print(tb2.colnames()) # ['DELAY_DIR', 'PHASE_DIR', 'REFERENCE_DIR', 'CODE', 'FLAG_ROW', 'NAME', 'NUM_POLY', 'SOURCE_ID', 'TIME']
         info_dict['FIELD']['ID'] = np.arange(0,tb2.nrows()).astype(int).tolist()
         info_dict['FIELD']['SOURCE_ID'] = tb2.getcol('SOURCE_ID').astype(int).tolist()
-        info_dict['FIELD']['NAME'] = tb2.getcol('NAME').astype(str).tolist()
+        info_dict['FIELD']['NAME'] = tb2.getcol('NAME') # .astype(str).tolist()
         tb2.close() # close table tb2
     else:
         missing_keywords.append('FIELD')
@@ -189,7 +189,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         tb2 = open_casa_table(tb1.getkeyword('SOURCE').replace('Table: ','')) # open table tb2
         #print(tb2.colnames()) # ['DIRECTION', 'PROPER_MOTION', 'CALIBRATION_GROUP', 'CODE', 'INTERVAL', 'NAME', 'NUM_LINES', 'SOURCE_ID', 'SPECTRAL_WINDOW_ID', 'TIME', 'POSITION', 'REST_FREQUENCY', 'SYSVEL', 'TRANSITION', 'SOURCE_MODEL']
         info_dict['SOURCE']['ID'] = np.arange(0,tb2.nrows()).astype(int).tolist()
-        info_dict['SOURCE']['NAME'] = tb2.getcol('NAME').astype(str).tolist()
+        info_dict['SOURCE']['NAME'] = tb2.getcol('NAME') # .astype(str).tolist()
         info_dict['SOURCE']['SOURCE_ID'] = tb2.getcol('SOURCE_ID').astype(int).tolist()
         info_dict['SOURCE']['SPW_ID'] = tb2.getcol('SPECTRAL_WINDOW_ID').astype(int).tolist()
         tb2.close() # close table tb2
@@ -212,7 +212,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         tb2 = open_casa_table(tb1.getkeyword('SPECTRAL_WINDOW').replace('Table: ','')) # open table tb2
         #print(tb2.colnames()) # ['MEAS_FREQ_REF', 'CHAN_FREQ', 'REF_FREQUENCY', 'CHAN_WIDTH', 'EFFECTIVE_BW', 'RESOLUTION', 'FLAG_ROW', 'FREQ_GROUP', 'FREQ_GROUP_NAME', 'IF_CONV_CHAIN', 'NAME', 'NET_SIDEBAND', 'NUM_CHAN', 'TOTAL_BANDWIDTH']
         info_dict['SPW']['ID'] = np.arange(0,tb2.nrows()).astype(int).tolist()
-        info_dict['SPW']['NAME'] = tb2.getcol('NAME').astype(str).tolist()
+        info_dict['SPW']['NAME'] = tb2.getcol('NAME') # .astype(str).tolist()
         info_dict['SPW']['NUM_CHAN'] = tb2.getcol('NUM_CHAN').astype(int).tolist()
         info_dict['SPW']['DATA_DESC_ID'] = []
         info_dict['SPW']['PRIMARY_BEAM'] = [] # in units of degrees
@@ -554,7 +554,7 @@ def print_interferometry_info_dict(info_dict, only_return_strings = False, curre
                         print_str = print_fmt % (k, str(info_item[0] ) ) # ', '.join(map(str, info_item)
                     else:
                         print_fmt = '%%-%ds = [ ] (len=0)' % (print_fmt_col_width)
-                        print_str = print_fmt % (k, ) ) # ', '.join(map(str, info_item)
+                        print_str = print_fmt % (k, ) # ', '.join(map(str, info_item)
             else:
                 print_fmt = '%%-%ds = [ %%s ] (scalar)' % (print_fmt_col_width)
                 print_str = print_fmt % (k, info_item )
