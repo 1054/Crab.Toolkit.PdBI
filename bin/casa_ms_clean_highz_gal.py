@@ -95,7 +95,9 @@ def query_casa_table(tb0, query_where_str, columns = []):
         tbout = taql('SELECT %s FROM $tb0 WHERE (%s);'%(query_columns_str, query_where_str))
         #tbout = tb0.query(query=query_where_str, columns=query_columns_str)
     else:
-        tbout = tb0.query(query=query_where_str, columns=query_columns_str, style='python') # https://casa.nrao.edu/docs/CasaRef/table.query.html -- 
+        tbout = tb0.query(query=query_where_str, columns=query_columns_str)
+        #tbout = tb0.query(query=query_where_str, columns=query_columns_str, style='python') # https://casa.nrao.edu/docs/CasaRef/table.query.html -- 
+        #style='python' not working?
     return tbout
 
 
@@ -320,10 +322,10 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             print('Warning! Data cell has a dimension of %s and no polarization dimension!'%(str(data_shape)))
             number_of_stokes = 0
         elif len(data_shape) == 2:
-            #if USE_CASACORE == False:
-            #    data_shape = data_shape[::-1] #<TODO><20190716># __casac__.table.table has a different dimension order than casacore.tables.table ???
-            #    print('data_shape', data_shape, '(nrow, nstokes)')
-            ##--> now no need, we use style='python'
+            if USE_CASACORE == False:
+                data_shape = data_shape[::-1] #<TODO><20190716># __casac__.table.table has a different dimension order than casacore.tables.table ???
+                print('data_shape', data_shape, '(nrow, nstokes)')
+            #--> now no need, we use style='python'
             if data_shape[-1] == 1:
                 number_of_stokes = 1
             elif data_shape[-1] == 2:
@@ -350,10 +352,10 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         # get (u,v,w)
         print('Getting UVW info')
         data_UVW = tb3.getcol('UVW')
-        #if USE_CASACORE == False:
-        #    data_UVW = data_UVW.T #<TODO><20190716># __casac__.table.table has a different dimension order than casacore.tables.table ???
-        #    print('data_UVW.shape', data_UVW.shape, '(nrow, 3)')
-        ##--> now no need, we use style='python'
+        if USE_CASACORE == False:
+            data_UVW = data_UVW.T #<TODO><20190716># __casac__.table.table has a different dimension order than casacore.tables.table ???
+            print('data_UVW.shape', data_UVW.shape, '(nrow, 3)')
+        #--> now no need, we use style='python'
         info_dict[fieldKey]['UVW']['U_MAX'] = np.max(data_UVW[:,0])
         info_dict[fieldKey]['UVW']['U_MIN'] = np.max(data_UVW[:,1])
         info_dict[fieldKey]['UVW']['V_MAX'] = np.max(data_UVW[:,2])
@@ -419,10 +421,10 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             if number_of_stokes == 2:
                 data_array = tb4.getcol(data_column)
                 print('data_array.shape', data_array.shape)
-                #if USE_CASACORE == False:
-                #    data_array = data_array.T #<TODO><20190716># __casac__.table.table has a different dimension order than casacore.tables.table ???
-                #    print('data_array.shape', data_array.shape, '(nrow, nchan, nstokes)')
-                ##--> now no need, we use style='python'
+                if USE_CASACORE == False:
+                    data_array = data_array.T #<TODO><20190716># __casac__.table.table has a different dimension order than casacore.tables.table ???
+                    print('data_array.shape', data_array.shape, '(nrow, nchan, nstokes)')
+                #--> now no need, we use style='python'
                 data_stokesLL = data_array[:,:,0] # DATA shape (nrow, nchan, nstokes) and nstokes==2
                 data_stokesRR = data_array[:,:,1] # DATA shape (nrow, nchan, nstokes) and nstokes==2
                 data_stokesLL_abs = np.absolute(data_stokesLL)
@@ -458,10 +460,10 @@ def grab_interferometry_info(vis, info_dict_file = ''):
                 else:
                     data_array = tb4.getcol(data_column)[:,:] # DATA shape (nrow, nchan), no stokes dimension
                 print('data_array.shape', data_array.shape)
-                #if USE_CASACORE == False:
-                #    data_array = data_array.T #<TODO><20190716># __casac__.table.table has a different dimension order than casacore.tables.table ???
-                #    print('data_array.shape', data_array.shape, '(nrow, nchan, nstokes)')
-                ##--> now no need, we use style='python'
+                if USE_CASACORE == False:
+                    data_array = data_array.T #<TODO><20190716># __casac__.table.table has a different dimension order than casacore.tables.table ???
+                    print('data_array.shape', data_array.shape, '(nrow, nchan, nstokes)')
+                #--> now no need, we use style='python'
                 data_abs = np.absolute(data_array)
                 data_abs_mean = np.mean(data_abs, axis=0)
                 data_rms_per_chan = np.std(data_abs - data_abs_mean, axis=0)
