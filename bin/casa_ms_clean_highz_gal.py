@@ -1058,6 +1058,10 @@ if __name__ == '__main__':
             width = ''
     
     # 
+    # fix gal "" 
+    gal = gal.replace('"','')
+    
+    # 
     # print message
     print('vis = %s'%(vis))
     print('gal = %s'%(gal))
