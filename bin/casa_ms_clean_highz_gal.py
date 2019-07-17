@@ -180,6 +180,9 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         info_dict['FIELD']['ID'] = np.arange(0,tb2.nrows()).astype(int).tolist()
         info_dict['FIELD']['SOURCE_ID'] = tb2.getcol('SOURCE_ID').astype(int).tolist()
         info_dict['FIELD']['NAME'] = tb2.getcol('NAME') # .astype(str).tolist()
+        for t in info_dict['FIELD'].keys(): 
+            if type(info_dict['FIELD'][t]) is np.ndarray:
+                info_dict['FIELD'][t] = info_dict['FIELD'][t].tolist()
         tb2.close() # close table tb2
     else:
         missing_keywords.append('FIELD')
@@ -192,6 +195,9 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         info_dict['SOURCE']['NAME'] = tb2.getcol('NAME') # .astype(str).tolist()
         info_dict['SOURCE']['SOURCE_ID'] = tb2.getcol('SOURCE_ID').astype(int).tolist()
         info_dict['SOURCE']['SPW_ID'] = tb2.getcol('SPECTRAL_WINDOW_ID').astype(int).tolist()
+        for t in info_dict['SOURCE'].keys(): 
+            if type(info_dict['SOURCE'][t]) is np.ndarray:
+                info_dict['SOURCE'][t] = info_dict['SOURCE'][t].tolist()
         tb2.close() # close table tb2
     else:
         missing_keywords.append('SOURCE')
@@ -223,6 +229,9 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             info_dict['SPW']['CHAN_FREQ'].append( tb2.getcell('CHAN_FREQ', k2) ) # in units of Hz
             info_dict['SPW']['CHAN_PRIMARY_BEAM'].append( 1.13  * (2.99792458e8/info_dict['SPW']['CHAN_FREQ'][k2]) / (np.min(info_dict['ANTENNA']['DISH_DIAMETER'])) / np.pi * 180.0 ) # in units of degrees
             info_dict['SPW']['PRIMARY_BEAM'].append( np.mean( info_dict['SPW']['CHAN_PRIMARY_BEAM'][-1] ) )
+        for t in info_dict['SPW'].keys(): 
+            if type(info_dict['SPW'][t]) is np.ndarray:
+                info_dict['SPW'][t] = info_dict['SPW'][t].tolist()
         tb2.close() # close table tb2
     else:
         missing_keywords.append('SPECTRAL_WINDOW')
