@@ -123,6 +123,7 @@ while [[ "$#" -gt 0 ]]; do
                  "-vis") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="vis";;
                "-image") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="image";;
                 "-name") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-name";;
+                 "-gal") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-name";;
               "-source") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-name";;
            "-source-id") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-name";;
                "-field") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="field-id";;
