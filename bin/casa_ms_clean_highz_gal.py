@@ -525,7 +525,7 @@ def print_interferometry_info_dict(info_dict, only_return_strings = False, curre
     print_fmt_col_width += 1
     # 
     # loop dict keys
-    for k in info_dict:
+    for k in info_dict.keys():
         # if value is dict, iterate this function
         if type(info_dict[k]) is dict:
             printed_strings2 = print_interferometry_info_dict(info_dict[k], only_return_strings = True, current_dict_level = current_dict_level + 1)
@@ -561,12 +561,15 @@ def print_interferometry_info_dict(info_dict, only_return_strings = False, curre
                 # else if the list has only one dimension
                 # we print like "[ ..., ..., ... ]"
                 else:
-                    if len(info_item) > 0:
-                        print_fmt = '%%-%ds = [ %%s ] (len=1)' % (print_fmt_col_width)
-                        print_str = print_fmt % (k, str(info_item[0] ) ) # ', '.join(map(str, info_item)
+                    if len(info_item) > 3:
+                        print_fmt = '%%-%ds = [ %%s, ..., %%s ] (len=%%d)' % (print_fmt_col_width)
+                        print_str = print_fmt % (k, str(info_item[0]), str(info_item[-1]), len(info_item) )
+                    elif len(info_item) > 0:
+                        print_fmt = '%%-%ds = [ %%s ] (len=%%d)' % (print_fmt_col_width)
+                        print_str = print_fmt % (k, ', '.join(map(str, info_item), len(info_item)), len(info_item) )
                     else:
                         print_fmt = '%%-%ds = [ ] (len=0)' % (print_fmt_col_width)
-                        print_str = print_fmt % (k, ) # ', '.join(map(str, info_item)
+                        print_str = print_fmt % (k, )
             else:
                 print_fmt = '%%-%ds = [ %%s ] (scalar)' % (print_fmt_col_width)
                 print_str = print_fmt % (k, info_item )
