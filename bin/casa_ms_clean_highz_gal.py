@@ -585,7 +585,7 @@ def print_interferometry_info_dict(info_dict, only_return_strings = False, curre
 #   returns a set of selected values when a string in the form:
 #   '1~4,6,8,10~12'
 #   would return:
-#   [1,2,3,4,6,7,10,11,12]
+#   (1,2,3,4,6,7,10,11,12)
 # 
 def parseIntSet(nputstr=""):
     selection = set()
@@ -769,7 +769,7 @@ def clean_highz_gal(my_clean_mode = 'cube',
                 spw_list.append(info_dict['FIELD_'+field]['SPW']['ID'][ispw])
     else:
         selectdata = True
-        spw_list = parseIntSet(spw)
+        spw_list = list(parseIntSet(spw))
         ispw_list = []
         for ispw in range(len(spw_list)):
             if spw_list[ispw] in info_dict['FIELD_'+field]['SPW']['ID']:
