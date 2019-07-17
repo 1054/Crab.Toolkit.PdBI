@@ -177,8 +177,8 @@ def grab_interferometry_info(vis, info_dict_file = ''):
     if 'FIELD' in tb1.getkeywords():
         tb2 = open_casa_table(tb1.getkeyword('FIELD').replace('Table: ','')) # open table tb2
         #print(tb2.colnames()) # ['DELAY_DIR', 'PHASE_DIR', 'REFERENCE_DIR', 'CODE', 'FLAG_ROW', 'NAME', 'NUM_POLY', 'SOURCE_ID', 'TIME']
-        info_dict['FIELD']['ID'] = np.arange(0,tb2.nrows()).astype(int).tolist()
-        info_dict['FIELD']['SOURCE_ID'] = tb2.getcol('SOURCE_ID').astype(int).tolist()
+        info_dict['FIELD']['ID'] = np.arange(0,tb2.nrows()) # .astype(int).tolist()
+        info_dict['FIELD']['SOURCE_ID'] = tb2.getcol('SOURCE_ID') # .astype(int).tolist()
         info_dict['FIELD']['NAME'] = tb2.getcol('NAME') # .astype(str).tolist()
         for t in info_dict['FIELD'].keys(): 
             if type(info_dict['FIELD'][t]) is np.ndarray:
@@ -191,10 +191,10 @@ def grab_interferometry_info(vis, info_dict_file = ''):
     if 'SOURCE' in tb1.getkeywords():
         tb2 = open_casa_table(tb1.getkeyword('SOURCE').replace('Table: ','')) # open table tb2
         #print(tb2.colnames()) # ['DIRECTION', 'PROPER_MOTION', 'CALIBRATION_GROUP', 'CODE', 'INTERVAL', 'NAME', 'NUM_LINES', 'SOURCE_ID', 'SPECTRAL_WINDOW_ID', 'TIME', 'POSITION', 'REST_FREQUENCY', 'SYSVEL', 'TRANSITION', 'SOURCE_MODEL']
-        info_dict['SOURCE']['ID'] = np.arange(0,tb2.nrows()).astype(int).tolist()
+        info_dict['SOURCE']['ID'] = np.arange(0,tb2.nrows()) # .astype(int).tolist()
         info_dict['SOURCE']['NAME'] = tb2.getcol('NAME') # .astype(str).tolist()
-        info_dict['SOURCE']['SOURCE_ID'] = tb2.getcol('SOURCE_ID').astype(int).tolist()
-        info_dict['SOURCE']['SPW_ID'] = tb2.getcol('SPECTRAL_WINDOW_ID').astype(int).tolist()
+        info_dict['SOURCE']['SOURCE_ID'] = tb2.getcol('SOURCE_ID') # .astype(int).tolist()
+        info_dict['SOURCE']['SPW_ID'] = tb2.getcol('SPECTRAL_WINDOW_ID') # .astype(int).tolist()
         for t in info_dict['SOURCE'].keys(): 
             if type(info_dict['SOURCE'][t]) is np.ndarray:
                 info_dict['SOURCE'][t] = info_dict['SOURCE'][t].tolist()
@@ -206,9 +206,12 @@ def grab_interferometry_info(vis, info_dict_file = ''):
     if 'DATA_DESCRIPTION' in tb1.getkeywords():
         tb2 = open_casa_table(tb1.getkeyword('DATA_DESCRIPTION').replace('Table: ','')) # open table tb2
         #print(tb2.colnames()) # ['MEAS_FREQ_REF', 'CHAN_FREQ', 'REF_FREQUENCY', 'CHAN_WIDTH', 'EFFECTIVE_BW', 'RESOLUTION', 'FLAG_ROW', 'FREQ_GROUP', 'FREQ_GROUP_NAME', 'IF_CONV_CHAIN', 'NAME', 'NET_SIDEBAND', 'NUM_CHAN', 'TOTAL_BANDWIDTH']
-        info_dict['DATA_DESC']['ID'] = np.arange(0,tb2.nrows()).astype(int).tolist()
-        info_dict['DATA_DESC']['SPW_ID'] = tb2.getcol('SPECTRAL_WINDOW_ID').astype(int).tolist()
-        info_dict['DATA_DESC']['STOKES_ID'] = tb2.getcol('POLARIZATION_ID').astype(int).tolist()
+        info_dict['DATA_DESC']['ID'] = np.arange(0,tb2.nrows()) # .astype(int).tolist()
+        info_dict['DATA_DESC']['SPW_ID'] = tb2.getcol('SPECTRAL_WINDOW_ID') # .astype(int).tolist()
+        info_dict['DATA_DESC']['STOKES_ID'] = tb2.getcol('POLARIZATION_ID') # .astype(int).tolist()
+        for t in info_dict['DATA_DESC'].keys(): 
+            if type(info_dict['DATA_DESC'][t]) is np.ndarray:
+                info_dict['DATA_DESC'][t] = info_dict['DATA_DESC'][t].tolist()
         tb2.close() # close table tb2
     else:
         missing_keywords.append('DATA_DESCRIPTION')
@@ -217,9 +220,9 @@ def grab_interferometry_info(vis, info_dict_file = ''):
     if 'SPECTRAL_WINDOW' in tb1.getkeywords():
         tb2 = open_casa_table(tb1.getkeyword('SPECTRAL_WINDOW').replace('Table: ','')) # open table tb2
         #print(tb2.colnames()) # ['MEAS_FREQ_REF', 'CHAN_FREQ', 'REF_FREQUENCY', 'CHAN_WIDTH', 'EFFECTIVE_BW', 'RESOLUTION', 'FLAG_ROW', 'FREQ_GROUP', 'FREQ_GROUP_NAME', 'IF_CONV_CHAIN', 'NAME', 'NET_SIDEBAND', 'NUM_CHAN', 'TOTAL_BANDWIDTH']
-        info_dict['SPW']['ID'] = np.arange(0,tb2.nrows()).astype(int).tolist()
+        info_dict['SPW']['ID'] = np.arange(0,tb2.nrows()) # .astype(int).tolist()
         info_dict['SPW']['NAME'] = tb2.getcol('NAME') # .astype(str).tolist()
-        info_dict['SPW']['NUM_CHAN'] = tb2.getcol('NUM_CHAN').astype(int).tolist()
+        info_dict['SPW']['NUM_CHAN'] = tb2.getcol('NUM_CHAN') # .astype(int).tolist()
         info_dict['SPW']['DATA_DESC_ID'] = []
         info_dict['SPW']['PRIMARY_BEAM'] = [] # in units of degrees
         info_dict['SPW']['CHAN_PRIMARY_BEAM'] = [] # in units of degrees, should be a 2D array
