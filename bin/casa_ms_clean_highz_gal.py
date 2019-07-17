@@ -776,7 +776,7 @@ def clean_highz_gal(my_clean_mode = 'cube',
                 ispw_list.append(info_dict['FIELD_'+field]['SPW']['ID'].index(spw_list[ispw]))
             else:
                 print('Error! The input spw %d is not in the info_dict of the data "%s"!'%(spw_list[ispw], vis))
-                print('       Available spws are: %s'%(spw_list[ispw], str(info_dict['FIELD_'+field]['SPW']['ID'])))
+                print('       Available spws are: %s'%(str(info_dict['FIELD_'+field]['SPW']['ID'])))
                 sys.exit()
     # 
     # set reffreq and restfreq if no input. 
