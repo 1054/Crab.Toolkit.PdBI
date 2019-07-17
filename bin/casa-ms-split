@@ -306,18 +306,18 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     echo "        spw_numb = list_vis_desc_spwid[i]"                                        >> "$CASAMS_ScriptName.py"
     echo "        spw_name = 'spw%0d'%(list_vis_desc_spwid[i])"                             >> "$CASAMS_ScriptName.py"
     echo "        # check if there are any flagged channel in any row which is not completely flagged" >> "$CASAMS_ScriptName.py"
-    echo "        #tb1 = tb.query('FLAG_ROW==FALSE AND ntrue(FLAG)>0 AND DATA_DESC_ID==%d AND FIELD_ID==%d'%(spw_numb, field_numb), style='python')" >> "$CASAMS_ScriptName.py"  # style='python' means the row number starts from 0, see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1   -- ntrue(FLAG) or nfalse(FLAG) returns for each row the number of flags set, see https://casa.nrao.edu/docs/casaref/table.calc.html#x917-9330003.2.1
-    echo "        #if tb1.nrows() == 0:"                                                                >> "$CASAMS_ScriptName.py"
-    echo "        #    if os.path.isfile('$CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb)):"      >> "$CASAMS_ScriptName.py"
-    echo "        #        os.system('rm $CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb))"        >> "$CASAMS_ScriptName.py"
-    echo "        #    if os.path.isfile('$CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb)):"   >> "$CASAMS_ScriptName.py"
-    echo "        #        os.system('rm $CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb))"     >> "$CASAMS_ScriptName.py"
-    echo "        #    continue"                                                                        >> "$CASAMS_ScriptName.py"
-    echo "        #tb1.close()"                                                                         >> "$CASAMS_ScriptName.py"  # see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1
+    echo "        tb1 = tb.query('FLAG_ROW==FALSE AND ntrue(FLAG)>0 AND DATA_DESC_ID==%d AND FIELD_ID==%d'%(spw_numb, field_numb), style='python')" >> "$CASAMS_ScriptName.py"  # style='python' means the row number starts from 0, see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1   -- ntrue(FLAG) or nfalse(FLAG) returns for each row the number of flags set, see https://casa.nrao.edu/docs/casaref/table.calc.html#x917-9330003.2.1
+    echo "        if tb1.nrows() == 0:"                                                                >> "$CASAMS_ScriptName.py"
+    echo "            if os.path.isfile('$CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb)):"      >> "$CASAMS_ScriptName.py"
+    echo "                os.system('rm $CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb))"        >> "$CASAMS_ScriptName.py"
+    echo "            if os.path.isfile('$CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb)):"   >> "$CASAMS_ScriptName.py"
+    echo "                os.system('rm $CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb))"     >> "$CASAMS_ScriptName.py"
+    echo "            continue"                                                                        >> "$CASAMS_ScriptName.py"
+    echo "        tb1.close()"                                                                         >> "$CASAMS_ScriptName.py"  # see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1
     echo "        # then get the flag in those not-completely-flagged rows "                           >> "$CASAMS_ScriptName.py"
-    echo "        #tb2 = tb.query('FLAG_ROW==FALSE AND nfalse(FLAG)>0 AND DATA_DESC_ID==%d AND FIELD_ID==%d'%(spw_numb, field_numb), style='python')" >> "$CASAMS_ScriptName.py"  # style='python' means the row number starts from 0, see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1   -- ntrue(FLAG) or nfalse(FLAG) returns for each row the number of flags set, see https://casa.nrao.edu/docs/casaref/table.calc.html#x917-9330003.2.1
-    echo "        #if tb2.nrows() > 0:"                                                                 >> "$CASAMS_ScriptName.py" # also need to find out flagged channels <TODO> this does not work, because flags for channels might change between rows! The solution is to allow user to specify spw with channel range!
-    echo "        if True:"                                                                             >> "$CASAMS_ScriptName.py" # 20180613 debug
+    echo "        tb2 = tb.query('FLAG_ROW==FALSE AND nfalse(FLAG)>0 AND DATA_DESC_ID==%d AND FIELD_ID==%d'%(spw_numb, field_numb), style='python')" >> "$CASAMS_ScriptName.py"  # style='python' means the row number starts from 0, see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1   -- ntrue(FLAG) or nfalse(FLAG) returns for each row the number of flags set, see https://casa.nrao.edu/docs/casaref/table.calc.html#x917-9330003.2.1
+    echo "        if tb2.nrows() > 0:"                                                                 >> "$CASAMS_ScriptName.py" # also need to find out flagged channels <TODO> this does not work, because flags for channels might change between rows! The solution is to allow user to specify spw with channel range!
+    echo "        #if True:"                                                                             >> "$CASAMS_ScriptName.py" # 20180613 debug
     echo "            # then read flagged channels and write to file"                                  >> "$CASAMS_ScriptName.py"
     echo "            fo1 = open('$CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb),'wb')"         >> "$CASAMS_ScriptName.py"
     echo "            fo2 = open('$CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb),'wb')"      >> "$CASAMS_ScriptName.py"
@@ -326,7 +326,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     echo "            if tb2.nrows()>4: loop_row.append(int((tb2.nrows()-1)/4.0*3))"                   >> "$CASAMS_ScriptName.py"
     echo "            if tb2.nrows()>2: loop_row.append(int((tb2.nrows()-1)/2.0))"                     >> "$CASAMS_ScriptName.py"
     echo "            if tb2.nrows()>4: loop_row.append(int((tb2.nrows()-1)/4.0*1))"                   >> "$CASAMS_ScriptName.py"
-    echo "            loop_row.append(0)"                                                              >> "$CASAMS_ScriptName.py"
+    echo "            loop_row.append(0) # just loop a few rows plus the first row"                    >> "$CASAMS_ScriptName.py"
     echo "            for k in loop_row:"                                                              >> "$CASAMS_ScriptName.py"
     echo "                vis_flag = tb2.getcell('FLAG', k)"                                           >> "$CASAMS_ScriptName.py"
     echo "                for j in range(len(vis_flag[0])):"                                           >> "$CASAMS_ScriptName.py"

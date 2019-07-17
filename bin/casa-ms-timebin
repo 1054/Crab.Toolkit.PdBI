@@ -75,7 +75,7 @@ echo "inp(mstransform)"                                   >> "$CASAMS_EXE"
 echo "mstransform()"                                      >> "$CASAMS_EXE"
 echo ""                                                   >> "$CASAMS_EXE"
 echo "Wrote to python script: ${CASAMS_EXE}"
-echo "Please run bash -c 'casa --nologfile --nogui -c \"${CASAMS_EXE}\"' | tee \"${CASAMS_LOG}\""
+echo "Please run bash -c 'casa --nologfile --nogui -c \"execfile(\'${CASAMS_EXE}\')\"' | tee \"${CASAMS_LOG}\""
 
 
 

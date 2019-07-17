@@ -1,0 +1,228 @@
+#!/bin/bash
+# 
+# Input vis, gal
+# Output python script which runs CASA tclean()
+# 
+# Last update:
+#    2019-07-16 created, copied from casa-ms-timebin
+# 
+
+
+
+# Function to print usage
+function usage() {
+    echo "Usage: casa-ms-clean-highz-gal -vis INPUT_MEASUREMENT_SET.ms -gal GALAXY_NAME -mode cube [-width \"30km/s\"]"
+}
+
+
+
+# 
+# Read input parameters
+# 
+. $(dirname ${BASH_SOURCE[0]})/"casa-command-line-arguments" "$@"
+
+
+
+# 
+# Check input parameter -- image
+# 
+if [[ ${#CASA_INP_VIS[@]} -eq 0 ]]; then usage; exit; fi
+
+
+
+# 
+# Check CASA
+# 
+if [[ $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo ""
+    echo "Error! CASA was not found! Please check your \$PATH!"
+    echo ""
+    exit
+fi
+
+
+
+# 
+# We will call "casa_ms_clean_highz_gal.py" in CASA, 
+# but we first need to find out CASA library directory
+# 
+#casa --nologger --nologfile --nocrashreport --nogui -c 'os.system("echo "+__casac__.__path__[0]+" > .CASAC_PATH.txt")' > /dev/null 2>&1
+#CASAC_PATH=$(cat ".CASAC_PATH.txt" | tail -n 1)
+#echo "Running: "
+#if [[ -z "$PYTHONPATH" ]]; then
+#echo "PYTHONPATH=\"$(dirname $CASAC_PATH):$CASAC_PATH\"" $(dirname ${BASH_SOURCE[0]})/casa_ms_clean_highz_gal.py "$@"
+#PYTHONPATH="$(dirname $CASAC_PATH):$CASAC_PATH" $(dirname ${BASH_SOURCE[0]})/casa_ms_clean_highz_gal.py "$@"
+#else
+#echo "PYTHONPATH=\"$(dirname $CASAC_PATH):$CASAC_PATH:$PYTHONPATH\"" $(dirname ${BASH_SOURCE[0]})/casa_ms_clean_highz_gal.py "$@"
+#PYTHONPATH="$(dirname $CASAC_PATH):$CASAC_PATH:$PYTHONPATH" $(dirname ${BASH_SOURCE[0]})/casa_ms_clean_highz_gal.py "$@"
+#fi
+
+
+
+
+# 
+# We will directly call "casa_ms_clean_highz_gal.py" in CASA, 
+# but we need to set the input vairables
+# 
+
+# 
+# Write run_casa_ms_clean_highz_gal.py
+# 
+CASAMS_UTC=$(date +%Y%m%d.%Hh%Mm%Ss.%Z)
+CASAMS_EXE="run_casa_ms_clean_highz_gal_preparation.py" # .$CASAMS_UTC
+CASAMS_LOG="run_casa_ms_clean_highz_gal_preparation.log" # .$CASAMS_UTC
+echo "# This script must be run in CASA" > "$CASAMS_EXE"
+echo "#" >> "$CASAMS_EXE"
+# 
+# write into script to check casa environment
+echo "" >> "$CASAMS_EXE"
+echo "from __future__ import print_function" >> "$CASAMS_EXE"
+echo "import os, sys" >> "$CASAMS_EXE"
+echo "" >> "$CASAMS_EXE"
+echo "if not ('casa' in globals() and 'tclean' in globals()):" >> "$CASAMS_EXE"
+echo "    print('Error! We are not in CASA environment!')" >> "$CASAMS_EXE"
+echo "    sys.exit()" >> "$CASAMS_EXE"
+echo "" >> "$CASAMS_EXE"
+
+# 
+# can not use subprocess because the subprocess will not be in CASA environment anymore!
+# 
+#echo "import subprocess" >> "$CASAMS_EXE"
+#echo "subprocess.call( \\" >> "$CASAMS_EXE"
+#echo "    ['"$(cd $(dirname ${BASH_SOURCE[0]}); pwd)"/casa_ms_clean_highz_gal.py', \\" >> "$CASAMS_EXE"
+#echo "     '-mode', '"${CASA_INP_CLEAN_MODE[0]}"', \\" >> "$CASAMS_EXE"
+#echo "     '-vis', '"${CASA_INP_VIS[0]}"', \\" >> "$CASAMS_EXE"
+#
+#if [[ ${#CASA_INP_OUTPUT[@]} -gt 0 ]]; then
+#echo "     '-out', '"${CASA_INP_OUTPUT[0]}"', \\" >> "$CASAMS_EXE"
+#fi
+#
+#if [[ ${#CASA_INP_FIELD[@]} -gt 0 ]]; then
+#echo "     '-field', '"${CASA_INP_FIELD[0]}"', \\" >> "$CASAMS_EXE"
+#fi
+#
+#if [[ ${#CASA_INP_FREQ[@]} -gt 0 ]]; then
+#echo "     '-freq', '"${CASA_INP_FREQ[0]}"', \\" >> "$CASAMS_EXE"
+#fi
+#
+#if [[ ${#CASA_INP_SPW[@]} -gt 0 ]]; then
+#echo "     '-spw', '"${CASA_INP_SPW[0]}"', \\" >> "$CASAMS_EXE"
+#fi
+#
+#if [[ ${#CASA_INP_WIDTH[@]} -gt 0 ]]; then
+#echo "     '-width', '"${CASA_INP_WIDTH[0]}"', \\" >> "$CASAMS_EXE"
+#fi
+#
+#if [[ ${CASA_INP_CLEAN_DRY_RUN} -gt 0 ]]; then
+#echo "     '-dry-run', \\" >> "$CASAMS_EXE"
+#fi
+#
+#echo "    ] \\" >> "$CASAMS_EXE"
+#echo ")" >> "$CASAMS_EXE"
+#echo "" >> "$CASAMS_EXE"
+
+
+
+# 
+# fallback to Python 2 execfile() ...
+# 
+if [[ ${#CASA_INP_CLEAN_MODE[@]} -gt 0 ]]; then
+echo "clean_mode = '${CASA_INP_CLEAN_MODE[0]}'" >> "$CASAMS_EXE"
+fi
+
+echo "vis = '${CASA_INP_VIS[0]}'" >> "$CASAMS_EXE"
+
+if [[ ${#CASA_INP_OUTPUT[@]} -gt 0 ]]; then
+echo "out = '${CASA_INP_OUTPUT[0]}'" >> "$CASAMS_EXE"
+fi
+
+if [[ ${#CASA_INP_FIELD[@]} -gt 0 ]]; then
+echo "gal = '${CASA_INP_FIELD[0]}'" >> "$CASAMS_EXE"
+fi
+
+if [[ ${#CASA_INP_FREQ[@]} -gt 0 ]]; then
+echo "freq = '${CASA_INP_FREQ[0]}'" >> "$CASAMS_EXE"
+fi
+
+if [[ ${#CASA_INP_SPW[@]} -gt 0 ]]; then
+echo "spw = '${CASA_INP_SPW[0]}'" >> "$CASAMS_EXE"
+fi
+
+if [[ ${#CASA_INP_WIDTH[@]} -gt 0 ]]; then
+echo "width = '${CASA_INP_WIDTH[0]}'" >> "$CASAMS_EXE"
+fi
+
+if [[ ${CASA_INP_CLEAN_DRY_RUN} -gt 0 ]]; then
+echo "is_dry_run = True" >> "$CASAMS_EXE"
+fi
+
+echo "" >> "$CASAMS_EXE"
+echo "execfile('"$(cd $(dirname ${BASH_SOURCE[0]}); pwd)"/casa_ms_clean_highz_gal.py', globals(), locals())" >> "$CASAMS_EXE"
+echo "" >> "$CASAMS_EXE"
+
+# 
+# 
+# 
+
+# 
+#chmod +x "${CASAMS_EXE}"
+echo "Wrote to python script: ${CASAMS_EXE}"
+echo "Now running: casa --logfile \"${CASAMS_LOG}\" --nocrashreport --nogui -c \"execfile('${CASAMS_EXE}')\""
+
+casa --logfile "${CASAMS_LOG}" --nocrashreport --nogui -c "execfile('${CASAMS_EXE}')"
+
+
+
+# 
+# Run casa if the user agrees
+# 
+#if [[ $CASA_INP_NO -eq 0 ]]; then
+#    
+#    CASAMS_GOO="y"
+#    if [[ $CASA_INP_YES -eq 0 ]]; then
+#        read -e -p "Launch casa now? " -i "y" CASAMS_GOO
+#    else
+#        echo "Launching casa "
+#    fi
+#    if [[ x"$CASAMS_GOO" == x"y"* || x"$CASAMS_GOO" == x"Y"* ]]; then
+#       echo "casa --nogui --nologfile -c ${CASAMS_EXE} | tee ${CASAMS_LOG}"
+#             casa --nogui --nologfile -c "${CASAMS_EXE}" | tee "${CASAMS_LOG}"
+#    fi
+#    
+#    # copy EXE and LOG
+#    for (( i=0; i<${#CASA_INP_UVFIT_MODELTYPE[@]}; i++ )); do
+#        if [[ $i -lt ${#CASA_INP_OUTPUT[@]} ]]; then 
+#            cp "$CASAMS_EXE" $(echo "$TempOutput" | sed -e 's/\.ms$//g')".py"
+#            cp "$CASAMS_LOG" $(echo "$TempOutput" | sed -e 's/\.ms$//g')".log"
+#        fi
+#    done
+#    
+#else
+#    echo "OK, we will not run casa now. Please run the following command by yourself"
+#    echo "    casa --nogui --nologfile -c ${CASAMS_EXE} | tee ${CASAMS_LOG}"
+#    echo ""
+#fi
+
+
+
+# 
+# Run casa now
+# 
+#if [[ $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
+#    echo ""
+#    echo "Error! CASA was not found! Please check your \$PATH!"
+#    echo ""
+#    exit
+#else
+#    echo ""
+#    echo "Running casa at "$(date +"%Y%m%d %Hh%Mm%Ss %Z")", please wait ..."
+#    casa --nologfile --nogui -c "${CASAMS_EXE}" | tee "${CASAMS_LOG}"
+#    echo "Finished casa at "$(date +"%Y%m%d %Hh%Mm%Ss %Z")"!"
+#    echo ""
+#fi
+
+
+
+echo "Done!"
+
+

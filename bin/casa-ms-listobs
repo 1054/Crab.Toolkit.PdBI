@@ -103,7 +103,7 @@ echo "inp(listobs)"                                    >> "$CASAMS_FPY"
 echo "listobs()"                                       >> "$CASAMS_FPY"
 echo ""                                                >> "$CASAMS_FPY"
 echo "Wrote to python script: \"${CASAMS_FPY}\""
-echo "Please run bash -c 'casa --nologfile --nogui -c \"${CASAMS_FPY}\"'"
+echo "Please run bash -c 'casa --nologfile --nogui -c \"execfile(\'${CASAMS_FPY}\')\"'"
 # 
 # 
 # 

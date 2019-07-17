@@ -2,18 +2,44 @@
 # 
 # This code NOT REALLY must be run in CASA
 # 
+# to run this code in CASA, use 
+#   execfile(__file__, {}, locals()) 
+# but we must set vis and field in advance
+# 
 
 from __future__ import print_function
-import os, sys, re, json, copy, time, datetime, shutil, pprint
+import os, sys, re, json, copy, time, datetime, shutil
 import numpy as np
-import astropy
+#import astropy
+
+
+# 
+# def usage()
+# 
+def usage():
+    print('Usage:')
+    print('    casa_ms_clean_highz_gal.py -vis "Your_input_vis.ms" -gal "Your_galaxy_name" [-dry-run] [-spw "0,1,2,3"] [-width "30km/s"]')
+
+
+
+
+# 
+# import casacore table
+# 
+global USE_CASACORE
 try:
-    import casacore # pip install python-casacore # documentation: http://casacore.github.io/python-casacore/
+    #from __casac__ import *
+    from __casac__.table import table
+    USE_CASACORE = False
 except:
-    raise ImportError('Could not import casacore! Please install it via \'pip install python-casacore!\'')
+    try:
+        import casacore # pip install python-casacore # documentation: http://casacore.github.io/python-casacore/
+        from casacore.tables import table, taql
+        USE_CASACORE = True
+    except:
+        raise ImportError('Could not import casacore or __casac__! Please install casacore via \'pip install python-casacore!\'')
 
-from casacore.tables import table, taql
-
+print('USE_CASACORE = %s'%(USE_CASACORE))
 
 
 
@@ -33,6 +59,45 @@ class json_interferometry_info_dict_encoder(json.JSONEncoder):
             return obj.tolist()
         else:
             return super(json_interferometry_info_dict_encoder, self).default(obj)
+
+
+
+
+# 
+# open_casa_table
+# 
+def open_casa_table(table_file_path):
+    global USE_CASACORE
+    if USE_CASACORE == True:
+        tb0 = table(table_file_path)
+    else:
+        tb0 = table()
+        tb0.open(table_file_path)
+    return tb0
+
+
+
+
+# 
+# query_casa_table
+# 
+def query_casa_table(tb0, query_where_str, columns = []):
+    global USE_CASACORE
+    # 
+    # query_columns_str must be a single string with comma separated.
+    if type(columns) is str:
+        query_columns_str = columns
+    else:
+        query_columns_str = ', '.join(map(str, columns))
+    # 
+    # query 
+    if USE_CASACORE == True:
+        tbout = taql('SELECT %s FROM $tb0 WHERE (%s);'%(query_columns_str, query_where_str))
+        #tbout = tb0.query(query=query_where_str, columns=query_columns_str)
+    else:
+        tbout = tb0.query(query=query_where_str, columns=query_columns_str)
+    return tbout
+
 
 
 
@@ -65,11 +130,11 @@ def grab_interferometry_info(vis, info_dict_file = ''):
     print('Preparing info_dict for "%s"'%(vis))
     # 
     # open table
-    tb = table(vis) # open table tb1
+    tb1 = open_casa_table(vis) # open table tb1
     # 
     # test
-    #print(tb.getkeywords())
-    #print(tb.colnames())
+    #print(tb1.getkeywords())
+    #print(tb1.colnames())
     # 
     # prepare variables
     missing_keywords = []
@@ -96,58 +161,59 @@ def grab_interferometry_info(vis, info_dict_file = ''):
     info_dict['DATA_DESC']['SPW_ID'] = {} # SPW_ID for each data row
     # 
     # get ANTENNA
-    if 'ANTENNA' in tb.getkeywords():
-        tb2 = table(tb.getkeyword('ANTENNA')) # open table tb2
+    if 'ANTENNA' in tb1.getkeywords():
+        tb2 = open_casa_table(tb1.getkeyword('ANTENNA').replace('Table: ','')) # open table tb2
         #print(tb2.colnames()) # ['OFFSET', 'POSITION', 'TYPE', 'DISH_DIAMETER', 'FLAG_ROW', 'MOUNT', 'NAME', 'STATION']
-        info_dict['ANTENNA']['ID'] = np.arange(0,tb2.nrows()).astype(int)
-        info_dict['ANTENNA']['OFFSET'] = tb2.getcol('OFFSET')
-        info_dict['ANTENNA']['POSITION'] = tb2.getcol('POSITION')
-        info_dict['ANTENNA']['DISH_DIAMETER'] = tb2.getcol('DISH_DIAMETER')
+        info_dict['ANTENNA']['ID'] = np.arange(0,tb2.nrows()).astype(int).tolist()
+        info_dict['ANTENNA']['OFFSET'] = tb2.getcol('OFFSET').tolist()
+        info_dict['ANTENNA']['POSITION'] = tb2.getcol('POSITION').tolist()
+        info_dict['ANTENNA']['DISH_DIAMETER'] = tb2.getcol('DISH_DIAMETER').tolist()
+        print(type(info_dict['ANTENNA']['OFFSET']), info_dict['ANTENNA']['OFFSET'].shape).tolist()
         tb2.close() # close table tb2
     else:
         missing_keywords.append('ANTENNA')
     # 
     # get FIELD
-    if 'FIELD' in tb.getkeywords():
-        tb2 = table(tb.getkeyword('FIELD')) # open table tb2
+    if 'FIELD' in tb1.getkeywords():
+        tb2 = open_casa_table(tb1.getkeyword('FIELD').replace('Table: ','')) # open table tb2
         #print(tb2.colnames()) # ['DELAY_DIR', 'PHASE_DIR', 'REFERENCE_DIR', 'CODE', 'FLAG_ROW', 'NAME', 'NUM_POLY', 'SOURCE_ID', 'TIME']
-        info_dict['FIELD']['ID'] = np.arange(0,tb2.nrows()).astype(int)
-        info_dict['FIELD']['SOURCE_ID'] = tb2.getcol('SOURCE_ID')
-        info_dict['FIELD']['NAME'] = tb2.getcol('NAME')
+        info_dict['FIELD']['ID'] = np.arange(0,tb2.nrows()).astype(int).tolist()
+        info_dict['FIELD']['SOURCE_ID'] = tb2.getcol('SOURCE_ID').astype(int).tolist()
+        info_dict['FIELD']['NAME'] = tb2.getcol('NAME').astype(str).tolist()
         tb2.close() # close table tb2
     else:
         missing_keywords.append('FIELD')
     # 
     # get SOURCE
-    if 'SOURCE' in tb.getkeywords():
-        tb2 = table(tb.getkeyword('SOURCE')) # open table tb2
+    if 'SOURCE' in tb1.getkeywords():
+        tb2 = open_casa_table(tb1.getkeyword('SOURCE').replace('Table: ','')) # open table tb2
         #print(tb2.colnames()) # ['DIRECTION', 'PROPER_MOTION', 'CALIBRATION_GROUP', 'CODE', 'INTERVAL', 'NAME', 'NUM_LINES', 'SOURCE_ID', 'SPECTRAL_WINDOW_ID', 'TIME', 'POSITION', 'REST_FREQUENCY', 'SYSVEL', 'TRANSITION', 'SOURCE_MODEL']
-        info_dict['SOURCE']['ID'] = np.arange(0,tb2.nrows()).astype(int)
-        info_dict['SOURCE']['NAME'] = tb2.getcol('NAME')
-        info_dict['SOURCE']['SOURCE_ID'] = tb2.getcol('SOURCE_ID')
-        info_dict['SOURCE']['SPW_ID'] = tb2.getcol('SPECTRAL_WINDOW_ID')
+        info_dict['SOURCE']['ID'] = np.arange(0,tb2.nrows()).astype(int).tolist()
+        info_dict['SOURCE']['NAME'] = tb2.getcol('NAME').astype(str).tolist()
+        info_dict['SOURCE']['SOURCE_ID'] = tb2.getcol('SOURCE_ID').astype(int).tolist()
+        info_dict['SOURCE']['SPW_ID'] = tb2.getcol('SPECTRAL_WINDOW_ID').astype(int).tolist()
         tb2.close() # close table tb2
     else:
         missing_keywords.append('SOURCE')
     # 
     # get DATA_DESCRIPTION
-    if 'DATA_DESCRIPTION' in tb.getkeywords():
-        tb2 = table(tb.getkeyword('DATA_DESCRIPTION')) # open table tb2
+    if 'DATA_DESCRIPTION' in tb1.getkeywords():
+        tb2 = open_casa_table(tb1.getkeyword('DATA_DESCRIPTION').replace('Table: ','')) # open table tb2
         #print(tb2.colnames()) # ['MEAS_FREQ_REF', 'CHAN_FREQ', 'REF_FREQUENCY', 'CHAN_WIDTH', 'EFFECTIVE_BW', 'RESOLUTION', 'FLAG_ROW', 'FREQ_GROUP', 'FREQ_GROUP_NAME', 'IF_CONV_CHAIN', 'NAME', 'NET_SIDEBAND', 'NUM_CHAN', 'TOTAL_BANDWIDTH']
-        info_dict['DATA_DESC']['ID'] = np.arange(0,tb2.nrows()).astype(int)
-        info_dict['DATA_DESC']['SPW_ID'] = tb2.getcol('SPECTRAL_WINDOW_ID')
-        info_dict['DATA_DESC']['STOKES_ID'] = tb2.getcol('POLARIZATION_ID')
+        info_dict['DATA_DESC']['ID'] = np.arange(0,tb2.nrows()).astype(int).tolist()
+        info_dict['DATA_DESC']['SPW_ID'] = tb2.getcol('SPECTRAL_WINDOW_ID').astype(int).tolist()
+        info_dict['DATA_DESC']['STOKES_ID'] = tb2.getcol('POLARIZATION_ID').astype(int).tolist()
         tb2.close() # close table tb2
     else:
         missing_keywords.append('DATA_DESCRIPTION')
     # 
     # get SPECTRAL_WINDOW
-    if 'SPECTRAL_WINDOW' in tb.getkeywords():
-        tb2 = table(tb.getkeyword('SPECTRAL_WINDOW')) # open table tb2
+    if 'SPECTRAL_WINDOW' in tb1.getkeywords():
+        tb2 = open_casa_table(tb1.getkeyword('SPECTRAL_WINDOW').replace('Table: ','')) # open table tb2
         #print(tb2.colnames()) # ['MEAS_FREQ_REF', 'CHAN_FREQ', 'REF_FREQUENCY', 'CHAN_WIDTH', 'EFFECTIVE_BW', 'RESOLUTION', 'FLAG_ROW', 'FREQ_GROUP', 'FREQ_GROUP_NAME', 'IF_CONV_CHAIN', 'NAME', 'NET_SIDEBAND', 'NUM_CHAN', 'TOTAL_BANDWIDTH']
-        info_dict['SPW']['ID'] = np.arange(0,tb2.nrows()).astype(int)
-        info_dict['SPW']['NAME'] = tb2.getcol('NAME')
-        info_dict['SPW']['NUM_CHAN'] = tb2.getcol('NUM_CHAN')
+        info_dict['SPW']['ID'] = np.arange(0,tb2.nrows()).astype(int).tolist()
+        info_dict['SPW']['NAME'] = tb2.getcol('NAME').astype(str).tolist()
+        info_dict['SPW']['NUM_CHAN'] = tb2.getcol('NUM_CHAN').astype(int).tolist()
         info_dict['SPW']['DATA_DESC_ID'] = []
         info_dict['SPW']['PRIMARY_BEAM'] = [] # in units of degrees
         info_dict['SPW']['CHAN_PRIMARY_BEAM'] = [] # in units of degrees, should be a 2D array
@@ -165,14 +231,14 @@ def grab_interferometry_info(vis, info_dict_file = ''):
     if len(missing_keywords) > 0:
         print('Error! Could not find following keywords in the input vis "%s":'%(vis))
         print('    ' + ', '.join(missing_keywords))
-        tb.close() # close table on error
+        tb1.close() # close table on error
         sys.exit() # exit on error
     # 
     # 
     # 
     # determine data column
-    #print(tb.colnames())
-    if 'CORRECTED_DATA' in tb.colnames():
+    #print(tb1.colnames())
+    if 'CORRECTED_DATA' in tb1.colnames():
         data_column = 'CORRECTED_DATA'
     else:
         data_column = 'DATA'
@@ -200,21 +266,21 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             query_where_str3 = query_where_str + ' AND (FIELD_ID==%d)'%(query_field_id)
         else:
             print('Error! The input field "%s" is not in the FIELD table of the input data "%s"!'%(field, vis))
-            tb.close() # close table on error
+            tb1.close() # close table on error
             sys.exit()
         # 
         # select rows
-        tb3 = taql("SELECT UVW, "+data_column+", DATA_DESC_ID, EXPOSURE, TIME FROM $tb WHERE ("+query_where_str3+")") # open table tb3
+        tb3 = query_casa_table(tb1, query_where_str3, columns=["UVW", data_column, "DATA_DESC_ID", "EXPOSURE", "TIME"]) # open table tb3
         print('Selected %d rows with "%s" (field=%s)'%(tb3.nrows(), query_where_str3, field ) )
         if tb3.nrows() <= 0:
             print('Error! No data found with "%s"!'%(query_where_str3))
             tb3.close() # close table on error
-            tb.close() # close table on error
+            tb1.close() # close table on error
             sys.exit()
-        #print('DATA', type(tb3.getcol('DATA')), tb3.getcol('DATA').shape) # shape (nrow, nchan, nstokes)
-        #print('DATA[0,:]', type(tb3.getcol('DATA')[0,:]), tb3.getcol('DATA')[0,:].shape) # 
-        #print('DATA[0,0,:]', type(tb3.getcol('DATA')[0,0,:]), tb3.getcol('DATA')[0,0,:].shape) # 2 polarization
-        #print('DATA[0,0,0]', type(tb3.getcol('DATA')[0,0,0]), tb3.getcol('DATA')[0,0,0]) # complex
+        #print('DATA', type(tb3.getcol(data_column)), tb3.getcol(data_column).shape) # shape (nrow, nchan, nstokes)
+        #print('DATA[0,:]', type(tb3.getcol(data_column)[0,:]), tb3.getcol(data_column)[0,:].shape) # 
+        #print('DATA[0,0,:]', type(tb3.getcol(data_column)[0,0,:]), tb3.getcol(data_column)[0,0,:].shape) # 2 polarization
+        #print('DATA[0,0,0]', type(tb3.getcol(data_column)[0,0,0]), tb3.getcol(data_column)[0,0,0]) # complex
         # 
         # check stokes
         number_of_stokes = -1
@@ -222,7 +288,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         #if len(data_shape) < 2:
         #    print('Error! Data has a wrong dimension of %s!'%(data_shape))
         #    tb3.close() # close table on error
-        #    tb.close() # close table on error
+        #    tb1.close() # close table on error
         #    sys.exit()
         #elif len(data_shape) == 2:
         #    print('Warning! Data has a dimension of %s and no polarization dimension!'%(data_shape))
@@ -235,26 +301,29 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         #    else:
         #        print('Error! Data has a wrong polarization dimension of %s which should be 1 or 2!'%(data_shape[2]))
         #        tb3.close() # close table on error
-        #        tb.close() # close table on error
+        #        tb1.close() # close table on error
         #        sys.exit()
         data_shape = tb3.getcell(data_column, int(tb3.nrows()/2) ).shape # this is faster than getting the full data_column column
         if len(data_shape) == 1:
-            print('Warning! Data cell has a dimension of %s and no polarization dimension!'%(data_shape))
+            print('Warning! Data cell has a dimension of %s and no polarization dimension!'%(str(data_shape)))
             number_of_stokes = 0
         elif len(data_shape) == 2:
+            if USE_CASACORE == False:
+                data_shape = data_shape[::-1] #<TODO><20190716># __casac__.table.table has a different dimension order than casacore.tables.table ???
+                print('data_shape', data_shape, '(nrow, nstokes)')
             if data_shape[-1] == 1:
                 number_of_stokes = 1
             elif data_shape[-1] == 2:
                 number_of_stokes = 2
             else:
-                print('Error! Data cell has a wrong polarization dimension of %s which should be 1 or 2!'%(data_shape[-1]))
+                print('Error! Data cell has a wrong polarization dimension of %s which should be 1 or 2!'%(data_shape[-1])) # [-1]
                 tb3.close() # close table on error
-                tb.close() # close table on error
+                tb1.close() # close table on error
                 sys.exit()
         else:
-            print('Error! Data cell has a wrong dimension of %s which should be (Nchan, Nstokes)!'%(data_shape))
+            print('Error! Data cell has a wrong dimension of %s which should be (Nchan, Nstokes)!'%(str(data_shape)))
             tb3.close() # close table on error
-            tb.close() # close table on error
+            tb1.close() # close table on error
             sys.exit()
         # 
         # prepare dict entry
@@ -268,6 +337,9 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         # get (u,v,w)
         print('Getting UVW info')
         data_UVW = tb3.getcol('UVW')
+        if USE_CASACORE == False:
+            data_UVW = data_UVW.T #<TODO><20190716># __casac__.table.table has a different dimension order than casacore.tables.table ???
+            print('data_UVW.shape', data_UVW.shape, '(nrow, 3)')
         info_dict[fieldKey]['UVW']['U_MAX'] = np.max(data_UVW[:,0])
         info_dict[fieldKey]['UVW']['U_MIN'] = np.max(data_UVW[:,1])
         info_dict[fieldKey]['UVW']['V_MAX'] = np.max(data_UVW[:,2])
@@ -313,7 +385,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             # 
             # select spw data
             query_where_str4 = '(DATA_DESC_ID in [%s])'%( ','.join( map( str, info_dict['SPW']['DATA_DESC_ID'][ispw] ) ) )
-            tb4 = taql("SELECT * FROM $tb3 WHERE ("+query_where_str4+")") # open table tb4
+            tb4 = query_casa_table(tb3, query_where_str4) # open table tb4
             print('Selected %d rows with "%s" (ispw==%d, spw=%d)'%(tb4.nrows(), query_where_str4, ispw, info_dict['SPW']['ID'][ispw] ) )
             # 
             # check nrows
@@ -333,6 +405,9 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             if number_of_stokes == 2:
                 data_array = tb4.getcol(data_column)
                 print('data_array.shape', data_array.shape)
+                if USE_CASACORE == False:
+                    data_array = data_array.T #<TODO><20190716># __casac__.table.table has a different dimension order than casacore.tables.table ???
+                    print('data_array.shape', data_array.shape, '(nrow, nchan, nstokes)')
                 data_stokesLL = data_array[:,:,0] # DATA shape (nrow, nchan, nstokes) and nstokes==2
                 data_stokesRR = data_array[:,:,1] # DATA shape (nrow, nchan, nstokes) and nstokes==2
                 data_stokesLL_abs = np.absolute(data_stokesLL)
@@ -357,18 +432,21 @@ def grab_interferometry_info(vis, info_dict_file = ''):
                 info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_RR'].append( data_stokesRR_rms_per_chan )
                 # 
                 # also sum up EXPOSURE, EXPOSURE * BASELINE, and EXPOSURE * ALL
-                exposure = tb4.getcol('EXPOSURE')
+                exposure = tb4.getcol('EXPOSURE').tolist()
                 info_dict[fieldKey]['SPW']['EXPOSURE_X_BASELINE'].append( np.sum( exposure ) / 2.0 ) # single stokes
                 info_dict[fieldKey]['SPW']['NUM_SCAN_X_BASELINE'].append( len( exposure ) / 2.0 ) # single stokes
                 info_dict[fieldKey]['SPW']['NUM_SCAN_X_ALL'].append( len( exposure ) )
                 info_dict[fieldKey]['SPW']['NUM_STOKES'].append( number_of_stokes )
             else:
                 if number_of_stokes == 1:
-                    data = tb4.getcol(data_column)[:,:,0] # DATA shape (nrow, nchan, nstokes) and nstokes==1
+                    data_array = tb4.getcol(data_column)[:,:,0] # DATA shape (nrow, nchan, nstokes) and nstokes==1
                 else:
-                    data = tb4.getcol(data_column)[:,:] # DATA shape (nrow, nchan), no stokes dimension
+                    data_array = tb4.getcol(data_column)[:,:] # DATA shape (nrow, nchan), no stokes dimension
                 print('data_array.shape', data_array.shape)
-                data_abs = np.absolute(data)
+                if USE_CASACORE == False:
+                    data_array = data_array.T #<TODO><20190716># __casac__.table.table has a different dimension order than casacore.tables.table ???
+                    print('data_array.shape', data_array.shape, '(nrow, nchan, nstokes)')
+                data_abs = np.absolute(data_array)
                 data_abs_mean = np.mean(data_abs, axis=0)
                 data_rms_per_chan = np.std(data_abs - data_abs_mean, axis=0)
                 data_rms_all = np.std(data_abs - data_abs_mean)
@@ -379,7 +457,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
                 # 
                 # also sum up EXPOSURE, EXPOSURE * BASELINE, and EXPOSURE * ALL
                 # -- in average we have (N_ant * (N_ant - 1)) baselines
-                exposure = tb4.getcol('EXPOSURE')
+                exposure = tb4.getcol('EXPOSURE').tolist()
                 info_dict[fieldKey]['SPW']['EXPOSURE_X_BASELINE'].append( np.sum( exposure ) ) # / np.sqrt( len(info_dict['ANTENNA']['ID']) * (len(info_dict['ANTENNA']['ID'])-1) )
                 info_dict[fieldKey]['SPW']['NUM_SCAN_X_BASELINE'].append( len( exposure ) )
                 info_dict[fieldKey]['SPW']['NUM_SCAN_X_ALL'].append( len( exposure ) )
@@ -405,7 +483,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         tb3.close() # close table tb3
     # 
     # close table
-    tb.close() # # close table tb1
+    tb1.close() # # close table tb1
     # 
     # store into info_dict_file
     with open(info_dict_file, 'w') as fp:
@@ -471,8 +549,12 @@ def print_interferometry_info_dict(info_dict, only_return_strings = False, curre
                 # else if the list has only one dimension
                 # we print like "[ ..., ..., ... ]"
                 else:
-                    print_fmt = '%%-%ds = [ %%s ] (len=1)' % (print_fmt_col_width)
-                    print_str = print_fmt % (k, str(info_item[0] ) ) # ', '.join(map(str, info_item)
+                    if len(info_item) > 0:
+                        print_fmt = '%%-%ds = [ %%s ] (len=1)' % (print_fmt_col_width)
+                        print_str = print_fmt % (k, str(info_item[0] ) ) # ', '.join(map(str, info_item)
+                    else:
+                        print_fmt = '%%-%ds = [ ] (len=0)' % (print_fmt_col_width)
+                        print_str = print_fmt % (k, ) ) # ', '.join(map(str, info_item)
             else:
                 print_fmt = '%%-%ds = [ %%s ] (scalar)' % (print_fmt_col_width)
                 print_str = print_fmt % (k, info_item )
@@ -644,11 +726,6 @@ def clean_highz_gal(my_clean_mode = 'cube',
             print('Error! The input vis "%s" does not exist!'%(vis))
             check_ok = False
     # 
-    # check vis
-    if field == '':
-        print('Error! The input field is empty!')
-        check_ok = False
-    # 
     # if not check_ok, print usage and exit
     if not check_ok:
         print("Please call this function like:")
@@ -657,6 +734,12 @@ def clean_highz_gal(my_clean_mode = 'cube',
     # 
     # grab_interferometry_info
     info_dict = grab_interferometry_info(vis)
+    # 
+    # check field empty
+    if field == '':
+        print('Error! The input field is empty!')
+        print('       Available fields are: %s'%(', '.join(['"'+t+'"' for t in info_dict['FIELD']['NAME']])))
+        sys.exit()
     # 
     # check field 
     if not ('FIELD_'+field in info_dict):
@@ -831,7 +914,6 @@ def clean_highz_gal(my_clean_mode = 'cube',
     # then run casa
     if is_dry_run == False:
         try: 
-            __IPYTHON__
             if 'casa' in globals() and 'tclean' in globals():
                 type(tclean)
                 print('Currently we are in CASA IPython! Running CASA `clean`!')
@@ -848,18 +930,6 @@ def clean_highz_gal(my_clean_mode = 'cube',
         print('e.g., casa -c "execfile(\'%s\')"'%(script_file))
 
 
-    
-
-
-
-
-
-# 
-# def usage()
-# 
-def usage():
-    print('Usage:')
-    print('    %s -vis "Your_input_vis.ms" -gal "Your_galaxy_name" [-dry-run] [-spw "0,1,2,3"] [-width "30km/s"]'%(os.path.dirname(__file__) ) )
 
 
 
@@ -872,15 +942,56 @@ def usage():
 if __name__ == '__main__':
     
     # 
+    # initialize variables
+    if 'vis' in locals():
+        vis = locals()['vis']
+    else:
+        vis = ''
+    
+    if 'out' in locals():
+        out = locals()['out']
+    else:
+        out = ''
+    
+    if 'gal' in locals():
+        gal = locals()['gal']
+    else:
+        gal = ''
+    
+    if 'spw' in locals():
+        spw = locals()['spw']
+    else:
+        spw = ''
+    
+    if 'width' in locals():
+        width = locals()['width']
+    else:
+        width = ''
+    
+    if 'freq' in locals():
+        freq = locals()['freq']
+    else:
+        freq = ''
+    
+    if 'clean_mode' in locals():
+        clean_mode = locals()['clean_mode']
+    else:
+        clean_mode = ''
+    
+    if 'script_file' in locals():
+        script_file = locals()['script_file']
+    else:
+        script_file = ''
+    
+    if 'is_dry_run' in locals():
+        is_dry_run = locals()['is_dry_run']
+    else:
+        is_dry_run = False
+    
+    # 
+    # check globals()
+    # 
     # read user input
-    vis = ''
-    out = ''
-    gal = ''
-    spw = ''
-    width = ''
-    clean_mode = ''
-    script_file = ''
-    is_dry_run = False
     iarg = 1
     while iarg < len(sys.argv):
         istr = re.sub(r'[-]+', r'-', sys.argv[iarg]).lower()
@@ -904,6 +1015,14 @@ if __name__ == '__main__':
             if iarg+1 < len(sys.argv):
                 iarg += 1
                 width = sys.argv[iarg]
+        elif istr == '-freq':
+            if iarg+1 < len(sys.argv):
+                iarg += 1
+                freq = sys.argv[iarg]
+        elif istr == '-mode' or istr == '-clean-mode':
+            if iarg+1 < len(sys.argv):
+                iarg += 1
+                clean_mode = sys.argv[iarg]
         elif istr == '-dry-run':
             is_dry_run = True
         else:
@@ -917,17 +1036,17 @@ if __name__ == '__main__':
     
     # 
     # check user input
-    if vis == '' or \
-       gal == '':
+    if vis == '':
         usage()
         sys.exit()
     
     # 
     # determine clean_mode
-    clean_mode = 'cube'
-    if width == '0':
-        clean_mode = 'continuum'
-        width = ''
+    if width != '':
+        clean_mode = 'cube'
+        if width == '0':
+            clean_mode = 'continuum'
+            width = ''
     
     # 
     # print message
@@ -967,7 +1086,8 @@ if __name__ == '__main__':
         # 
         clean_highz_gal(my_clean_mode = 'cube', vis = vis, field = gal, imagename = out, \
                         spw = spw, width = width, 
-                        script_file = script_file)
+                        script_file = script_file, 
+                        is_dry_run = is_dry_run)
     else:
         # 
         if script_file == '':
@@ -975,7 +1095,8 @@ if __name__ == '__main__':
         # 
         clean_highz_gal(my_clean_mode = 'continuum', vis = vis, field = gal, imagename = out, \
                         spw = spw, width = width, 
-                        script_file = script_file)
+                        script_file = script_file, 
+                        is_dry_run = is_dry_run)
         
 
 
