@@ -402,11 +402,11 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             # select spw data
             query_where_str4 = '(DATA_DESC_ID in [%s])'%( ','.join( map( str, info_dict['SPW']['DATA_DESC_ID'][ispw] ) ) )
             if USE_CASACORE == False:
-                tb4 = query_casa_table(tb3, query_where_str4) # open table tb4
-            else:
                 # if no casacore, __casac__ table has problem when trying to query tb3, it seems tb3 was deleted before query
                 tb4 = query_casa_table(tb1, query_where_str3 + ' AND ' + query_where_str4, 
                                        columns=["UVW", data_column, "DATA_DESC_ID", "EXPOSURE", "TIME"]) # open table tb4
+            else:
+                tb4 = query_casa_table(tb3, query_where_str4) # open table tb4
             print('Selected %d rows with "%s" (ispw==%d, spw=%d)'%(tb4.nrows(), query_where_str4, ispw, info_dict['SPW']['ID'][ispw] ) )
             # 
             # check nrows
