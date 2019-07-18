@@ -41,12 +41,31 @@ global USE_CASACORE
 #    except:
 #        raise ImportError('Could not import casacore or __casac__! Please install casacore via \'pip install python-casacore!\'')
 try:
-    import casacore # pip install python-casacore # documentation: http://casacore.github.io/python-casacore/
+    import casacore # PYTHONPATH= pip install --user python-casacore # documentation: http://casacore.github.io/python-casacore/
     from casacore.tables import table as casacore_table
     from casacore.tables import taql as casacore_taql
     USE_CASACORE = True
 except:
-    raise ImportError('Could not import casacore or __casac__! Please install casacore via \'pip install python-casacore!\'')
+    print('Error! Python package casacore not found! Should we install it?')
+    print('We can run `PYTHONPATH= pip install --user python-casacore` now if you argee by typing [y]:')
+    if sys.version_info.major >= 3:
+        check_yes = input("[y/n]: ")
+    else:
+        check_yes = raw_input("[y/n]: ")
+    if check_yes.lower().startswith('y'):
+        print('Running `PYTHONPATH= pip install --user python-casacore`')
+        os.system('PYTHONPATH= pip install --user python-casacore')
+        try:
+            import casacore # PYTHONPATH= pip install --user python-casacore # documentation: http://casacore.github.io/python-casacore/
+            from casacore.tables import table as casacore_table
+            from casacore.tables import taql as casacore_taql
+            USE_CASACORE = True
+        except:
+            print('Sorry, still could not import casacore!')
+            raise ImportError('Could not import casacore or __casac__! Please install casacore via \'PYTHONPATH= pip install python-casacore!\'')
+    else:
+        print('Abort!')
+        raise ImportError('Could not import casacore or __casac__! Please install casacore via \'PYTHONPATH= pip install python-casacore!\'')
 
 print('USE_CASACORE = %s'%(USE_CASACORE))
 
