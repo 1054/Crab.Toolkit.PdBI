@@ -6,6 +6,8 @@
 #   execfile(__file__, {}, locals()) 
 # but we must set vis and field in advance
 # 
+# 20190718: Could not run this in CASA with __casac__. Still must need casacore. 
+# 
 
 from __future__ import print_function
 import os, sys, re, json, copy, time, datetime, shutil
@@ -27,17 +29,23 @@ def usage():
 # import casacore table
 # 
 global USE_CASACORE
+#try:
+#    #from __casac__ import *
+#    from __casac__.table import table
+#    USE_CASACORE = False
+#except:
+#    try:
+#        import casacore # pip install python-casacore # documentation: http://casacore.github.io/python-casacore/
+#        from casacore.tables import table, taql
+#        USE_CASACORE = True
+#    except:
+#        raise ImportError('Could not import casacore or __casac__! Please install casacore via \'pip install python-casacore!\'')
 try:
-    #from __casac__ import *
-    from __casac__.table import table
-    USE_CASACORE = False
+    import casacore # pip install python-casacore # documentation: http://casacore.github.io/python-casacore/
+    from casacore.tables import table, taql
+    USE_CASACORE = True
 except:
-    try:
-        import casacore # pip install python-casacore # documentation: http://casacore.github.io/python-casacore/
-        from casacore.tables import table, taql
-        USE_CASACORE = True
-    except:
-        raise ImportError('Could not import casacore or __casac__! Please install casacore via \'pip install python-casacore!\'')
+    raise ImportError('Could not import casacore or __casac__! Please install casacore via \'pip install python-casacore!\'')
 
 print('USE_CASACORE = %s'%(USE_CASACORE))
 
