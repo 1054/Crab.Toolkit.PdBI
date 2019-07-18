@@ -42,7 +42,8 @@ global USE_CASACORE
 #        raise ImportError('Could not import casacore or __casac__! Please install casacore via \'pip install python-casacore!\'')
 try:
     import casacore # pip install python-casacore # documentation: http://casacore.github.io/python-casacore/
-    from casacore.tables import table, taql
+    from casacore.tables import table as casacore_table
+    from casacore.tables import taql as casacore_taql
     USE_CASACORE = True
 except:
     raise ImportError('Could not import casacore or __casac__! Please install casacore via \'pip install python-casacore!\'')
@@ -77,7 +78,7 @@ class json_interferometry_info_dict_encoder(json.JSONEncoder):
 def open_casa_table(table_file_path):
     global USE_CASACORE
     if USE_CASACORE == True:
-        tb0 = table(table_file_path)
+        tb0 = casacore_table(table_file_path)
     else:
         tb0 = table()
         tb0.open(table_file_path)
@@ -100,7 +101,7 @@ def query_casa_table(tb0, query_where_str, columns = []):
     # 
     # query 
     if USE_CASACORE == True:
-        tbout = taql('SELECT %s FROM $tb0 WHERE (%s);'%(query_columns_str, query_where_str))
+        tbout = casacore_taql('SELECT %s FROM $tb0 WHERE (%s);'%(query_columns_str, query_where_str))
         #tbout = tb0.query(query=query_where_str, columns=query_columns_str)
     else:
         tbout = tb0.query(query=query_where_str, columns=query_columns_str)
