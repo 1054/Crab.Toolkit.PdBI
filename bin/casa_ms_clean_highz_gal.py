@@ -13,6 +13,7 @@ from __future__ import print_function
 import os, sys, re, json, copy, time, datetime, shutil
 import numpy as np
 #import astropy
+import casacore
 
 
 # 
@@ -46,26 +47,41 @@ try:
     from casacore.tables import taql as casacore_taql
     USE_CASACORE = True
 except:
-    print('Error! Python package casacore not found! Should we install it?')
-    print('We can run `PYTHONPATH= pip install --user python-casacore` now if you argee by typing [y]:')
-    if sys.version_info.major >= 3:
-        check_yes = input("[y/n]: ")
-    else:
-        check_yes = raw_input("[y/n]: ")
-    if check_yes.lower().startswith('y'):
-        print('Running `PYTHONPATH= pip install --user python-casacore`')
-        os.system('PYTHONPATH= pip install --user python-casacore')
-        try:
-            import casacore # PYTHONPATH= pip install --user python-casacore # documentation: http://casacore.github.io/python-casacore/
-            from casacore.tables import table as casacore_table
-            from casacore.tables import taql as casacore_taql
-            USE_CASACORE = True
-        except:
-            print('Sorry, still could not import casacore!')
-            raise ImportError('Could not import casacore or __casac__! Please install casacore via \'PYTHONPATH= pip install python-casacore!\'')
-    else:
-        print('Abort!')
-        raise ImportError('Could not import casacore or __casac__! Please install casacore via \'PYTHONPATH= pip install python-casacore!\'')
+    #print('Error! Python package casacore not found! Should we install it?')
+    #print('We can run pip now to install python-casacore into user directory, if you argee by typing "y":')
+    #if sys.version_info.major >= 3:
+    #    check_yes = input("[y/n]: ")
+    #else:
+    #    check_yes = raw_input("[y/n]: ")
+    #if check_yes.lower().startswith('y'):
+    #    #os.system('PYTHONPATH= pip install --user python-casacore')
+    #    print('Trying to import pip and install python-casacore')
+    #    try:
+    #        import pip
+    #        #import sysconfig
+    #        if hasattr(pip, 'main'):
+    #            pip.main(['install', '--user', 'python-casacore'])
+    #        else:
+    #            pip._internal.main(['install', '--user', 'python-casacore'])
+    #    except:
+    #        try:
+    #            import pip
+    #            
+    #        except:
+    #            pass
+    #    
+    #    try:
+    #        import casacore # PYTHONPATH= pip install --user python-casacore # documentation: http://casacore.github.io/python-casacore/
+    #        from casacore.tables import table as casacore_table
+    #        from casacore.tables import taql as casacore_taql
+    #        USE_CASACORE = True
+    #    except:
+    #        print('Sorry, still could not import casacore!')
+    #        raise ImportError('Could not import casacore or __casac__! Please install casacore via \'PYTHONPATH= pip install python-casacore!\'')
+    #else:
+    #    print('Abort!')
+    #    raise ImportError('Could not import casacore or __casac__! Please install casacore via \'PYTHONPATH= pip install python-casacore!\'')
+    raise ImportError('Could not import casacore! Please install casacore outside CASA via \'PYTHONPATH= pip install python-casacore!\'')
 
 print('USE_CASACORE = %s'%(USE_CASACORE))
 
@@ -313,7 +329,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         # 
         # select rows
         tb3 = query_casa_table(tb1, query_where_str3, columns=["UVW", data_column, "DATA_DESC_ID", "EXPOSURE", "TIME"]) # open table tb3
-        print('Selected %d rows with "%s" (field=%s)'%(tb3.nrows(), query_where_str3, field ) )
+        print('Selected %d rows with "%s" (field="%s")'%(tb3.nrows(), query_where_str3, field ) )
         if tb3.nrows() <= 0:
             print('Error! No data found with "%s"!'%(query_where_str3))
             tb3.close() # close table on error
@@ -435,7 +451,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
                                        columns=["UVW", data_column, "DATA_DESC_ID", "EXPOSURE", "TIME"]) # open table tb4
             else:
                 tb4 = query_casa_table(tb3, query_where_str4) # open table tb4
-            print('Selected %d rows with "%s" (ispw==%d, spw=%d)'%(tb4.nrows(), query_where_str4, ispw, info_dict['SPW']['ID'][ispw] ) )
+            print('Selected %d rows with "%s" (ispw==%d, spw=%d, field="%s")'%(tb4.nrows(), query_where_str4, ispw, info_dict['SPW']['ID'][ispw], field ) )
             # 
             # check nrows
             if tb4.nrows() <= 0:
@@ -605,7 +621,7 @@ def print_interferometry_info_dict(info_dict, only_return_strings = False, curre
                         print_str = print_fmt % (k, str(info_item[0]), str(info_item[-1]), len(info_item) )
                     elif len(info_item) > 0:
                         print_fmt = '%%-%ds = [ %%s ] (len=%%d)' % (print_fmt_col_width)
-                        print_str = print_fmt % (k, ', '.join(map(str, info_item), len(info_item)), len(info_item) )
+                        print_str = print_fmt % (k, ', '.join(map(str, info_item)), len(info_item) )
                     else:
                         print_fmt = '%%-%ds = [ ] (len=0)' % (print_fmt_col_width)
                         print_str = print_fmt % (k, )
@@ -801,15 +817,25 @@ def clean_highz_gal(my_clean_mode = 'cube',
         print('       Available fields are: %s'%(', '.join(['"'+t+'"' for t in info_dict['FIELD']['NAME']])))
         sys.exit()
     # 
+    # check spw empty
+    if len(info_dict['FIELD_'+field]['SPW']['ID']) == 0:
+        print('Error! The info_dict table shows zero SPW for the field %s! Maybe re-read the info_dict by deleting "%s" and run this code again?'%(field, re.sub(r'\.ms$', r'', vis, re.IGNORECASE) + '.info.dict.json'))
+        print(info_dict['FIELD_'+field])
+        sys.exit()
+    # 
     # set spw selection according to the input
     if spw == '':
         selectdata = False
         spw_list = []
         ispw_list = []
         for ispw in range(len(info_dict['FIELD_'+field]['SPW']['ID'])):
+            #print('info_dict[%s][\'SPW\'][\'NAME\'][%d] = %s'% ('FIELD_'+field, ispw, info_dict['FIELD_'+field]['SPW']['NAME'][ispw]) )
             if (not info_dict['FIELD_'+field]['SPW']['NAME'][ispw].startswith('WVR')) \
-               and info_dict['FIELD_'+field]['SPW']['NAME'][ispw].find('ALMA') > 0 \
-               and info_dict['FIELD_'+field]['SPW']['NAME'][ispw].find('FULL_RES') > 0:
+                and info_dict['FIELD_'+field]['SPW']['NAME'][ispw].find('ALMA') > 0 \
+                and info_dict['FIELD_'+field]['SPW']['NAME'][ispw].find('FULL_RES') > 0:
+                ispw_list.append(ispw) # ispw is the index for info_dict['FIELD_'+field]['SPW']['ID'] array
+                spw_list.append(info_dict['FIELD_'+field]['SPW']['ID'][ispw])
+            elif (info_dict['FIELD_'+field]['SPW']['NAME'][ispw] == 'none'):
                 ispw_list.append(ispw) # ispw is the index for info_dict['FIELD_'+field]['SPW']['ID'] array
                 spw_list.append(info_dict['FIELD_'+field]['SPW']['ID'][ispw])
     else:
@@ -823,6 +849,10 @@ def clean_highz_gal(my_clean_mode = 'cube',
                 print('Error! The input spw %d is not in the info_dict of the data "%s"!'%(spw_list[ispw], vis))
                 print('       Available spws are: %s'%(str(info_dict['FIELD_'+field]['SPW']['ID'])))
                 sys.exit()
+    #print('ispw_list', ispw_list)
+    if len(ispw_list) == 0:
+        print('Error! The spw list is empty?! This should not happen..')
+        sys.exit()
     # 
     # set reffreq and restfreq if no input. 
     # -- reffreq is the Reference frequency for MFS (relevant only if nterms > 1)
@@ -842,7 +872,11 @@ def clean_highz_gal(my_clean_mode = 'cube',
             sys.stdout.write('\n')
             sys.stdout.flush()
             # 
-            reffreq = '%0.9f GHz'%(np.mean(np.array(info_dict['SPW']['CHAN_FREQ'])[np.array(ispw_list)][0]) / 1e9)
+            #print('ispw_list', ispw_list)
+            if len(ispw_list) > 1:
+                reffreq = '%0.9f GHz'%(np.mean(np.array(info_dict['SPW']['CHAN_FREQ'])[ispw_list][0]) / 1e9)
+            else:
+                reffreq = '%0.9f GHz'%(np.mean(np.array(info_dict['SPW']['CHAN_FREQ'])[ispw_list]) / 1e9)
         
     # 
     # set channel width if no input
@@ -881,11 +915,12 @@ def clean_highz_gal(my_clean_mode = 'cube',
         #image_plane_rms_mJy_per_beam = np.mean(np.array(info_dict['SPW']['RMS'])[ispw_list]) / np.sqrt( len(info_dict['ANTENNA']['ID']) * (len(info_dict['ANTENNA']['ID'])-1) ) * 1e3 # in units of mJy/beam
         # now we use NUM_SCAN_X_BASELINE == N_ant * (N_ant-1) * (t_source / t_interval), so image plane rms is as below
         # now we use NUM_SCAN_X_ALL == N_ant * (N_ant-1) * (t_source / t_interval) * n_polar, so image plane rms is as below
-        image_plane_rms_mJy_per_beam = np.mean(np.array(info_dict['FIELD_'+field]['SPW']['RMS'])[ispw_list]) \
+        image_plane_rms_mJy_per_beam = np.mean( np.array(info_dict['FIELD_'+field]['SPW']['RMS'])[ispw_list] ) \
                                        / np.sqrt( np.array(info_dict['FIELD_'+field]['SPW']['NUM_SCAN_X_ALL'])[ispw_list] ) \
                                        * 1e3 # in units of mJy/beam
         if np.isnan(clean_to_nsigma):
             clean_to_nsigma = 3.0 #<TODO># clean to how many sigma
+        print('image_plane_rms_mJy_per_beam', image_plane_rms_mJy_per_beam)
         threshold = '%0.6f mJy'%(np.min(image_plane_rms_mJy_per_beam) * clean_to_nsigma) # in units of mJy/beam
     # 
     # set stokes
@@ -894,7 +929,8 @@ def clean_highz_gal(my_clean_mode = 'cube',
     # 
     # print message
     print('spw_list = %s'%(spw_list))
-    print('restfreq = %s'%(restfreq))
+    print('reffreq = %s'%(reffreq)) # for continuum
+    print('restfreq = %s'%(restfreq)) # for line, if empty CASA tclean will compute the centeroid frequency by itself
     print('threshold = %s'%(threshold))
     # 
     # set other parameters
