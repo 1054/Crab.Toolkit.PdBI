@@ -124,12 +124,10 @@ def open_casa_table(table_file_path):
 # 
 # query_casa_table
 # 
-def query_casa_table(tb0, query_where_str, columns = None, max_nrows = None, verbose = False):
+def query_casa_table(tb0, query_where_str, columns = []):
     global USE_CASACORE
     # 
     # query_columns_str must be a single string with comma separated.
-    if columns is None:
-        columns = []
     if type(columns) is str:
         query_columns_str = columns
     else:
@@ -137,22 +135,12 @@ def query_casa_table(tb0, query_where_str, columns = None, max_nrows = None, ver
     # 
     # query 
     if USE_CASACORE == True:
-        if query_where_str != '' and query_where_str != '*':
-            query_str = 'SELECT %s FROM $tb0 WHERE (%s)'%(query_columns_str, query_where_str)
-        else:
-            query_str = 'SELECT %s FROM $tb0'%(query_columns_str)
-        if max_nrows is not None:
-            query_str = query_str + ' LIMIT %d'%(max_nrows)
-        if verbose == True:
-            print('casacore_taql: '+ query_str)
-        tbout = casacore_taql(query_str)
+        tbout = casacore_taql('SELECT %s FROM $tb0 WHERE (%s);'%(query_columns_str, query_where_str))
+        #tbout = tb0.query(query=query_where_str, columns=query_columns_str)
     else:
-        if query_where_str != '' and query_where_str != '*':
-            tbout = tb0.query(query=query_where_str, columns=query_columns_str)
-            #tbout = tb0.query(query=query_where_str, columns=query_columns_str, style='python') # https://casa.nrao.edu/docs/CasaRef/table.query.html -- 
-            #style='python' not working?
-        else:
-            tbout = tb0.query(columns=query_columns_str)
+        tbout = tb0.query(query=query_where_str, columns=query_columns_str)
+        #tbout = tb0.query(query=query_where_str, columns=query_columns_str, style='python') # https://casa.nrao.edu/docs/CasaRef/table.query.html -- 
+        #style='python' not working?
     return tbout
 
 
@@ -332,45 +320,67 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         # check field name
         if field in info_dict['FIELD']['NAME']:
             query_field_id = info_dict['FIELD']['ID'][ info_dict['FIELD']['NAME'].index(field) ]
-            query_where_field_str = query_where_str + ' AND (FIELD_ID==%d)'%(query_field_id)
+            query_where_str3 = query_where_str + ' AND (FIELD_ID==%d)'%(query_field_id)
         else:
             print('Error! The input field "%s" is not in the FIELD table of the input data "%s"!'%(field, vis))
             tb1.close() # close table on error
             sys.exit()
         # 
-        # select first row and check stokes
-        tb3 = query_casa_table(tb1, query_where_field_str, 'GCOUNT()') # open table tb3, TAQL GCOUNT() counts global row number
-        number_of_data_rows_per_field = tb3.getcell(tb3.colnames()[0], 0)
-        tb3.close()
-        print('Selected %d rows with "%s" (field="%s")'%(number_of_data_rows_per_field, query_where_field_str, field ) )
-        if number_of_data_rows_per_field <= 0:
-            print('Error! No data found with "%s"!'%(query_where_field_str))
+        # select rows
+        tb3 = query_casa_table(tb1, query_where_str3, columns=["UVW", data_column, "DATA_DESC_ID", "EXPOSURE", "TIME"]) # open table tb3
+        print('Selected %d rows with "%s" (field="%s")'%(tb3.nrows(), query_where_str3, field ) )
+        if tb3.nrows() <= 0:
+            print('Error! No data found with "%s"!'%(query_where_str3))
+            tb3.close() # close table on error
             tb1.close() # close table on error
             sys.exit()
+        #print('DATA', type(tb3.getcol(data_column)), tb3.getcol(data_column).shape) # shape (nrow, nchan, nstokes)
+        #print('DATA[0,:]', type(tb3.getcol(data_column)[0,:]), tb3.getcol(data_column)[0,:].shape) # 
+        #print('DATA[0,0,:]', type(tb3.getcol(data_column)[0,0,:]), tb3.getcol(data_column)[0,0,:].shape) # 2 polarization
+        #print('DATA[0,0,0]', type(tb3.getcol(data_column)[0,0,0]), tb3.getcol(data_column)[0,0,0]) # complex
         # 
         # check stokes
         number_of_stokes = -1
-        tb3 = query_casa_table(tb1, query_where_field_str, 'SHAPE('+data_column+')', max_nrows = 1) # open table tb3, TAQL SHAPE() counts global row number
-        data_cell_shape = tb3.getcell(tb3.colnames()[0], 0)
-        tb3.close()
-        if len(data_cell_shape) == 1:
+        #data_shape = tb3.getcol(data_column).shape
+        #if len(data_shape) < 2:
+        #    print('Error! Data has a wrong dimension of %s!'%(data_shape))
+        #    tb3.close() # close table on error
+        #    tb1.close() # close table on error
+        #    sys.exit()
+        #elif len(data_shape) == 2:
+        #    print('Warning! Data has a dimension of %s and no polarization dimension!'%(data_shape))
+        #    number_of_stokes = 0
+        #else:
+        #    if data_shape[2] == 1:
+        #        number_of_stokes = 1
+        #    elif data_shape[2] == 2:
+        #        number_of_stokes = 2
+        #    else:
+        #        print('Error! Data has a wrong polarization dimension of %s which should be 1 or 2!'%(data_shape[2]))
+        #        tb3.close() # close table on error
+        #        tb1.close() # close table on error
+        #        sys.exit()
+        data_shape = tb3.getcell(data_column, int(tb3.nrows()/2) ).shape # this is faster than getting the full data_column column
+        if len(data_shape) == 1:
             print('Warning! Data cell has a dimension of %s and no polarization dimension!'%(str(data_shape)))
             number_of_stokes = 0
-        elif len(data_cell_shape) == 2:
+        elif len(data_shape) == 2:
             if USE_CASACORE == False:
-                data_cell_shape = data_cell_shape[::-1] #<TODO><20190716># __casac__.table.table has a different dimension order than casacore.tables.table ???
-                print('data_cell_shape', data_cell_shape, '(nrow, nstokes)')
+                data_shape = data_shape[::-1] #<TODO><20190716># __casac__.table.table has a different dimension order than casacore.tables.table ???
+                print('data_shape', data_shape, '(nrow, nstokes)')
             #--> now no need, we use style='python'
-            if data_cell_shape[-1] == 1:
+            if data_shape[-1] == 1:
                 number_of_stokes = 1
-            elif data_cell_shape[-1] == 2:
+            elif data_shape[-1] == 2:
                 number_of_stokes = 2
             else:
-                print('Error! Data cell has a wrong polarization dimension of %s which should be 1 or 2!'%(data_cell_shape[-1])) # [-1]
+                print('Error! Data cell has a wrong polarization dimension of %s which should be 1 or 2!'%(data_shape[-1])) # [-1]
+                tb3.close() # close table on error
                 tb1.close() # close table on error
                 sys.exit()
         else:
-            print('Error! Data cell has a wrong dimension of %s which should be (Nchan, Nstokes)!'%(str(data_cell_shape)))
+            print('Error! Data cell has a wrong dimension of %s which should be (Nchan, Nstokes)!'%(str(data_shape)))
+            tb3.close() # close table on error
             tb1.close() # close table on error
             sys.exit()
         # 
@@ -384,32 +394,25 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         # 
         # get (u,v,w)
         print('Getting UVW info')
-        #tb4 = query_casa_table(tb1, query_where_field_str, 'GMAXS(UVW)')
-        #data_UVW_GMAXS = tb4.getcol(tb4.colnames()[0]) # output shape is (1, 3)
-        #tb4.close()
-        #tb4 = query_casa_table(tb1, query_where_field_str, 'GMINS(UVW)')
-        #data_UVW_GMINS = tb4.getcol(tb4.colnames()[0]) # output shape is (1, 3)
-        #tb4.close()
-        #tb4 = query_casa_table(tb1, query_where_field_str, 'GMAXS(ABS(UVW))')
-        #data_UVW_GMAXS_ABS = tb4.getcol(tb4.colnames()[0]) # output shape is (1, 3)
-        #tb4.close()
-        #tb4 = query_casa_table(tb1, query_where_field_str, 'GMINS(ABS(UVW))')
-        #data_UVW_GMINS_ABS = tb4.getcol(tb4.colnames()[0]) # output shape is (1, 3)
-        #tb4.close()
-        #print(data_UVW_GMAXS, data_UVW_GMINS)
-        #print(data_UVW_GMAXS_ABS, data_UVW_GMINS_ABS)
-        tb4 = query_casa_table(tb1, query_where_field_str, 'GMAX(sqrt(sumsqr(UVW[1:2])))')
-        data_UVW_GMAX = tb4.getcell(tb4.colnames()[0], 0) # output cell is a scalar
-        tb4.close()
-        tb4 = query_casa_table(tb1, query_where_field_str, 'GMIN(sqrt(sumsqr(UVW[1:2])))')
-        data_UVW_GMIN = tb4.getcell(tb4.colnames()[0], 0) # output cell is a scalar
-        tb4.close()
-        info_dict[fieldKey]['UVW']['MAX'] = data_UVW_GMAX
-        info_dict[fieldKey]['UVW']['MIN'] = data_UVW_GMIN
-        #print(info_dict[fieldKey]['UVW'])
-        #sys.exit()
+        data_UVW = tb3.getcol('UVW')
+        if USE_CASACORE == False:
+            data_UVW = data_UVW.T #<TODO><20190716># __casac__.table.table has a different dimension order than casacore.tables.table ???
+            print('data_UVW.shape', data_UVW.shape, '(nrow, 3)')
+        #--> now no need, we use style='python'
+        info_dict[fieldKey]['UVW']['U_MAX'] = np.max(data_UVW[:,0])
+        info_dict[fieldKey]['UVW']['U_MIN'] = np.max(data_UVW[:,1])
+        info_dict[fieldKey]['UVW']['V_MAX'] = np.max(data_UVW[:,2])
+        info_dict[fieldKey]['UVW']['V_MIN'] = np.min(data_UVW[:,0])
+        info_dict[fieldKey]['UVW']['W_MAX'] = np.min(data_UVW[:,1])
+        info_dict[fieldKey]['UVW']['W_MIN'] = np.min(data_UVW[:,2])
+        info_dict[fieldKey]['UVW']['U_ABSMAX'] = np.max( np.abs(data_UVW[:,0]) )
+        info_dict[fieldKey]['UVW']['U_ABSMIN'] = np.max( np.abs(data_UVW[:,1]) )
+        info_dict[fieldKey]['UVW']['V_ABSMAX'] = np.max( np.abs(data_UVW[:,2]) )
+        info_dict[fieldKey]['UVW']['V_ABSMIN'] = np.min( np.abs(data_UVW[:,0]) )
+        info_dict[fieldKey]['UVW']['W_ABSMAX'] = np.min( np.abs(data_UVW[:,1]) )
+        info_dict[fieldKey]['UVW']['W_ABSMIN'] = np.min( np.abs(data_UVW[:,2]) )
         # 
-        # prepare spw dict for each field
+        # loop spw and calc rms per channel
         print('Getting SPW info')
         info_dict[fieldKey]['SPW']['ID'] = []
         info_dict[fieldKey]['SPW']['NAME'] = []
@@ -423,9 +426,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             info_dict[fieldKey]['SPW']['RMS_STOKES_LL'] = [] # in units of Jy/beam
             info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_RR'] = [] #in units of Jy/beam,  should be a 2D array
             info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_LL'] = [] #in units of Jy/beam,  should be a 2D array
-        # prepare more per-spw meta data
         info_dict[fieldKey]['SPW']['EXPOSURE_X_BASELINE'] = []
-        info_dict[fieldKey]['SPW']['EXPOSURE_X_ALL'] = []
         info_dict[fieldKey]['SPW']['NUM_SCAN_X_BASELINE'] = []
         info_dict[fieldKey]['SPW']['NUM_SCAN_X_ALL'] = []
         info_dict[fieldKey]['SPW']['NUM_STOKES'] = []
@@ -433,39 +434,30 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         info_dict[fieldKey]['SPW']['BMIN'] = [] # in units of degrees
         info_dict[fieldKey]['SPW']['CHAN_BMAJ'] = [] # in units of degrees, should be a 2D array
         info_dict[fieldKey]['SPW']['CHAN_BMIN'] = [] # in units of degrees, should be a 2D array
-        # 
-        # loop spw and calc rms per channel
         for ispw in range(len(info_dict['SPW']['ID'])):
             print('Looping ispw %d spw %d spw name %s'%(ispw, info_dict['SPW']['ID'][ispw], info_dict['SPW']['NAME'][ispw]))
             # 
-            # check field has this spw
+            # select spw
             if len(info_dict['SPW']['DATA_DESC_ID'][ispw]) <= 0:
-                print('Skipped ispw %d spw %d for the field %s because it has no DATA_DESC_ID'%(ispw, info_dict['SPW']['ID'][ispw], field))
+                print('Skipped ispw %d spw %d due to no data for the field %s'%(ispw, info_dict['SPW']['ID'][ispw], field))
                 continue
             # 
-            # check spw is not WVR
-            if info_dict['SPW']['NAME'][ispw].startswith('WVR'):
-                print('Skipped ispw %d spw %d for the field %s because it is Water Vapour frequency'%(ispw, info_dict['SPW']['ID'][ispw], field))
-                continue
-            # 
-            # set spw data
-            query_where_spw_str = '(DATA_DESC_ID in [%s])'%( ','.join( map( str, info_dict['SPW']['DATA_DESC_ID'][ispw] ) ) )
-            # 
-            # query tb1
-            tb4 = query_casa_table(tb1, query_where_field_str + ' AND ' + query_where_spw_str, 'GCOUNT()')
-            number_of_data_rows_per_field_per_spw = tb4.getcell(tb4.colnames()[0], 0)
-            tb4.close()
+            # select spw data
+            query_where_str4 = '(DATA_DESC_ID in [%s])'%( ','.join( map( str, info_dict['SPW']['DATA_DESC_ID'][ispw] ) ) )
+            if USE_CASACORE == False:
+                # if no casacore, __casac__ table has problem when trying to query tb3, it seems tb3 was deleted before query
+                tb4 = query_casa_table(tb1, query_where_str3 + ' AND ' + query_where_str4, 
+                                       columns=["UVW", data_column, "DATA_DESC_ID", "EXPOSURE", "TIME"]) # open table tb4
+            else:
+                tb4 = query_casa_table(tb3, query_where_str4) # open table tb4
+            print('Selected %d rows with "%s" (ispw==%d, spw=%d, field="%s")'%(tb4.nrows(), query_where_str4, ispw, info_dict['SPW']['ID'][ispw], field ) )
             # 
             # check nrows
-            if number_of_data_rows_per_field_per_spw <= 0:
-                print('Skipped ispw %d spw %d for the field %s due to no data selected'%(ispw, info_dict['SPW']['ID'][ispw], field))
+            if tb4.nrows() <= 0:
+                tb4.close() # close table on error
+                print('Skipped ispw %d spw %d due to no data for the field %s'%(ispw, info_dict['SPW']['ID'][ispw], field))
                 continue
             # 
-            # print 
-            print('Selected %d rows with "%s" (ispw==%d, spw=%d, field="%s")'%(number_of_data_rows_per_field_per_spw, query_where_spw_str, ispw, info_dict['SPW']['ID'][ispw], field ) )
-            
-            # 
-            # prepare SPW dict for each fieldKey in info_dict
             # copy SPW ID NAME CHAN_FREQ PRIMARY_BEAM CHAN_PRIMARY_BEAM
             info_dict[fieldKey]['SPW']['ID'].append( info_dict['SPW']['ID'][ispw] )
             info_dict[fieldKey]['SPW']['NAME'].append( info_dict['SPW']['NAME'][ispw] )
@@ -473,77 +465,88 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             info_dict[fieldKey]['SPW']['PRIMARY_BEAM'].append( info_dict['SPW']['PRIMARY_BEAM'][ispw] )
             info_dict[fieldKey]['SPW']['CHAN_PRIMARY_BEAM'].append( info_dict['SPW']['CHAN_PRIMARY_BEAM'][ispw] )
             # 
-            # calc rms per channel per stokes for each spw
-            tb4 = query_casa_table(tb1, query_where_field_str + ' AND ' + query_where_spw_str, 
-                                        columns = 'RMSS(GAGGR(amplitude('+data_column+')),0)') 
-                                        # open table tb4, data array has a shape of (nchan, nstokes)
-                                        # casacore GAGGR() stacks DATA, so the shape becomes (nrows, nchan, nstokes)
-                                        # casacore RMSS() computes along axis 0, so the shape becomes (1, nchan, nstokes)
-                                        # columns = 'GRMS(ABS(mscal.stokes('+data_column+',\'LL\')))') # not working
-            data_array_rms_per_chan = tb4.getcol(tb4.colnames()[0])[0]
-            #print(data_array_rms_per_chan.shape) # (nchan, nstokes)
-            tb4.close()
-            # 
-            # calc rms for all channels per stokes for each spw
-            tb4 = query_casa_table(tb1, query_where_field_str + ' AND ' + query_where_spw_str, 
-                                        columns = 'RMSS(GAGGR(amplitude('+data_column+')),[0,1])') 
-                                        # open table tb4, data array has a shape of (nchan, nstokes)
-                                        # see above
-            data_array_rms = tb4.getcol(tb4.colnames()[0])[0]
-            #print(data_array_rms.shape) # (nstokes)
-            tb4.close()
-            # 
-            # store into info_dict
-            if number_of_stokes >= 2:
-                info_dict[fieldKey]['SPW']['RMS'].append( np.mean(data_array_rms) )
-                info_dict[fieldKey]['SPW']['RMS_STOKES_LL'].append( data_array_rms[0] )
-                info_dict[fieldKey]['SPW']['RMS_STOKES_RR'].append( data_array_rms[1] )
-                info_dict[fieldKey]['SPW']['CHAN_RMS'].append( np.mean(data_array_rms_per_chan, axis=1) ) # merge along stokes axis
-                info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_LL'].append( data_array_rms_per_chan[:,0] )
-                info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_RR'].append( data_array_rms_per_chan[:,1] )
-            elif number_of_stokes == 1:
-                info_dict[fieldKey]['SPW']['RMS'].append( np.mean(data_array_rms) )
-                info_dict[fieldKey]['SPW']['CHAN_RMS'].append( np.mean(data_array_rms_per_chan, axis=1) ) # single stokes axis
-            elif number_of_stokes == 0:
-                info_dict[fieldKey]['SPW']['RMS'].append( data_array_rms )
-                info_dict[fieldKey]['SPW']['CHAN_RMS'].append( data_array_rms_per_chan ) # no stokes axis
-            # 
-            # calculate sum of EXPOSURE, EXPOSURE * BASELINE, and EXPOSURE * ALL, ALL means BASELINE * NSTOKES. 
-            tb4 = query_casa_table(tb1, query_where_field_str + ' AND ' + query_where_spw_str, 
-                                        columns = 'GSUM(EXPOSURE), GCOUNT(EXPOSURE)')
-            exposure_sum = tb4.getcell(tb4.colnames()[0], 0)
-            exposure_count = tb4.getcell(tb4.colnames()[1], 0)
-            tb4.close()
-            # 
-            # store more into info_dict
-            if number_of_stokes >= 2:
-                info_dict[fieldKey]['SPW']['EXPOSURE_X_BASELINE'].append( exposure_sum ) # single stokes
-                info_dict[fieldKey]['SPW']['EXPOSURE_X_ALL'].append( exposure_sum * float(number_of_stokes) ) # all stokes
-                info_dict[fieldKey]['SPW']['NUM_SCAN_X_BASELINE'].append( exposure_count ) # single stokes
-                info_dict[fieldKey]['SPW']['NUM_SCAN_X_ALL'].append( exposure_count * float(number_of_stokes) ) # all stokes
+            # calc rms per spw per channel
+            if number_of_stokes == 2:
+                data_array = tb4.getcol(data_column)
+                print('data_array.shape', data_array.shape)
+                if USE_CASACORE == False:
+                    data_array = data_array.T #<TODO><20190716># __casac__.table.table has a different dimension order than casacore.tables.table ???
+                    print('data_array.shape', data_array.shape, '(nrow, nchan, nstokes)')
+                #--> now no need, we use style='python'
+                data_stokesLL = data_array[:,:,0] # DATA shape (nrow, nchan, nstokes) and nstokes==2
+                data_stokesRR = data_array[:,:,1] # DATA shape (nrow, nchan, nstokes) and nstokes==2
+                data_stokesLL_abs = np.absolute(data_stokesLL)
+                data_stokesRR_abs = np.absolute(data_stokesRR)
+                data_stokesLL_abs_mean = np.mean(data_stokesLL_abs, axis=0)
+                data_stokesRR_abs_mean = np.mean(data_stokesRR_abs, axis=0)
+                data_stokesLL_rms_per_chan = np.std(data_stokesLL_abs - data_stokesLL_abs_mean, axis=0)
+                data_stokesRR_rms_per_chan = np.std(data_stokesRR_abs - data_stokesRR_abs_mean, axis=0)
+                #print('data_stokesLL_rms_per_chan = %s'%(data_stokesLL_rms_per_chan) )
+                #print('data_stokesRR_rms_per_chan = %s'%(data_stokesRR_rms_per_chan) )
+                data_stokesLL_rms_all = np.std(data_stokesLL_abs - data_stokesLL_abs_mean)
+                data_stokesRR_rms_all = np.std(data_stokesRR_abs - data_stokesRR_abs_mean)
+                #print('data_stokesLL_rms_all = %s'%(data_stokesLL_rms_all) )
+                #print('data_stokesRR_rms_all = %s'%(data_stokesRR_rms_all) )
+                # 
+                # store into info_dict
+                info_dict[fieldKey]['SPW']['RMS'].append( (data_stokesLL_rms_all + data_stokesRR_rms_all) / 2.0 )
+                info_dict[fieldKey]['SPW']['RMS_STOKES_LL'].append( data_stokesLL_rms_all )
+                info_dict[fieldKey]['SPW']['RMS_STOKES_RR'].append( data_stokesRR_rms_all )
+                info_dict[fieldKey]['SPW']['CHAN_RMS'].append( (data_stokesRR_rms_per_chan + data_stokesLL_rms_per_chan) / 2.0 )
+                info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_LL'].append( data_stokesLL_rms_per_chan )
+                info_dict[fieldKey]['SPW']['CHAN_RMS_STOKES_RR'].append( data_stokesRR_rms_per_chan )
+                # 
+                # also sum up EXPOSURE, EXPOSURE * BASELINE, and EXPOSURE * ALL
+                exposure = tb4.getcol('EXPOSURE').tolist()
+                info_dict[fieldKey]['SPW']['EXPOSURE_X_BASELINE'].append( np.sum( exposure ) / 2.0 ) # single stokes
+                info_dict[fieldKey]['SPW']['NUM_SCAN_X_BASELINE'].append( len( exposure ) / 2.0 ) # single stokes
+                info_dict[fieldKey]['SPW']['NUM_SCAN_X_ALL'].append( len( exposure ) )
                 info_dict[fieldKey]['SPW']['NUM_STOKES'].append( number_of_stokes )
             else:
-                info_dict[fieldKey]['SPW']['EXPOSURE_X_BASELINE'].append( exposure_sum ) # single stokes
-                info_dict[fieldKey]['SPW']['EXPOSURE_X_ALL'].append( exposure_sum ) # single stokes
-                info_dict[fieldKey]['SPW']['NUM_SCAN_X_BASELINE'].append( exposure_count ) # single stokes
-                info_dict[fieldKey]['SPW']['NUM_SCAN_X_ALL'].append( exposure_count ) # single stokes
+                if number_of_stokes == 1:
+                    data_array = tb4.getcol(data_column)[:,:,0] # DATA shape (nrow, nchan, nstokes) and nstokes==1
+                else:
+                    data_array = tb4.getcol(data_column)[:,:] # DATA shape (nrow, nchan), no stokes dimension
+                print('data_array.shape', data_array.shape)
+                if USE_CASACORE == False:
+                    data_array = data_array.T #<TODO><20190716># __casac__.table.table has a different dimension order than casacore.tables.table ???
+                    print('data_array.shape', data_array.shape, '(nrow, nchan, nstokes)')
+                #--> now no need, we use style='python'
+                data_abs = np.absolute(data_array)
+                data_abs_mean = np.mean(data_abs, axis=0)
+                data_rms_per_chan = np.std(data_abs - data_abs_mean, axis=0)
+                data_rms_all = np.std(data_abs - data_abs_mean)
+                # 
+                # store into info_dict
+                info_dict[fieldKey]['SPW']['RMS'].append( data_rms_all )
+                info_dict[fieldKey]['SPW']['CHAN_RMS'].append( data_rms_per_chan )
+                # 
+                # also sum up EXPOSURE, EXPOSURE * BASELINE, and EXPOSURE * ALL
+                # -- in average we have (N_ant * (N_ant - 1)) baselines
+                exposure = tb4.getcol('EXPOSURE').tolist()
+                info_dict[fieldKey]['SPW']['EXPOSURE_X_BASELINE'].append( np.sum( exposure ) ) # / np.sqrt( len(info_dict['ANTENNA']['ID']) * (len(info_dict['ANTENNA']['ID'])-1) )
+                info_dict[fieldKey]['SPW']['NUM_SCAN_X_BASELINE'].append( len( exposure ) )
+                info_dict[fieldKey]['SPW']['NUM_SCAN_X_ALL'].append( len( exposure ) )
                 info_dict[fieldKey]['SPW']['NUM_STOKES'].append( number_of_stokes )
             # 
             # calc BMAJ BMIN for each CHAN of each SPW of each field (array operation)
             # interferometry: Fourier Transform is exp( 2 * pi * 1j * (u_m * x_rad + v_m * y_rad) / lambda_m )
             # "2.0*np.sqrt(2.0*np.log(2.0))" converts Gaussian sigma to FWHM
-            # print(np.array(info_dict[fieldKey]['SPW']['CHAN_FREQ']).shape) # (nspw, nchan)
-            info_dict[fieldKey]['SPW']['CHAN_BMAJ'].append( 2.99792458e8 / np.array(info_dict[fieldKey]['SPW']['CHAN_FREQ'])[ispw,:] / info_dict[fieldKey]['UVW']['MAX'] / np.pi * 180.0) # in units of degrees
-            info_dict[fieldKey]['SPW']['CHAN_BMIN'].append( 2.99792458e8 / np.array(info_dict[fieldKey]['SPW']['CHAN_FREQ'])[ispw,:] / info_dict[fieldKey]['UVW']['MAX'] / np.pi * 180.0) # in units of degrees
+            info_dict[fieldKey]['SPW']['CHAN_BMAJ'].append( 2.99792458e8 / np.array(info_dict[fieldKey]['SPW']['CHAN_FREQ'][-1]) / info_dict[fieldKey]['UVW']['U_MAX'] / np.pi * 180.0) # in units of degrees
+            info_dict[fieldKey]['SPW']['CHAN_BMIN'].append( 2.99792458e8 / np.array(info_dict[fieldKey]['SPW']['CHAN_FREQ'][-1]) / info_dict[fieldKey]['UVW']['V_MAX'] / np.pi * 180.0) # in units of degrees
             # 
             # calc BMAJ BMIN for each SPW of each field, taking the min of CHAN_FREQ
             info_dict[fieldKey]['SPW']['BMAJ'].append( np.min(info_dict[fieldKey]['SPW']['CHAN_BMAJ'][-1]) )
             info_dict[fieldKey]['SPW']['BMIN'].append( np.min(info_dict[fieldKey]['SPW']['CHAN_BMIN'][-1]) )
             # 
+            # close table
+            tb4.close()
             # 
             #if ispw >= 2:
             #    break
-            #sys.exit()
+        # 
+        # close table
+        tb3.close() # close table tb3
     # 
     # close table
     tb1.close() # # close table tb1
@@ -573,9 +576,7 @@ def print_interferometry_info_dict(info_dict, only_return_strings = False, curre
     for k in info_dict.keys():
         if print_fmt_col_width < len(k):
             print_fmt_col_width = len(k)
-    if current_dict_level == 2:
-        print_fmt_col_width = np.max([print_fmt_col_width, 15])
-    #print_fmt_col_width += 1
+    print_fmt_col_width += 1
     # 
     # loop dict keys
     for k in info_dict.keys():
@@ -583,7 +584,7 @@ def print_interferometry_info_dict(info_dict, only_return_strings = False, curre
         if type(info_dict[k]) is dict:
             printed_strings2 = print_interferometry_info_dict(info_dict[k], only_return_strings = True, current_dict_level = current_dict_level + 1)
             for k2 in printed_strings2:
-                print_fmt = '%%-%ds : %%s' % (print_fmt_col_width)
+                print_fmt = '%%-%ds: %%s' % (print_fmt_col_width)
                 print_str = print_fmt % (k, k2)
                 printed_strings.append(print_str)
                 if not only_return_strings:
