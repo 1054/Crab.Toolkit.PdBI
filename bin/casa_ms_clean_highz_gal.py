@@ -24,6 +24,13 @@ def usage():
 
 
 
+# 
+# set debug level
+# 
+global SET_DEBUG_LEVEL
+SET_DEBUG_LEVEL = 0
+
+
 
 # 
 # import casacore table
@@ -126,6 +133,7 @@ def open_casa_table(table_file_path):
 # 
 def query_casa_table(tb0, query_where_str, columns = None, max_nrows = None, verbose = False):
     global USE_CASACORE
+    global SET_DEBUG_LEVEL
     # 
     # query_columns_str must be a single string with comma separated.
     if columns is None:
@@ -143,7 +151,7 @@ def query_casa_table(tb0, query_where_str, columns = None, max_nrows = None, ver
             query_str = 'SELECT %s FROM $tb0'%(query_columns_str)
         if max_nrows is not None:
             query_str = query_str + ' LIMIT %d'%(max_nrows)
-        if verbose == True:
+        if verbose == True or SET_DEBUG_LEVEL >=1 :
             print('casacore_taql: '+ query_str)
         tbout = casacore_taql(query_str)
     else:
@@ -453,6 +461,10 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             # 
             # query tb1
             tb4 = query_casa_table(tb1, query_where_field_str + ' AND ' + query_where_spw_str, 'GCOUNT()')
+            if SET_DEBUG_LEVEL >= 1:
+                print('tb4.nrows()', tb4.nrows())
+                print('tb4.colnames()', tb4.colnames())
+                print('tb4.getcol(tb4.colnames()[0]).shape', tb4.getcol(tb4.colnames()[0]).shape)
             number_of_data_rows_per_field_per_spw = tb4.getcell(tb4.colnames()[0], 0)
             tb4.close()
             # 
@@ -1113,6 +1125,8 @@ if __name__ == '__main__':
                 clean_mode = sys.argv[iarg]
         elif istr == '-dry-run':
             is_dry_run = True
+        elif istr == '-debug':
+            SET_DEBUG_LEVEL += 1
         else:
             if vis == '':
                 vis = sys.argv[iarg]
