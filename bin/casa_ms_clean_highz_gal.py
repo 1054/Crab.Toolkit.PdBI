@@ -347,7 +347,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             sys.exit()
         # 
         # select first row and check stokes
-        tb3 = query_casa_table(tb1, query_where_field_str, 'GCOUNT()') # open table tb3, TAQL GCOUNT() counts global row number
+        tb3 = query_casa_table(tb1, query_where_field_str, 'GCOUNT()') # open table tb3, TAQL GCOUNT() counts global row number when no GROUPBY 
         number_of_data_rows_per_field = tb3.getcell(tb3.colnames()[0], 0)
         tb3.close()
         print('Selected %d rows with "%s" (field="%s")'%(number_of_data_rows_per_field, query_where_field_str, field ) )
@@ -414,7 +414,8 @@ def grab_interferometry_info(vis, info_dict_file = ''):
         tb4.close()
         info_dict[fieldKey]['UVW']['MAX'] = data_UVW_GMAX
         info_dict[fieldKey]['UVW']['MIN'] = data_UVW_GMIN
-        #print(info_dict[fieldKey]['UVW'])
+        if SET_DEBUG_LEVEL >= 1:
+            print('info_dict[fieldKey][\'UVW\']', info_dict[fieldKey]['UVW'])
         #sys.exit()
         # 
         # prepare spw dict for each field
@@ -459,13 +460,16 @@ def grab_interferometry_info(vis, info_dict_file = ''):
             # set spw data
             query_where_spw_str = '(DATA_DESC_ID in [%s])'%( ','.join( map( str, info_dict['SPW']['DATA_DESC_ID'][ispw] ) ) )
             # 
-            # query tb1
+            # query this spw for this field
             tb4 = query_casa_table(tb1, query_where_field_str + ' AND ' + query_where_spw_str, 'GCOUNT()')
             if SET_DEBUG_LEVEL >= 1:
                 print('tb4.nrows()', tb4.nrows())
                 print('tb4.colnames()', tb4.colnames())
                 print('tb4.getcol(tb4.colnames()[0]).shape', tb4.getcol(tb4.colnames()[0]).shape)
-            number_of_data_rows_per_field_per_spw = tb4.getcell(tb4.colnames()[0], 0)
+            if tb4.nrows() <= 0:
+                number_of_data_rows_per_field_per_spw = 0
+            else:
+                number_of_data_rows_per_field_per_spw = tb4.getcell(tb4.colnames()[0], 0)
             tb4.close()
             # 
             # check nrows
