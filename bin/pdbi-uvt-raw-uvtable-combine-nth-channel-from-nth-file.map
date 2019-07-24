@@ -1,0 +1,101 @@
+!
+! This code should be ran in GILDAS MAPPING by typing @script_name.map
+!
+! Aim:
+!     Read nth channel from nth uvt file and combine them into a new uvt file with n channels (n is a number). 
+! 
+! Usage: 
+!     All input uvt files should have the same number (n) of channels and visibilities and stokes, 
+!     and named like XXX_ch1.uvt, XXX_ch2.uvt, XXX_ch3.uvt. The input uvt basename should be just XXX. 
+!
+!define uvtable uvt PDBIUVT_INPUT_FILE read
+!say 'size(uvt)' ! total array size = NVISI*(3*NSTOKES*NCHAN+7)
+! 
+! set variables
+define character input_file*300
+define character output_file*300
+define integer input_nchan
+define integer input_nvisi
+define integer input_nstokes
+let input_file PDBIUVT_INPUT_FILE
+let output_file PDBIUVT_OUTPUT_FILE
+!let output_file 'input_file'-Combined ! debug
+say "Creating output uvt file by cp "'input_file'".uvt "'output_file'".uvt"
+sys "cp "'input_file'".uvt "'output_file'".uvt"
+!
+! read first uvt file and get input_nvisi
+! 
+define uvtable uvt 'output_file'.uvt write
+let input_nvisi = uvt%nvisi
+let input_nchan = uvt%nchan
+let input_nstokes = uvt%nstokes
+! 
+! process the rest uvt files
+! 
+define integer iu
+define integer iv
+define integer iw
+define integer ire
+define integer iim
+define integer iwt
+say "Looping "'input_nchan'" channels to take the visibility data from nth file for the nth channel"
+for j 1 to input_nchan
+  ! 
+  ! print progress
+  if j.EQ.1 then
+    say "Looping "'input_nvisi'" visibilities at the "'j'"-th channel"
+  else if j.EQ.2 then
+    say "Looping "'input_nvisi'" visibilities at the "'j'"-nd channel"
+  else if j.EQ.3 then
+    say "Looping "'input_nvisi'" visibilities at the "'j'"-rd channel"
+  else
+    say "Looping "'input_nvisi'" visibilities at the "'j'"-th channel"
+  endif
+  ! 
+  ! read the nth input file and take the nth channel
+  define uvtable uvt_n 'input_file'_ch'j'.uvt read
+  for i 1 to input_nvisi
+    for k 1 to input_nstokes
+      let iu = 1 ! first 7 columns are u,v,w,date,date,n1,n2, then followed by visibilities re im wt
+      let iv = 2 ! first 7 columns are u,v,w,date,date,n1,n2, then followed by visibilities re im wt
+      let iw = 3 ! first 7 columns are u,v,w,date,date,n1,n2, then followed by visibilities re im wt
+      let ire = 7+((j-1)*(input_nstokes)+(k-1))*3+1
+      let iim = 7+((j-1)*(input_nstokes)+(k-1))*3+2
+      let iwt = 7+((j-1)*(input_nstokes)+(k-1))*3+3
+      ! 
+      ! copy nth channel data
+      uvt[ire,i] = uvt_n[ire,i]
+      uvt[iim,i] = uvt_n[iim,i]
+      uvt[iwt,i] = uvt_n[iwt,i]
+      ! 
+      ! debug
+      !if i.EQ.9999 then
+      !  say "visibility "'i'" re im wt in input uvtable: "'uvt_n[ire,i]'" "'uvt_n[iim,i]'" "'uvt_n[iwt,i]'
+      !endif
+      ! 
+      ! debug set zeros to the nth channel data
+      !uvt[ire,i] = uvt_n[ire,i]*0.0
+      !uvt[iim,i] = uvt_n[iim,i]*0.0
+      !uvt[iwt,i] = uvt_n[iwt,i]*0.0
+      ! 
+      ! debug
+      !if i.EQ.9999 then
+      !  say "visibility "'i'" re im wt in output uvtable: "'uvt[ire,i]'" "'uvt[iim,i]'" "'uvt[iwt,i]'
+      !endif
+    next
+  next
+  ! 
+  ! debug
+  if j.GT.2 break !debug
+  !
+  ! end reading the nth file
+  delete /variable uvt_n
+next
+! 
+! clean up
+delete /variable uvt
+delete /variable iu iv iw ire iim iwt
+delete /variable input_file input_nchan input_nvisi input_nstokes
+!
+! end
+say "Output to "'output_file'".uvt!"

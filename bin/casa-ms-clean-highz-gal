@@ -11,7 +11,18 @@
 
 # Function to print usage
 function usage() {
-    echo "Usage: casa-ms-clean-highz-gal -vis INPUT_MEASUREMENT_SET.ms -gal GALAXY_NAME -mode cube [-width \"30km/s\"]"
+    echo "Usage: "
+    echo "    casa-ms-clean-highz-gal \\"
+    echo "        -vis INPUT_MEASUREMENT_SET.ms \\"
+    echo "        -gal GALAXY_NAME \\"
+    echo "        -mode cube \\"
+    echo "        -out cube \\"
+    echo "        [-width \"30km/s\"] \\"
+    echo "        [-beam \"0.5arcsec\"] \\"
+    echo "        [-cell \"0.08arcsec\"] \\"
+    echo "        [-imsize \"512\"] \\"
+    echo "        [-phasecenter \"12:36:27.0 +62:20:17.0\"] \\"
+    echo ""
 }
 
 
@@ -43,6 +54,53 @@ fi
 
 
 # 
+# Check Python casacore
+# 
+if [[ $(python -c "import casacore" 2>&1 | wc -l) -gt 0 ]]; then
+    echo ""
+    echo "Error! Python casacore package could not be imported! Please install it within your Python!"
+    echo ""
+    exit
+fi
+
+
+
+# 
+# We will call "csasa" without CASA but with Python casacore package
+# 
+$(dirname ${BASH_SOURCE[0]})/casa_ms_clean_highz_gal.py "$@" | tee run_casa_ms_clean_highz_gal.log
+
+# check output
+output_script_name=$(cat "run_casa_ms_clean_highz_gal.log" | grep "^Output script to " | perl -p -e 's/Output script to "(.*)\.py".*/\1/g')
+echo ""
+echo "output_script_name = $output_script_name"
+if [[ -z "$output_script_name" ]]; then
+    echo "Error! Failed to run \"$(dirname ${BASH_SOURCE[0]})/run_casa_ms_clean_highz_gal.py\"! Please check \"./run_casa_ms_clean_highz_gal.log\"!"
+    exit
+fi
+
+
+
+# 
+# run the output script in casa
+# 
+CASAMS_UTC=$(date +%Y%m%d.%Hh%Mm%Ss.%Z)
+CASAMS_EXE="$output_script_name.py" # .$CASAMS_UTC
+CASAMS_LOG="$output_script_name.log" # .$CASAMS_UTC
+
+echo ""
+echo "Now running: casa --logfile \"${CASAMS_LOG}\" --nocrashreport --nogui -c \"execfile('${CASAMS_EXE}')\""
+casa --logfile "${CASAMS_LOG}" --nocrashreport --nogui -c "execfile('${CASAMS_EXE}')"
+
+
+
+
+
+# 
+# below are are some old code
+# 
+
+# 
 # We will call "casa_ms_clean_highz_gal.py" in CASA, 
 # but we first need to find out CASA library directory
 # 
@@ -68,108 +126,134 @@ fi
 # 
 # Write run_casa_ms_clean_highz_gal.py
 # 
-CASAMS_UTC=$(date +%Y%m%d.%Hh%Mm%Ss.%Z)
-CASAMS_EXE="run_casa_ms_clean_highz_gal_preparation.py" # .$CASAMS_UTC
-CASAMS_LOG="run_casa_ms_clean_highz_gal_preparation.log" # .$CASAMS_UTC
-echo "# This script must be run in CASA" > "$CASAMS_EXE"
-echo "#" >> "$CASAMS_EXE"
-# 
-# write into script to check casa environment
-echo "" >> "$CASAMS_EXE"
-echo "from __future__ import print_function" >> "$CASAMS_EXE"
-echo "import os, sys" >> "$CASAMS_EXE"
-echo "" >> "$CASAMS_EXE"
-echo "if not ('casa' in globals() and 'tclean' in globals()):" >> "$CASAMS_EXE"
-echo "    print('Error! We are not in CASA environment!')" >> "$CASAMS_EXE"
-echo "    sys.exit()" >> "$CASAMS_EXE"
-echo "" >> "$CASAMS_EXE"
-
-# 
-# can not use subprocess because the subprocess will not be in CASA environment anymore!
-# 
-#echo "import subprocess" >> "$CASAMS_EXE"
-#echo "subprocess.call( \\" >> "$CASAMS_EXE"
-#echo "    ['"$(cd $(dirname ${BASH_SOURCE[0]}); pwd)"/casa_ms_clean_highz_gal.py', \\" >> "$CASAMS_EXE"
-#echo "     '-mode', '"${CASA_INP_CLEAN_MODE[0]}"', \\" >> "$CASAMS_EXE"
-#echo "     '-vis', '"${CASA_INP_VIS[0]}"', \\" >> "$CASAMS_EXE"
-#
-#if [[ ${#CASA_INP_OUTPUT[@]} -gt 0 ]]; then
-#echo "     '-out', '"${CASA_INP_OUTPUT[0]}"', \\" >> "$CASAMS_EXE"
-#fi
-#
-#if [[ ${#CASA_INP_FIELD[@]} -gt 0 ]]; then
-#echo "     '-field', '"${CASA_INP_FIELD[0]}"', \\" >> "$CASAMS_EXE"
-#fi
-#
-#if [[ ${#CASA_INP_FREQ[@]} -gt 0 ]]; then
-#echo "     '-freq', '"${CASA_INP_FREQ[0]}"', \\" >> "$CASAMS_EXE"
-#fi
-#
-#if [[ ${#CASA_INP_SPW[@]} -gt 0 ]]; then
-#echo "     '-spw', '"${CASA_INP_SPW[0]}"', \\" >> "$CASAMS_EXE"
-#fi
-#
-#if [[ ${#CASA_INP_WIDTH[@]} -gt 0 ]]; then
-#echo "     '-width', '"${CASA_INP_WIDTH[0]}"', \\" >> "$CASAMS_EXE"
-#fi
-#
-#if [[ ${CASA_INP_CLEAN_DRY_RUN} -gt 0 ]]; then
-#echo "     '-dry-run', \\" >> "$CASAMS_EXE"
-#fi
-#
-#echo "    ] \\" >> "$CASAMS_EXE"
-#echo ")" >> "$CASAMS_EXE"
-#echo "" >> "$CASAMS_EXE"
-
-
-
-# 
-# fallback to Python 2 execfile() ...
-# 
-if [[ ${#CASA_INP_CLEAN_MODE[@]} -gt 0 ]]; then
-echo "clean_mode = '${CASA_INP_CLEAN_MODE[0]}'" >> "$CASAMS_EXE"
-fi
-
-echo "vis = '${CASA_INP_VIS[0]}'" >> "$CASAMS_EXE"
-
-if [[ ${#CASA_INP_OUTPUT[@]} -gt 0 ]]; then
-echo "out = '${CASA_INP_OUTPUT[0]}'" >> "$CASAMS_EXE"
-fi
-
-if [[ ${#CASA_INP_FIELD[@]} -gt 0 ]]; then
-echo "gal = '${CASA_INP_FIELD[0]}'" >> "$CASAMS_EXE"
-fi
-
-if [[ ${#CASA_INP_FREQ[@]} -gt 0 ]]; then
-echo "freq = '${CASA_INP_FREQ[0]}'" >> "$CASAMS_EXE"
-fi
-
-if [[ ${#CASA_INP_SPW[@]} -gt 0 ]]; then
-echo "spw = '${CASA_INP_SPW[0]}'" >> "$CASAMS_EXE"
-fi
-
-if [[ ${#CASA_INP_WIDTH[@]} -gt 0 ]]; then
-echo "width = '${CASA_INP_WIDTH[0]}'" >> "$CASAMS_EXE"
-fi
-
-if [[ ${CASA_INP_CLEAN_DRY_RUN} -gt 0 ]]; then
-echo "is_dry_run = True" >> "$CASAMS_EXE"
-fi
-
-echo "" >> "$CASAMS_EXE"
-echo "execfile('"$(cd $(dirname ${BASH_SOURCE[0]}); pwd)"/casa_ms_clean_highz_gal.py', globals(), locals())" >> "$CASAMS_EXE"
-echo "" >> "$CASAMS_EXE"
-
-# 
-# 
-# 
-
-# 
-#chmod +x "${CASAMS_EXE}"
-echo "Wrote to python script: ${CASAMS_EXE}"
-echo "Now running: casa --logfile \"${CASAMS_LOG}\" --nocrashreport --nogui -c \"execfile('${CASAMS_EXE}')\""
-
-casa --logfile "${CASAMS_LOG}" --nocrashreport --nogui -c "execfile('${CASAMS_EXE}')"
+#<20190723># CASAMS_UTC=$(date +%Y%m%d.%Hh%Mm%Ss.%Z)
+#<20190723># CASAMS_EXE="run_casa_ms_clean_highz_gal_preparation.py" # .$CASAMS_UTC
+#<20190723># CASAMS_LOG="run_casa_ms_clean_highz_gal_preparation.log" # .$CASAMS_UTC
+#<20190723># echo "# This script must be run in CASA" > "$CASAMS_EXE"
+#<20190723># echo "#" >> "$CASAMS_EXE"
+#<20190723># # 
+#<20190723># # write into script to check casa environment
+#<20190723># echo "" >> "$CASAMS_EXE"
+#<20190723># echo "from __future__ import print_function" >> "$CASAMS_EXE"
+#<20190723># echo "import os, sys" >> "$CASAMS_EXE"
+#<20190723># echo "" >> "$CASAMS_EXE"
+#<20190723># echo "if not ('casa' in globals() and 'tclean' in globals()):" >> "$CASAMS_EXE"
+#<20190723># echo "    print('Error! We are not in CASA environment!')" >> "$CASAMS_EXE"
+#<20190723># echo "    sys.exit()" >> "$CASAMS_EXE"
+#<20190723># echo "" >> "$CASAMS_EXE"
+#<20190723># 
+#<20190723># # 
+#<20190723># # can not use subprocess because the subprocess will not be in CASA environment anymore!
+#<20190723># # 
+#<20190723># #echo "import subprocess" >> "$CASAMS_EXE"
+#<20190723># #echo "subprocess.call( \\" >> "$CASAMS_EXE"
+#<20190723># #echo "    ['"$(cd $(dirname ${BASH_SOURCE[0]}); pwd)"/casa_ms_clean_highz_gal.py', \\" >> "$CASAMS_EXE"
+#<20190723># #echo "     '-mode', '"${CASA_INP_CLEAN_MODE[0]}"', \\" >> "$CASAMS_EXE"
+#<20190723># #echo "     '-vis', '"${CASA_INP_VIS[0]}"', \\" >> "$CASAMS_EXE"
+#<20190723># #
+#<20190723># #if [[ ${#CASA_INP_OUTPUT[@]} -gt 0 ]]; then
+#<20190723># #echo "     '-out', '"${CASA_INP_OUTPUT[0]}"', \\" >> "$CASAMS_EXE"
+#<20190723># #fi
+#<20190723># #
+#<20190723># #if [[ ${#CASA_INP_FIELD[@]} -gt 0 ]]; then
+#<20190723># #echo "     '-field', '"${CASA_INP_FIELD[0]}"', \\" >> "$CASAMS_EXE"
+#<20190723># #fi
+#<20190723># #
+#<20190723># #if [[ ${#CASA_INP_FREQ[@]} -gt 0 ]]; then
+#<20190723># #echo "     '-freq', '"${CASA_INP_FREQ[0]}"', \\" >> "$CASAMS_EXE"
+#<20190723># #fi
+#<20190723># #
+#<20190723># #if [[ ${#CASA_INP_SPW[@]} -gt 0 ]]; then
+#<20190723># #echo "     '-spw', '"${CASA_INP_SPW[0]}"', \\" >> "$CASAMS_EXE"
+#<20190723># #fi
+#<20190723># #
+#<20190723># #if [[ ${#CASA_INP_WIDTH[@]} -gt 0 ]]; then
+#<20190723># #echo "     '-width', '"${CASA_INP_WIDTH[0]}"', \\" >> "$CASAMS_EXE"
+#<20190723># #fi
+#<20190723># #
+#<20190723># #if [[ ${CASA_INP_CLEAN_DRY_RUN} -gt 0 ]]; then
+#<20190723># #echo "     '-dry-run', \\" >> "$CASAMS_EXE"
+#<20190723># #fi
+#<20190723># #
+#<20190723># #echo "    ] \\" >> "$CASAMS_EXE"
+#<20190723># #echo ")" >> "$CASAMS_EXE"
+#<20190723># #echo "" >> "$CASAMS_EXE"
+#<20190723># 
+#<20190723># 
+#<20190723># 
+#<20190723># # 
+#<20190723># # fallback to Python 2 execfile() ...
+#<20190723># # 
+#<20190723># if [[ ${#CASA_INP_CLEAN_MODE[@]} -gt 0 ]]; then
+#<20190723># echo "clean_mode = '${CASA_INP_CLEAN_MODE[0]}'" >> "$CASAMS_EXE"
+#<20190723># fi
+#<20190723># 
+#<20190723># echo "vis = '${CASA_INP_VIS[0]}'" >> "$CASAMS_EXE"
+#<20190723># 
+#<20190723># if [[ ${#CASA_INP_OUTPUT[@]} -gt 0 ]]; then
+#<20190723># echo "out = '${CASA_INP_OUTPUT[0]}'" >> "$CASAMS_EXE"
+#<20190723># fi
+#<20190723># 
+#<20190723># if [[ ${#CASA_INP_FIELD[@]} -gt 0 ]]; then
+#<20190723># echo "gal = '${CASA_INP_FIELD[0]}'" >> "$CASAMS_EXE"
+#<20190723># fi
+#<20190723># 
+#<20190723># if [[ ${#CASA_INP_FREQ[@]} -gt 0 ]]; then
+#<20190723># echo "freq = '${CASA_INP_FREQ[0]}'" >> "$CASAMS_EXE"
+#<20190723># fi
+#<20190723># 
+#<20190723># if [[ ${#CASA_INP_SPW[@]} -gt 0 ]]; then
+#<20190723># echo "spw = '${CASA_INP_SPW[0]}'" >> "$CASAMS_EXE"
+#<20190723># fi
+#<20190723># 
+#<20190723># if [[ ${#CASA_INP_WIDTH[@]} -gt 0 ]]; then
+#<20190723># echo "width = '${CASA_INP_WIDTH[0]}'" >> "$CASAMS_EXE"
+#<20190723># fi
+#<20190723># 
+#<20190723># if [[ ${#CASA_INP_CLEAN_BEAM[@]} -gt 0 ]]; then
+#<20190723># echo "beam = '${CASA_INP_CLEAN_BEAM[0]}'" >> "$CASAMS_EXE"
+#<20190723># fi
+#<20190723># 
+#<20190723># if [[ ${#CASA_INP_CLEAN_CELL[@]} -gt 0 ]]; then
+#<20190723># echo "cell = '${CASA_INP_CLEAN_CELL[0]}'" >> "$CASAMS_EXE"
+#<20190723># fi
+#<20190723># 
+#<20190723># if [[ ${#CASA_INP_CLEAN_IMSIZE[@]} -gt 0 ]]; then
+#<20190723># echo "imsize = '${CASA_INP_CLEAN_IMSIZE[0]}'" >> "$CASAMS_EXE"
+#<20190723># fi
+#<20190723># 
+#<20190723># if [[ ${#CASA_INP_CLEAN_PHASECENTER[@]} -gt 0 ]]; then
+#<20190723># echo "phasecenter = '${CASA_INP_CLEAN_PHASECENTER[0]}'" >> "$CASAMS_EXE"
+#<20190723># fi
+#<20190723># 
+#<20190723># if [[ ${#CASA_INP_CLEAN_THRESHOLD[@]} -gt 0 ]]; then
+#<20190723># echo "threshold = '${CASA_INP_CLEAN_THRESHOLD[0]}'" >> "$CASAMS_EXE"
+#<20190723># fi
+#<20190723># 
+#<20190723># if [[ ${#CASA_INP_OVERWRITE[@]} -gt 0 ]]; then
+#<20190723>#     if [[ "${CASA_INP_OVERWRITE[0]}" -gt 0 ]]; then
+#<20190723>#         echo "overwrite = True" >> "$CASAMS_EXE"
+#<20190723>#     fi
+#<20190723># fi
+#<20190723># 
+#<20190723># if [[ ${CASA_INP_CLEAN_DRY_RUN} -gt 0 ]]; then
+#<20190723># echo "is_dry_run = True" >> "$CASAMS_EXE"
+#<20190723># fi
+#<20190723># 
+#<20190723># echo "" >> "$CASAMS_EXE"
+#<20190723># echo "execfile('"$(cd $(dirname ${BASH_SOURCE[0]}); pwd)"/casa_ms_clean_highz_gal.py', globals(), locals())" >> "$CASAMS_EXE"
+#<20190723># echo "" >> "$CASAMS_EXE"
+#<20190723># 
+#<20190723># # 
+#<20190723># # 
+#<20190723># # 
+#<20190723># 
+#<20190723># # 
+#<20190723># #chmod +x "${CASAMS_EXE}"
+#<20190723># echo "Wrote to python script: ${CASAMS_EXE}"
+#<20190723># echo "Now running: casa --logfile \"${CASAMS_LOG}\" --nocrashreport --nogui -c \"execfile('${CASAMS_EXE}')\""
+#<20190723># 
+#<20190723># casa --logfile "${CASAMS_LOG}" --nocrashreport --nogui -c "execfile('${CASAMS_EXE}')"
 
 
 

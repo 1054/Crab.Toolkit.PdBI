@@ -19,7 +19,7 @@ CASA_COMMAND="casa"
 CASA_VERSION=""
 if [[ $(type casapy 2>/dev/null | wc -l) -eq 0 && $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
     echo ""
-    echo "Error! CASA (casapy) was not found! Please check your \$PATH!"
+    echo "Error! CASA (casa or casapy) was not found! Please check your \$PATH!"
     echo ""
     exit
 else
@@ -105,6 +105,11 @@ CASA_INP_CONCAT_DIRTOL=() # freqtolerance for concat()
 CASA_INP_SPLIT_TIMEBIN=() # bin times, string type
 CASA_INP_SPLIT_TRIMCHAN=0 # trim flagged channel or not
 CASA_INP_CLEAN_MODE=() # clean mode, "cube" or "continuum"
+CASA_INP_CLEAN_BEAM=() # 
+CASA_INP_CLEAN_CELL=() # 
+CASA_INP_CLEAN_IMSIZE=() # 
+CASA_INP_CLEAN_PHASECENTER=() # 
+CASA_INP_CLEAN_THRESHOLD=() # 
 CASA_INP_CLEAN_DRY_RUN=0
 CASA_INP_CONTINUE_ON_ERROR=0 # continue on error or not
 CASA_CMD_TYPE="n/a"
@@ -154,6 +159,11 @@ while [[ "$#" -gt 0 ]]; do
              "-timebin") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="split-timebin";;
           "-trim-chan"*) CASA_CMD_TEXT="$1";        CASA_CMD_TYPE="split-trimchan";;
                 "-mode") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="clean-mode";;
+                "-beam") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="clean-beam";;
+                "-cell") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="clean-cell";;
+              "-imsize") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="clean-imsize";;
+         "-phasecenter") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="clean-phasecenter";;
+           "-threshold") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="clean-threshold";;
              "-dry-run") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="clean-dry-run";;
                  "-out") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="output";;
               "-output") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="output";;
@@ -183,6 +193,12 @@ while [[ "$#" -gt 0 ]]; do
         "concat-dirtol") if [[ $# -gt 0 ]]; then CASA_INP_CONCAT_DIRTOL+=("$1"); fi;;
         "split-timebin") if [[ $# -gt 0 ]]; then CASA_INP_SPLIT_TIMEBIN+=("$1"); fi;;
        "split-trimchan")                         CASA_INP_SPLIT_TRIMCHAN=1;;
+           "clean-mode") if [[ $# -gt 0 ]]; then CASA_INP_CLEAN_MODE+=("$1"); fi;;
+           "clean-beam") if [[ $# -gt 0 ]]; then CASA_INP_CLEAN_BEAM+=("$1"); fi;;
+           "clean-cell") if [[ $# -gt 0 ]]; then CASA_INP_CLEAN_CELL+=("$1"); fi;;
+         "clean-imsize") if [[ $# -gt 0 ]]; then CASA_INP_CLEAN_IMSIZE+=("$1"); fi;;
+    "clean-phasecenter") if [[ $# -gt 0 ]]; then CASA_INP_CLEAN_PHASECENTER+=("$1"); fi;;
+      "clean-threshold") if [[ $# -gt 0 ]]; then CASA_INP_CLEAN_THRESHOLD+=("$1"); fi;;
            "clean-mode") if [[ $# -gt 0 ]]; then CASA_INP_CLEAN_MODE+=("$1"); fi;;
        "clean-dry-run")                          CASA_INP_CLEAN_DRY_RUN=1;;
                "output") if [[ $# -gt 0 ]]; then CASA_INP_OUTPUT+=("$1"); fi;;

@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 # 
-# This code NOT REALLY must be run in CASA
+# This code does not need CASA but needs Python "casacore" package
 # 
-# to run this code in CASA, use 
-#   execfile(__file__, {}, locals()) 
-# but we must set vis and field in advance
+# This code creates clean script for running clean task in CASA. 
 # 
 # 20190718: Could not run this in CASA with __casac__. Still must need casacore. 
 # 
@@ -12,7 +10,7 @@
 from __future__ import print_function
 import os, sys, re, json, copy, time, datetime, shutil
 import numpy as np
-import inspect
+#import astropy
 
 
 # 
@@ -20,25 +18,23 @@ import inspect
 # 
 def usage():
     print('Usage:')
-    print('    casa_ms_clean_highz_gal.py \\')
-    print('        -vis "input_vis.ms" \\')
-    print('        -field "galaxy_name" \\')
-    print('        [-out "output_name"] \\')
-    print('        [-script "output_script_file"] \\')
-    print('        [-dry-run] \\')
-    print('        [-spw "0,1,2,3"] \\')
-    print('        [-width "30km/s"] \\')
-    print('        [-phasecenter ""] \\')
-    print('        [-threshold ""] \\')
-    print('    ')
-    print('Output:')
-    print('    The output will be a script to be ran in CASA. The default script name is "run_casa_ms_clean_highz_gal_cube.py" or "run_casa_ms_clean_highz_gal_continuum.py"')
-    print('    ')
-    print('Note:')
-    print('    Arguments with [] means they are optional. Do not type the [] when use the argument.')
-    print('    To run the output script in CASA, for now CASA uses Python 2, so just use execfile("run_casa_ms_clean_highz_gal.py")')
-    print('    Todo: for future Python 3, we can from . import casa_ms_clean_highz_gal; casa_ms_clean_highz_gal.main()')
-    print('')
+    print('    casacore_ms_clean.py -vis "Your_input_vis.ms" -gal "Your_galaxy_name" [-dry-run] [-spw "0,1,2,3"] [-width "30km/s"]')
+
+
+
+# 
+# import casacore table
+# 
+global USE_CASACORE
+try:
+    import casacore # PYTHONPATH= pip install --user python-casacore # documentation: http://casacore.github.io/python-casacore/
+    from casacore.tables import table as casacore_table
+    from casacore.tables import taql as casacore_taql
+    USE_CASACORE = True
+except:
+    raise ImportError('Could not import casacore! Please install casacore outside CASA via \'PYTHONPATH= pip install --user python-casacore!\'')
+
+print('USE_CASACORE = %s'%(USE_CASACORE))
 
 
 
@@ -47,67 +43,6 @@ def usage():
 # 
 global SET_DEBUG_LEVEL
 SET_DEBUG_LEVEL = 0
-
-
-
-# 
-# import casacore table
-# 
-global USE_CASACORE
-#try:
-#    #from __casac__ import *
-#    from __casac__.table import table
-#    USE_CASACORE = False
-#except:
-#    try:
-#        import casacore # pip install python-casacore # documentation: http://casacore.github.io/python-casacore/
-#        from casacore.tables import table, taql
-#        USE_CASACORE = True
-#    except:
-#        raise ImportError('Could not import casacore or __casac__! Please install casacore via \'pip install python-casacore!\'')
-try:
-    import casacore # PYTHONPATH= pip install --user python-casacore # documentation: http://casacore.github.io/python-casacore/
-    from casacore.tables import table as casacore_table
-    from casacore.tables import taql as casacore_taql
-    USE_CASACORE = True
-except:
-    #print('Error! Python package casacore not found! Should we install it?')
-    #print('We can run pip now to install python-casacore into user directory, if you argee by typing "y":')
-    #if sys.version_info.major >= 3:
-    #    check_yes = input("[y/n]: ")
-    #else:
-    #    check_yes = raw_input("[y/n]: ")
-    #if check_yes.lower().startswith('y'):
-    #    #os.system('PYTHONPATH= pip install --user python-casacore')
-    #    print('Trying to import pip and install python-casacore')
-    #    try:
-    #        import pip
-    #        #import sysconfig
-    #        if hasattr(pip, 'main'):
-    #            pip.main(['install', '--user', 'python-casacore'])
-    #        else:
-    #            pip._internal.main(['install', '--user', 'python-casacore'])
-    #    except:
-    #        try:
-    #            import pip
-    #            
-    #        except:
-    #            pass
-    #    
-    #    try:
-    #        import casacore # PYTHONPATH= pip install --user python-casacore # documentation: http://casacore.github.io/python-casacore/
-    #        from casacore.tables import table as casacore_table
-    #        from casacore.tables import taql as casacore_taql
-    #        USE_CASACORE = True
-    #    except:
-    #        print('Sorry, still could not import casacore!')
-    #        raise ImportError('Could not import casacore or __casac__! Please install casacore via \'PYTHONPATH= pip install python-casacore!\'')
-    #else:
-    #    print('Abort!')
-    #    raise ImportError('Could not import casacore or __casac__! Please install casacore via \'PYTHONPATH= pip install python-casacore!\'')
-    raise ImportError('Could not import casacore! Please install casacore outside CASA via \'PYTHONPATH= pip install --user python-casacore!\'')
-
-print('USE_CASACORE = %s'%(USE_CASACORE))
 
 
 
@@ -608,9 +543,7 @@ def print_interferometry_info_dict(info_dict, only_return_strings = False, curre
         if print_fmt_col_width < len(k):
             print_fmt_col_width = len(k)
     if current_dict_level == 2:
-        for k in info_dict.keys():
-            if not (type(info_dict[k]) is dict):
-                print_fmt_col_width = np.max([print_fmt_col_width, 15])
+        print_fmt_col_width = np.max([print_fmt_col_width, 15])
     #print_fmt_col_width += 1
     # 
     # loop dict keys
@@ -674,7 +607,7 @@ def print_interferometry_info_dict(info_dict, only_return_strings = False, curre
 
 
 # 
-# def parseSpw()
+# def parseIntSet()
 # 
 #   based on https://stackoverflow.com/questions/712460/interpreting-number-ranges-in-python
 #   returns a set of selected values when a string in the form:
@@ -682,61 +615,36 @@ def print_interferometry_info_dict(info_dict, only_return_strings = False, curre
 #   would return:
 #   (1,2,3,4,6,7,10,11,12)
 # 
-def parseSpw(input_str="", no_chan=False):
-    selection = {'spw':[], 'chan':[], 'spw+chan':[]}
-    invalid = []
+def parseIntSet(nputstr=""):
+    selection = set()
+    invalid = set()
     # tokens are comma seperated values
-    tokens = [t.strip() for t in input_str.split(',')]
-    for token in tokens:
-        # a token could be a spw, a spw+chan (separated with comma), or a range of spw
-        # 
-        # check if the input spw expression contains channels or not
-        chan_expression = ''
-        chan_selection = None
-        chan_list = []
-        if token.find(':') >= 0:
-            tokens2 = [t.strip() for t in token.split(':')]
-            if len(tokens2) > 1:
-                token = tokens2[0]
-                chan_expression = tokens2[1]
-                chan_selection = parseSpw(chan_expression, no_chan=True)
-                chan_list = chan_selection['chan']
-        # 
-        # check the input spw expression when split out any channel selection
-        if len(token) > 0:
-            if token[:1] == "<":
-                token = "1~%s"%(token[1:])
+    tokens = [x.strip() for x in nputstr.split(',')]
+    for i in tokens:
+        if len(i) > 0:
+            if i[:1] == "<":
+                i = "1~%s"%(i[1:])
         try:
             # typically tokens are plain old integers
-            selection['spw'].append(int(token))
-            selection['chan'].append(chan_list)
-            if chan_expression != '':
-                selection['spw+chan'].append(token+':'+chan_expression)
-            else:
-                selection['spw+chan'].append(token)
+            selection.add(int(i))
         except:
             # if not, then it might be a range
             try:
-                tokens2 = [int(k.strip()) for k in token.split('~')]
-                if len(tokens2) > 1:
-                    tokens2.sort()
+                token = [int(k.strip()) for k in i.split('~')]
+                if len(token) > 1:
+                    token.sort()
                     # we have items seperated by a dash
                     # try to build a valid range
-                    first = tokens2[0]
-                    last = tokens2[len(tokens2)-1]
-                    for t in range(first, last+1):
-                        selection['spw'].append(t)
-                        selection['chan'].append(chan_list)
-                        if chan_expression != '':
-                            selection['spw+chan'].append(token+':'+chan_expression)
-                        else:
-                            selection['spw+chan'].append(token)
+                    first = token[0]
+                    last = token[len(token)-1]
+                    for x in range(first, last+1):
+                        selection.add(x)
             except:
                 # not an int and not a range...
-                invalid.append(token)
+                invalid.add(i)
     # Report invalid tokens before returning valid selection
     if len(invalid) > 0:
-        print("Error! Invalid inputs: " + str(invalid))
+        print("Error! Invalid set: " + str(invalid))
         sys.exit()
     # 
     return selection
@@ -823,18 +731,14 @@ def clean_highz_gal(my_clean_mode = 'cube',
                     width = '', 
                     start = '', 
                     nchan = '', 
-                    beam = '', 
-                    cell = '', 
-                    imsize = 0, 
                     threshold = '', 
                     weighting = 'briggs', 
                     robust = 2.0, 
                     uvtaper = [], 
-                    clean_to_nsigma = 1.5, 
+                    clean_to_nsigma = 3.0, 
                     info_dict_file = '',
                     script_file = 'run_casa_ms_clean_highz_gal.py', 
                     is_dry_run = False, 
-                    overwrite = False, 
                    ):
     # 
     # check_ok
@@ -844,11 +748,8 @@ def clean_highz_gal(my_clean_mode = 'cube',
     if my_clean_mode == '':
         print('Error! The input my_clean_mode is empty!')
         check_ok = False
-    elif not my_clean_mode.lower().startswith('cube') and \
-         not my_clean_mode.lower().startswith('cont') and \
-         not my_clean_mode.lower().startswith('line') and \
-         not my_clean_mode.lower().startswith('map'):
-        print('Error! The input my_clean_mode is "%s", but it should be either "cube" or "continuum" (or "line_map" or "map" (TODO))!'%(my_clean_mode))
+    elif not my_clean_mode.startswith('cube') and not my_clean_mode.startswith('cont'):
+        print('Error! The input my_clean_mode is "%s", but it should be either "cube" or "continuum"!'%(my_clean_mode))
         check_ok = False
     # 
     # check vis
@@ -906,8 +807,7 @@ def clean_highz_gal(my_clean_mode = 'cube',
                 spw_list.append(info_dict['FIELD_'+field]['SPW']['ID'][ispw])
     else:
         selectdata = True
-        spw_chan_selection = parseSpw(spw)
-        spw_list = spw_chan_selection['spw']
+        spw_list = list(parseIntSet(spw))
         ispw_list = []
         for ispw in range(len(spw_list)):
             if spw_list[ispw] in info_dict['FIELD_'+field]['SPW']['ID']:
@@ -924,7 +824,7 @@ def clean_highz_gal(my_clean_mode = 'cube',
     # set reffreq and restfreq if no input. 
     # -- reffreq is the Reference frequency for MFS (relevant only if nterms > 1)
     # -- restfreq is for translation of velocities. When no input, CASA tclean() will set it to the center of spw automatically.
-    if my_clean_mode.lower().startswith('cont'):
+    if my_clean_mode.startswith('cont'):
         if reffreq == '':
             if spw == '':
                 sys.stdout.write('Computing reffreq as the centroid frequency of all spws:')
@@ -948,97 +848,46 @@ def clean_highz_gal(my_clean_mode = 'cube',
     # 
     # set channel width if no input
     if width == '':
-        if my_clean_mode.lower().startswith('cube'):
-            width = '2' # channel width, default is 2 channels <TODO>
-        #elif my_clean_mode.lower().startswith('map') or my_clean_mode.lower().startswith('line'):
-        #    width = '1' # single-channel line map <TODO>
+        if my_clean_mode.startswith('cube'):
+            width = '2' # channel width
     # 
     # set imagename if no input
     if imagename == '':
-        if vis.find(os.sep) >= 0:
-            vis_name = os.path.basename(vis)
+        if my_clean_mode.startswith('cube'):
+            imagename = '%s_%s_cube'%(re.sub(r'\.ms$', r'', vis, re.IGNORECASE), re.sub(r'[^a-zA-Z0-9_+-]', r'_', field))
         else:
-            vis_name = vis
-        imagename = '%s_%s_%s'%(re.sub(r'\.ms$', r'', vis_name, re.IGNORECASE), \
-                                re.sub(r'[^a-zA-Z0-9_+-]', r'_', field), \
-                                re.sub(r'[^a-zA-Z0-9_+-]', r'_', my_clean_mode)
-                               )
+            imagename = '%s_%s_continuum'%(re.sub(r'\.ms$', r'', vis, re.IGNORECASE), re.sub(r'[^a-zA-Z0-9_+-]', r'_', field))
     # 
     # check imagename existence
-    check_dir_ok = True
-    for check_dir_suffix in ['.image', 
-                             '.image.pbcor', 
-                             '.mask', 
-                             '.model', 
-                             '.pb', 
-                             '.psf', 
-                             '.weight', 
-                             '.residual', 
-                             '.sumwt']:
-        if os.path.isdir(imagename+check_dir_suffix): 
-            if overwrite == False:
-                print('Error! The output data "%s" already exists!'%(imagename+'.image'))
-                check_dir_ok = False
-            else:
-                shutil.rmtree(imagename+check_dir_suffix)
-    # 
-    for check_file_suffix in ['.image.fits', '.residual.fits']:
-        if os.path.isfile(imagename+check_file_suffix): 
-            if overwrite == False:
-                print('Error! The output file "%s" already exists!'%(imagename+check_file_suffix))
-                check_dir_ok = False
-            else:
-                print('Backing-up previous output file "%s" as "%s.backup"'%(imagename+check_file_suffix, imagename+check_file_suffix))
-                shutil.move(imagename+check_file_suffix, imagename+check_file_suffix+'.backup')
-    # 
-    if check_dir_ok == False:
-        print('Error occurred! Please check the above error message!')
+    if os.path.isdir(imagename+'.image'):
+        print('Error! The output data "%s" already exists!'%(imagename+'.image'))
         sys.exit()
     # 
     # set clean threshold
     if threshold == '':
-        # 
-        # set clean to which sigma level
-        #if np.isnan(clean_to_nsigma):
-        #    clean_to_nsigma = 1.5 #<TODO># clean to how many sigma
-        # 
-        # check if selectdata==True (i.e., spw != '')
         if spw == '':
-            sys.stdout.write('Computing uv plane rms per channel for all spws:')
+            sys.stdout.write('Computing threshold from all spws:')
             sys.stdout.flush()
         else:
-            sys.stdout.write('Computing uv plane rms per channel for the input spws:')
+            sys.stdout.write('Computing threshold from the input spws:')
             sys.stdout.flush()
         # loop spw and print rms info
         for ispw in ispw_list:
-            sys.stdout.write(' %d (%.6f mJy/beam)'%(info_dict['FIELD_'+field]['SPW']['ID'][ispw], info_dict['FIELD_'+field]['SPW']['RMS'][ispw] * 1e3))
+            sys.stdout.write(' %d (RMS %.6f mJy/beam)'%(info_dict['FIELD_'+field]['SPW']['ID'][ispw], info_dict['FIELD_'+field]['SPW']['RMS'][ispw] * 1e3))
             sys.stdout.flush()
         sys.stdout.write('\n')
         sys.stdout.flush()
         # 
-        # image plane rms per channel = 
-        #     visibility rms per channel / sqrt( N_ant * (N_ant-1) * (t_source / t_interval) * n_polar ) -- see https://casaguides.nrao.edu/index.php/DataWeightsAndCombination
-        # --> (info_dict['SPW']['RMS'])  / sqrt( N_baseline        * N_scan                  * N_stokes )
-        # --> (info_dict['SPW']['RMS'])  / sqrt( info_dict[fieldKey]['SPW']['NUM_SCAN_X_ALL'] )
-        # 
-        # where NUM_SCAN_X_BASELINE == N_ant * (N_ant-1) * (t_source / t_interval), 
-        #   and NUM_SCAN_X_ALL == N_ant * (N_ant-1) * (t_source / t_interval) * n_polar, 
-        # 
+        # image plane rms = visibility rms / sqrt( N_ant * (N_ant-1) * (t_source / t_interval) * n_polar ) -- see https://casaguides.nrao.edu/index.php/DataWeightsAndCombination
+        #image_plane_rms_mJy_per_beam = np.mean(np.array(info_dict['SPW']['RMS'])[ispw_list]) / np.sqrt( len(info_dict['ANTENNA']['ID']) * (len(info_dict['ANTENNA']['ID'])-1) ) * 1e3 # in units of mJy/beam
+        # now we use NUM_SCAN_X_BASELINE == N_ant * (N_ant-1) * (t_source / t_interval), so image plane rms is as below
+        # now we use NUM_SCAN_X_ALL == N_ant * (N_ant-1) * (t_source / t_interval) * n_polar, so image plane rms is as below
         image_plane_rms_mJy_per_beam = np.mean( np.array(info_dict['FIELD_'+field]['SPW']['RMS'])[ispw_list] ) \
                                        / np.sqrt( np.array(info_dict['FIELD_'+field]['SPW']['NUM_SCAN_X_ALL'])[ispw_list] ) \
                                        * 1e3 # in units of mJy/beam
-        print('image plane rms per channel = %s mJy/beam'%(image_plane_rms_mJy_per_beam))
-        # 
-        # check if selectdata==True (i.e., spw != '') and has channel selection expression
-        if spw != '':
-            for ispw in ispw_list:
-                if len(spw_chan_selection['chan'][ispw]) > 0:
-                    image_plane_rms_mJy_per_beam = np.array(info_dict['FIELD_'+field]['SPW']['RMS'])[ispw] \
-                                       / np.sqrt( np.array(info_dict['FIELD_'+field]['SPW']['NUM_SCAN_X_ALL'])[ispw] ) \
-                                       / np.sqrt(len(spw_chan_selection['chan'][ispw])) \
-                                       * 1e3 # in units of mJy/beam
-                    print('image plane rms of spw %d over %d channels = %s mJy/beam'%(spw_list[ispw], len(spw_chan_selection['chan'][ispw]), image_plane_rms_mJy_per_beam))
-        # 
+        if np.isnan(clean_to_nsigma):
+            clean_to_nsigma = 3.0 #<TODO># clean to how many sigma
+        print('image_plane_rms_mJy_per_beam', image_plane_rms_mJy_per_beam)
         threshold = '%0.6f mJy'%(np.min(image_plane_rms_mJy_per_beam) * clean_to_nsigma) # in units of mJy/beam
     # 
     # set stokes
@@ -1054,32 +903,20 @@ def clean_highz_gal(my_clean_mode = 'cube',
     # set other parameters
     #start = ''
     #nchan = ''
-    if beam == '':
-        restoringbeam = '%.5g arcsec'%(np.min([np.array(info_dict['FIELD_'+field]['SPW']['BMAJ'])[ispw_list]*3600.0, \
-                                       np.array(info_dict['FIELD_'+field]['SPW']['BMIN'])[ispw_list]*3600.0]))
-    else:
-        restoringbeam = '%.5g arcsec'%(np.min(np.array(info_dict['FIELD_'+field]['SPW']['BMAJ'])[ispw_list])*3600.0) # 'common' # Automatically estimate a common beam shape/size appropriate for all planes.
+    synthesized_beam_sampling_factor = 5.0
+    cell_arcsec = np.min([np.array(info_dict['FIELD_'+field]['SPW']['BMAJ'])[ispw_list]*3600.0, \
+                          np.array(info_dict['FIELD_'+field]['SPW']['BMIN'])[ispw_list]*3600.0]) \
+                  / synthesized_beam_sampling_factor # in units of arcsec
+    cell = '%0.6f arcsec'%(cell_arcsec) # in units of arcsec
+    imsize = np.max(np.array(info_dict['FIELD_'+field]['SPW']['PRIMARY_BEAM'])[ispw_list])*3600.0 * 2.0 / cell_arcsec # 2.0 * PB, in units of pixel
+    imsize = get_optimized_imsize(imsize)
     # 
-    if cell == '':
-        synthesized_beam_sampling_factor = 6.45 # 5.0
-        cell_arcsec = np.min([np.array(info_dict['FIELD_'+field]['SPW']['BMAJ'])[ispw_list]*3600.0, \
-                              np.array(info_dict['FIELD_'+field]['SPW']['BMIN'])[ispw_list]*3600.0]) \
-                      / synthesized_beam_sampling_factor # in units of arcsec
-        cell = '%0.5g arcsec'%(cell_arcsec) # in units of arcsec
-    # 
-    if imsize == 0:
-        imsize = np.max(np.array(info_dict['FIELD_'+field]['SPW']['PRIMARY_BEAM'])[ispw_list])*3600.0 * 2.0 / cell_arcsec # 2.0 * PB, in units of pixel
-        imsize = get_optimized_imsize(imsize)
-    # 
-    if my_clean_mode.lower().startswith('cube'):
+    if my_clean_mode.startswith('cube'):
         gridder = 'mosaic' # 'standard'
         specmode = 'cube' # for spectral line cube
-    elif my_clean_mode.lower().startswith('cont'):
+    elif my_clean_mode.startswith('cont'):
         gridder='standard'
         specmode = 'mfs'
-    elif my_clean_mode.lower().startswith('map') or my_clean_mode.lower().startswith('line'):
-        gridder = 'mosaic' # 'standard'
-        specmode = 'cube' # for single-channel line map
     outframe = 'LSRK'
     deconvolver = 'hogbom'
     usemask = 'pb' # construct a 1/0 mask at the 0.2 level
@@ -1087,6 +924,7 @@ def clean_highz_gal(my_clean_mode = 'cube',
     mask = '' #<TODO># 
     pblimit = 0.1 # data outside this pblimit will be output as NaN
     pbcor = True # create both pbcorrected and uncorrected images
+    restoringbeam = 'common' # Automatically estimate a common beam shape/size appropriate for all planes.
     nterms = 1 # nterms must be ==1 when deconvolver='hogbom' is chosen
     chanchunks = -1 # This feature is experimental and may have restrictions on how chanchunks is to be chosen. For now, please pick chanchunks so that nchan/chanchunks is an integer. 
     interactive = False
@@ -1128,26 +966,7 @@ def clean_highz_gal(my_clean_mode = 'cube',
         fp.write('\n')
         fp.write('tclean()\n')
         fp.write('\n')
-        fp.write('\n')
-        fp.write('\n')
-        fp.write('imagename = \'%s\'\n'%(imagename+'.image'))
-        fp.write('fitsimage = \'%s\'\n'%(imagename+'.image.fits'))
-        fp.write('\n')
-        fp.write('inp(exportfits)\n')
-        fp.write('\n')
-        fp.write('exportfits()\n')
-        fp.write('\n')
-        fp.write('\n')
-        fp.write('\n')
-        fp.write('imagename = \'%s\'\n'%(imagename+'.residual'))
-        fp.write('fitsimage = \'%s\'\n'%(imagename+'.residual.fits'))
-        fp.write('\n')
-        fp.write('inp(exportfits)\n')
-        fp.write('\n')
-        fp.write('exportfits()\n')
-        fp.write('\n')
-        fp.write('\n')
-        print('Output script to "%s"!'%(script_file))
+        print('Output to "%s"!'%(script_file))
     # 
     # then run casa
     if is_dry_run == False:
@@ -1177,7 +996,7 @@ def clean_highz_gal(my_clean_mode = 'cube',
 # 
 # main
 # 
-def main():
+if __name__ == '__main__':
     
     # 
     # initialize variables
@@ -1191,10 +1010,10 @@ def main():
     else:
         out = ''
     
-    if 'field' in locals():
-        field = locals()['field']
+    if 'gal' in locals():
+        gal = locals()['gal']
     else:
-        field = ''
+        gal = ''
     
     if 'spw' in locals():
         spw = locals()['spw']
@@ -1210,31 +1029,6 @@ def main():
         freq = locals()['freq']
     else:
         freq = ''
-    
-    if 'beam' in locals():
-        beam = locals()['beam']
-    else:
-        beam = ''
-    
-    if 'cell' in locals():
-        cell = locals()['cell']
-    else:
-        cell = ''
-    
-    if 'imsize' in locals():
-        imsize = locals()['imsize']
-    else:
-        imsize = 0
-    
-    if 'phasecenter' in locals():
-        phasecenter = locals()['phasecenter']
-    else:
-        phasecenter = ''
-    
-    if 'threshold' in locals():
-        threshold = locals()['threshold']
-    else:
-        threshold = ''
     
     if 'clean_mode' in locals():
         clean_mode = locals()['clean_mode']
@@ -1255,7 +1049,6 @@ def main():
     # check globals()
     # 
     # read user input
-    user_input_ok = True
     iarg = 1
     while iarg < len(sys.argv):
         istr = re.sub(r'[-]+', r'-', sys.argv[iarg]).lower()
@@ -1263,85 +1056,47 @@ def main():
             if iarg+1 < len(sys.argv):
                 iarg += 1
                 vis = sys.argv[iarg]
-                print('vis = %s'%(vis))
         elif istr == '-gal' or istr == '-field':
             if iarg+1 < len(sys.argv):
                 iarg += 1
-                field = sys.argv[iarg]
-                print('field = %s'%(field))
+                gal = sys.argv[iarg]
         elif istr == '-out' or istr == '-output':
             if iarg+1 < len(sys.argv):
                 iarg += 1
                 out = sys.argv[iarg]
-                print('out = %s'%(out))
         elif istr == '-spw':
             if iarg+1 < len(sys.argv):
                 iarg += 1
                 spw = sys.argv[iarg]
-                print('spw = %s'%(spw))
         elif istr == '-width':
             if iarg+1 < len(sys.argv):
                 iarg += 1
                 width = sys.argv[iarg]
-                print('width = %s'%(width))
         elif istr == '-freq':
             if iarg+1 < len(sys.argv):
                 iarg += 1
                 freq = sys.argv[iarg]
-                print('freq = %s'%(freq))
-        elif istr == '-beam':
-            if iarg+1 < len(sys.argv):
-                iarg += 1
-                beam = sys.argv[iarg]
-                print('beam = %s'%(beam))
-        elif istr == '-cell':
-            if iarg+1 < len(sys.argv):
-                iarg += 1
-                cell = sys.argv[iarg]
-                print('cell = %s'%(cell))
-        elif istr == '-imsize':
-            if iarg+1 < len(sys.argv):
-                iarg += 1
-                imsize = int(sys.argv[iarg])
-                print('imsize = %s'%(imsize))
-        elif istr == '-phasecenter':
-            if iarg+1 < len(sys.argv):
-                iarg += 1
-                phasecenter = sys.argv[iarg]
-                print('phasecenter = %s'%(phasecenter))
-        elif istr == '-threshold':
-            if iarg+1 < len(sys.argv):
-                iarg += 1
-                threshold = sys.argv[iarg]
-                print('threshold = %s'%(threshold))
         elif istr == '-mode' or istr == '-clean-mode':
             if iarg+1 < len(sys.argv):
                 iarg += 1
                 clean_mode = sys.argv[iarg]
         elif istr == '-dry-run':
             is_dry_run = True
-        elif istr == '-overwrite':
-            overwrite = True
         elif istr == '-debug':
             SET_DEBUG_LEVEL += 1
         else:
-            #if vis == '':
-            #    vis = sys.argv[iarg]
-            #elif field == '':
-            #    field = sys.argv[iarg]
-            #elif spw == '':
-            #    spw = sys.argv[iarg]
-            print('Error! Unknown/unimplemented input "%s"'%(sys.argv[iarg]))
-            user_input_ok = False
-        # 
+            if vis == '':
+                vis = sys.argv[iarg]
+            elif gal == '':
+                gal = sys.argv[iarg]
+            elif spw == '':
+                spw = sys.argv[iarg]
         iarg += 1
     
     # 
     # check user input
-    if vis == '' or user_input_ok == False:
+    if vis == '':
         usage()
-        if user_input_ok == False:
-            print('Please check the error message about the user inputs above usage.')
         sys.exit()
     
     # 
@@ -1353,24 +1108,21 @@ def main():
             width = ''
     
     # 
-    # fix field "" 
-    field = field.replace('"','')
+    # fix gal "" 
+    gal = gal.replace('"','')
     
     # 
     # print message
-    #print('vis = %s'%(vis))
-    #print('field = %s'%(field))
-    #print('spw = %s'%(spw))
-    #print('width = %s'%(width))
-    #print('freq = %s'%(freq))
+    print('vis = %s'%(vis))
+    print('gal = %s'%(gal))
+    print('spw = %s'%(spw))
+    print('width = %s'%(width))
     print('clean_mode = %s'%(clean_mode))
     print('is_dry_run = %s'%(is_dry_run))
     
     # 
-    # test subroutine parseSpw()
-    #print('parseSpw(\'1~4,6,8,10~12\')', parseSpw('1~4,6,8,10~12'))
-    #print('parseSpw(\'1~4:5~59,5:2,6~10\')', parseSpw('1~4:5~59,5:2,6~10'))
-    #sys.exit()
+    # test subroutine
+    #print('parseIntSet(\'1~4,6,8,10~12\')', parseIntSet('1~4,6,8,10~12'))
     
     # 
     # test subroutine
@@ -1387,70 +1139,33 @@ def main():
     #imsize = 7*17
     #print('get_optimized_imsize(%d)'%(imsize), get_optimized_imsize(imsize))
     
-    
-    # 
-    # try to get clean_highz_gal() argument list from locals() and pass arguments as a dict to the function.
-    try:
-        arg_list = inspect.signature(clean_highz_gal).parameters.keys()
-        arg_list = list(arg_list)
-    except:
-        try:
-            arg_list = inspect.getfullargspec(clean_highz_gal)[0].a
-        except:
-            try:
-                arg_list = inspect.getargspec(clean_highz_gal)[0]
-            except:
-                pass
-    #print(arg_list)
-    #print(locals()['vis'])
-    #arg_parser = lambda l, d=locals(): dict((k, d[k]) for k in l if k in d)
-    #arg_dict = arg_parser(arg_list)
-    #print(type(arg_dict), arg_dict.keys())
-    #print(type(locals()), locals().keys())
-    #sys.exit()
-    
-    
-    # 
-    # check clean_mode <TODO> cube, continuum, line_map
-    my_clean_mode = clean_mode
-    
-    
-    # 
-    # check output
-    imagename = out
-    restoringbeam = beam
-    #field = gal
-    if freq != '':
-        if clean_mode.lower().startswith('cont'):
-            reffreq = freq
-        else:
-            restfreq = freq
-    
-    
     # 
     # run test 
     #grab_interferometry_info(vis)
-    if script_file == '':
-        script_file = 'run_casa_ms_clean_highz_gal_%s.py'%(my_clean_mode)
-    # 
-    arg_parser = lambda l, d=locals(): dict((k, d[k]) for k in l if k in d)
-    # 
-    clean_highz_gal(**arg_parser(arg_list))
-    
+    if clean_mode == 'cube':
+        # 
+        if script_file == '':
+            script_file = 'run_casa_ms_clean_highz_gal_cube.py'
+        # 
+        clean_highz_gal(my_clean_mode = 'cube', vis = vis, field = gal, imagename = out, \
+                        spw = spw, width = width, 
+                        script_file = script_file, 
+                        is_dry_run = is_dry_run)
+    else:
+        # 
+        if script_file == '':
+            script_file = 'run_casa_ms_clean_highz_gal_continuum.py'
+        # 
+        clean_highz_gal(my_clean_mode = 'continuum', vis = vis, field = gal, imagename = out, \
+                        spw = spw, width = width, 
+                        script_file = script_file, 
+                        is_dry_run = is_dry_run)
         
 
 
 
 
 
-
-
-# 
-# __main__
-# 
-if __name__ == '__main__':
-    # 
-    main()
 
 
 
