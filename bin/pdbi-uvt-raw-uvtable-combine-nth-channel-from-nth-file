@@ -117,8 +117,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     fi
     cat "$SRC_TEMP_EXEC" | sed -e "s%PDBIUVT_INPUT_FILE%${PdBIUVT_NAME[tk]}%g" | sed -e "s%PDBIUVT_OUTPUT_FILE%${PdBIUVT_SAVE[tk]}%g" > "$PdBIUVT_TEMP_EXEC"
     echo "Running GILDAS mapping (it may take some time, check the realtime output in the log file)"
-    echo "echo @$PdBIUVT_TEMP_EXEC | mapping -nw -nl > $PdBIUVT_TEMP_LOGT"
-    echo "@$PdBIUVT_TEMP_EXEC" | mapping -nw -nl > "$PdBIUVT_TEMP_LOGT"
+    echo "echo @$PdBIUVT_TEMP_EXEC | mapping -nw -nl | tee $PdBIUVT_TEMP_LOGT"
+    echo "@$PdBIUVT_TEMP_EXEC" | mapping -nw -nl | tee "$PdBIUVT_TEMP_LOGT"
     
     if [[ ! -f "${PdBIUVT_SAVE[tk]}.uvt" ]]; then
         echo "Error! Failed to run the code! Please check:"

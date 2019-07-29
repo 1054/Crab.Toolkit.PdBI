@@ -64,20 +64,22 @@ if [[ $(python -c "import casacore" 2>&1 | wc -l) -gt 0 ]]; then
 fi
 
 
-
 # 
 # We will call "csasa" without CASA but with Python casacore package
 # 
 $(dirname ${BASH_SOURCE[0]})/casa_ms_clean_highz_gal.py "$@" | tee run_casa_ms_clean_highz_gal.log
 
+
+# 
 # check output
+# 
 output_script_name=$(cat "run_casa_ms_clean_highz_gal.log" | grep "^Output script to " | perl -p -e 's/Output script to "(.*)\.py".*/\1/g')
-echo ""
-echo "output_script_name = $output_script_name"
 if [[ -z "$output_script_name" ]]; then
     echo "Error! Failed to run \"$(dirname ${BASH_SOURCE[0]})/run_casa_ms_clean_highz_gal.py\"! Please check \"./run_casa_ms_clean_highz_gal.log\"!"
     exit
 fi
+echo ""
+echo "output_script_name = $output_script_name"
 
 
 

@@ -5,15 +5,19 @@
 # cp ../uv_table_data/split_VUDS0510807732_spw1_width10_SP.uvt data.uvt
 
 # prepare channel-differed data
-bash << EOF
-for (( i=1; i<=16; i++ )); do
-cp data.uvt data_ch\${i}.uvt
-done
-EOF
+#bash << EOF
+#for (( i=1; i<=16; i++ )); do
+#cp data.uvt data_ch\${i}.uvt
+#done
+#EOF
+cp data.uvt data_ch10.uvt
+cp data.uvt data_ch12.uvt
+cp data.uvt data_ch14.uvt
+cp data.uvt data_ch16.uvt
 
 # test script
-cp ../pdbi-uvt-raw-uvtable-combine-nth-channel-from-nth-file.map test.map
-open test.map
+#cp ../pdbi-uvt-raw-uvtable-combine-nth-channel-from-nth-file.map test.map
+#open test.map
 
 # run pdbi-uvt-raw-uvtable-combine-nth-channel-from-nth-file
 pdbi-uvt-raw-uvtable-combine-nth-channel-from-nth-file -name data -out data-Combined

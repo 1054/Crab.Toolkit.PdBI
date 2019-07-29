@@ -1057,8 +1057,9 @@ def clean_highz_gal(my_clean_mode = 'cube',
     if beam == '':
         restoringbeam = '%.5g arcsec'%(np.min([np.array(info_dict['FIELD_'+field]['SPW']['BMAJ'])[ispw_list]*3600.0, \
                                        np.array(info_dict['FIELD_'+field]['SPW']['BMIN'])[ispw_list]*3600.0]))
+        # or 'common'? # Automatically estimate a common beam shape/size appropriate for all planes.
     else:
-        restoringbeam = '%.5g arcsec'%(np.min(np.array(info_dict['FIELD_'+field]['SPW']['BMAJ'])[ispw_list])*3600.0) # 'common' # Automatically estimate a common beam shape/size appropriate for all planes.
+        restoringbeam = beam 
     # 
     if cell == '':
         synthesized_beam_sampling_factor = 6.45 # 5.0
@@ -1239,7 +1240,7 @@ def main():
     if 'clean_mode' in locals():
         clean_mode = locals()['clean_mode']
     else:
-        clean_mode = ''
+        clean_mode = 'cube' # cube, continuum
     
     if 'script_file' in locals():
         script_file = locals()['script_file']
@@ -1395,7 +1396,7 @@ def main():
         arg_list = list(arg_list)
     except:
         try:
-            arg_list = inspect.getfullargspec(clean_highz_gal)[0].a
+            arg_list = inspect.getfullargspec(clean_highz_gal)[0]
         except:
             try:
                 arg_list = inspect.getargspec(clean_highz_gal)[0]
