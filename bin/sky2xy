@@ -1,0 +1,34 @@
+#!/bin/bash
+# 
+# common caller for wcstools:
+#=  cphead
+#=  imhead
+#=  edhead
+#=  gethead
+#=  getpix
+#=  sethead
+#=  sky2xy
+#=  xy2sky
+# 
+# for ff in $(cat gethead | grep "^#= " | tr -s ' ' | cut -d ' ' -f 2); do cp gethead $ff; done
+#   
+# 
+# Linux
+if [[ $(uname -s) == Linux ]]; then
+    if [[ $(bc <<< "$(ldd --version | head -n 1 | tr -s ' ' | cut -d ' ' -f 4 | cut -d '.' -f 2)<14") -eq 1 ]]; then
+        # the supercomputer planer has an old GLIBC version 2.5
+        $(dirname $0)/wcstools_linux_Glibc_2.12/$(basename $0) "$@"
+    else
+        $(dirname $0)/wcstools_linux_Glibc_2.14/$(basename $0) "$@"
+    fi
+fi
+# Darwin
+if [[ $(uname -s) == Darwin ]]; then
+    $(dirname $0)/wcstools_mac/$(basename $0) "$@"
+fi
+# Cygwin
+if [[ $(uname -s) == *CYGWIN* ]]; then
+    $(dirname $0)/wcstools_cygwin/$(basename $0)_cygwin_x86.exe "$@"
+fi
+
+

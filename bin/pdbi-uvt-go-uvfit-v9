@@ -359,6 +359,13 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             if [[ $(awk "BEGIN {if($PdBIUVT_Obj_Maj<=0) print 1; else print 0;}") -eq 1 ]]; then
                 PdBIUVT_Obj_Maj="0.1" # set a non-zero initial guess if the user has not provided any. This is needed for EXPO fitting.
             fi
+            if echo "$PdBIUVT_Function" | grep -q -i "E_EXPO"; then
+                echo Obj FWHM Minor = $PdBIUVT_Obj_Min arcsec "(START=$PdBIUVT_Fit_Min)"
+                echo Obj Pos. Angle = $PdBIUVT_Obj_Ang degree "(START=$PdBIUVT_Fit_Ang)"
+                if [[ $(awk "BEGIN {if($PdBIUVT_Obj_Min<=0) print 1; else print 0;}") -eq 1 ]]; then
+                    PdBIUVT_Obj_Min="0.1" # set a non-zero initial guess if the user has not provided any. This is needed for EXPO fitting.
+                fi
+            fi
         fi
         # 
         # print separator
@@ -550,12 +557,12 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                 PLOT_DEFAULT_FoV=10 # arcsec, default FoV
                 for (( iOutXY = 0; iOutXY < ${#PdBIUVT_OutXY[@]}; iOutXY++ )); do
                     if [[ "${PdBIUVT_OutSNR[iOutXY]}" != "NaN" ]]; then
-                        if [[ $(awk "BEGIN {if (($PdBIUVT_OutSNR)>0) print 1; else print 0;}") -eq 1 ]]; then
+                        #if [[ $(awk "BEGIN {if (($PdBIUVT_OutSNR)>0) print 1; else print 0;}") -eq 1 ]]; then
                             if [[ $(awk "BEGIN {if (2.0*(${PdBIUVT_OutXY[iOutXY]})*2.0*(${PdBIUVT_OutXY[iOutXY]}) > ($PLOT_DEFAULT_FoV)*($PLOT_DEFAULT_FoV)) print 1; else print 0;}") -eq 1 ]]; then
                                 PLOT_DEFAULT_FoV=$(awk "BEGIN {if ((${PdBIUVT_OutXY[iOutXY]})>=0) print (2.0*(${PdBIUVT_OutXY[iOutXY]})); else print (-2.0*(${PdBIUVT_OutXY[iOutXY]}));}")
                                 # note that 'PdBIUVT_OutXY' are the offset of fitted objects, while FoV is the length of field of view, so we need '2.0*PdBIUVT_OutXY'. 
                             fi
-                        fi
+                        #fi
                     fi
                 done
                 PLOT_DEFAULT_FoV=$(awk "BEGIN {print (($PLOT_DEFAULT_FoV)*1.2);}") # arcsec, default FoV, 10*1.2 = 12 arcsec.

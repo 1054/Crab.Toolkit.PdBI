@@ -116,6 +116,7 @@ while i < len(sys.argv):
         if i+1 < len(sys.argv):
             i = i + 1
             input_linefreq.append(float(sys.argv[i]))
+            #print('input_linefreq.append(%s)'%(float(sys.argv[i])))
     elif temp_argv == '-linename' or temp_argv == '-line-name':
         if i+1 < len(sys.argv):
             i = i + 1
@@ -475,6 +476,8 @@ for i in range(len(input_names)):
                     if len(set_highlight_frange) > 0:
                         for k in range(0,len(set_highlight_frange),2):
                             if k+1 < len(set_highlight_frange):
+                                #<20190912><BUG># if x[j]-x_left_width[j] >= set_highlight_frange[k] and x[j]+x_right_width[j] <= set_highlight_frange[k+1]:
+                                #<20190912><BUG># if x[j]+x_left_width[j] >= set_highlight_frange[k] and x[j]-x_right_width[j] <= set_highlight_frange[k+1]:
                                 if x[j]-x_left_width[j] >= set_highlight_frange[k] and x[j]+x_right_width[j] <= set_highlight_frange[k+1]:
                                     x_highlights.append([x[j]-x_left_width[j],x[j]+x_right_width[j]])
                                     y_highlights.append([y[j],y[j]])
@@ -489,13 +492,18 @@ for i in range(len(input_names)):
                             if kk >= len(input_lineFWHM):
                                 input_lineFWHM.append(input_lineFWHM[-1])
                             if input_lineFWHM[kk] > 0:
-                                if numpy.abs(x[j] / (input_linefreq[kk]/(1.0+input_redshift)) - 1.0) * 2.99792458e5 <= input_lineFWHM[kk] / 2.0:
+                                #print('debug highlighting spectrum channels', x[j], (input_linefreq[kk]/(1.0+input_redshift)))
+                                if ((x[j]+x_left_width[j]) / (input_linefreq[kk]/(1.0+input_redshift)) - 1.0) * 2.99792458e5 >= -input_lineFWHM[kk] / 2.0 and \
+                                   ((x[j]-x_right_width[j]) / (input_linefreq[kk]/(1.0+input_redshift)) - 1.0) * 2.99792458e5 <= input_lineFWHM[kk] / 2.0:
                                     x_highlights.append([x[j]-x_left_width[j],x[j]+x_right_width[j]])
                                     y_highlights.append([y[j],y[j]])
                                     sum_highlights+=y[j]
                                     cnt_highlights+=1
-                                    nom_highlights=input_linename[kk]
-                                    #print('highlighting input spectral line %d between %0.6f and %0.6f GHz'%(kk+1,x[j]-x_left_width[j],x[j]+x_right_width[j]))
+                                    if kk < len(input_linename):
+                                        nom_highlights=input_linename[kk]
+                                    else:
+                                        nom_highlights='input_line_%d'%(kk+1) #<TODO># default line name if no input
+                                    print('highlighting input spectral line %d between %0.6f and %0.6f GHz'%(kk+1,x[j]-x_left_width[j],x[j]+x_right_width[j]))
                                 #x_highlights.append([(1.0-input_lineFWHM[kk]/2.99792458e5)*input_linefreq[kk]/(1.0+input_redshift)-x_left_width[j],
                                 #                     (1.0+input_lineFWHM[kk]/2.99792458e5)*input_linefreq[kk]/(1.0+input_redshift)+x_right_width[j]])
                                 #y_highlights.append([y[j],y[j]])

@@ -1,0 +1,24 @@
+#!/bin/bash
+# 
+# compute at a given redshift the kpc2arcsec conversion factor
+# 
+LANG=C
+
+mathcalc() {
+    awk 'BEGIN { printf "%.6f\n", '"$1"'}'
+}
+
+if [[ $# -lt 1 ]]; then
+    echo "Usage: "
+    echo "    kpc2arcsec z # Output in unit of arcsec/kpc."
+    echo "    kpc2arcsec 0 dL # Output in unit of arcsec/kpc."
+    exit
+fi
+if [[ $# -ge 2 ]]; then
+    KPCLUMDIST="$2"
+else
+    KPCLUMDIST=($(lumdist -verbose "$1" | grep "d_A=" | perl -p -e 's/.* d_A=(.*) Mpc/\1/g'))
+fi
+if echo $KPCLUMDIST | grep -q -v "lumdist"; then
+    mathcalc "1e-3/($KPCLUMDIST)/3.1415926*180.0*3600.0"
+fi

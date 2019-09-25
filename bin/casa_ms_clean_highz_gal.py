@@ -355,6 +355,10 @@ def grab_interferometry_info(vis, info_dict_file = ''):
     for field in field_list:
         print('Looping field %s in the field_list %s'%(field, field_list))
         # 
+        # check field id -- if field is like '[0]', '[1]'
+        if re.match(r'^\[([0-9]+)\]$', field):
+            field = info_dict['FIELD']['NAME'][int(re.sub(r'^\[([0-9]+)\]$', r'\1', field))]
+        # 
         # check field name
         if field in info_dict['FIELD']['NAME']:
             query_field_id = info_dict['FIELD']['ID'][ info_dict['FIELD']['NAME'].index(field) ]
@@ -830,6 +834,9 @@ def clean_highz_gal(my_clean_mode = 'cube',
                     weighting = 'briggs', 
                     robust = 2.0, 
                     uvtaper = [], 
+                    niter = 30000, 
+                    calcres = True, 
+                    calcpsf = True,  
                     clean_to_nsigma = 1.5, 
                     info_dict_file = '',
                     script_file = 'run_casa_ms_clean_highz_gal.py', 
@@ -877,6 +884,12 @@ def clean_highz_gal(my_clean_mode = 'cube',
         print('       Available fields are: %s'%(', '.join(['"'+t+'"' for t in info_dict['FIELD']['NAME']])))
         sys.exit()
     # 
+    # check if field is id
+    # 
+    # check field id -- if field is like '[0]', '[1]'
+    if re.match(r'^\[([0-9]+)\]$', field):
+        field = info_dict['FIELD']['NAME'][int(re.sub(r'^\[([0-9]+)\]$', r'\1', field))]
+    # 
     # check field 
     if not ('FIELD_'+field in info_dict):
         print('Error! The input field "%s" is not in the info_dict of the data "%s"!'%(field, vis))
@@ -896,12 +909,8 @@ def clean_highz_gal(my_clean_mode = 'cube',
         ispw_list = []
         for ispw in range(len(info_dict['FIELD_'+field]['SPW']['ID'])):
             #print('info_dict[%s][\'SPW\'][\'NAME\'][%d] = %s'% ('FIELD_'+field, ispw, info_dict['FIELD_'+field]['SPW']['NAME'][ispw]) )
-            if (not info_dict['FIELD_'+field]['SPW']['NAME'][ispw].startswith('WVR')) \
-                and info_dict['FIELD_'+field]['SPW']['NAME'][ispw].find('ALMA') > 0 \
-                and info_dict['FIELD_'+field]['SPW']['NAME'][ispw].find('FULL_RES') > 0:
-                ispw_list.append(ispw) # ispw is the index for info_dict['FIELD_'+field]['SPW']['ID'] array
-                spw_list.append(info_dict['FIELD_'+field]['SPW']['ID'][ispw])
-            elif (info_dict['FIELD_'+field]['SPW']['NAME'][ispw] == 'none'):
+            if (not (info_dict['FIELD_'+field]['SPW']['NAME'][ispw].startswith('WVR'))) and \
+               (not (info_dict['FIELD_'+field]['SPW']['NAME'][ispw].find('AVERAGE')>0)):
                 ispw_list.append(ispw) # ispw is the index for info_dict['FIELD_'+field]['SPW']['ID'] array
                 spw_list.append(info_dict['FIELD_'+field]['SPW']['ID'][ispw])
     else:
@@ -919,6 +928,9 @@ def clean_highz_gal(my_clean_mode = 'cube',
     #print('ispw_list', ispw_list)
     if len(ispw_list) == 0:
         print('Error! The spw list is empty?! This should not happen..')
+        print('spw = %s'%(spw))
+        print('selectdata = %s'%(selectdata))
+        print(info_dict['FIELD_'+field]['SPW']['NAME'])
         sys.exit()
     # 
     # set reffreq and restfreq if no input. 
@@ -977,7 +989,7 @@ def clean_highz_gal(my_clean_mode = 'cube',
                              '.sumwt']:
         if os.path.isdir(imagename+check_dir_suffix): 
             if overwrite == False:
-                print('Error! The output data "%s" already exists!'%(imagename+'.image'))
+                print('Error! The output data "%s" already exists!'%(imagename+check_dir_suffix))
                 check_dir_ok = False
             else:
                 shutil.rmtree(imagename+check_dir_suffix)
@@ -1092,9 +1104,9 @@ def clean_highz_gal(my_clean_mode = 'cube',
     chanchunks = -1 # This feature is experimental and may have restrictions on how chanchunks is to be chosen. For now, please pick chanchunks so that nchan/chanchunks is an integer. 
     interactive = False
     savemodel = 'virtual' # 'none', 'virtual', 'modelcolumn'. 'virtual' for simple gridding, 'modelcolumn' for gridder='awproject'.
-    niter = 30000
-    calcres = True # calculate initial residual image at the beginning of the first major cycle
-    calcpsf = True
+    #niter = 30000
+    #calcres = True # calculate initial residual image at the beginning of the first major cycle
+    #calcpsf = True
     if calcres==False and niter==0:
         print('Note: Only the PSF will be made and no data will be gridded in the first major cycle of cleaning.')
     elif calcres==False and niter>0:
@@ -1146,6 +1158,16 @@ def clean_highz_gal(my_clean_mode = 'cube',
         fp.write('inp(exportfits)\n')
         fp.write('\n')
         fp.write('exportfits()\n')
+        fp.write('\n')
+        fp.write('\n')
+        fp.write('\n')
+        fp.write('imagename = \'%s\'\n'%(imagename+'.psf'))
+        fp.write('fitsimage = \'%s\'\n'%(imagename+'.psf.fits'))
+        fp.write('\n')
+        fp.write('inp(exportfits)\n')
+        fp.write('\n')
+        fp.write('exportfits()\n')
+        fp.write('\n')
         fp.write('\n')
         fp.write('\n')
         print('Output script to "%s"!'%(script_file))
@@ -1237,6 +1259,16 @@ def main():
     else:
         threshold = ''
     
+    if 'robust' in locals():
+        robust = locals()['robust']
+    else:
+        robust = 2.0
+    
+    if 'niter' in locals():
+        niter = locals()['niter']
+    else:
+        niter = 30000
+    
     if 'clean_mode' in locals():
         clean_mode = locals()['clean_mode']
     else:
@@ -1269,6 +1301,11 @@ def main():
             if iarg+1 < len(sys.argv):
                 iarg += 1
                 field = sys.argv[iarg]
+                print('field = %s'%(field))
+        elif istr == '-field-id':
+            if iarg+1 < len(sys.argv):
+                iarg += 1
+                field = '['+sys.argv[iarg]+']'
                 print('field = %s'%(field))
         elif istr == '-out' or istr == '-output':
             if iarg+1 < len(sys.argv):
@@ -1315,6 +1352,16 @@ def main():
                 iarg += 1
                 threshold = sys.argv[iarg]
                 print('threshold = %s'%(threshold))
+        elif istr == '-robust':
+            if iarg+1 < len(sys.argv):
+                iarg += 1
+                robust = float(sys.argv[iarg])
+                print('robust = %s'%(robust))
+        elif istr == '-niter':
+            if iarg+1 < len(sys.argv):
+                iarg += 1
+                niter = int(sys.argv[iarg])
+                print('niter = %d'%(niter))
         elif istr == '-mode' or istr == '-clean-mode':
             if iarg+1 < len(sys.argv):
                 iarg += 1

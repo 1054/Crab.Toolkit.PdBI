@@ -9,14 +9,12 @@
 CASAMS_VIS="" # dataset name
 CASAMS_OUT="" # the output directory containing phase calibrator figures
 # 
-# Usage
+# Read input parameters
 # 
-usage() {
-    echo "Usage: "
-    echo "    casa-ms-plot-phasecal -vis calibrated.ms -out output_dir]"
-    echo "Note:"
-    echo "    This code will produce a number of diagnostic figures for the phase calibrators in the input ALMA visibility measurement set."
-}
+#if [[ "$#" -eq 0 ]]; then
+#    echo "Usage: casa-ms-plot-phasecal -vis calibrated.ms [-out calibrated.ms.listobs.txt]"
+#    exit
+#fi
 # 
 # Check casa
 # 
@@ -24,14 +22,14 @@ if [[ $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
     echo ""
     echo "Error! CASA was not found! Please check your \$PATH!"
     echo ""
-    exit 255
+    exit
 fi
 # 
 # Read input parameters
 # 
 CASAMS_GOOD=1
 CASAMS_RPAR=""
-while [[ $# -gt 0 ]]; do
+while [[ "$#" -gt 0 ]]; do
     # echo $1
     case $1 in
            "-vis") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_VIS="$1";;
@@ -44,16 +42,29 @@ done
 # 
 if [[ x"$CASAMS_VIS" == x ]]; then
     CASAMS_GOOD=0
-fi
-if [[ x"$CASAMS_OUT" == x ]]; then
-    CASAMS_GOOD=0
+    #echo -n "Please input vis: "
+    #read CASAMS_VIS
+    # Set default value
+    CASAMS_VIS="calibrated.ms"
+    # Now we can first print default value, then if user input anything we remove the default value and show the user input. 
+    echo -n "Please input vis: $CASAMS_VIS"
+    read -N 1 CASAMS_KEY
+    if [[ x"$CASAMS_KEY" != x ]]; then
+        echo -e -n "\r$(tput el)Please input vis: $CASAMS_KEY"
+        read CASAMS_VIS
+        CASAMS_VIS="${CASAMS_KEY}${CASAMS_VIS}"
+    fi
+    # Check again the input is not empty
+    if [[ x"$CASAMS_VIS" != x ]]; then
+        CASAMS_GOOD=1
+    fi
 fi
 # 
 # Check input parameters ------ if not passed then print usage and exit
 # 
 if [[ $CASAMS_GOOD -eq 0 ]]; then
-    usage
-    exit 255
+    echo "Usage: casa-ms-plot-phasecal -vis calibrated.ms -out output_dir_name"
+    exit
 fi
 # 
 # Revise input parameters
@@ -67,8 +78,8 @@ else
 fi
 CASAMS_VIS=$(echo $CASAMS_VIS | sed -E 's/[.]ms$//g')
 if [[ ! -d "${CASAMS_VIS}${CASAMS_VIS_SFIX}" ]]; then
-    echo "Error! \"${CASAMS_VIS}${CASAMS_VIS_SFIX}\" does not exist! Exit!"
-    exit 255
+    echo Error! "${CASAMS_VIS}${CASAMS_VIS_SFIX}" was not found! Exit!
+    exit
 fi
 # 
 # Revise input parameter -- output directory -- if not given, set to input vis+".plot.phasecal"
@@ -80,29 +91,35 @@ fi
 # 
 # Backup and make output directory
 # 
+if [[ -d "$CASAMS_OUT.backup" ]]; then
+    echo "Found existing \"$CASAMS_OUT.backup\"! Backuping it as \"$CASAMS_OUT.backup.backup\"!"
+    mv "$CASAMS_OUT.backup" "$CASAMS_OUT.backup.backup"
+fi
 if [[ -d "$CASAMS_OUT" ]]; then
-    if [[ -d "$CASAMS_OUT.backup" ]]; then
-        rm -rf "$CASAMS_OUT.backup"
-    fi
     echo "Found existing \"$CASAMS_OUT\"! Backuping it as \"$CASAMS_OUT.backup\"!"
     mv "$CASAMS_OUT" "$CASAMS_OUT.backup"
 fi
 if [[ ! -d "$CASAMS_OUT" ]]; then
-    mkdir -p "$CASAMS_OUT"
+    mkdir "$CASAMS_OUT"
 fi
 if [[ ! -d "$CASAMS_OUT" ]]; then
     echo "Error! Failed to create output directory \"$CASAMS_OUT\"!"
-    exit 255
+    exit 1
 fi
+## 
+## Check listobs
+## 
+#CASAMS_LISTOBS="$(basename ${CASAMS_VIS}${CASAMS_VIS_SFIX}).listobs.txt"
+#if [[ ! -f "${CASAMS_LISTOBS}" ]]; then
+#    casa-ms-listobs -vis "${CASAMS_VIS}${CASAMS_VIS_SFIX}" -out "${CASAMS_LISTOBS}"
+#fi
 # 
 # 
 # 
 # 
-# Call casa_ms_plot_phasecal.py in CASA
+# Write run_dzliu_plot_phasecal.py
 # -- see -- https://casaguides.nrao.edu/index.php?title=TWHydraBand7_Calibration_4.2#Set_Up_the_Flux_Calibrator_Model
 # 
-script_dir=$(dirname "${BASH_SOURCE[0]}")
-casa -c "import sys; sys.append(\"$script_dir\"); from casa_ms_plot_phasecal import casa_ms_plot_phasecal; casa_ms_plot_phasecal()"
 CASAMS_FPY="run_dzliu_plot_phasecal.py"
 echo "# CASAPY "                                             >  "$CASAMS_FPY"
 echo "# "                                                    >> "$CASAMS_FPY"

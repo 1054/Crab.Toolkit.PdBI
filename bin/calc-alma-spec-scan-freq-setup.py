@@ -43,6 +43,7 @@ if __name__ == '__main__':
     input_params['begin'] = np.nan
     input_params['end'] = np.nan
     input_params['number'] = np.nan
+    input_params['overlap-channels'] = 4
     input_params['out'] = ''
     input_params['plot'] = False
     i = 1
@@ -89,7 +90,7 @@ if __name__ == '__main__':
     if input_params['begin'] >= 84.0 and  input_params['begin']<116.0:
         ALMA_Band = 3
         IF_range = (4.0, 8.0)
-        IF_width = 7.5
+        IF_width = 7.5 # Maximum instantaneous IF bandwidth
     elif input_params['begin'] >= 125.0 and  input_params['begin']<158.0:
         ALMA_Band = 4
         IF_range = (4.0, 8.0)
@@ -120,17 +121,25 @@ if __name__ == '__main__':
         IF_width = 7.5 # 15.0 <TODO>
     # 
     # calc freq
-    SPW_overlap = 0.250 # GHz
-    SPW_width = 1.875
+    SPW_width = 1.875 # GHz, = IF_width / 4.0 if we have 4 SPWs
+    SPW_chanwidth = 31.25 / 1e3 # MHz -> GHz, channel width if TDM
+    SPW_overlap = SPW_chanwidth * int(input_params['overlap-channels']) # 0.250 # GHz
+    SPW_padding_fraction = 0.0 # 0.0 to 1.0
+    SPW_padding_LO = SPW_padding_fraction * ((IF_range[1]-IF_range[0])-SPW_width*2+SPW_overlap)/2.0 
+                     # sideband has a width of IF[1]-IF[0] = 4.0 GHz, SPW has a width of 1.875 GHz, therefore there is a padding max. 4.0-1.875 GHz. 
+                     # In default we put two slightly-overlapped SPW at the center of each sideband.
     LO_width = IF_range[0] * 2.0 # GHz
     SB_width = IF_range[1] - IF_range[0] # sideband width
     # 
     # 
     spw0center = input_params['begin'] + SPW_width/2.0
     spw1center = spw0center + SPW_width - SPW_overlap
-    spw2center = (spw0center+spw1center)/2.0 + SB_width + LO_width - SPW_width/2.0 + SPW_overlap/2.0
+    #spw2center1 = (spw0center+spw1center)/2.0 + SB_width + LO_width - SPW_width/2.0 + SPW_overlap/2.0
+    spw2center = spw1center + SPW_padding_LO + SPW_width/2.0 + LO_width + SPW_padding_LO + SPW_width/2.0
+    #print(spw2center1, spw2center, SPW_padding_LO)
     spw3center = spw2center + SPW_width - SPW_overlap
-    LO_freq = (spw0center+spw1center)/2.0 + SB_width/2.0 + LO_width/2.0
+    #LO_freq = (spw0center+spw1center)/2.0 + SB_width/2.0 + LO_width/2.0
+    LO_freq = spw1center + SPW_padding_LO + SPW_width/2.0 + LO_width/2.0
     print('LSBcenter2Lo = %.6f'%((spw0center+spw1center)/2.0 - LO_freq))
     print('USBcenter2Lo = %.6f'%((spw2center+spw3center)/2.0 - LO_freq))
     print('spw0center = %.6f'%(spw0center))
@@ -148,7 +157,8 @@ if __name__ == '__main__':
         for i in range(1,int(input_params['number'])):
             spw0center = next_begin_freq + SPW_width/2.0
             spw1center = spw0center + SPW_width - SPW_overlap
-            spw2center = (spw0center+spw1center)/2.0 + SB_width + LO_width - SPW_width/2.0 + SPW_overlap/2.0
+            #spw2center1 = (spw0center+spw1center)/2.0 + SB_width + LO_width - SPW_width/2.0 + SPW_overlap/2.0
+            spw2center = spw1center + SPW_padding_LO + SPW_width/2.0 + LO_width + SPW_padding_LO + SPW_width/2.0
             spw3center = spw2center + SPW_width - SPW_overlap
             print('spw0center = %.6f'%(spw0center))
             print('spw1center = %.6f'%(spw1center))

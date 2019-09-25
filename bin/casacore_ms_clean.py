@@ -458,6 +458,7 @@ def grab_interferometry_info(vis, info_dict_file = ''):
                                         columns = 'RMSS(GAGGR(amplitude('+data_column+')),[0,1])') 
                                         # open table tb4, data array has a shape of (nchan, nstokes)
                                         # see above
+                                        # see -- TAQL -- https://casacore.github.io/casacore-notes/199.html
             data_array_rms = tb4.getcol(tb4.colnames()[0])[0]
             #print(data_array_rms.shape) # (nstokes)
             tb4.close()

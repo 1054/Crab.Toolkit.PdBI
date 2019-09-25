@@ -1,0 +1,24 @@
+#!/bin/bash
+# 
+# 
+
+
+if [[ $# -eq 0 ]]; then echo "Usage: imcenter aaa.fits"; exit; fi
+if [[ $(type gethead 2>/dev/null | wc -l) -eq 0 ]]; then echo "Error! gethead was not found! Please make sure WCSTOOLS was installed and in the \$PATH!" >&2; exit 1; fi
+if [[ $(type xy2sky 2>/dev/null | wc -l) -eq 0 ]]; then echo "Error! xy2sky was not found! Please make sure WCSTOOLS was installed and in the \$PATH!" >&2; exit 1; fi
+if [[ ! -f "$1" ]]; then echo "Error! The input fits file \"$1\" does not exist!" >&2; exit 1; fi
+
+tmp_naxis=($(gethead "$1" NAXIS1 NAXIS2))
+if [[ ${#tmp_naxis[@]} -eq 0 ]]; then echo "Error! Failed to run the WCSTOOLS command gethead \"$1\"!"; exit 1; fi
+tmp_imcen=($(awk "BEGIN {print (${tmp_naxis[0]}+1.0)/2.0;}") $(awk "BEGIN {print (${tmp_naxis[1]}+1.0)/2.0;}"))
+tmp_radec=($(xy2sky -d -n 7 "$1" "${tmp_imcen[0]}" "${tmp_imcen[1]}" | sed -e 's/^ *//g' | tr -s ' '))
+if [[ "$*" == *"-verbose"* ]]; then
+    echo "FITS = $1"
+    echo "NAXIS1 = ${tmp_naxis[0]}"
+    echo "NAXIS2 = ${tmp_naxis[1]}"
+    echo "IMCEN1 = ${tmp_imcen[0]}"
+    echo "IMCEN2 = ${tmp_imcen[1]}"
+    echo "RADECS = ${tmp_radec[@]}"
+fi
+echo "${tmp_radec[@]}"
+

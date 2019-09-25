@@ -1,0 +1,30 @@
+#!/bin/bash
+# 
+# 
+
+
+if [[ $# -eq 0 ]]; then echo "Usage: pixscale aaa.fits"; exit; fi
+if [[ $(type gethead 2>/dev/null | wc -l) -eq 0 ]]; then echo "Error! gethead was not found! Please make sure WCSTOOLS was installed and in the \$PATH!" >&2; exit 1; fi
+if [[ $(type xy2sky 2>/dev/null | wc -l) -eq 0 ]]; then echo "Error! xy2sky was not found! Please make sure WCSTOOLS was installed and in the \$PATH!" >&2; exit 1; fi
+if [[ ! -f "$1" ]]; then echo "Error! The input fits file \"$1\" does not exist!" >&2; exit 1; fi
+
+tmp_naxis=($(gethead "$1" NAXIS1 NAXIS2))
+#echo "${tmp_naxis[@]}"
+tmp_radec=($(xy2sky -d -n 7 "$1" 1 1 ${tmp_naxis[0]} ${tmp_naxis[1]} | sed -e 's/^ *//g' | tr -s ' '))
+#echo "${tmp_radec[@]}"
+if [[ "$*" == *"-verbose"* ]]; then
+    echo "NAXIS1 = ${tmp_naxis[0]}"
+    echo "NAXIS2 = ${tmp_naxis[1]}"
+    echo "RADECS = ${tmp_radec[@]} (((${tmp_radec[5+1]})-(${tmp_radec[1]})))"
+fi
+if [[ "$*" == *"-2D"* ]]; then
+    tmp_pixsc2=$(awk "BEGIN { print ((${tmp_radec[5+1]})-(${tmp_radec[1]}))/(${tmp_naxis[1]})*3600.0 }")
+    tmp_pixsc1=$(awk "BEGIN { print ((${tmp_radec[5+0]})-(${tmp_radec[0]}))*cos( ((${tmp_radec[1]})+(${tmp_radec[5+1]}))/2.0/180.0*3.14159265359 )/(${tmp_naxis[0]})*3600.0 }")
+    echo "$tmp_pixsc1" "$tmp_pixsc2"
+else
+    tmp_pixsc=$(awk "BEGIN { print ((${tmp_radec[5+1]})-(${tmp_radec[1]}))/(${tmp_naxis[1]})*3600.0 }")
+    if [[ x"$tmp_pixsc" != x ]]; then
+        echo "$tmp_pixsc" # | sed -e 's/^-//g' # > "image_sci_pixscale.txt"
+    fi
+fi
+
