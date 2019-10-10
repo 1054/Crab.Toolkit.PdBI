@@ -3,10 +3,10 @@
 # 
 # 
 
-if [[ $(type pdbi-uvt-go-uvfit-v9 2>/dev/null | wc -l) -eq 0 ]]; then
+if [[ $(type pdbi-uvt-go-uvfit-v10 2>/dev/null | wc -l) -eq 0 ]]; then
     source $(dirname ${BASH_SOURCE[0]})"/../SETUP.bash"
 fi
 
-pdbi-uvt-go-uvfit-v9 "$@"
+pdbi-uvt-go-uvfit-v10 "$@"
 
 
