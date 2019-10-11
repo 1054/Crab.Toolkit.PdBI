@@ -57,16 +57,30 @@ fi
 # CHECK radec2degree
 # 
 if [[ $(radec2degree 2>/dev/null | wc -l) -eq 0 ]]; then
-    echo "Error! radec2degree not found! It should be included in this software! Please contact dzliu. "
-    return 1
+    # try to find ../SETUP.bash
+    if [[ -f $(dirname $(dirname "${BASH_SOURCE[0]}"))/SETUP.bash ]]; then
+        source $(dirname $(dirname "${BASH_SOURCE[0]}"))/SETUP.bash
+    fi
+    # recheck
+    if [[ $(radec2degree 2>/dev/null | wc -l) -eq 0 ]]; then
+        echo "Error! radec2degree not found! It should be included in this software! Please contact dzliu. "
+        return 1
+    fi
 fi
 
 # 
 # CHECK degree2radec
 # 
 if [[ $(degree2radec 2>/dev/null | wc -l) -eq 0 ]]; then
-    echo "Error! degree2radec not found! It should be included in this software! Please contact dzliu. "
-    return 1
+    # try to find ../SETUP.bash
+    if [[ -f $(dirname $(dirname "${BASH_SOURCE[0]}"))/SETUP.bash ]]; then
+        source $(dirname $(dirname "${BASH_SOURCE[0]}"))/SETUP.bash
+    fi
+    # recheck
+    if [[ $(degree2radec 2>/dev/null | wc -l) -eq 0 ]]; then
+        echo "Error! degree2radec not found! It should be included in this software! Please contact dzliu. "
+        return 1
+    fi
 fi
 
 
