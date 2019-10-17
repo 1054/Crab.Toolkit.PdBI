@@ -16,8 +16,8 @@
 #    2018-02-12 added 'pdbi-uvt-go-plot-uvfit-result-spectrum-with-python' and use that in default for plottting spectrum.
 #    2018-05-03 now allow -cdisk -edisk -disk -expo
 #    2018-05-24 now we do not show errorbar when plotting spectrum in default
-#    2018-01-28 pdbi-uvt-go-uvfit-print-results-v8 --> pdbi-uvt-go-uvfit-print-results-v9 (multi-source fitting bug fixed)
-#    2019-10-10 pdbi-uvt-go-uvfit-print-results-v10 -- now allow input the per-object arg "-keep-in-residual" or "-subtract". Updated "pdbi-uvt-core-arg-v10" parsing of object-oriented parameters.
+#    2018-01-28 pdbi-uvt-go-uvfit-v8 --> pdbi-uvt-go-uvfit-v9 (multi-source fitting bug fixed)
+#    2019-10-10 pdbi-uvt-go-uvfit-v10 -- now allow input the per-object arg "-keep-in-residual" or "-subtract". Updated "pdbi-uvt-core-arg-v10" parsing of object-oriented parameters. Updated "pdbi-uvt-go-uvfit-print-results-v10" with more freq digits.
 # 
 
 
@@ -504,8 +504,8 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # 
     # Run pdbi-uvt-go-uvfit-print-results
     # 
-    echo "pdbi-uvt-go-uvfit-print-results-v9 \"${PdBIUVT_SAVE[tk]}.uvfit\""
-    pdbi-uvt-go-uvfit-print-results-v9 "${PdBIUVT_SAVE[tk]}.uvfit"
+    echo "pdbi-uvt-go-uvfit-print-results-v10 \"${PdBIUVT_SAVE[tk]}.uvfit\""
+    pdbi-uvt-go-uvfit-print-results-v10 "${PdBIUVT_SAVE[tk]}.uvfit"
     # 
     # loop each object (according to the input radec pairs)
     # 
@@ -516,7 +516,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         echo "Checking \"${PdBIUVT_SAVE[tk]}.result.obj_$((i+1)).txt\""
         if [[ ! -f "${PdBIUVT_SAVE[tk]}.result.obj_$((i+1)).txt" ]]; then
             echo 
-            echo "Error! Failed to run \"pdbi-uvt-go-uvfit-print-results-v9\" \"${PdBIUVT_SAVE[tk]}.uvfit\"!"
+            echo "Error! Failed to run \"pdbi-uvt-go-uvfit-print-results-v10\" \"${PdBIUVT_SAVE[tk]}.uvfit\"!"
             exit 1
         else
             if [[ "${PdBIUVT_OBJ_NAME[i]}" != "obj_$((i+1))" ]]; then

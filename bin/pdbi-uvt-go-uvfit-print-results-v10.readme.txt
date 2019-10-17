@@ -1,0 +1,2 @@
+20191017 
+    increased freq precision to 6 digits after point

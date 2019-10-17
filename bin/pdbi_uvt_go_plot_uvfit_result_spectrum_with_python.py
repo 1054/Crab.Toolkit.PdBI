@@ -98,6 +98,8 @@ lib_linefreq.extend([1900.53690,1461.13141,2459.38010])
 lib_linename.extend(['[CII](1-0)','[NII](1-0)','[NII](2-1)']) # CII158, NII205, NII122
 #lib_linefreq.extend([3393.00624,5785.87959])
 #lib_linename.extend(['[OIII](1-0)','[OIII](2-1)']) # OIII88, OIII51
+lib_linefreq.extend([1.420405751])
+lib_linename.extend(['HI21cm'])
 
 i = 1
 while i < len(sys.argv):

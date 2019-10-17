@@ -1,0 +1,315 @@
+#!/bin/bash
+# 
+# Input the pdbi-uvt-go-uvfit output uvfit file, 
+# Output formatted data table: Source, reduced_chi2, flux, ferr, xoff, xerr, ...
+# 
+# Last update:
+#     2017-02-22 created. 
+#     2017-03-30 v5 - deleted PdBIUVT_EXE after successful run
+#     2018-02-08 pdbi-uvt-go-uvfit-print-results-v6 --> pdbi-uvt-go-uvfit-print-results-v7 (more columns, velwidth, ra_hms, dec_dms)
+#     2018-02-12 Copied from v7, then reverted v7 to v6 which does not have new columns of velwidth, ra_hms, dec_dms.
+#     2018-03-21 found a solution to identify bad channel: use the rf_2 which is the number of fitted functions
+#     2018-03-29 found a bug! rf_2=0 does not work for earlier GILDAS e.g. nov2017! I do an additional check on rf_2 and rf_7 now.
+# 
+# 
+# Notes on GILDAS/MAPPING UV_FIT program:
+#    GILDAS/MAPPING UV_FIT program outputs a formatted uvfit file. The formats are written in 'uv_fit.f90' in the GILDAS source code package, 
+#    subroutine outfit(nc,ic,ncol,y,rms,vit,nbpar,par,epar)
+#      use gildas_def
+#      use uvfit_data
+#      !---------------------------------------------------------------------
+#      ! Store the fitted parameters into the output table Y
+#      !
+#      ! Format of table is, for each channel:
+#      ! 1-4  RMS of fit, number of functions, number of parameters, velocity
+#      ! then for each function, 3+mpin*2 columns:
+#      !        Function number, type of function, number of parameters
+#      !        then 6 times (parameter, error)
+#      !---------------------------------------------------------------------
+#    Also note that the GIDLAS/MAPPING RMS is (according to 'uv_fit.f90')
+#      np2 = 2*np ! np is the number of data points
+#      fsumsq  = denorm(np2, fvec) ! fvec is the fitted model (http://www.lahey.com/docs/lgf13help/slatec/DNLS1E.htm), denorm() computes the Euclidean norm (https://en.wikipedia.org/wiki/Norm_(mathematics)#Euclidean_norm)
+#      rms = fsumsq*dsqrt(np2*1d0)
+#    Thus, RMS actually is 
+#      rms = sum(X**2) * sqrt(np2) --- which is buggy??
+#    
+# Notes on GILDAS SAY command:
+#    say var1 /format ES15.7 ! "ES" is Scientific form, see http://fortranwiki.org/fortran/show/Edit+descriptors
+# 
+# 
+
+# 
+# CHECK GILDAS mapping
+# 
+if [[ $(echo "say hello" | mapping 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo "Error! GILDAS mapping not found! Exit!"
+    exit 1
+fi
+
+# 
+# Prepare function to print usage
+# 
+function usage() {
+    echo "Usage: "
+    echo "    pdbi-uvt-go-uvfit-print-results-v8 aaa.uvfit"
+    echo ""
+}
+
+
+
+# 
+# Read input parameters
+# 
+if [[ $# -eq 0 ]]; then
+    usage
+    exit
+fi
+
+
+
+# 
+# Check input parameters
+# 
+Input_files=()
+while [[ $# -gt 0 ]]; do
+    # 
+    if [[ ! -f "$1" ]]; then 
+        echo "Error! Input file \"$1\" was not found!"
+        exit 1
+    fi
+    # Check input file extension
+    if [[ x"$1" == x*".uvfit" ]]; then
+        Input_file=$(basename "$1") # | sed -e 's/\.uvfit$//g'
+    else
+        Input_file=$(basename "$1")".uvfit"
+    fi
+    # Copy input file to current directory and make sure the file extension is ".uvfit"
+    if [[ ! -f "$Input_file" ]]; then
+        echo "cp \"$1\" \"$Input_file\""
+        cp "$1" "$Input_file"
+    fi
+    Input_files+=("$Input_file")
+    shift
+done
+
+
+
+# 
+# Write GILDAS mapping script for each input file
+# then join into a big script for running
+# 
+# The code is based on GILDAS plotfit source code, 
+# see -- /Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_plotfit.map
+# 
+PdBIUVT_EXE=""
+while [[ -z "$PdBIUVT_EXE" || -f "$PdBIUVT_EXE" ]]; do
+    # makes sure no existing file with the same datetime mark
+    PdBIUVT_UTC=$(date +%Y%m%d.%Hh%Mm%Ss.%Z)
+    PdBIUVT_EXE="run_pdbi_uvt_go_uvfit_print_results.$PdBIUVT_UTC.map"
+    PdBIUVT_LOG="run_pdbi_uvt_go_uvfit_print_results.$PdBIUVT_UTC.log"
+    PdBIUVT_OUT="run_pdbi_uvt_go_uvfit_print_results.$PdBIUVT_UTC.out" # this file contains the list of all output txt files
+done
+
+touch $PdBIUVT_EXE
+touch $PdBIUVT_LOG
+touch $PdBIUVT_OUT
+
+for (( i=0; i<${#Input_files[@]}; i++ )); do
+    
+    echo "# Processing ${Input_files[i]}"
+    
+    PdBIUVT_SAVE=$(basename ${Input_files[i]} | sed -e 's/\.uvfit$//g')
+    
+    echo "! GIDLAS mapping script" >  "$PdBIUVT_SAVE.result.map"
+    echo "" >> "$PdBIUVT_SAVE.result.map"
+    echo "let SIC%TEE .TRUE." >> "$PdBIUVT_SAVE.result.map"
+    echo "" >> "$PdBIUVT_SAVE.result.map"
+    echo "let name $PdBIUVT_SAVE" >> "$PdBIUVT_SAVE.result.map"
+    echo "define image f 'name'.uvfit read /global" >> "$PdBIUVT_SAVE.result.map" # see -- /Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_plotfit.map
+    echo "define header UVT_HEADER 'name'.uvfit read" >> "$PdBIUVT_SAVE.result.map" # see -- pdbi-uvt-go-plot-uvfit-result-image
+    echo "" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(ilength)) define integer ilength" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(nlength)) define integer nlength" >> "$PdBIUVT_SAVE.result.map"
+    echo "nlength = f%dim[2]-4" >> "$PdBIUVT_SAVE.result.map"
+    echo "if (mod(nlength,15).eq.0) then" >> "$PdBIUVT_SAVE.result.map"
+    echo "  ilength = 15 ! Old uvfit format" >> "$PdBIUVT_SAVE.result.map"
+    echo "else if (mod(nlength,17).eq.0) then" >> "$PdBIUVT_SAVE.result.map"
+    echo "  ilength = 17 ! New uvfit format" >> "$PdBIUVT_SAVE.result.map"
+    echo "endif" >> "$PdBIUVT_SAVE.result.map"
+    echo "" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(nchan)) define integer nchan" >> "$PdBIUVT_SAVE.result.map"
+    echo "let nchan f%dim[1]" >> "$PdBIUVT_SAVE.result.map"
+    echo "say nchan = 'nchan'" >> "$PdBIUVT_SAVE.result.map"
+    echo "" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(nobj)) define integer nobj" >> "$PdBIUVT_SAVE.result.map"
+    echo "let nobj nlength/ilength" >> "$PdBIUVT_SAVE.result.map"
+    echo "" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_1)) define real rf_1" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_2)) define real rf_2" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_3)) define real rf_3" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_4)) define real rf_4" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_5)) define real rf_5" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_6)) define real rf_6" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_7)) define real rf_7" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_func_num)) define integer rf_func_num" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_x)) define real rf_x" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_x_err)) define real rf_x_err" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_y)) define real rf_y" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_y_err)) define real rf_y_err" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_freq)) define real rf_freq" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_flux)) define real rf_flux" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_flux_err)) define real rf_flux_err" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_major)) define real rf_major" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_major_err)) define real rf_major_err" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_minor)) define real rf_minor" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_minor_err)) define real rf_minor_err" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_PA)) define real rf_PA" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_PA_err)) define real rf_PA_err" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_snr)) define real rf_snr" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_ra)) define real rf_ra" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_dec)) define real rf_dec" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_velo)) define real rf_velo" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_ra_hms)) define character*16 rf_ra_hms /global" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_dec_dms)) define character*16 rf_dec_dms /global" >> "$PdBIUVT_SAVE.result.map"
+    echo "IF (.NOT.EXIST(rf_width)) define real rf_width" >> "$PdBIUVT_SAVE.result.map"
+    echo "let rf_func_num 0 ! number of functions, initialize it to 0"  >> "$PdBIUVT_SAVE.result.map"
+    echo "for iobj 1 to nobj" >> "$PdBIUVT_SAVE.result.map"
+    echo "  sic output \"$PdBIUVT_OUT\" append" >> "$PdBIUVT_SAVE.result.map"
+    echo "  say \"$PdBIUVT_SAVE.result.obj_\"'iobj'\".txt\"" >> "$PdBIUVT_SAVE.result.map"
+    echo "  sic output" >> "$PdBIUVT_SAVE.result.map"
+    echo "  sic output \"$PdBIUVT_SAVE.result.obj_\"'iobj'\".txt\" new" >> "$PdBIUVT_SAVE.result.map"
+    echo "  say # \"x\" \" \" \"x_err\" \" \" \"y\" \" \" \"y_err\" \" \" \"freq\" \" \" \"flux\" \" \" \"flux_err\" \" \" \"SNR\" \" \" \"major\" \" \" \"major_err\" \" \" \"minor\" \" \" \"minor_err\" \" \" \"PA\" \" \" \"PA_err\" \" \" \"RA\" \" \" \"Dec\" \" \" \"RA_hms\" \" \" \"Dec_dms\" \" \" \"velocity\" \" \" \"velwidth\" /format A1 A11 A1 A12 A1 A12 A1 A12 A1 A12 A1 A15 A1 A15 A1 A12 A1 A12 A1 A12 A1 A12 A1 A12 A1 A12 A1 A12 A1 A15 A1 A15 A1 A16 A1 A16 A1 A12 A1 A12" >> "$PdBIUVT_SAVE.result.map"
+    echo "  say # arcsec \" \" arcsec \" \" arcsec \" \" arcsec \" \" GHz \" \" mJy \" \" mJy \" \" \"---\" \" \" arcsec \" \" arcsec \" \" arcsec \" \" arcsec \" \" degree \" \" degree \" \" degree \" \" degree \" \" \"---\" \" \" \"---\" \" \" \"km/s\" \" \" \"km/s\" /format A1 A11 A1 A12 A1 A12 A1 A12 A1 A12 A1 A15 A1 A15 A1 A12 A1 A12 A1 A12 A1 A12 A1 A12 A1 A12 A1 A12 A1 A15 A1 A15 A1 A16 A1 A16 A1 A12 A1 A12" >> "$PdBIUVT_SAVE.result.map"
+    echo "  for ichan 1 to nchan" >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_width    'abs(UVT_HEADER%VELRES)'"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_velo      f[ichan,4]"               >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_freq    -(f[ichan,4]-f%veloff)*f%restfre/299792.458+f%restfre" >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_freq      rf_freq/1e3   ! to GHz"          >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_1         f[ichan,'01+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_2         f[ichan,'02+(iobj-1)*ilength']! number of functions"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_3         f[ichan,'03+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_4         f[ichan,'04+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_5         f[ichan,'05+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_6         f[ichan,'06+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_7         f[ichan,'07+(iobj-1)*ilength'] ! number of parameters"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_x         f[ichan,'08+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_x_err     f[ichan,'09+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_y         f[ichan,'10+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_y_err     f[ichan,'11+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_flux      f[ichan,'12+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_flux_err  f[ichan,'13+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_flux      rf_flux*1e3        ! to mJy"     >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_flux_err  rf_flux_err*1e3    ! to mJy"     >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_snr       rf_flux/rf_flux_err"             >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_snr.LT.0) let rf_snr 0"                    >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_func_num.EQ.0.AND.rf_2.GT.0.AND.rf_2.LE.100.AND.rf_7.GE.0.AND.rf_7.LE.10) let rf_func_num INT(rf_2) ! number of functions, only valid when rf_2<=100 and rf_7<=10"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_func_num.GT.0.AND.rf_7.GE.4) then"         >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_major     f[ichan,'14+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_major_err f[ichan,'15+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_major.LE.1E-7)     let rf_major 0"         >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_major.GE.1E+7)     let rf_major 0"         >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_major_err.LE.1E-7) let rf_major_err 0"     >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_major_err.GE.1E+7) let rf_major_err 0"     >> "$PdBIUVT_SAVE.result.map"
+    echo "    else"                                             >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_major     0.0"                             >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_major_err -99"                             >> "$PdBIUVT_SAVE.result.map"
+    echo "    endif"                                            >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_func_num.GT.0.AND.rf_7.GE.5) then"                              >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_minor     f[ichan,'16+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_minor_err f[ichan,'17+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_minor.LE.1E-7)     let rf_minor 0"         >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_minor.GE.1E+7)     let rf_minor 0"         >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_minor_err.LE.1E-7) let rf_minor_err 0"     >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_minor_err.GE.1E+7) let rf_minor_err 0"     >> "$PdBIUVT_SAVE.result.map"
+    echo "    else"                                             >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_minor     0.0"                             >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_minor_err -99"                             >> "$PdBIUVT_SAVE.result.map"
+    echo "    endif"                                            >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_func_num.GT.0.AND.rf_7.GE.6) then"                              >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_PA        f[ichan,'18+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_PA_err    f[ichan,'19+(iobj-1)*ilength']"  >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_PA.LE.-1E+7)       let rf_PA 0"            >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_PA.GE.1E+7)        let rf_PA 0"            >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_PA_err.LE.-1E+7)   let rf_PA_err 0"        >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_PA_err.GE.1E+7)    let rf_PA_err 0"        >> "$PdBIUVT_SAVE.result.map"
+    echo "    else"                                             >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_PA        0.0"                             >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_PA_err    -99"                             >> "$PdBIUVT_SAVE.result.map"
+    echo "    endif"                                            >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_func_num.LE.0) then"                       >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_x 0.0"                                     >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_y 0.0"                                     >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_x_err -99"                                 >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_y_err -99"                                 >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_flux 0.0"                                  >> "$PdBIUVT_SAVE.result.map"
+    echo "    let rf_flux_err -99"                              >> "$PdBIUVT_SAVE.result.map"
+    echo "    endif"                                            >> "$PdBIUVT_SAVE.result.map"
+    echo "    if (rf_func_num.GT.0.OR.1.EQ.1) then"             >> "$PdBIUVT_SAVE.result.map" # here 1.EQ.1 means that we do output bad channel
+    echo "      if (rf_x.LE.-1E+7.OR.rf_x.GE.+1E+7.OR.rf_y.LE.-1E+7.OR.rf_y.GE.+1E+7) then" >> "$PdBIUVT_SAVE.result.map"
+    echo "        let rf_ra -99" >> "$PdBIUVT_SAVE.result.map"
+    echo "        let rf_dec -99" >> "$PdBIUVT_SAVE.result.map"
+    echo "        let rf_ra_hms \"-99:-99:-99\"" >> "$PdBIUVT_SAVE.result.map"
+    echo "        let rf_dec_dms \"-99:-99:-99\"" >> "$PdBIUVT_SAVE.result.map"
+    echo "        say rf_x \" \" rf_x_err \" \" rf_y \" \" rf_y_err \" \" rf_freq \" \" rf_flux \" \" rf_flux_err \" \" rf_snr \" \" rf_major \" \" rf_major_err \" \" rf_minor \" \" rf_minor_err \" \" rf_PA \" \" rf_PA_err \" \" rf_ra \" \" rf_dec \" \" rf_ra_hms \" \" rf_dec_dms \" \" rf_velo \" \" rf_width /format ES12.4 A1 ES12.4 A1 ES12.4 A1 ES12.4 A1 F12.6 A1 ES15.5 A1 ES15.5 A1 F12.1 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F15.7 A1 F15.7 A1 A16 A1 A16 A1 F12.4 A1 F12.4" >> "$PdBIUVT_SAVE.result.map"   # G19.7 ES19.7 E19.7 -- https://www.cs.mtu.edu/~shene/COURSES/cs201/NOTES/chap05/format.html
+    echo "      else" >> "$PdBIUVT_SAVE.result.map"
+    echo "        if (f%a0.GT.0) then" >> "$PdBIUVT_SAVE.result.map" #<fixed><20170414># 
+    echo "          let rf_ra f%a0/pi*180+rf_x/3600/cos(f%d0)" >> "$PdBIUVT_SAVE.result.map"
+    echo "          let rf_dec f%d0/pi*180+rf_y/3600" >> "$PdBIUVT_SAVE.result.map"
+    echo "        else" >> "$PdBIUVT_SAVE.result.map"
+    echo "          let rf_ra f%ra/pi*180+rf_x/3600/cos(f%dec)" >> "$PdBIUVT_SAVE.result.map"
+    echo "          let rf_dec f%dec/pi*180+rf_y/3600" >> "$PdBIUVT_SAVE.result.map"
+    echo "        endif" >> "$PdBIUVT_SAVE.result.map"
+    echo "        @ l-rad2ra.map rf_ra_hms 'rf_ra/180.0*pi'" >> "$PdBIUVT_SAVE.result.map" # see -- '/Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_setup.map'
+    echo "        @ l-rad2dec.map rf_dec_dms 'rf_dec/180.0*pi'" >> "$PdBIUVT_SAVE.result.map" # see -- '/Users/dzliu/Softwares/GILDAS/gildas-exe-10feb17/pro/p_setup.map'
+    echo "        say rf_x \" \" rf_x_err \" \" rf_y \" \" rf_y_err \" \" rf_freq \" \" rf_flux \" \" rf_flux_err \" \" rf_snr \" \" rf_major \" \" rf_major_err \" \" rf_minor \" \" rf_minor_err \" \" rf_PA \" \" rf_PA_err \" \" rf_ra \" \" rf_dec \" \" rf_ra_hms \" \" rf_dec_dms \" \" rf_velo \" \" rf_width /format F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.6 A1 ES15.5 A1 ES15.5 A1 F12.1 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F12.4 A1 F15.7 A1 F15.7 A1 A16 A1 A16 A1 F12.4 A1 F12.4" >> "$PdBIUVT_SAVE.result.map"   # G19.7 ES19.7 E19.7 -- https://www.cs.mtu.edu/~shene/COURSES/cs201/NOTES/chap05/format.html
+    echo "      endif" >> "$PdBIUVT_SAVE.result.map"
+    echo "    endif" >> "$PdBIUVT_SAVE.result.map"
+    echo "  next ichan" >> "$PdBIUVT_SAVE.result.map"
+    #echo "  say \"\"" >> "$PdBIUVT_SAVE.result.map"
+    echo "  sic output" >> "$PdBIUVT_SAVE.result.map"
+    echo "next iobj" >> "$PdBIUVT_SAVE.result.map"
+    echo "" >> "$PdBIUVT_SAVE.result.map"
+    echo "!go plotfit" >> "$PdBIUVT_SAVE.result.map"
+    echo "!hardcopy $PdBIUVT_SAVE.plotfit.'iorder'.eps /overwrite" >> "$PdBIUVT_SAVE.result.map"
+    echo "" >> "$PdBIUVT_SAVE.result.map"
+    #echo "for iobj 1 to nobj" >> "$PdBIUVT_SAVE.result.map"
+    #echo "    say \"# --> $PdBIUVT_SAVE.result.obj_\"'iobj'\".txt\"" >> "$PdBIUVT_SAVE.result.map"
+    #echo "    sic\system \"cat $PdBIUVT_SAVE.result.obj_\"'iobj'\".txt\"" >> "$PdBIUVT_SAVE.result.map"
+    #echo "next iobj" >> "$PdBIUVT_SAVE.result.map"
+    echo "" >> "$PdBIUVT_SAVE.result.map"
+    echo "delete /variable f" >> "$PdBIUVT_SAVE.result.map"
+    echo "" >> "$PdBIUVT_SAVE.result.map"
+    
+    cat "$PdBIUVT_SAVE.result.map" >> "$PdBIUVT_EXE"
+    
+done
+
+
+
+echo "# Running GILDAS mapping:"
+echo "# echo @$PdBIUVT_EXE | mapping -nw -nl > $PdBIUVT_LOG"
+echo "# "
+echo "@$PdBIUVT_EXE" | mapping -nw -nl > "$PdBIUVT_LOG"
+echo "# Output the following uv_fit result data tables:"
+
+# Check output file list
+Old_IFS=$IFS
+IFS=$'\n' read -d '' -r -a Output_Files < "$PdBIUVT_OUT"
+IFS="$Old_IFS"
+
+for Output_File in "${Output_Files[@]}"; do echo "# --> $Output_File"; done
+#echo "--> Note: the columns are frequency [GHz], flux [mJy] and error [mJy]"
+#ls $PdBIUVT_SAVE.result.obj_*.eps
+
+
+
+rm $PdBIUVT_EXE
+rm $PdBIUVT_LOG
+rm $PdBIUVT_OUT
+
+
+
+echo "# "
+echo "# Done!"
+
+
