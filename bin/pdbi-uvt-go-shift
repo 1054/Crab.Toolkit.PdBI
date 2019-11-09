@@ -139,14 +139,16 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         if [[ -f "${PdBIUVT_SAVE[i]}.uvt" ]]; then
             echo "Successufully saved to \"${PdBIUVT_SAVE[i]}.uvt\"!"
             echo "--"
-            if [[ -f "$PdBIUVT_TEMP_LOGT" ]]; then
-                rm "$PdBIUVT_TEMP_LOGT"
-            fi
-            if [[ -f "$PdBIUVT_TEMP_INIT" ]]; then
-                rm "$PdBIUVT_TEMP_INIT"
-            fi
-            if [[ -f "$PdBIUVT_TEMP_EXEC" ]]; then
-                rm "$PdBIUVT_TEMP_EXEC"
+            if [[ $PdBIUVT_UVMERGE_KEEP_FILE -le 0 ]]; then
+                if [[ -f "$PdBIUVT_TEMP_LOGT" ]]; then
+                    rm "$PdBIUVT_TEMP_LOGT"
+                fi
+                if [[ -f "$PdBIUVT_TEMP_INIT" ]]; then
+                    rm "$PdBIUVT_TEMP_INIT"
+                fi
+                if [[ -f "$PdBIUVT_TEMP_EXEC" ]]; then
+                    rm "$PdBIUVT_TEMP_EXEC"
+                fi
             fi
         else
             echo "Error! Failed to run GILDAS MAPPING UV_SUBTRACT and output \"${PdBIUVT_SAVE[i]}.uvt\"!"
