@@ -1,0 +1,56 @@
+#!/bin/bash
+# 
+# 
+
+
+if [[ $# -eq 0 ]]; then 
+    echo "Usage: pdbi-uvt-read-uv-fit-result-table-and-print-integrated-flux *_go_uvfit.result.obj_1.txt"
+    exit
+fi
+
+
+for (( i = 1; i <= $#; i++ )); do
+    uvfit_result_table="${!i}"
+    if [[ ! -f "$uvfit_result_table" ]]; then
+        echo "Error! The input uvfit result table \"$uvfit_result_table\" does not exist!"
+        exit 255
+    fi
+    flux_column_index=$(head -n 1 "$uvfit_result_table" | sed 's/^# *//g' | perl -p -e 's/ +/\n/g' | nl -n ln | grep -i '\bflux\b' | cut -d ' ' -f 1)
+    flux=($(cat "$uvfit_result_table" | awk "{ if(substr(\$1,0,1)!=\"#\") {print (\$$flux_column_index);} }"))
+    
+    flux_err_column_index=$(head -n 1 "$uvfit_result_table" | sed 's/^# *//g' | perl -p -e 's/ +/\n/g' | nl -n ln | grep -i '\bflux_err\b' | cut -d ' ' -f 1)
+    flux_err=($(cat "$uvfit_result_table" | awk "{ if(substr(\$1,0,1)!=\"#\") {print (\$$flux_err_column_index);} }"))
+    
+    velwidth_column_index=$(head -n 1 "$uvfit_result_table" | sed 's/^# *//g' | perl -p -e 's/ +/\n/g' | nl -n ln | grep -i '\bvelwidth\b' | cut -d ' ' -f 1)
+    velwidth=($(cat "$uvfit_result_table" | awk "{ if(substr(\$1,0,1)!=\"#\") {print (\$$velwidth_column_index);} }"))
+    
+    if [[ ${#flux[@]} -ne ${#flux_err[@]} ]] || [[ ${#flux[@]} -ne ${#velwidth[@]} ]]; then
+        echo "Error! Read ${#flux[@]} flux, ${#flux_err[@]} flux_err and ${#velwidth[@]} velwidth. The numbers are different!"
+        exit 255
+    fi
+    
+    if [[ $i -eq 1 ]]; then
+        printf "# %10s %12s %18s %20s %15s %15s   %s\n" \
+                "Table_Index" \
+                "Row_Index" \
+                "Line_Flux_Jykms" \
+                "Line_Flux_Err_Jykms" \
+                "Line_SNR" \
+                "Line_Width_kms" \
+                "Table_File"
+    fi
+    
+    for (( j = 0; j < ${#flux[@]}; j++ )); do
+        printf "%12d %12d %18g %20g %15g %15g   %s\n" \
+                $i \
+                $((j+1)) \
+                $(awk "BEGIN {print ( (${flux[j]}) * (${velwidth[j]}) / 1e3 ) ; }") \
+                $(awk "BEGIN {print ( (${flux_err[j]}) * (${velwidth[j]}) / 1e3 ) ; }") \
+                $(awk "BEGIN {if ( (${flux[j]}) > 0 ) print ( (${flux[j]}) / (${flux_err[j]}) ) ; else print 0 ; }") \
+                ${velwidth[j]} \
+                "\"$uvfit_result_table\""
+    done
+    
+done
+
+
