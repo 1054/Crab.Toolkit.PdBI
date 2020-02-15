@@ -144,6 +144,11 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         
         echo "let map_beam_step 1"                              >> "$PdBIUVT_EXE"
         
+        #echo "define uvtable uvtvar 'name'.uvt read"
+        #echo "if (uvtvar%ntel.eq.0) then"
+        #echo "    header 'name'.uvt /teles ALMA   ! see p_telesmap"
+        #echo "endif"
+        
         if [[ $PdBIUVT_PARALLELS -eq 1 ]]; then
             echo "let type lmv"                                 >> "$PdBIUVT_EXE"
         else

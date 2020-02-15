@@ -16,6 +16,8 @@ import scipy.interpolate as interpolate
 if len(sys.argv) <= 1:
     print('Usage: ')
     print('    pdbi_uvt_go_plot_uvfit_result_spectrum_with_python.py *.result.obj_1.txt [-output output_name] [-figwidth 20] [-line-name XXX -rest-freq XXX -redshift XXX]')
+    print('Options:')
+    print('    -continuum -- can be one value, or freq_GHz cont_mJy pairs, for example -continuum 100 1.0 200 2.0 means the continuum increases from 1.0 to 2.0, from 100 GHz to 200 GHz.')
     print('')
     sys.exit()
 

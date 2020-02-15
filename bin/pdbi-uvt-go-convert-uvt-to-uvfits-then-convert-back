@@ -1,0 +1,110 @@
+#!/bin/bash
+# 
+# Input uvtablefile
+# Run the task UV_NOISE
+# 
+# Last update:
+#    2018-03-12 
+# 
+# 
+
+
+
+# 
+# Uage
+# 
+usage() {
+    echo "Usage: "
+    echo "  pdbi-uvt-go-convert-uvt-to-uvfits-then-convert-back -name UV_TABLE_NAME"
+    echo ""
+    echo "  Convert to uvfits then convert back so as to solve the missing telescope section issue."
+    echo ""
+}
+
+
+
+# 
+# SOURCE pdbi-uvt-core-arg
+# 
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" "$@"
+else
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8\"!"
+    echo ""
+    exit 1
+fi
+
+
+
+# 
+# Check input parameters -- uvt file name, velocity width ("-width") or line width ("-linewidth")
+# 
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]]; then
+    usage; exit
+fi
+
+
+
+# 
+# Loop input uv tables
+# 
+for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
+    
+    
+    
+    # 
+    # if type is uvtable
+    # 
+    if [[ ${PdBIUVT_TYPE[tk]} != "uvt" && ${PdBIUVT_TYPE[tk]} != "UVT" ]]; then
+        continue
+    fi
+    
+    
+    # 
+    # output
+    # 
+    OUTPUT_NAME="${PdBIUVT_NAME[tk]}_converted"
+    if [[ $tk -lt ${#PdBIUVT_SAVE[@]} ]]; then
+        OUTPUT_NAME="${PdBIUVT_SAVE[tk]}"
+    fi
+    
+    
+    
+    # 
+    # run
+    # 
+    # 
+    if [[ -f "${PdBIUVT_NAME[tk]}_converting.uvfits" ]]; then
+        rm "${PdBIUVT_NAME[tk]}_converting.uvfits"
+    fi
+    echo "Running in GILDAS MAPPING: "
+    echo "FITS ${PdBIUVT_NAME[tk]}_converting.uvfits FROM ${PdBIUVT_NAME[tk]}.uvt /STYLE CASA"
+    echo "FITS ${PdBIUVT_NAME[tk]}_converting.uvfits FROM ${PdBIUVT_NAME[tk]}.uvt /STYLE CASA" | mapping -nw -nl
+    echo "FITS ${PdBIUVT_NAME[tk]}_converting.uvfits TO ${OUTPUT_NAME}.uvt /STYLE CASA"
+    echo "FITS ${PdBIUVT_NAME[tk]}_converting.uvfits TO ${OUTPUT_NAME}.uvt /STYLE CASA" | mapping -nw -nl
+    if [[ -f "${PdBIUVT_NAME[tk]}_converting.uvfits" ]]; then
+        rm "${PdBIUVT_NAME[tk]}_converting.uvfits"
+    fi
+    if [[ -f "${OUTPUT_NAME}.uvt" ]]; then
+        echo "Output to \"${OUTPUT_NAME}.uvt\"!"
+    else
+        echo "Error! Failed to run GILDAS MAPPING and convert the uvtable \"${PdBIUVT_NAME[tk]}.uvt\"!"
+        exit 255
+    fi
+    
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
