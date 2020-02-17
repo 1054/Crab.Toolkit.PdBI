@@ -8,6 +8,7 @@
 #    2018-02-12 using "pdbi-uvt-core-arg-v8"
 #    2018-11-30 using "pdbi-uvt-core-cvf-v9", fixed [CII] [CI] line rest freq bug
 #    2018-12-02 fixed -crange one 0 one non-zero bug in "pdbi-uvt-core-cvf-v9"
+#    2020-02-17 using "pdbi-uvt-core-arg-v10" and "pdbi-uvt-core-cvf-v10" (CII NII)
 # 
 # 
 
@@ -29,11 +30,11 @@ usage() {
 # 
 # SOURCE pdbi-uvt-core-arg
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v10" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v10" "$@"
 else
     echo ""
-    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8\"!"
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v10\"!"
     echo ""
     exit 1
 fi
@@ -59,11 +60,11 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # 
     # SOURCE pdbi-uvt-core-cvf
     # 
-    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v9" ]]; then
-        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v9" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
+    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v10" ]]; then
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v10" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
     else
         echo ""
-        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v9\"!"
+        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v10\"!"
         echo ""
         exit 1
     fi
