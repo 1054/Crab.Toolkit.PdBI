@@ -97,7 +97,7 @@ lib_linename.extend(['[CI](1-0)','[CI](2-1)'])
 lib_linefreq.extend([556.93599,1113.34301,987.92676,752.03314,1669.90477,1228.78872,1661.00764,1716.76963,1153.12682,1097.36479,1162.91160,1919.35953,1893.68651,1602.21937,916.17158,1207.63873,1410.61807])
 lib_linename.extend(['H2O(110-101)','H2O(111-000)','H2O(202-111)','H2O(211-202)','H2O(212-101)','H2O(220-211)','H2O(221-212)','H2O(302-212)','H2O(312-221)','H2O(312-303)','H2O(321-312)','H2O(322-313)','H2O(331-404)','H2O(413-404)','H2O(422-331)','H2O(422-413)','H2O(523-514)'])
 lib_linefreq.extend([1900.53690,1461.13141,2459.38010])
-lib_linename.extend(['[CII]158um','[NII]205um','[NII]122um']) # CII158, NII205, NII122 | '[CII](1-0)','[NII](1-0)','[NII](2-1)'
+lib_linename.extend(['[CII](1-0)','[NII](1-0)','[NII](2-1)']) # CII158, NII205, NII122 | '[CII](1-0)','[NII](1-0)','[NII](2-1)'
 #lib_linefreq.extend([3393.00624,5785.87959])
 #lib_linename.extend(['[OIII](1-0)','[OIII](2-1)']) # OIII88, OIII51
 lib_linefreq.extend([1.420405751])
@@ -284,6 +284,15 @@ if len(input_linename) > 0:
                 for ikk in range(len(lib_linename)):
                     if lib_linename[ikk] == input_linename[kk]:
                         jkk.append(ikk)
+                    else:
+                        if lib_linename[ikk] == '[CII](1-0)':
+                            possible_linenames = ['[CII]158um', '[CII]158', 'CII158', '[CII](1-0)']
+                        elif lib_linename[ikk] == '[NII](1-0)':
+                            possible_linenames = ['[NII]205um', '[NII]205', 'NII205', '[NII](1-0)']
+                        elif lib_linename[ikk] == '[NII](2-1)':
+                            possible_linenames = ['[NII]122um', '[NII]122', 'NII122', '[NII](2-1)']
+                        if input_linename[kk] in possible_linenames:
+                            jkk.append(ikk)
                 #jkk = numpy.argwhere(lib_linename == input_linename[kk]).flatten().tolist()
                 #print(jkk)
                 if len(jkk) > 0:
