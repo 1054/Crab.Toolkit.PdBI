@@ -285,14 +285,16 @@ if len(input_linename) > 0:
                     if lib_linename[ikk] == input_linename[kk]:
                         jkk.append(ikk)
                     else:
+                        possible_linenames = []
                         if lib_linename[ikk] == '[CII](1-0)':
                             possible_linenames = ['[CII]158um', '[CII]158', 'CII158', '[CII](1-0)']
                         elif lib_linename[ikk] == '[NII](1-0)':
                             possible_linenames = ['[NII]205um', '[NII]205', 'NII205', '[NII](1-0)']
                         elif lib_linename[ikk] == '[NII](2-1)':
                             possible_linenames = ['[NII]122um', '[NII]122', 'NII122', '[NII](2-1)']
-                        if input_linename[kk] in possible_linenames:
-                            jkk.append(ikk)
+                        if len(possible_linenames) > 0:
+                            if input_linename[kk] in possible_linenames:
+                                jkk.append(ikk)
                 #jkk = numpy.argwhere(lib_linename == input_linename[kk]).flatten().tolist()
                 #print(jkk)
                 if len(jkk) > 0:
