@@ -18,6 +18,7 @@
 #    2018-05-24 now we do not show errorbar when plotting spectrum in default
 #    2018-01-28 pdbi-uvt-go-uvfit-v8 --> pdbi-uvt-go-uvfit-v9 (multi-source fitting bug fixed)
 #    2019-10-10 pdbi-uvt-go-uvfit-v10 -- now allow input the per-object arg "-keep-in-residual" or "-subtract". Updated "pdbi-uvt-core-arg-v10" parsing of object-oriented parameters. Updated "pdbi-uvt-go-uvfit-print-results-v10" with more freq digits.
+#    2020-02-17 pdbi-uvt-core-cvf-v9 --> pdbi-uvt-core-cvf-v10 (CII NII)
 # 
 
 
@@ -148,11 +149,11 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     # 
     # SOURCE pdbi-uvt-core-cvf
     # 
-    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v9" ]]; then
-        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v9" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
+    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v10" ]]; then
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v10" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
     else
         echo ""
-        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v9\"!"
+        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v10\"!"
         echo ""
         exit 1
     fi
