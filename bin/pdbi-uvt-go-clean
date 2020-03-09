@@ -91,6 +91,18 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # 
         # Backup existing output file
         # 
+        for OUTPUT_SUFFIX in ".beam" ".beam.fits" ".cct" ".lmv" ".lmv.fits" ".lmv-clean" ".lmv-clean.fits" ".lmv-res" ".lmv-res.fits" "-prim.lmv-clean" "-prim.lmv-clean.fits"; do
+            if [[ -f "${PdBIUVT_NAME[i]}${OUTPUT_SUFFIX}" ]]; then
+                #if [[ -f "${PdBIUVT_NAME[i]}${OUTPUT_SUFFIX}.backup" ]]; then
+                #    \rm "${PdBIUVT_NAME[i]}${OUTPUT_SUFFIX}.backup"
+                #fi
+                #echo "Warning! Found existing \"${PdBIUVT_NAME[i]}${OUTPUT_SUFFIX}\"! Backup as \"${PdBIUVT_NAME[i]}${OUTPUT_SUFFIX}.backup\"!"
+                #mv "${PdBIUVT_NAME[i]}${OUTPUT_SUFFIX}" "${PdBIUVT_NAME[i]}${OUTPUT_SUFFIX}.backup"
+                # 
+                echo "Warning! Found existing \"${PdBIUVT_NAME[i]}${OUTPUT_SUFFIX}\"! Deleting it!"
+                rm "${PdBIUVT_NAME[i]}${OUTPUT_SUFFIX}"
+            fi
+        done
         if [[ -f "${PdBIUVT_EPS}.eps" ]]; then
             if [[ -f "${PdBIUVT_EPS}.eps.backup" ]]; then
                 \rm "${PdBIUVT_EPS}.eps.backup"
