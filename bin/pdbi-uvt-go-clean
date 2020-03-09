@@ -248,19 +248,28 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo "go primary"                                       >> "$PdBIUVT_EXE"
         
         
+        # Exam current name, should be previous name-prim
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"exam name\""                                >> "$PdBIUVT_EXE"
+        echo "exam name"                                        >> "$PdBIUVT_EXE"
+        
+        
+        # Update name (no need, go primary will update name by itself)
+        #echo ""                                                 >> "$PdBIUVT_EXE"
+        #echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        #echo "say \"let name 'name'-prim\""                     >> "$PdBIUVT_EXE"
+        #echo "let name 'name'-prim"                             >> "$PdBIUVT_EXE"
+        
+        
         # Save fits
         echo ""                                                 >> "$PdBIUVT_EXE"
         echo "say \"\""                                         >> "$PdBIUVT_EXE"
         echo "say \"fits\""                                     >> "$PdBIUVT_EXE"
-        echo "fits 'name'-prim.lmv-clean.fits from 'name'-prim.lmv-clean /overwrite"  >> "$PdBIUVT_EXE"
+        echo "fits 'name'.lmv-clean.fits from 'name'.lmv-clean /overwrite"  >> "$PdBIUVT_EXE"
         
         
         # plot 
-        echo ""                                                 >> "$PdBIUVT_EXE"
-        echo "say \"\""                                         >> "$PdBIUVT_EXE"
-        echo "say \"let name 'name'-prim\""                     >> "$PdBIUVT_EXE"
-        echo "let name 'name'-prim"                             >> "$PdBIUVT_EXE"
-        
         echo ""                                                 >> "$PdBIUVT_EXE"
         echo "say \"\""                                         >> "$PdBIUVT_EXE"
         echo "say \"go view\""                                  >> "$PdBIUVT_EXE"
