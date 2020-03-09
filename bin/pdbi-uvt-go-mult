@@ -15,7 +15,7 @@
 # 
 usage() {
     echo "Usage: "
-    echo "  pdbi-uvt-go-mult -name UV_TABLE_NAME -factor  -out UV_TABLE_NEW"
+    echo "  pdbi-uvt-go-mult -name UV_TABLE_NAME -factor 0.8 -out UV_TABLE_NEW"
     echo ""
     echo "  Note that \"-factor\" is the input factors. When you input one value, it will be the factor multiplied to intensity and noise. When you input three values, it will be the factors multiplied to image X dimension, Y dimension and intensity and noise respectively."
     echo ""
