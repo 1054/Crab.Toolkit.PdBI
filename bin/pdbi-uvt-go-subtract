@@ -106,7 +106,7 @@ echo '! Task UV_SUBTRACT'                                                       
 echo '! '                                                                                                                           >> "$PdBIUVT_INI"
 echo 'TASK\CHARACTER "UV table to subtract from"                         UV_TABLE$    "'"${PdBIUVT_SAVE[0]}.uvt"'"'                 >> "$PdBIUVT_INI"
 echo 'TASK\CHARACTER "UV table used as continuum"                            SELF$    "'"${PdBIUVT_NAME[1]}.${PdBIUVT_TYPE[1]}"'"'  >> "$PdBIUVT_INI"
-echo 'TASK\REAL      "The smoothing time constant in seconds"               DTIME$     500'                                         >> "$PdBIUVT_INI"
+echo 'TASK\REAL      "The smoothing time constant in seconds"               DTIME$      45'                                         >> "$PdBIUVT_INI" # 20200310: 500 -> 45
 echo 'TASK\INTEGER   "The continuum channel"                                 WCOL$[2]  0 0'                                         >> "$PdBIUVT_INI"
 echo 'TASK\REAL      "How many times should the continuum be subtracted"      SUB$     '"${PdBIUVT_SUB}"                            >> "$PdBIUVT_INI"
 echo 'TASK\GO'                                                                                                                      >> "$PdBIUVT_INI"

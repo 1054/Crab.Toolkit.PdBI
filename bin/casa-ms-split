@@ -892,12 +892,15 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 SPLIT_WID="${CASAMS_WID[${#CASAMS_WID[@]}-1]}"
             fi
             
+            # prepare width string in the output file name
+            SPLIT_WID_STR="${SPLIT_WID}"
+            
             # if the width is 0, set it to the full width (i.e. a single-channel continuum)
             if [[ x"$SPLIT_WID" == x"0" ]]; then
                 SPLIT_WID=$SPLIT_SPW_NUMCHAN
             fi
             # if the width has a unit of km/s, then round to a channel width -- 20180612 
-            if [[ x"$SPLIT_WID" == x*"km/s" ]]; then
+            if [[ x"$SPLIT_WID" == x*"km/s" ]] || [[ x"$SPLIT_WID" == x*"KM/S" ]]; then
                 if [[ x"$SPLIT_FEQ" == x ]]; then
                     echo "Error! Could not compute channel binning width from the given velocity $SPLIT_WID without REF_FREQUENCY!"
                     exit 1
@@ -906,12 +909,18 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "Error! Could not compute channel binning width from the given velocity $SPLIT_WID without REF_FREQUENCY!"
                     exit 1
                 fi
-                SPLIT_WID=$(echo "$SPLIT_WID" | sed -e 's%km/s%%g')
+                SPLIT_WID=$(echo "$SPLIT_WID" | sed -e 's%km/s%%g' | sed -e 's%KM/S%%g')
                 SPLIT_WID=$(awk "BEGIN {printf (\"%.0f\", $SPLIT_WID/(($SPLIT_SPW_BANDWIDTH/$SPLIT_SPW_NUMCHAN)/$SPLIT_FEQ*2.99792458e5));}")
                 SPLIT_WID=$(awk "BEGIN {if ($SPLIT_WID<1) print 1; else print $SPLIT_WID;}")
+                SPLIT_WID_STR="${SPLIT_WID}kms"
             fi
-            # 
-            SPLIT_WID=$(awk "BEGIN {if ($SPLIT_WID>$SPLIT_SPW_NUMCHAN) print $SPLIT_SPW_NUMCHAN; else print $SPLIT_WID;}")
+            # if the width is wider than the whole bandwidth of the spw, use the whole bandwidth
+            #SPLIT_WID=$(awk "BEGIN {if ($SPLIT_WID>$SPLIT_SPW_NUMCHAN) print $SPLIT_SPW_NUMCHAN; else print $SPLIT_WID;}")
+            if [[ $(awk "BEGIN {if ($SPLIT_WID>$SPLIT_SPW_NUMCHAN) print 1; else print 0;") ]]; then
+                echo "Warning! The input width $SPLIT_WID_STR is wider than the whole bandwidth of this spw $SPLIT_SPW_NUMCHAN! Will set to the whole bandwidth."
+                SPLIT_WID="$SPLIT_SPW_NUMCHAN"
+                SPLIT_WID_STR="0"
+            fi
             
             # determine the timebin <20180316> <TODO> only support a single value
             SPLIT_TIMEBIN="0s"
@@ -931,7 +940,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 echo "  * looping source    '$SPLIT_SOU'  ($(($isou+1))/${#CASAMS_SOU[@]})"; fi
                 echo "    *       spw       '$SPLIT_SPW_ID'"
                 echo "    *       spw_name  '$SPLIT_SPW_NAME'"
-                echo "            chanwidth '$SPLIT_WID'"
+                echo "            chanwidth '$SPLIT_WID' ('$SPLIT_WID_STR')"
                 echo "            bandwidth '$SPLIT_SPW_BANDWIDTH'"
                 echo "            ref_freq  '$SPLIT_FEQ'"
             
@@ -967,7 +976,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 # Append spw info to the output name
                 # 
                 if [[ x"$SPLIT_SPW" != x ]]; then SPLIT_OutputName="${SPLIT_OutputName}_spw${SPLIT_SPW_ID}"; fi
-                if [[ x"$SPLIT_WID" != x ]]; then SPLIT_OutputName="${SPLIT_OutputName}_width${SPLIT_WID}"; fi
+                if [[ x"$SPLIT_WID" != x ]]; then SPLIT_OutputName="${SPLIT_OutputName}_width${SPLIT_WID_STR}"; fi
                 if [[ x"$SPLIT_STK" != x ]]; then SPLIT_OutputName="${SPLIT_OutputName}_stokes${SPLIT_STK}"; fi
                 
                 # 
