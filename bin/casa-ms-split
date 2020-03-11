@@ -910,9 +910,9 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     exit 1
                 fi
                 SPLIT_WID=$(echo "$SPLIT_WID" | sed -e 's%km/s%%g' | sed -e 's%KM/S%%g')
+                SPLIT_WID_STR="${SPLIT_WID}kms"
                 SPLIT_WID=$(awk "BEGIN {printf (\"%.0f\", $SPLIT_WID/(($SPLIT_SPW_BANDWIDTH/$SPLIT_SPW_NUMCHAN)/$SPLIT_FEQ*2.99792458e5));}")
                 SPLIT_WID=$(awk "BEGIN {if ($SPLIT_WID<1) print 1; else print $SPLIT_WID;}")
-                SPLIT_WID_STR="${SPLIT_WID}kms"
             fi
             # if the width is wider than the whole bandwidth of the spw, use the whole bandwidth
             #SPLIT_WID=$(awk "BEGIN {if ($SPLIT_WID>$SPLIT_SPW_NUMCHAN) print $SPLIT_SPW_NUMCHAN; else print $SPLIT_WID;}")
