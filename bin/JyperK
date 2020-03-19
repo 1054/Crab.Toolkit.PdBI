@@ -1,0 +1,54 @@
+#!/bin/bash
+# 
+# compute Jy/K factor according to 
+# https://help.almascience.org/index.php?/Knowledgebase/Article/View/286
+# 
+# The constant 3514 is derived as below:
+# flux density: S_{\nu} = 2 * \nu^2 / c^2 * k_B * \int T_{mb} d \Omega -- Rayleigh-Jeans approximation of Planck's law
+# power received by the antenna: k_B T_{A}^{\prime} = k_B * T_{A}^{*} / F_{eff} = 1/2 * S_{\nu} * A_{eff}, where A_{eff} is the effective collecting area of the antenna dish, pi / 4 * D**2.
+# thus: S_{\nu} / T_{A}^{*} = 2 * k_B / (pi / 4 * D**2) * F_{eff} / \eta_{A}, where \eta_{A} is the antenna efficiency. 
+# k_B = 1.3806488e-16 erg/K, D is the anntena dish diameter in units of meter but needs to convert to centimeter in calculation in CGS, 
+# and final quantity needs to multiply 1e23 to Jy unit from CGS erg s-1 cm-2 Hz-1, 
+# thus Jy/K = 2 * 1.3806488e-16 / (3.14159 / 4 * 1e2**2) * 1e23 = 3515.796268768362
+# 
+LANG=C
+
+mathcalc() {
+    awk 'BEGIN { printf "%.6f\n", '"$1"'}'
+}
+
+usage() {
+    echo "Usage: "
+    echo "    JyperK antenna_name # output Jy/K factor"
+    echo "Notes: "
+    echo "    Allowed antenna names are \"ALMA_7m\", \"ALMA_12m\", \"NOEMA\", \"NOEMA_15m\", \"IRAM_30m\"."
+}
+
+if [[ $# -lt 1 ]]; then
+    usage
+    exit
+fi
+AntName="$1"
+AntDishDiameter=0.0
+AntEfficiency=0.0
+if [[ "$AntName" == "ALMA_7m" ]]; then
+    AntEfficiency=0.8
+    AntDishDiameter=7.0
+    mathcalc "3514.0/($AntEfficiency)/($AntDishDiameter)/($AntDishDiameter)"
+elif [[ "$AntName" == "ALMA_12m" ]]; then
+    AntEfficiency=0.8
+    AntDishDiameter=12.0
+    mathcalc "3514.0/($AntEfficiency)/($AntDishDiameter)/($AntDishDiameter)"
+elif [[ "$AntName" == "NOEMA" ]] || [[ "$AntName" == "NOEMA_15m" ]]; then
+    AntEfficiency=0.8
+    AntDishDiameter=15.0
+    mathcalc "3514.0/($AntEfficiency)/($AntDishDiameter)/($AntDishDiameter)"
+elif [[ "$AntName" == "IRAM_30m" ]]; then
+    AntEfficiency=0.6 # 93GHz
+    AntDishDiameter=30.0
+    mathcalc "3514.0/($AntEfficiency)/($AntDishDiameter)/($AntDishDiameter)"
+else
+    usage
+    exit
+fi
+

@@ -916,7 +916,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             fi
             # if the width is wider than the whole bandwidth of the spw, use the whole bandwidth
             #SPLIT_WID=$(awk "BEGIN {if ($SPLIT_WID>$SPLIT_SPW_NUMCHAN) print $SPLIT_SPW_NUMCHAN; else print $SPLIT_WID;}")
-            if [[ $(awk "BEGIN {if ($SPLIT_WID>$SPLIT_SPW_NUMCHAN) print 1; else print 0;") ]]; then
+            if [[ $(awk "BEGIN {if ($SPLIT_WID>$SPLIT_SPW_NUMCHAN) print 1; else print 0;}") -eq 1 ]]; then
                 echo "Warning! The input width $SPLIT_WID_STR is wider than the whole bandwidth of this spw $SPLIT_SPW_NUMCHAN! Will set to the whole bandwidth."
                 SPLIT_WID="$SPLIT_SPW_NUMCHAN"
                 SPLIT_WID_STR="0"
