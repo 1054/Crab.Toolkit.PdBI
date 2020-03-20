@@ -159,7 +159,7 @@ while [[ "$#" -gt 0 ]]; do
               "-dirtol") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="concat-dirtol";;
              "-timebin") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="split-timebin";;
            "-trim-chan") CASA_CMD_TEXT="$1";        CASA_CMD_TYPE="split-trimchan";;
-       "-trim-chan-num") CASA_CMD_TEXT="$1";        CASA_CMD_TYPE="split-trimchannum";;
+       "-trim-chan-num") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="split-trimchannum";;
                 "-mode") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="clean-mode";;
                 "-beam") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="clean-beam";;
                 "-cell") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="clean-cell";;
