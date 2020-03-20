@@ -867,7 +867,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                             trim_right=$(bc <<< "${SPLIT_SPW_NUMCHAN}-1-(${CASA_INP_SPLIT_TRIMCHANNUM[0]})")
                         fi
                     fi
-                    SPLIT_SPW="${SPLIT_SPW_ID}:${trim_left}~${trim_right}")
+                    SPLIT_SPW="${SPLIT_SPW_ID}:${trim_left}~${trim_right}"
                 fi
             elif [[ $CASA_INP_SPLIT_TRIMCHAN -eq 1 ]]; then
                 # if user gives the option "-trim-chan" (and not giving the option "-trim-chan-num")
