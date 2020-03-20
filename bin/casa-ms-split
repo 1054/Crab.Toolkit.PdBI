@@ -849,8 +849,28 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             
             # determine whether there are flagged channels (experimental)
             # apply this if user has not input "-spw 0:XXX~XXX 1:XXX~XXX"
-            if [[ $CASA_INP_SPLIT_TRIMCHAN -eq 1 ]]; then
-                # if user gives the option "-trim-chan"
+            if [[ ${#CASA_INP_SPLIT_TRIMCHANNUM[@]} -ge 1 ]]; then
+                # if user gives the option "-trim-chan-num"
+                if [[ "$SPLIT_SPW_ID" == "$SPLIT_SPW" ]]; then
+                    # if user is not applying channalized spw like "-spw 0:XXX~XXX"
+                    trim_left=0
+                    trim_right=$(bc <<< "${SPLIT_SPW_NUMCHAN}-1")
+                    if [[ ${CASA_INP_SPLIT_TRIMCHANNUM[0]} -gt 0 ]]; then
+                        trim_left="${CASA_INP_SPLIT_TRIMCHANNUM[0]}"
+                    fi
+                    if [[ ${#CASA_INP_SPLIT_TRIMCHANNUM[@]} -ge 2 ]]; then
+                        if [[ ${CASA_INP_SPLIT_TRIMCHANNUM[1]} -gt 0 ]]; then
+                            trim_right=$(bc <<< "${SPLIT_SPW_NUMCHAN}-1-(${CASA_INP_SPLIT_TRIMCHANNUM[1]})")
+                        fi
+                    else
+                        if [[ ${CASA_INP_SPLIT_TRIMCHANNUM[0]} -gt 0 ]]; then
+                            trim_right=$(bc <<< "${SPLIT_SPW_NUMCHAN}-1-(${CASA_INP_SPLIT_TRIMCHANNUM[0]})")
+                        fi
+                    fi
+                    SPLIT_SPW="${SPLIT_SPW_ID}:${trim_left}~${trim_right}")
+                fi
+            elif [[ $CASA_INP_SPLIT_TRIMCHAN -eq 1 ]]; then
+                # if user gives the option "-trim-chan" (and not giving the option "-trim-chan-num")
                 if [[ "$SPLIT_SPW_ID" == "$SPLIT_SPW" ]]; then
                     # if user is not applying channalized spw like "-spw 0:XXX~XXX"
                     if [[ -f "$CASAMS_ScriptName.chan.flagged.spw${SPLIT_SPW_ID}.field${SPLIT_SID}.txt" ]] && [[ -f "$CASAMS_ScriptName.chan.nonflagged.spw${SPLIT_SPW_ID}.field${SPLIT_SID}.txt" ]]; then

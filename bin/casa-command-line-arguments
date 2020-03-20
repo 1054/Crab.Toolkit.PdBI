@@ -104,6 +104,7 @@ CASA_INP_CONCAT_FREQTOL=() # freqtolerance for concat()
 CASA_INP_CONCAT_DIRTOL=() # freqtolerance for concat()
 CASA_INP_SPLIT_TIMEBIN=() # bin times, string type
 CASA_INP_SPLIT_TRIMCHAN=0 # trim flagged channel or not
+CASA_INP_SPLIT_TRIMCHANNUM=()
 CASA_INP_CLEAN_MODE=() # clean mode, "cube" or "continuum"
 CASA_INP_CLEAN_BEAM=() # 
 CASA_INP_CLEAN_CELL=() # 
@@ -157,7 +158,8 @@ while [[ "$#" -gt 0 ]]; do
              "-freqtol") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="concat-freqtol";;
               "-dirtol") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="concat-dirtol";;
              "-timebin") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="split-timebin";;
-          "-trim-chan"*) CASA_CMD_TEXT="$1";        CASA_CMD_TYPE="split-trimchan";;
+           "-trim-chan") CASA_CMD_TEXT="$1";        CASA_CMD_TYPE="split-trimchan";;
+       "-trim-chan-num") CASA_CMD_TEXT="$1";        CASA_CMD_TYPE="split-trimchannum";;
                 "-mode") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="clean-mode";;
                 "-beam") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="clean-beam";;
                 "-cell") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="clean-cell";;
@@ -193,6 +195,7 @@ while [[ "$#" -gt 0 ]]; do
         "concat-dirtol") if [[ $# -gt 0 ]]; then CASA_INP_CONCAT_DIRTOL+=("$1"); fi;;
         "split-timebin") if [[ $# -gt 0 ]]; then CASA_INP_SPLIT_TIMEBIN+=("$1"); fi;;
        "split-trimchan")                         CASA_INP_SPLIT_TRIMCHAN=1;;
+    "split-trimchannum") if [[ $# -gt 0 ]]; then CASA_INP_SPLIT_TRIMCHANNUM+=("$1"); fi;;
            "clean-mode") if [[ $# -gt 0 ]]; then CASA_INP_CLEAN_MODE+=("$1"); fi;;
            "clean-beam") if [[ $# -gt 0 ]]; then CASA_INP_CLEAN_BEAM+=("$1"); fi;;
            "clean-cell") if [[ $# -gt 0 ]]; then CASA_INP_CLEAN_CELL+=("$1"); fi;;
