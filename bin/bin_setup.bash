@@ -174,8 +174,10 @@ if [[ 1 == 1 ]]; then
     done
     # finally append current directory "." as the last system path item
     if [[ x"$CRAB_BIN_SETUP_PATH_TEXT" != x ]]; then
+        echo "declare $CRAB_BIN_SETUP_VARIABLE=\"$CRAB_BIN_SETUP_PATH_TEXT:.\""
         declare $CRAB_BIN_SETUP_VARIABLE="$CRAB_BIN_SETUP_PATH_TEXT:."
     else
+        echo "declare $CRAB_BIN_SETUP_VARIABLE=\".\""
         declare $CRAB_BIN_SETUP_VARIABLE="."
     fi
     # print sorted/dup-removed/cleared PATH
