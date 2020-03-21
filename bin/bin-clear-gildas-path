@@ -7,7 +7,7 @@
 # 
 
 while [[ "$PATH" == *"/gildas-"* ]]; do
-    gildas_path=$(echo "$PATH" | perl -p -e 's%^([^\:]*[\:]|)([^\:]+/gildas-[^\:]+)([\:][^\:]*|)$%\2%g')
+    gildas_path=$(echo "$PATH" | perl -p -e 's%^(.*[\:]|)([^\:]+/gildas-[^\:]+)([\:].*|)$%\2%g')
     echo "gildas_path = $gildas_path"
     source $(dirname "${BASH_SOURCE[0]}")/bin_setup.bash -var PATH -clear "$gildas_path" -noop -debug
     break
@@ -15,13 +15,13 @@ done
 exit
 
 while [[ "$LD_LIBRARY_PATH" == *"/gildas-"* ]]; do
-    gildas_path=$(echo "$LD_LIBRARY_PATH" | perl -p -e 's%^([^\:]*[\:]|)([^\:]+/gildas-[^\:]+)([\:][^\:]*|)$%\2%g')
+    gildas_path=$(echo "$LD_LIBRARY_PATH" | perl -p -e 's%^(.*[\:]|)([^\:]+/gildas-[^\:]+)([\:].*|)$%\2%g')
     echo "gildas_path = $gildas_path"
     source $(dirname "${BASH_SOURCE[0]}")/bin_setup.bash -var LD_LIBRARY_PATH -clear "$gildas_path" -noop -debug
 done
 
 while [[ "$PYTHONPATH" == *"/gildas-"* ]]; do
-    gildas_path=$(echo "$PYTHONPATH" | perl -p -e 's%^([^\:]*[\:]|)([^\:]+/gildas-[^\:]+)([\:][^\:]*|)$%\2%g')
+    gildas_path=$(echo "$PYTHONPATH" | perl -p -e 's%^(.*[\:]|)([^\:]+/gildas-[^\:]+)([\:].*|)$%\2%g')
     echo "gildas_path = $gildas_path"
     source $(dirname "${BASH_SOURCE[0]}")/bin_setup.bash -var PYTHONPATH -clear "$gildas_path" -noop -debug
 done
