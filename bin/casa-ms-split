@@ -294,7 +294,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     echo "else: "                                                                       >> "$CASAMS_ScriptName.py"
     echo "    fo.write('data\n')"                                                       >> "$CASAMS_ScriptName.py"
     echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    if [[ $CASA_INP_SPLIT_TRIMCHAN -eq 1 ]]; then
+    if [[ $CASA_INP_SPLIT_TRIMCHAN -eq 1 ]] || [[ $CASA_INP_SPLIT_UNFLAGEDGECHAN -eq 1 ]]; then
     echo "#"                                                                                                                >> "$CASAMS_ScriptName.py"
     echo "# if user has input -trim-chan, then we will try to find out which channels are completely flagged, "             >> "$CASAMS_ScriptName.py"
     echo "# then we will select only non-flagged channels for output."                                                      >> "$CASAMS_ScriptName.py"
@@ -874,7 +874,49 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 if [[ "$SPLIT_SPW_ID" == "$SPLIT_SPW" ]]; then
                     # if user is not applying channalized spw like "-spw 0:XXX~XXX"
                     if [[ -f "$CASAMS_ScriptName.chan.flagged.spw${SPLIT_SPW_ID}.field${SPLIT_SID}.txt" ]] && [[ -f "$CASAMS_ScriptName.chan.nonflagged.spw${SPLIT_SPW_ID}.field${SPLIT_SID}.txt" ]]; then
+                        # if has computed the flagged channel list
                         SPLIT_SPW="${SPLIT_SPW_ID}:"$(cat "$CASAMS_ScriptName.chan.nonflagged.spw${SPLIT_SPW_ID}.field${SPLIT_SID}.txt" | grep -v "^#" | head -n 1 | sed -e 's/ *//g')
+                    fi
+                fi
+            fi
+            
+            # determine whether there are edge channels to unflag
+            # apply this if user has not input "-spw 0:XXX~XXX 1:XXX~XXX"
+            # added on 20200321
+            UNFLAG_SPW=""
+            if [[ ${#CASA_INP_SPLIT_UNFLAGEDGECHANNUM[@]} -gt 0 ]]; then
+                # if user gives the option "-unflag-edge-chan-num"
+                if [[ "$SPLIT_SPW_ID" == "$SPLIT_SPW" ]]; then
+                    # if user is not applying channalized spw like "-spw 0:XXX~XXX"
+                    trim_left=""
+                    trim_right=""
+                    if [[ ${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[0]} -gt 0 ]]; then
+                        trim_left=$(bc <<< "${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[0]}-1")
+                    fi
+                    if [[ ${#CASA_INP_SPLIT_UNFLAGEDGECHANNUM[@]} -ge 2 ]]; then
+                        if [[ ${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[1]} -gt 0 ]]; then
+                            trim_right=$(bc <<< "${SPLIT_SPW_NUMCHAN}-(${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[1]})")
+                        fi
+                    else
+                        if [[ ${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[0]} -gt 0 ]]; then
+                            trim_right=$(bc <<< "${SPLIT_SPW_NUMCHAN}-(${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[0]})")
+                        fi
+                    fi
+                    if [[ x"$trim_left" != x"" ]] && [[ x"$trim_right" != x"" ]]; then
+                        UNFLAG_SPW="0:0~${trim_left};${trim_right}~${SPLIT_SPW_NUMCHAN}"
+                    elif [[ x"$trim_left" != x"" ]]; then
+                        UNFLAG_SPW="0:0~${trim_left}"
+                    elif [[ x"$trim_right" != x"" ]]; then
+                        UNFLAG_SPW="0:${trim_right}~${SPLIT_SPW_NUMCHAN}"
+                    fi
+                fi
+            elif [[ $CASA_INP_SPLIT_UNFLAGEDGECHAN -eq 1 ]]; then
+                # if user gives the option "-unflag-edge-chan" (and not giving the option "-unflag-edge-chan-num")
+                if [[ "$SPLIT_SPW_ID" == "$SPLIT_SPW" ]]; then
+                    # if user is not applying channalized spw like "-spw 0:XXX~XXX"
+                    if [[ -f "$CASAMS_ScriptName.chan.flagged.spw${SPLIT_SPW_ID}.field${SPLIT_SID}.txt" ]] && [[ -f "$CASAMS_ScriptName.chan.nonflagged.spw${SPLIT_SPW_ID}.field${SPLIT_SID}.txt" ]]; then
+                        # if has computed the flagged channel list
+                        UNFLAG_SPW="0:"$(cat "$CASAMS_ScriptName.chan.flagged.spw${SPLIT_SPW_ID}.field${SPLIT_SID}.txt" | grep -v "^#" | head -n 1 | sed -e 's/ *//g')
                     fi
                 fi
             fi
@@ -1081,6 +1123,16 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "dirbackup(outputvis)"                                              >> "$CASAMS_Script1"
                     echo "inp(split)"                                                        >> "$CASAMS_Script1"
                     echo "split()"                                                           >> "$CASAMS_Script1"
+                    if [[ x"${UNFLAG_SPW}" != x"" ]]; then
+                    echo ""                                                                  >> "$CASAMS_Script1"
+                    echo "# Unflag edge channels"                                            >> "$CASAMS_Script1"
+                    echo "vis         = outputvis"                                           >> "$CASAMS_Script1"
+                    echo "field       = ''"                                                  >> "$CASAMS_Script1"
+                    echo "spw         = '${UNFLAG_SPW}'"                                     >> "$CASAMS_Script1"
+                    echo "mode        = 'unflag'"                                            >> "$CASAMS_Script1"
+                    echo "inp(flagdata)"                                                     >> "$CASAMS_Script1"
+                    echo "flagdata()"                                                        >> "$CASAMS_Script1"
+                    fi
                     echo ""                                                                  >> "$CASAMS_Script1"
                     echo "# We also try to split each mosaic pointing"                       >> "$CASAMS_Script1"
                     echo "try: "                                                             >> "$CASAMS_Script1"
@@ -1100,6 +1152,16 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "            dirbackup(outputvis)"                                  >> "$CASAMS_Script1"
                     echo "            inp(split)"                                            >> "$CASAMS_Script1"
                     echo "            split()"                                               >> "$CASAMS_Script1"
+                    if [[ x"${UNFLAG_SPW}" != x"" ]]; then
+                    echo "            "                                                      >> "$CASAMS_Script1"
+                    echo "            # Unflag edge channels"                                >> "$CASAMS_Script1"
+                    echo "            vis         = outputvis"                               >> "$CASAMS_Script1"
+                    echo "            field       = ''"                                      >> "$CASAMS_Script1"
+                    echo "            spw         = '${UNFLAG_SPW}'"                         >> "$CASAMS_Script1"
+                    echo "            mode        = 'unflag'"                                >> "$CASAMS_Script1"
+                    echo "            inp(flagdata)"                                         >> "$CASAMS_Script1"
+                    echo "            flagdata()"                                            >> "$CASAMS_Script1"
+                    fi
                     echo "    "                                                              >> "$CASAMS_Script1"
                     echo "except:"                                                           >> "$CASAMS_Script1"
                     echo "    pass"                                                          >> "$CASAMS_Script1"
