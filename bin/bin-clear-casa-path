@@ -7,17 +7,20 @@
 # 
 
 while [[ "$PATH" == *"/casa-"* ]]; do
-  casa_path=$(echo "$PATH" | perl -p -e 's%^([^:]*[:]|)([^:]+/casa-[^:]+)([:][^:]*|)$%\2%g')
-  source $(dirname "${BASH_SOURCE[0]}")/bin_setup.bash -var PATH -clear "$casa_path" -noop
+    casa_path=$(echo "$PATH" | perl -p -e 's%^(.*[:]|)([^:]+/casa-[^:]+)([:].*|)$%\2%g')
+    echo "casa_path = $casa_path"
+    source $(dirname "${BASH_SOURCE[0]}")/bin_setup.bash -var PATH -clear "$casa_path" -noop -debug
 done
 
 while [[ "$LD_LIBRARY_PATH" == *"/casa-"* ]]; do
-  casa_path=$(echo "$LD_LIBRARY_PATH" | perl -p -e 's%^([^:]*[:]|)([^:]+/casa-[^:]+)([:][^:]*|)$%\2%g')
-  source $(dirname "${BASH_SOURCE[0]}")/bin_setup.bash -var LD_LIBRARY_PATH -clear "$casa_path" -noop
+    casa_path=$(echo "$LD_LIBRARY_PATH" | perl -p -e 's%^(.*[:]|)([^:]+/casa-[^:]+)([:].*|)$%\2%g')
+    echo "casa_path = $casa_path"
+    source $(dirname "${BASH_SOURCE[0]}")/bin_setup.bash -var LD_LIBRARY_PATH -clear "$casa_path" -noop -debug
 done
 
 while [[ "$PYTHONPATH" == *"/casa-"* ]]; do
-  casa_path=$(echo "$PYTHONPATH" | perl -p -e 's%^([^:]*[:]|)([^:]+/casa-[^:]+)([:][^:]*|)$%\2%g')
-  source $(dirname "${BASH_SOURCE[0]}")/bin_setup.bash -var PYTHONPATH -clear "$casa_path" -noop
+    casa_path=$(echo "$PYTHONPATH" | perl -p -e 's%^(.*[:]|)([^:]+/casa-[^:]+)([:].*|)$%\2%g')
+    echo "casa_path = $casa_path"
+    source $(dirname "${BASH_SOURCE[0]}")/bin_setup.bash -var PYTHONPATH -clear "$casa_path" -noop -debug
 done
 
