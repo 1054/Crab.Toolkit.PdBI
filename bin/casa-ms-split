@@ -16,6 +16,9 @@
 #               TRIMCHAN still not working, getcell::REST_FREQUENCY Exception Reported: Table DataManager error: ... no array ... in column REST_FREQUENCY ...
 #               allow wildcard in argument "-spw", e.g., "-spw" "*:5~60"
 #               allow multiple spw in one argument "-spw", e.g., "-spw" "5,7,9,11:5~60"
+#    2020-03-20 added TRIMCHANNUM, UNFLAGEDGECHAN and UNFLAGEDGECHANNUM
+#               allow width to be like "[0-9]+km/s"
+#               added the call to bin-clear-casa-path
 # 
 
 
@@ -1058,6 +1061,8 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "#!/usr/bin/env python"                                             > "$CASAMS_Script4"
                     echo "#!/usr/bin/env python"                                             > "$CASAMS_Script5"
                     echo "#!/bin/bash"                                                       > "$CASAMS_Script6"
+                    
+                    echo "source \"$(dirname ${BASH_SOURCE[0]})/bin-clear-casa-path\""       >> "$CASAMS_Script6" # clear CASA path for running GILDAS
                     
                     
                     echo "import os, sys"                                                    >> "$CASAMS_Script1"
