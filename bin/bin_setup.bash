@@ -8,6 +8,9 @@
 #    source /some/path/to/bin_setup.bash -var LD_LIBRARY_PATH -path /my/lib 
 #    source /some/path/to/bin_setup.bash -var PATH -clear "/some/path/to/be/deleted/from/path" -noop -debug
 # 
+# Last update:
+#    2020-03-21 echo declare
+# 
 
 
 # 
@@ -174,10 +177,14 @@ if [[ 1 == 1 ]]; then
     done
     # finally append current directory "." as the last system path item
     if [[ x"$CRAB_BIN_SETUP_PATH_TEXT" != x ]]; then
-        echo "declare $CRAB_BIN_SETUP_VARIABLE=\"$CRAB_BIN_SETUP_PATH_TEXT:.\""
+        if [[ $CRAB_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
+            echo "declare $CRAB_BIN_SETUP_VARIABLE=\"$CRAB_BIN_SETUP_PATH_TEXT:.\""
+        fi
         declare $CRAB_BIN_SETUP_VARIABLE="$CRAB_BIN_SETUP_PATH_TEXT:."
     else
-        echo "declare $CRAB_BIN_SETUP_VARIABLE=\".\""
+        if [[ $CRAB_BIN_SETUP_DEBUG_FLAG -eq 1 ]]; then
+            echo "declare $CRAB_BIN_SETUP_VARIABLE=\".\""
+        fi
         declare $CRAB_BIN_SETUP_VARIABLE="."
     fi
     # print sorted/dup-removed/cleared PATH
