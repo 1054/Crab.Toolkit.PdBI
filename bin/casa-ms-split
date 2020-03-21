@@ -1074,7 +1074,14 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "            os.system('rm -rf \"%s\"'%(dirback))"                  >> "$CASAMS_Script1"
                     echo "        os.system('mv \"%s\" \"%s\"'%(dirpath, dirback))"          >> "$CASAMS_Script1"
                     echo "        print('Backed up \"%s\" as \"%s\".'%(dirpath, dirback))"   >> "$CASAMS_Script1"
-                    echo ""                                                                  >> "$CASAMS_Script1"
+                    echo "    "                                                                                              >> "$CASAMS_Script1"
+                    echo "    if os.path.isdir(dirpath+'.flagversions'):"                                                    >> "$CASAMS_Script1"
+                    echo "        if os.path.isdir(dirback+'.flagversions'):"                                                >> "$CASAMS_Script1"
+                    echo "            os.system('rm -rf \"%s\"'%(dirback+'.flagversions'))"                                  >> "$CASAMS_Script1"
+                    echo "        os.system('mv \"%s\" \"%s\"'%(dirpath+'.flagversions', dirback+'.flagversions'))"          >> "$CASAMS_Script1"
+                    echo "        print('Backed up \"%s\" as \"%s\".'%(dirpath+'.flagversions', dirback+'.flagversions'))"   >> "$CASAMS_Script1"
+                    echo "    "                                                                                              >> "$CASAMS_Script1"
+                    echo ""                                                                                                  >> "$CASAMS_Script1"
                     
                     
                     echo "import os, sys"                                                    >> "$CASAMS_Script2"
@@ -1091,7 +1098,14 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "            os.system('rm -rf \"%s\"'%(dirback))"                  >> "$CASAMS_Script2"
                     echo "        os.system('mv \"%s\" \"%s\"'%(dirpath, dirback))"          >> "$CASAMS_Script2"
                     echo "        print('Backed up \"%s\" as \"%s\".'%(dirpath, dirback))"   >> "$CASAMS_Script2"
-                    echo ""                                                                  >> "$CASAMS_Script2"
+                    echo "    "                                                                                              >> "$CASAMS_Script2"
+                    echo "    if os.path.isdir(dirpath+'.flagversions'):"                                                    >> "$CASAMS_Script2"
+                    echo "        if os.path.isdir(dirback+'.flagversions'):"                                                >> "$CASAMS_Script2"
+                    echo "            os.system('rm -rf \"%s\"'%(dirback+'.flagversions'))"                                  >> "$CASAMS_Script2"
+                    echo "        os.system('mv \"%s\" \"%s\"'%(dirpath+'.flagversions', dirback+'.flagversions'))"          >> "$CASAMS_Script2"
+                    echo "        print('Backed up \"%s\" as \"%s\".'%(dirpath+'.flagversions', dirback+'.flagversions'))"   >> "$CASAMS_Script2"
+                    echo "    "                                                                                              >> "$CASAMS_Script2"
+                    echo ""                                                                                                  >> "$CASAMS_Script2"
                     
                     
                     echo "import os, sys" >> "$CASAMS_Script4"
@@ -1115,9 +1129,9 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "timebin     = '${SPLIT_TIMEBIN}'"                                  >> "$CASAMS_Script1" #<Added><20180316># 
                     echo "combinespw  = False"                                               >> "$CASAMS_Script1"
                     echo "keepflags   = False"                                               >> "$CASAMS_Script1"
-                    if [[ ${#CASA_VERSION[@]} -eq 3 ]]; then
+                    if [[ ${#CASA_VERSION[@]} -ge 2 ]]; then
                     if [[ ${CASA_VERSION[0]} -ge 4 && ${CASA_VERSION[1]} -ge 6 ]]; then
-                    echo "keepmms     = False"                                               >> "$CASAMS_Script1"
+                    echo "keepmms     = False"                                               >> "$CASAMS_Script1" # for CASA >=4.6
                     fi
                     fi
                     echo "dirbackup(outputvis)"                                              >> "$CASAMS_Script1"
