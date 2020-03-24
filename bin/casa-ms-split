@@ -955,6 +955,19 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             # prepare width string in the output file name
             SPLIT_WID_STR="${SPLIT_WID}"
             
+            # prepare minimum channel width
+            SPLIT_WID_MIN_KMS="-99"
+            if [[ x"$SPLIT_FEQ" != x ]]; then
+                SPLIT_WID_MIN_KMS=$(awk "BEGIN {print (($SPLIT_SPW_BANDWIDTH/$SPLIT_SPW_NUMCHAN)/($SPLIT_FEQ)*2.99792458e5);}")
+                if [[ x"$SPLIT_WID_MIN_KMS" == x ]]; then
+                    echo "Error! Could not get the channel width in velocity!"
+                    echo "SPLIT_SPW_BANDWIDTH = $SPLIT_SPW_BANDWIDTH"
+                    echo "SPLIT_SPW_NUMCHAN = $SPLIT_SPW_NUMCHAN"
+                    echo "SPLIT_FEQ = $SPLIT_FEQ"
+                    exit 1
+                fi
+            fi
+            
             # if the width is 0, set it to the full width (i.e. a single-channel continuum)
             if [[ x"$SPLIT_WID" == x"0" ]]; then
                 SPLIT_WID=$SPLIT_SPW_NUMCHAN
@@ -973,12 +986,11 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 fi
                 SPLIT_WID=$(echo "$SPLIT_WID" | sed -e 's%km/s%%g' | sed -e 's%KM/S%%g')
                 SPLIT_WID_STR="${SPLIT_WID}kms"
-                SPLIT_WID_MIN_KMS=$(awk "BEGIN {print (($SPLIT_SPW_BANDWIDTH/$SPLIT_SPW_NUMCHAN)/($SPLIT_FEQ)*2.99792458e5);}")
-                #<DEBUG> awk "BEGIN {print (2e+09/128)/8.9743e+10*2.99792458e5);}"
+                #<DEBUG> awk "BEGIN {print ((2e+09/128)/(8.9743e+10)*2.99792458e5);}"
                 if [[ $(awk "BEGIN {if ($SPLIT_WID<($SPLIT_WID_MIN_KMS)) print 1; else print 0;}") -eq 1 ]]; then
-                    echo "Error! The given channel width \"${SPLIT_WID_STR}\" is too small! Minimum channel width is \"${SPLIT_WID_MIN_KMS}km/s\"."
-                    echo "Please set -width to at least the minimum value and try again."
-                    exit 1
+                    echo "Error! The given channel width \"${SPLIT_WID_STR}\" is too small for this spw! Minimum channel width is \"${SPLIT_WID_MIN_KMS}km/s\"."
+                    echo "Please set -width to at least the minimum value and try again if you want to split this spw. We will skip it for now."
+                    continue
                 fi
                 # convert width in velocity to width in channel number and round to integer (floor)
                 SPLIT_WID=$(awk "BEGIN {printf ( \"%.0f\", $SPLIT_WID/($SPLIT_WID_MIN_KMS) );}")
@@ -1097,7 +1109,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 echo "  * looping source    '$SPLIT_SOU'  ($(($isou+1))/${#CASAMS_SOU[@]})"; fi
                 echo "    *       spw       '$SPLIT_SPW_ID'"
                 echo "    *       spw_name  '$SPLIT_SPW_NAME'"
-                echo "            chanwidth '$SPLIT_WID' ('$SPLIT_WID_STR')"
+                echo "            chanwidth '$SPLIT_WID' ('$SPLIT_WID_STR') (original '${SPLIT_WID_MIN_KMS}km/s')"
                 echo "            bandwidth '$SPLIT_SPW_BANDWIDTH'"
                 echo "            ref_freq  '$SPLIT_FEQ'"
             
