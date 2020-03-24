@@ -881,8 +881,6 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 echo "Skipping spw \"$SPLIT_SPW_ID\" because its NAME in SPECTRAL_WINDOW table is \"$SPLIT_SPW_NAME\"!"
                 echo ""
                 continue
-            else
-                count_ispw=$(awk "BEGIN {print ($count_ispw+1);}")
             fi
             
             # determine whether there are flagged channels (experimental)
@@ -1103,9 +1101,12 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             
             
             
+            
+            
             # 
             # print progress
             # 
+            count_ispw=$(awk "BEGIN {print ($count_ispw+1);}")
             if [[ $count_ispw -eq 1 ]]; then 
                 echo "  "; 
                 echo "  * looping source    '$SPLIT_SOU'  ($(($isou+1))/${#CASAMS_SOU[@]})"; fi
