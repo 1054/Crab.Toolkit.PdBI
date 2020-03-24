@@ -964,6 +964,8 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 if [[ x"$SPLIT_FEQ" == x ]]; then
                     echo "Error! Could not compute channel binning width from the given velocity $SPLIT_WID without REF_FREQUENCY!"
                     exit 1
+                elif [[ x"$SPLIT_FEQ" == x"e+" ]]; then
+                    SPLIT_FEQ=$()
                 fi
                 if [[ x"$SPLIT_SPW_BANDWIDTH" == x ]]; then
                     echo "Error! Could not compute channel binning width from the given velocity $SPLIT_WID without REF_FREQUENCY!"
@@ -971,14 +973,15 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 fi
                 SPLIT_WID=$(echo "$SPLIT_WID" | sed -e 's%km/s%%g' | sed -e 's%KM/S%%g')
                 SPLIT_WID_STR="${SPLIT_WID}kms"
-                SPLIT_WID_MIN_KMS=$(awk "BEGIN {print ($SPLIT_SPW_BANDWIDTH/$SPLIT_SPW_NUMCHAN)/$SPLIT_FEQ*2.99792458e5);}")
+                SPLIT_WID_MIN_KMS=$(awk "BEGIN {print (($SPLIT_SPW_BANDWIDTH/$SPLIT_SPW_NUMCHAN)/($SPLIT_FEQ)*2.99792458e5);}")
+                #<DEBUG> awk "BEGIN {print (2e+09/128)/8.9743e+10*2.99792458e5);}"
                 if [[ $(awk "BEGIN {if ($SPLIT_WID<($SPLIT_WID_MIN_KMS)) print 1; else print 0;}") -eq 1 ]]; then
                     echo "Error! The given channel width \"${SPLIT_WID_STR}\" is too small! Minimum channel width is \"${SPLIT_WID_MIN_KMS}km/s\"."
                     echo "Please set -width to at least the minimum value and try again."
                     exit 1
                 fi
                 # convert width in velocity to width in channel number and round to integer (floor)
-                SPLIT_WID=$(awk "BEGIN {printf (\"%.0f\", $SPLIT_WID/(($SPLIT_SPW_BANDWIDTH/$SPLIT_SPW_NUMCHAN)/$SPLIT_FEQ*2.99792458e5));}")
+                SPLIT_WID=$(awk "BEGIN {printf ( \"%.0f\", $SPLIT_WID/($SPLIT_WID_MIN_KMS) );}")
                 SPLIT_WID=$(awk "BEGIN {if ($SPLIT_WID<1) print 1; else print $SPLIT_WID;}")
             fi
             # if the width is wider than the whole bandwidth of the spw, use the whole bandwidth
