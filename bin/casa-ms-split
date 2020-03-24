@@ -138,11 +138,12 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     # 
     CASAMS_OVERWRITE=0
     if [[ ${#CASA_INP_OVERWRITE[@]} -gt 0 ]]; then
-        if [[ $ivis -lt ${#CASA_INP_OVERWRITE[@]} ]]; then
-            CASAMS_OVERWRITE=${CASA_INP_OVERWRITE[ivis]}
-        else
-            CASAMS_OVERWRITE=${CASA_INP_OVERWRITE[${#CASA_INP_OVERWRITE[@]}-1]}
-        fi
+        for (( ioverwrite = 0; ioverwrite < ${#CASA_INP_OVERWRITE[@]}; ioverwrite++ )); do
+            if [[ x"${CASA_INP_OVERWRITE[ioverwrite]}" == x"meta" ]]; then
+                CASAMS_OVERWRITE=1
+                break
+            fi
+        done
     fi
     
 
@@ -166,7 +167,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
        [[ ! -f "$CASAMS_ScriptName.spw.name.txt" ]] || \
        [[ ! -f "$CASAMS_ScriptName.spw.bandwidth.txt" ]] || \
        [[ ! -f "$CASAMS_ScriptName.datatype.txt" ]] || \
-       [[ $CASAMS_OVERWRITE -ge 2 ]]; then
+       [[ $CASAMS_OVERWRITE -ge 1 ]]; then
         
         echo "# This script needs to be executed by CASA as follows:"                       >  "$CASAMS_ScriptName.py"
         echo "# casa --nogui --log2term -c \"execfile('$CASAMS_ScriptName.py')\""           >> "$CASAMS_ScriptName.py"
@@ -583,6 +584,8 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         else
             echo "Finished running \"$CASAMS_ScriptName.py\" in CASA!"
         fi
+    
+    fi
     
     # 
     # Read data tables
