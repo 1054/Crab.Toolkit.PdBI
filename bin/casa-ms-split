@@ -132,8 +132,19 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         exit
     fi
     
-
-
+    
+    # 
+    # Check overwrite
+    # 
+    CASAMS_OVERWRITE=0
+    if [[ ${#CASA_INP_OVERWRITE[@]} -gt 0 ]]; then
+        if [[ $ivis -lt ${#CASA_INP_OVERWRITE[@]} ]]; then
+            CASAMS_OVERWRITE=${CASA_INP_OVERWRITE[ivis]}
+        else
+            CASAMS_OVERWRITE=${CASA_INP_OVERWRITE[${#CASA_INP_OVERWRITE[@]}-1]}
+        fi
+    fi
+    
 
     # 
     # Check SOURCE and SPECTRAL_WINDOW table with casa
@@ -145,412 +156,433 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
     CASAMS_TableFreqs=() # The list of the ref freq of each spw, in Hz
     CASAMS_TableSpws=() # The list of list of spw for each source, has a dimension of source number. 
     CASAMS_ScriptName="$CASAMS_VIS_NAME.read.tables"
-    echo "# This script needs to be executed by CASA as follows:"                       >  "$CASAMS_ScriptName.py"
-    echo "# casa --nogui --log2term -c \"execfile('$CASAMS_ScriptName.py')\""           >> "$CASAMS_ScriptName.py"
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "import os, sys"                                                               >> "$CASAMS_ScriptName.py" #<20180321>#
-    echo "import numpy"                                                                 >> "$CASAMS_ScriptName.py" #<20180321>#
-    echo "import json"                                                                  >> "$CASAMS_ScriptName.py" #<20180321>#
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "#####################"                                                        >> "$CASAMS_ScriptName.py"
-    echo "# Read SOURCE table #"                                                        >> "$CASAMS_ScriptName.py"
-    echo "#####################"                                                        >> "$CASAMS_ScriptName.py"
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "tb.open('${CASAMS_VIS}/SOURCE')"                                              >> "$CASAMS_ScriptName.py" # CASA table operation see "https://casa.nrao.edu/docs/CasaRef/table-Module.html"
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    #echo "fo = open('$CASAMS_ScriptName.name.txt','wb')"                                >> "$CASAMS_ScriptName.py"
-    #echo "fo.write('\n'.join(list(set(tb.getcol('NAME')))))"                            >> "$CASAMS_ScriptName.py"
-    #echo "fo.write('\n')"                                                               >> "$CASAMS_ScriptName.py"
-    #echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    #echo "fo = open('$CASAMS_ScriptName.field.txt','wb')"                               >> "$CASAMS_ScriptName.py"
-    #echo "fo.write('\n'.join(list(set(map(str,tb.getcol('SOURCE_ID'))))))"              >> "$CASAMS_ScriptName.py"
-    #echo "fo.write('\n')"                                                               >> "$CASAMS_ScriptName.py"
-    #echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo "list_all_spw = tb.getcol('SPECTRAL_WINDOW_ID')"                               >> "$CASAMS_ScriptName.py"
-    echo "list_all_sou = tb.getcol('NAME')"                                             >> "$CASAMS_ScriptName.py"
-    echo "list_uni_sou = list(set(list_all_sou))"                                       >> "$CASAMS_ScriptName.py"
-    #echo "fo = open('$CASAMS_ScriptName.source.spw.uniq.txt','wb')"                     >> "$CASAMS_ScriptName.py"
-    #echo "for i in range(len(list_uni_sou)): "                                          >> "$CASAMS_ScriptName.py"
-    #echo "    for j in range(len(list_all_sou)): "                                      >> "$CASAMS_ScriptName.py"
-    #echo "        if list_all_sou[j] == list_uni_sou[i]: "                              >> "$CASAMS_ScriptName.py"
-    #echo "            fo.write('%s '%(list_all_spw[j]))"                                >> "$CASAMS_ScriptName.py"
-    #echo "    fo.write('\n')"                                                           >> "$CASAMS_ScriptName.py"
-    #echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    #echo "fo = open('$CASAMS_ScriptName.source.name.uniq.txt','wb')"                    >> "$CASAMS_ScriptName.py"
-    #echo "for i in range(len(list_uni_sou)): "                                          >> "$CASAMS_ScriptName.py"
-    #echo "    fo.write('%s\n'%(list_uni_sou[i]))"                                       >> "$CASAMS_ScriptName.py"
-    #echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo "fo = open('$CASAMS_ScriptName.source.spw.txt','wb')"                          >> "$CASAMS_ScriptName.py"
-    echo "list_all = tb.getcol('SPECTRAL_WINDOW_ID')"                                   >> "$CASAMS_ScriptName.py"
-    echo "for i in range(len(list_all)): "                                              >> "$CASAMS_ScriptName.py"
-    echo "    fo.write('%d\n'%(list_all[i]))"                                           >> "$CASAMS_ScriptName.py"
-    echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo "fo = open('$CASAMS_ScriptName.source.name.txt','wb')"                         >> "$CASAMS_ScriptName.py"
-    echo "list_all = tb.getcol('NAME')"                                                 >> "$CASAMS_ScriptName.py"
-    echo "for i in range(tb.nrows()): "                                                 >> "$CASAMS_ScriptName.py"
-    echo "    fo.write('%s\n'%(list_all[i]))"                                           >> "$CASAMS_ScriptName.py"
-    echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo "fo = open('$CASAMS_ScriptName.source.id.txt','wb')"                           >> "$CASAMS_ScriptName.py"
-    echo "list_all = tb.getcol('SOURCE_ID')"                                            >> "$CASAMS_ScriptName.py"
-    echo "for i in range(tb.nrows()): "                                                 >> "$CASAMS_ScriptName.py"
-    echo "    fo.write('%d\n'%(list_all[i]))"                                           >> "$CASAMS_ScriptName.py"
-    echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    #echo "fo = open('$CASAMS_ScriptName.source.freq.txt','wb')"                         >> "$CASAMS_ScriptName.py"
-    #echo "for i in range(tb.nrows()): "                                                 >> "$CASAMS_ScriptName.py"
-    #echo "    try:"                                                                     >> "$CASAMS_ScriptName.py"
-    #echo "        list_ref_feq = (tb.getcell('REST_FREQUENCY',i))[0]"                   >> "$CASAMS_ScriptName.py"
-    #echo "    except:"                                                                  >> "$CASAMS_ScriptName.py"
-    #echo "        list_ref_feq = 0.0"                                                   >> "$CASAMS_ScriptName.py"
-    #echo "    fo.write('%s\n'%(list_ref_feq))"                                          >> "$CASAMS_ScriptName.py"
-    #echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "tb.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "##############################"                                               >> "$CASAMS_ScriptName.py"
-    echo "# Read SPECTRAL_WINDOW table #"                                               >> "$CASAMS_ScriptName.py"
-    echo "##############################"                                               >> "$CASAMS_ScriptName.py"
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "tb.open('${CASAMS_VIS}/SPECTRAL_WINDOW')"                                     >> "$CASAMS_ScriptName.py"
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "fo = open('$CASAMS_ScriptName.spw.txt','wb')"                                 >> "$CASAMS_ScriptName.py"
-    echo "list_all_chn = tb.getcol('NUM_CHAN')"                                         >> "$CASAMS_ScriptName.py"
-    echo "for i in range(len(list_all_chn)):"                                           >> "$CASAMS_ScriptName.py"
-    echo "    fo.write('%d\n'%(i))"                                                     >> "$CASAMS_ScriptName.py"
-    echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo "fo = open('$CASAMS_ScriptName.spw.name.txt','wb')"                            >> "$CASAMS_ScriptName.py"
-    echo "list_all_str = tb.getcol('NAME')"                                             >> "$CASAMS_ScriptName.py"
-    echo "for i in range(len(list_all_str)):"                                           >> "$CASAMS_ScriptName.py"
-    echo "    fo.write('%s\n'%(list_all_str[i]))"                                       >> "$CASAMS_ScriptName.py"
-    echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo "fo = open('$CASAMS_ScriptName.spw.bandwidth.txt','wb')"                       >> "$CASAMS_ScriptName.py"
-    echo "list_all_chn = tb.getcol('TOTAL_BANDWIDTH')"                                  >> "$CASAMS_ScriptName.py"
-    echo "for i in range(len(list_all_chn)):"                                           >> "$CASAMS_ScriptName.py"
-    echo "    fo.write('%g\n'%(list_all_chn[i]))"                                       >> "$CASAMS_ScriptName.py"
-    echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo "fo = open('$CASAMS_ScriptName.chan.txt','wb')"                                >> "$CASAMS_ScriptName.py"
-    echo "list_all_chn = tb.getcol('NUM_CHAN')"                                         >> "$CASAMS_ScriptName.py"
-    echo "for i in range(len(list_all_chn)):"                                           >> "$CASAMS_ScriptName.py"
-    echo "    fo.write('%g\n'%(list_all_chn[i]))"                                       >> "$CASAMS_ScriptName.py"
-    echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo "fo = open('$CASAMS_ScriptName.chan.name.txt','wb')"                           >> "$CASAMS_ScriptName.py"
-    echo "list_all = tb.getcol('NAME')"                                                 >> "$CASAMS_ScriptName.py"
-    echo "for i in range(len(list_all)):"                                               >> "$CASAMS_ScriptName.py"
-    echo "    fo.write('%s\n'%(list_all[i]))"                                           >> "$CASAMS_ScriptName.py"
-    echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo "fo = open('$CASAMS_ScriptName.chan.width.txt','wb')"                          >> "$CASAMS_ScriptName.py"
-    echo "list_all = tb.getcol('NUM_CHAN')"                                             >> "$CASAMS_ScriptName.py"
-    echo "for i in range(len(list_all)):"                                               >> "$CASAMS_ScriptName.py"
-    echo "    fo.write('%d\n'%(list_all[i]))"                                           >> "$CASAMS_ScriptName.py"
-    echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo "fo = open('$CASAMS_ScriptName.chan.freq.ref.txt','wb')"                       >> "$CASAMS_ScriptName.py"
-    echo "list_all_chs = tb.getcol('REF_FREQUENCY')"                                    >> "$CASAMS_ScriptName.py"
-    echo "for i in range(len(list_all_chs)):"                                           >> "$CASAMS_ScriptName.py"
-    echo "    fo.write('%g\n'%(list_all_chs[i]))"                                       >> "$CASAMS_ScriptName.py"
-    echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo "for i in range(len(list_all_chs)): "                                          >> "$CASAMS_ScriptName.py"
-    echo "    fo = open('$CASAMS_ScriptName.chan.freq.spw%d.txt'%(i),'wb')"             >> "$CASAMS_ScriptName.py"
-    echo "    list_all_chk = tb.getcell('CHAN_FREQ',i)"                                 >> "$CASAMS_ScriptName.py"
-    echo "    for j in range(len(list_all_chk)): "                                      >> "$CASAMS_ScriptName.py"
-    echo "        fo.write('%0.10g\n'%(list_all_chk[j]))"                               >> "$CASAMS_ScriptName.py"
-    echo "    fo.close()"                                                               >> "$CASAMS_ScriptName.py"
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "tb.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "###############################"                                              >> "$CASAMS_ScriptName.py"
-    echo "# Read DATA_DESCRIPTION table #"                                              >> "$CASAMS_ScriptName.py"
-    echo "###############################"                                              >> "$CASAMS_ScriptName.py"
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "tb.open('${CASAMS_VIS}/DATA_DESCRIPTION')"                                    >> "$CASAMS_ScriptName.py"
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "if 'SPECTRAL_WINDOW_ID' in tb.colnames():"                                    >> "$CASAMS_ScriptName.py"
-    echo "    list_vis_desc_spwid = tb.getcol('SPECTRAL_WINDOW_ID')"                    >> "$CASAMS_ScriptName.py" # see "DATA_DESC_ID" documentation in https://casa.nrao.edu/casadocs-devel/stable/reference-material/measurement-set
-    echo "else:"                                                                        >> "$CASAMS_ScriptName.py"
-    echo "    list_vis_desc_spwid = [0]"                                                >> "$CASAMS_ScriptName.py"
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "tb.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "####################"                                                         >> "$CASAMS_ScriptName.py"
-    echo "# Read FIELD table #"                                                         >> "$CASAMS_ScriptName.py"
-    echo "####################"                                                         >> "$CASAMS_ScriptName.py"
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "tb.open('${CASAMS_VIS}/FIELD')"                                               >> "$CASAMS_ScriptName.py"
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "list_field_names = tb.getcol('NAME')"                                         >> "$CASAMS_ScriptName.py" # see "DATA_DESC_ID" documentation in https://casa.nrao.edu/casadocs-devel/stable/reference-material/measurement-set
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "fo = open('$CASAMS_ScriptName.field.names.txt','wb')"                         >> "$CASAMS_ScriptName.py"
-    echo "for i in range(len(list_field_names)):"                                       >> "$CASAMS_ScriptName.py"
-    echo "    fo.write('%s\n'%(list_field_names[i]))"                                   >> "$CASAMS_ScriptName.py"
-    echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "tb.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo "# "                                                                           >> "$CASAMS_ScriptName.py"
-    echo "##############################"                                               >> "$CASAMS_ScriptName.py"
-    echo "# Read CASAMS_VIS main table #"                                               >> "$CASAMS_ScriptName.py"
-    echo "##############################"                                               >> "$CASAMS_ScriptName.py"
-    echo "#"                                                                            >> "$CASAMS_ScriptName.py"
-    echo "tb.open('${CASAMS_VIS}')"                                                     >> "$CASAMS_ScriptName.py"
-    echo "#"                                                                            >> "$CASAMS_ScriptName.py"
-    echo "fo = open('$CASAMS_ScriptName.datatype.txt','wb')"                            >> "$CASAMS_ScriptName.py" # need to make sure that column corrected is not there
-    echo "list_col = tb.colnames()"                                                     >> "$CASAMS_ScriptName.py"
-    echo "if 'CORRECTED_DATA' in list_col: "                                            >> "$CASAMS_ScriptName.py"
-    echo "    fo.write('corrected\n')"                                                  >> "$CASAMS_ScriptName.py"
-    echo "else: "                                                                       >> "$CASAMS_ScriptName.py"
-    echo "    fo.write('data\n')"                                                       >> "$CASAMS_ScriptName.py"
-    echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    if [[ $CASA_INP_SPLIT_TRIMCHAN -eq 1 ]] || [[ $CASA_INP_SPLIT_UNFLAGEDGECHAN -eq 1 ]]; then
-    echo "#"                                                                                                                >> "$CASAMS_ScriptName.py"
-    echo "# if user has input -trim-chan, then we will try to find out which channels are completely flagged, "             >> "$CASAMS_ScriptName.py"
-    echo "# then we will select only non-flagged channels for output."                                                      >> "$CASAMS_ScriptName.py"
-    echo "# we do this for all spws in 'list_vis_desc_spwid'"                                                               >> "$CASAMS_ScriptName.py"
-    echo "for ii in range(len(list_field_names)):"                                                                          >> "$CASAMS_ScriptName.py"
-    echo "    field_name = list_field_names[ii]"                                                                            >> "$CASAMS_ScriptName.py"
-    echo "    field_numb = ii"                                                                                              >> "$CASAMS_ScriptName.py"
-    echo "    for i in range(len(list_vis_desc_spwid)):"                                                                    >> "$CASAMS_ScriptName.py"
-    echo "        spw_numb = list_vis_desc_spwid[i]"                                                                        >> "$CASAMS_ScriptName.py"
-    echo "        spw_name = 'spw%0d'%(list_vis_desc_spwid[i])"                                                             >> "$CASAMS_ScriptName.py"
-    #
-    #echo "        # check if there are any flagged channels in any row which are not completely flagged"                    >> "$CASAMS_ScriptName.py"
-    #echo "        tb1 = tb.query('FLAG_ROW==FALSE' + ' AND '\\"                                                             >> "$CASAMS_ScriptName.py" 
-    #echo "                       'ntrue(FLAG)>0' + ' AND '\\"                                                               >> "$CASAMS_ScriptName.py" 
-    #echo "                       'DATA_DESC_ID==%d'%(spw_numb) + ' AND '\\"                                                 >> "$CASAMS_ScriptName.py" 
-    #echo "                       'FIELD_ID==%d'%(field_numb), \\"                                                           >> "$CASAMS_ScriptName.py" 
-    #echo "                       style='python') # style='python' means row number is 0-based"                              >> "$CASAMS_ScriptName.py"
-    #echo "        if tb1.nrows() == 0:"                                                                                     >> "$CASAMS_ScriptName.py"
-    #echo "            if os.path.isfile('$CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb)):"       >> "$CASAMS_ScriptName.py"
-    #echo "                os.system('rm $CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb))"         >> "$CASAMS_ScriptName.py"
-    #echo "            if os.path.isfile('$CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb)):"    >> "$CASAMS_ScriptName.py"
-    #echo "                os.system('rm $CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb))"      >> "$CASAMS_ScriptName.py"
-    #echo "            continue"                                                                                             >> "$CASAMS_ScriptName.py"
-    #echo "        tb1.close()"                                                                                              >> "$CASAMS_ScriptName.py"
-    #
-    echo "        # "                                                                                                       >> "$CASAMS_ScriptName.py"
-    echo "        # clean old files"                                                                                        >> "$CASAMS_ScriptName.py"
-    echo "        if os.path.isfile('$CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb)):"           >> "$CASAMS_ScriptName.py"
-    echo "            os.system('rm $CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb))"             >> "$CASAMS_ScriptName.py"
-    echo "        if os.path.isfile('$CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb)):"        >> "$CASAMS_ScriptName.py"
-    echo "            os.system('rm $CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb))"          >> "$CASAMS_ScriptName.py"
-    echo "        # then get the flag in those not-completely-flagged rows "                                                >> "$CASAMS_ScriptName.py"
-    echo "        # "                                                                                                       >> "$CASAMS_ScriptName.py"
-    echo "        # select data rows which are not completely flagged or nonflagged"                                        >> "$CASAMS_ScriptName.py" 
-    echo "        tb2 = tb.query('FLAG_ROW==FALSE' + ' AND '\\"                                                             >> "$CASAMS_ScriptName.py" 
-    echo "                       'ntrue(FLAG)>0' + ' AND '\\"                                                               >> "$CASAMS_ScriptName.py" 
-    echo "                       'nfalse(FLAG)>0' + ' AND '\\"                                                              >> "$CASAMS_ScriptName.py" 
-    echo "                       'DATA_DESC_ID==%d'%(spw_numb) + ' AND '\\"                                                 >> "$CASAMS_ScriptName.py" 
-    echo "                       'FIELD_ID==%d'%(field_numb), \\"                                                           >> "$CASAMS_ScriptName.py" 
-    echo "                       style='python')"                                                                           >> "$CASAMS_ScriptName.py"
-    echo "        if tb2.nrows() == 0:"                                                                                     >> "$CASAMS_ScriptName.py" 
-    echo "            continue"                                                                                             >> "$CASAMS_ScriptName.py" 
-    echo "        # "                                                                                                       >> "$CASAMS_ScriptName.py"
-    echo "        # prepare to write to file"                                                                               >> "$CASAMS_ScriptName.py"
-    echo "        fo1 = open('$CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb),'wb')"              >> "$CASAMS_ScriptName.py"
-    echo "        fo2 = open('$CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb),'wb')"           >> "$CASAMS_ScriptName.py"
-    echo "        # "                                                                                                       >> "$CASAMS_ScriptName.py"
-    echo "        # get 'FLAG' column for all data rows, note that the 'FLAG' data array has a shape of (2, nchan, nrow)"   >> "$CASAMS_ScriptName.py"
-    echo "        vis_flag_data = tb2.getcol('FLAG')"                                                                       >> "$CASAMS_ScriptName.py"
-    echo "        # "                                                                                                       >> "$CASAMS_ScriptName.py"
-    echo "        # check completely flagged channels"                                                                      >> "$CASAMS_ScriptName.py"
-    echo "        if len(vis_flag_data.shape) == 3:"                                                                        >> "$CASAMS_ScriptName.py"
-    echo "            vis_flag_mask = numpy.all(vis_flag_data, axis=(0,2))"                                                 >> "$CASAMS_ScriptName.py"
-    echo "        elif len(vis_flag_data.shape) == 2:"                                                                      >> "$CASAMS_ScriptName.py"
-    echo "            vis_flag_mask = numpy.all(vis_flag_data, axis=(1,))"                                                  >> "$CASAMS_ScriptName.py"
-    echo "        else:"                                                                                                    >> "$CASAMS_ScriptName.py"
-    echo "            print('Error! wrong data dimension %s!'%(str(vis_flag_data.shape)))"                                  >> "$CASAMS_ScriptName.py"
-    echo "            sys.exit()"                                                                                           >> "$CASAMS_ScriptName.py"
-    echo "        # "                                                                                                       >> "$CASAMS_ScriptName.py"
-    echo "        # It seems writting each channel number seperately will cause CASA not able to work properly, "           >> "$CASAMS_ScriptName.py"
-    echo "        # so we have to merge consecutive channels and write them into channel ranges, "                          >> "$CASAMS_ScriptName.py"
-    echo "        # e.g., write [0,1,2,3,60,61,62,63] as '0~3;60~63'"                                                       >> "$CASAMS_ScriptName.py"
-    echo "        # Our way is to check each element whether its difference to left and right elements are both 1."         >> "$CASAMS_ScriptName.py"
-    echo "        vis_chan_flagged_str = ''"                                                                                >> "$CASAMS_ScriptName.py"
-    echo "        if numpy.count_nonzero(vis_flag_mask) > 0:"                                                               >> "$CASAMS_ScriptName.py"
-    echo "            vis_chan_flagged = numpy.arange(len(vis_flag_mask))[vis_flag_mask]"                                   >> "$CASAMS_ScriptName.py"
-    echo "            if len(vis_chan_flagged) == 1:"                                                                       >> "$CASAMS_ScriptName.py"
-    echo "                vis_chan_flagged_str = '%d'%(vis_chan_flagged)"                                                   >> "$CASAMS_ScriptName.py"
-    echo "            else:"                                                                                                >> "$CASAMS_ScriptName.py"
-    echo "                vis_chan_flagged_ediff1d_left = numpy.ediff1d(numpy.concatenate(\\"                               >> "$CASAMS_ScriptName.py"
-    echo "                                                (vis_chan_flagged,[vis_chan_flagged[-1]])))"                      >> "$CASAMS_ScriptName.py"
-    echo "                                                # [0,1,2,3,60,61,62,63,63] ediff1d=[1,1,1,57,1,1,1,0]"            >> "$CASAMS_ScriptName.py"
-    echo "                vis_chan_flagged_ediff1d_right = numpy.ediff1d(numpy.concatenate(\\"                              >> "$CASAMS_ScriptName.py"
-    echo "                                                 ([vis_chan_flagged[0]],vis_chan_flagged)))"                      >> "$CASAMS_ScriptName.py"
-    echo "                                                # [0,0,1,2,3,60,61,62,63]  ediff1d=[0,1,1,1,57,1,1,1]"            >> "$CASAMS_ScriptName.py"
-    echo "                vis_chan_flagged_nonconsecu_mask = numpy.logical_or(\\"                                           >> "$CASAMS_ScriptName.py"
-    echo "                                                 vis_chan_flagged_ediff1d_left != 1, \\"                          >> "$CASAMS_ScriptName.py"
-    echo "                                                 vis_chan_flagged_ediff1d_right != 1)"                            >> "$CASAMS_ScriptName.py"
-    echo "                                                 # [T,F,F,T,T,F,F,T] [0,F,F,3,60,F,F,63]"                         >> "$CASAMS_ScriptName.py"
-    echo "                vis_chan_flagged_nonconsecu = vis_chan_flagged[vis_chan_flagged_nonconsecu_mask]"                 >> "$CASAMS_ScriptName.py"
-    echo "                vis_chan_flagged_str = ';'.join(['%d~%d'%(tstr1,tstr2) \\"                                        >> "$CASAMS_ScriptName.py"
-    echo "                                                 for tstr1,tstr2 in zip(\\"                                       >> "$CASAMS_ScriptName.py"
-    echo "                                                  vis_chan_flagged_nonconsecu[::2],\\"                            >> "$CASAMS_ScriptName.py"
-    echo "                                                  vis_chan_flagged_nonconsecu[1::2]\\"                           >> "$CASAMS_ScriptName.py"
-    echo "                                                 )])"                                                             >> "$CASAMS_ScriptName.py"
-    echo "        # "                                                                                                       >> "$CASAMS_ScriptName.py"
-    echo "        if numpy.count_nonzero(~vis_flag_mask) > 0:"                                                              >> "$CASAMS_ScriptName.py"
-    echo "            vis_chan_nonflagged = numpy.arange(len(vis_flag_mask))[~vis_flag_mask]"                               >> "$CASAMS_ScriptName.py"
-    echo "            if len(vis_chan_nonflagged) == 1:"                                                                    >> "$CASAMS_ScriptName.py"
-    echo "                vis_chan_nonflagged_str = '%d'%(vis_chan_nonflagged)"                                             >> "$CASAMS_ScriptName.py"
-    echo "            else:"                                                                                                >> "$CASAMS_ScriptName.py"
-    echo "                vis_chan_nonflagged_ediff1d_left = numpy.ediff1d(numpy.concatenate(\\"                            >> "$CASAMS_ScriptName.py"
-    echo "                                                   (vis_chan_nonflagged,[vis_chan_nonflagged[-1]])))"             >> "$CASAMS_ScriptName.py"
-    echo "                vis_chan_nonflagged_ediff1d_right = numpy.ediff1d(numpy.concatenate(\\"                           >> "$CASAMS_ScriptName.py"
-    echo "                                                    ([vis_chan_nonflagged[0]],vis_chan_nonflagged)))"             >> "$CASAMS_ScriptName.py"
-    echo "                vis_chan_nonflagged_nonconsecu_mask = numpy.logical_or(\\"                                        >> "$CASAMS_ScriptName.py"
-    echo "                                                      vis_chan_nonflagged_ediff1d_left != 1, \\"                  >> "$CASAMS_ScriptName.py"
-    echo "                                                      vis_chan_nonflagged_ediff1d_right != 1)"                    >> "$CASAMS_ScriptName.py"
-    echo "                vis_chan_nonflagged_nonconsecu = vis_chan_nonflagged[vis_chan_nonflagged_nonconsecu_mask]"        >> "$CASAMS_ScriptName.py"
-    echo "                vis_chan_nonflagged_str = ';'.join(['%d~%d'%(tstr1,tstr2) \\"                                     >> "$CASAMS_ScriptName.py"
-    echo "                                                   for tstr1,tstr2 in zip(\\"                                     >> "$CASAMS_ScriptName.py"
-    echo "                                                    vis_chan_nonflagged_nonconsecu[::2],\\"                       >> "$CASAMS_ScriptName.py"
-    echo "                                                    vis_chan_nonflagged_nonconsecu[1::2]\\"                       >> "$CASAMS_ScriptName.py"
-    echo "                                                   )])"                                                           >> "$CASAMS_ScriptName.py"
-    echo "        # "                                                                                                       >> "$CASAMS_ScriptName.py"
-    echo "        fo1.write(vis_chan_flagged_str+'\n')"                                                                     >> "$CASAMS_ScriptName.py"
-    echo "        fo2.write(vis_chan_nonflagged_str+'\n')"                                                                  >> "$CASAMS_ScriptName.py"
-    echo "        fo1.close()"                                                                                              >> "$CASAMS_ScriptName.py"
-    echo "        fo2.close()"                                                                                              >> "$CASAMS_ScriptName.py"
-    echo "        tb2.close()"                                                                                              >> "$CASAMS_ScriptName.py"
     
-    #echo "        #if True:"                                                                             >> "$CASAMS_ScriptName.py" # 20180613 debug
-    #echo "            # then read flagged channels and write to file"                                  >> "$CASAMS_ScriptName.py"
-    #echo "            fo1 = open('$CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb),'wb')"         >> "$CASAMS_ScriptName.py"
-    #echo "            fo2 = open('$CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb),'wb')"      >> "$CASAMS_ScriptName.py"
-    #echo "            loop_row = []"                                                                   >> "$CASAMS_ScriptName.py"
-    #echo "            if tb2.nrows()>2: loop_row.append(int((tb2.nrows()-1)/2.0))"                     >> "$CASAMS_ScriptName.py"
-    #echo "            if tb2.nrows()>4: loop_row.append(int((tb2.nrows()-1)/4.0*3))"                   >> "$CASAMS_ScriptName.py"
-    #echo "            if tb2.nrows()>4: loop_row.append(int((tb2.nrows()-1)/4.0*1))"                   >> "$CASAMS_ScriptName.py"
-    #echo "            if tb2.nrows()>1: loop_row.append(tb2.nrows()-1)"                                >> "$CASAMS_ScriptName.py"
-    #echo "            loop_row.append(0) # just loop a few rows plus the first row"                    >> "$CASAMS_ScriptName.py"
-    #echo "            # it seems writting each channel number seperately will cause CASA "             >> "$CASAMS_ScriptName.py"
-    #echo "            # not able to output anything, we have to write channel ranges."                 >> "$CASAMS_ScriptName.py"
-    #echo "            for k in loop_row:"                                                              >> "$CASAMS_ScriptName.py"
-    #echo "                vis_flag = tb2.getcell('FLAG', k)"                                           >> "$CASAMS_ScriptName.py"
-    ##echo "                has_written_line_fo1 = False"                                                >> "$CASAMS_ScriptName.py"
-    ##echo "                has_written_line_fo2 = False"                                                >> "$CASAMS_ScriptName.py"
-    ##echo "                for j in range(len(vis_flag[0])):"                                           >> "$CASAMS_ScriptName.py"
-    ##echo "                    # if either stokes is flagged"                                           >> "$CASAMS_ScriptName.py"
-    ##echo "                    if (vis_flag[0][j] or vis_flag[1][j]):"                                  >> "$CASAMS_ScriptName.py"
-    ##echo "                        if has_written_line_fo1 == False:"                                   >> "$CASAMS_ScriptName.py"
-    ##echo "                            fo1.write('%d'%(j))"                                             >> "$CASAMS_ScriptName.py"
-    ##echo "                        else:"                                                               >> "$CASAMS_ScriptName.py"
-    ##echo "                            fo1.write(';%d'%(j))"                                            >> "$CASAMS_ScriptName.py" # NOTE ’;’ to separate channel selections, see https://casa.nrao.edu/docs/taskref/exportuvfits-task.html
-    ##echo "                        has_written_line_fo1 = True"                                         >> "$CASAMS_ScriptName.py"
-    ##echo "                    else:"                                                                   >> "$CASAMS_ScriptName.py"
-    ##echo "                        if has_written_line_fo2 == False:"                                   >> "$CASAMS_ScriptName.py"
-    ##echo "                            fo2.write('%d'%(j))"                                             >> "$CASAMS_ScriptName.py"
-    ##echo "                        else:"                                                               >> "$CASAMS_ScriptName.py"
-    ##echo "                            fo2.write(';%d'%(j))"                                            >> "$CASAMS_ScriptName.py" # NOTE ’;’ to separate channel selections, see https://casa.nrao.edu/docs/taskref/exportuvfits-task.html
-    ##echo "                        has_written_line_fo2 = True"                                         >> "$CASAMS_ScriptName.py"
-    ##echo "                fo1.write('\n')"                                                             >> "$CASAMS_ScriptName.py"
-    ##echo "                fo2.write('\n')"                                                             >> "$CASAMS_ScriptName.py"
-    #echo "                has_written_fo1 = False"                                                      >> "$CASAMS_ScriptName.py"
-    #echo "                has_written_fo2 = False"                                                      >> "$CASAMS_ScriptName.py"
-    #echo "                for j in range(len(vis_flag[0])):"                                            >> "$CASAMS_ScriptName.py"
-    #echo "                    has_changed_flag = False"                                                 >> "$CASAMS_ScriptName.py"
-    #echo "                    # check if flag is changed at this channel"                               >> "$CASAMS_ScriptName.py"
-    #echo "                    if j == 0:"                                                               >> "$CASAMS_ScriptName.py"
-    #echo "                        has_changed_flag = True"                                              >> "$CASAMS_ScriptName.py"
-    #echo "                    else:"                                                                    >> "$CASAMS_ScriptName.py"
-    #echo "                        if (vis_flag[0][j] or vis_flag[1][j]) != \\"                          >> "$CASAMS_ScriptName.py"
-    #echo "                           (vis_flag[0][j-1] or vis_flag[1][j-1]) :"                          >> "$CASAMS_ScriptName.py"
-    #echo "                            has_changed_flag = True"                                          >> "$CASAMS_ScriptName.py"
-    #echo "                    # "                                                                       >> "$CASAMS_ScriptName.py"
-    #echo "                    # if flag is changed at this channel j, then "                            >> "$CASAMS_ScriptName.py"
-    #echo "                    # we mark j-1 as the ending of last channel range, and "                  >> "$CASAMS_ScriptName.py"
-    #echo "                    # we mark j as the beginning of the next channel range."                  >> "$CASAMS_ScriptName.py"
-    #echo "                    if has_changed_flag == True:"                                             >> "$CASAMS_ScriptName.py"
-    #echo "                        if j > 0:"                                                            >> "$CASAMS_ScriptName.py"
-    #echo "                            if (vis_flag[0][j-1] or vis_flag[1][j-1]):"                       >> "$CASAMS_ScriptName.py"
-    #echo "                                fo1.write('~%d'%(j-1))"                                       >> "$CASAMS_ScriptName.py"
-    #echo "                                has_written_fo1 = True"                                       >> "$CASAMS_ScriptName.py"
-    #echo "                            else:"                                                            >> "$CASAMS_ScriptName.py"
-    #echo "                                fo2.write('~%d'%(j-1))"                                       >> "$CASAMS_ScriptName.py"
-    #echo "                                has_written_fo2 = True"                                       >> "$CASAMS_ScriptName.py"
-    #echo "                    # "                                                                       >> "$CASAMS_ScriptName.py"
-    #echo "                    if has_changed_flag == True or (j == len(vis_flag[0])-1):"                >> "$CASAMS_ScriptName.py"
-    #echo "                        if (vis_flag[0][j] or vis_flag[1][j]):"                               >> "$CASAMS_ScriptName.py"
-    #echo "                            if has_written_fo1 == True:"                                      >> "$CASAMS_ScriptName.py"
-    #echo "                                fo1.write(';')"                                               >> "$CASAMS_ScriptName.py"
-    #echo "                            fo1.write('%d'%(j))"                                              >> "$CASAMS_ScriptName.py"
-    #echo "                            has_written_fo1 = True"                                           >> "$CASAMS_ScriptName.py"
-    #echo "                        else:"                                                                >> "$CASAMS_ScriptName.py"
-    #echo "                            if has_written_fo2 == True:"                                      >> "$CASAMS_ScriptName.py"
-    #echo "                                fo2.write(';')"                                               >> "$CASAMS_ScriptName.py"
-    #echo "                            fo2.write('%d'%(j))"                                              >> "$CASAMS_ScriptName.py"
-    #echo "                            has_written_fo2 = True"                                           >> "$CASAMS_ScriptName.py"
-    #echo "                fo1.write('\n')"                                                              >> "$CASAMS_ScriptName.py"
-    #echo "                fo2.write('\n')"                                                              >> "$CASAMS_ScriptName.py"
-    #echo "            fo1.close()"                                                                      >> "$CASAMS_ScriptName.py"
-    #echo "            fo2.close()"                                                                      >> "$CASAMS_ScriptName.py"
-    #echo "        tb2.close()"                                                                          >> "$CASAMS_ScriptName.py"  # see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1
-    #<old-method-20180322>#echo "loop_row = 0"                                                                 >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "while loop_row < tb.nrows():"                                                 >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "    if tb.getcell('FLAG_ROW',loop_row) == 0:"                                 >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "        vis_desc = tb.getcell('DATA_DESC_ID',loop_row)"                       >> "$CASAMS_ScriptName.py" # DATA_DESC_ID column is referred to the DATA_DESCRIPTION table, it is an integer, and usually it distinguishes spws
-    #<old-method-20180322>#echo "        vis_flag = tb.getcell('FLAG',loop_row)"                               >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "        vis_spwt = 'spw%0d'%(list_vis_desc_spwid[vis_desc])"                  >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "        for i in range(len(vis_flag)):"                                       >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "            if vis_flag[i][0] or vis_flag[i][1]:"                             >> "$CASAMS_ScriptName.py" # note that each vis_flag has two correlations (stokes) RR LL
-    #<old-method-20180322>#echo "                if vis_spwt not in list_chan_flagged:"                        >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "                    list_chan_flagged[vis_spwt] = [i]"                        >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "                else:"                                                        >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "                    list_chan_flagged[vis_spwt].append(i)"                    >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "            else:"                                                            >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "                if vis_spwt not in list_chan_nonflagged:"                     >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "                    list_chan_nonflagged[vis_spwt] = [i]"                     >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "                else:"                                                        >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "                    list_chan_nonflagged[vis_spwt].append(i)"                 >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "        check_done = True"                                                    >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "        for i in range(len(list_vis_desc_spwid)):"                            >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "            vis_spwt = 'spw%0d'%(list_vis_desc_spwid[i])"                     >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "            if vis_spwt not in list_chan_nonflagged:"                         >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "                check_done = False"                                           >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "        if check_done:"                                                       >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "            break"                                                            >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "    loop_row = loop_row + 1"                                                  >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "#"                                                                            >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "for i in range(len(list_vis_desc_spwid)): "                                   >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "    vis_spwt = 'spw%0d'%(list_vis_desc_spwid[i])"                             >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "    # if we found some flagged channels for each spw"                         >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "    if len(list_chan_flagged[vis_spwt]) > 0:"                                 >> "$CASAMS_ScriptName.py" # if found some flagged channels
-    #<old-method-20180322>#echo "        fo = open('$CASAMS_ScriptName.chan.flagged.spw%d.txt'%(i),'wb')"      >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "        for j in range(len(list_chan_flagged[vis_spwt])):"                    >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "            if j == 0:"                                                       >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "                fo.write('%d'%(list_chan_flagged[vis_spwt][j]))"              >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "            else:"                                                            >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "                fo.write(',%d'%(list_chan_flagged[vis_spwt][j]))"             >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "        fo.write('\n')"                                                       >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "        fo.close()"                                                           >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "    elif os.path.isfile('$CASAMS_ScriptName.chan.flagged.spw%d.txt'%(i)):"    >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "        os.system('rm $CASAMS_ScriptName.chan.flagged.spw%d.txt'%(i))"        >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "    # if we found nonflagged channels for each spw"                           >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "    if len(list_chan_nonflagged[vis_spwt]) > 0:"                              >> "$CASAMS_ScriptName.py" # if found some flagged channels
-    #<old-method-20180322>#echo "        fo = open('$CASAMS_ScriptName.chan.nonflagged.spw%d.txt'%(i),'wb')"   >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "        for j in range(len(list_chan_nonflagged[vis_spwt])):"                 >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "            if j == 0:"                                                       >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "                fo.write('%d'%(list_chan_nonflagged[vis_spwt][j]))"           >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "            else:"                                                            >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "                fo.write(',%d'%(list_chan_nonflagged[vis_spwt][j]))"          >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "        fo.write('\n')"                                                       >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "        fo.close()"                                                           >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "    elif os.path.isfile('$CASAMS_ScriptName.chan.nonflagged.spw%d.txt'%(i)):" >> "$CASAMS_ScriptName.py"
-    #<old-method-20180322>#echo "        os.system('rm $CASAMS_ScriptName.chan.nonflagged.spw%d.txt'%(i))"     >> "$CASAMS_ScriptName.py"
-    fi
-    echo "#"                                                                            >> "$CASAMS_ScriptName.py"
-    echo "tb.close()"                                                                   >> "$CASAMS_ScriptName.py"
-    echo ""                                                                             >> "$CASAMS_ScriptName.py"
-    echo "Running CASA ($CASA_COMMAND) to read measurement set data tables: "
-    echo "    \"${CASAMS_VIS}\"/SOURCE"
-    echo "    \"${CASAMS_VIS}\"/SPECTRAL_WINDOW"
-    echo "Running "
-    echo "    $CASA_COMMAND --nogui --log2term -c \"$CASAMS_ScriptName.py\" > \"$CASAMS_ScriptName.log\" 2>&1"
+    if [[ ! -f "$CASAMS_ScriptName.py" ]] || \
+       [[ ! -f "$CASAMS_ScriptName.done" ]] || \
+       [[ ! -f "$CASAMS_ScriptName.field.names.txt" ]] || \
+       [[ ! -f "$CASAMS_ScriptName.chan.width.txt" ]] || \
+       [[ ! -f "$CASAMS_ScriptName.chan.freq.ref.txt" ]] || \
+       [[ ! -f "$CASAMS_ScriptName.spw.txt" ]] || \
+       [[ ! -f "$CASAMS_ScriptName.spw.name.txt" ]] || \
+       [[ ! -f "$CASAMS_ScriptName.spw.bandwidth.txt" ]] || \
+       [[ ! -f "$CASAMS_ScriptName.datatype.txt" ]] || \
+       [[ $CASAMS_OVERWRITE -ge 2 ]]; then
+        
+        echo "# This script needs to be executed by CASA as follows:"                       >  "$CASAMS_ScriptName.py"
+        echo "# casa --nogui --log2term -c \"execfile('$CASAMS_ScriptName.py')\""           >> "$CASAMS_ScriptName.py"
+        echo "# casa --nogui --log2term -c \"exec(open('$CASAMS_ScriptName.py').read())\""  >> "$CASAMS_ScriptName.py"
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "import os, sys"                                                               >> "$CASAMS_ScriptName.py" #<20180321>#
+        echo "import numpy"                                                                 >> "$CASAMS_ScriptName.py" #<20180321>#
+        echo "import json"                                                                  >> "$CASAMS_ScriptName.py" #<20180321>#
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "#####################"                                                        >> "$CASAMS_ScriptName.py"
+        echo "# Read SOURCE table #"                                                        >> "$CASAMS_ScriptName.py"
+        echo "#####################"                                                        >> "$CASAMS_ScriptName.py"
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "tb.open('${CASAMS_VIS}/SOURCE')"                                              >> "$CASAMS_ScriptName.py" # CASA table operation see "https://casa.nrao.edu/docs/CasaRef/table-Module.html"
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        #echo "fo = open('$CASAMS_ScriptName.name.txt','wb')"                                >> "$CASAMS_ScriptName.py"
+        #echo "fo.write('\n'.join(list(set(tb.getcol('NAME')))))"                            >> "$CASAMS_ScriptName.py"
+        #echo "fo.write('\n')"                                                               >> "$CASAMS_ScriptName.py"
+        #echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        #echo "fo = open('$CASAMS_ScriptName.field.txt','wb')"                               >> "$CASAMS_ScriptName.py"
+        #echo "fo.write('\n'.join(list(set(map(str,tb.getcol('SOURCE_ID'))))))"              >> "$CASAMS_ScriptName.py"
+        #echo "fo.write('\n')"                                                               >> "$CASAMS_ScriptName.py"
+        #echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo "list_all_spw = tb.getcol('SPECTRAL_WINDOW_ID')"                               >> "$CASAMS_ScriptName.py"
+        echo "list_all_sou = tb.getcol('NAME')"                                             >> "$CASAMS_ScriptName.py"
+        echo "list_uni_sou = list(set(list_all_sou))"                                       >> "$CASAMS_ScriptName.py"
+        #echo "fo = open('$CASAMS_ScriptName.source.spw.uniq.txt','wb')"                     >> "$CASAMS_ScriptName.py"
+        #echo "for i in range(len(list_uni_sou)): "                                          >> "$CASAMS_ScriptName.py"
+        #echo "    for j in range(len(list_all_sou)): "                                      >> "$CASAMS_ScriptName.py"
+        #echo "        if list_all_sou[j] == list_uni_sou[i]: "                              >> "$CASAMS_ScriptName.py"
+        #echo "            fo.write('%s '%(list_all_spw[j]))"                                >> "$CASAMS_ScriptName.py"
+        #echo "    fo.write('\n')"                                                           >> "$CASAMS_ScriptName.py"
+        #echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        #echo "fo = open('$CASAMS_ScriptName.source.name.uniq.txt','wb')"                    >> "$CASAMS_ScriptName.py"
+        #echo "for i in range(len(list_uni_sou)): "                                          >> "$CASAMS_ScriptName.py"
+        #echo "    fo.write('%s\n'%(list_uni_sou[i]))"                                       >> "$CASAMS_ScriptName.py"
+        #echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo "fo = open('$CASAMS_ScriptName.source.spw.txt','wb')"                          >> "$CASAMS_ScriptName.py"
+        echo "list_all = tb.getcol('SPECTRAL_WINDOW_ID')"                                   >> "$CASAMS_ScriptName.py"
+        echo "for i in range(len(list_all)): "                                              >> "$CASAMS_ScriptName.py"
+        echo "    fo.write('%d\n'%(list_all[i]))"                                           >> "$CASAMS_ScriptName.py"
+        echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo "fo = open('$CASAMS_ScriptName.source.name.txt','wb')"                         >> "$CASAMS_ScriptName.py"
+        echo "list_all = tb.getcol('NAME')"                                                 >> "$CASAMS_ScriptName.py"
+        echo "for i in range(tb.nrows()): "                                                 >> "$CASAMS_ScriptName.py"
+        echo "    fo.write('%s\n'%(list_all[i]))"                                           >> "$CASAMS_ScriptName.py"
+        echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo "fo = open('$CASAMS_ScriptName.source.id.txt','wb')"                           >> "$CASAMS_ScriptName.py"
+        echo "list_all = tb.getcol('SOURCE_ID')"                                            >> "$CASAMS_ScriptName.py"
+        echo "for i in range(tb.nrows()): "                                                 >> "$CASAMS_ScriptName.py"
+        echo "    fo.write('%d\n'%(list_all[i]))"                                           >> "$CASAMS_ScriptName.py"
+        echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        #echo "fo = open('$CASAMS_ScriptName.source.freq.txt','wb')"                         >> "$CASAMS_ScriptName.py"
+        #echo "for i in range(tb.nrows()): "                                                 >> "$CASAMS_ScriptName.py"
+        #echo "    try:"                                                                     >> "$CASAMS_ScriptName.py"
+        #echo "        list_ref_feq = (tb.getcell('REST_FREQUENCY',i))[0]"                   >> "$CASAMS_ScriptName.py"
+        #echo "    except:"                                                                  >> "$CASAMS_ScriptName.py"
+        #echo "        list_ref_feq = 0.0"                                                   >> "$CASAMS_ScriptName.py"
+        #echo "    fo.write('%s\n'%(list_ref_feq))"                                          >> "$CASAMS_ScriptName.py"
+        #echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "tb.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "##############################"                                               >> "$CASAMS_ScriptName.py"
+        echo "# Read SPECTRAL_WINDOW table #"                                               >> "$CASAMS_ScriptName.py"
+        echo "##############################"                                               >> "$CASAMS_ScriptName.py"
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "tb.open('${CASAMS_VIS}/SPECTRAL_WINDOW')"                                     >> "$CASAMS_ScriptName.py"
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "fo = open('$CASAMS_ScriptName.spw.txt','wb')"                                 >> "$CASAMS_ScriptName.py"
+        echo "list_all_chn = tb.getcol('NUM_CHAN')"                                         >> "$CASAMS_ScriptName.py"
+        echo "for i in range(len(list_all_chn)):"                                           >> "$CASAMS_ScriptName.py"
+        echo "    fo.write('%d\n'%(i))"                                                     >> "$CASAMS_ScriptName.py"
+        echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo "fo = open('$CASAMS_ScriptName.spw.name.txt','wb')"                            >> "$CASAMS_ScriptName.py"
+        echo "list_all_str = tb.getcol('NAME')"                                             >> "$CASAMS_ScriptName.py"
+        echo "for i in range(len(list_all_str)):"                                           >> "$CASAMS_ScriptName.py"
+        echo "    fo.write('%s\n'%(list_all_str[i]))"                                       >> "$CASAMS_ScriptName.py"
+        echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo "fo = open('$CASAMS_ScriptName.spw.bandwidth.txt','wb')"                       >> "$CASAMS_ScriptName.py"
+        echo "list_all_chn = tb.getcol('TOTAL_BANDWIDTH')"                                  >> "$CASAMS_ScriptName.py"
+        echo "for i in range(len(list_all_chn)):"                                           >> "$CASAMS_ScriptName.py"
+        echo "    fo.write('%g\n'%(list_all_chn[i]))"                                       >> "$CASAMS_ScriptName.py"
+        echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo "fo = open('$CASAMS_ScriptName.chan.txt','wb')"                                >> "$CASAMS_ScriptName.py"
+        echo "list_all_chn = tb.getcol('NUM_CHAN')"                                         >> "$CASAMS_ScriptName.py"
+        echo "for i in range(len(list_all_chn)):"                                           >> "$CASAMS_ScriptName.py"
+        echo "    fo.write('%g\n'%(list_all_chn[i]))"                                       >> "$CASAMS_ScriptName.py"
+        echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo "fo = open('$CASAMS_ScriptName.chan.name.txt','wb')"                           >> "$CASAMS_ScriptName.py"
+        echo "list_all = tb.getcol('NAME')"                                                 >> "$CASAMS_ScriptName.py"
+        echo "for i in range(len(list_all)):"                                               >> "$CASAMS_ScriptName.py"
+        echo "    fo.write('%s\n'%(list_all[i]))"                                           >> "$CASAMS_ScriptName.py"
+        echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo "fo = open('$CASAMS_ScriptName.chan.width.txt','wb')"                          >> "$CASAMS_ScriptName.py"
+        echo "list_all = tb.getcol('NUM_CHAN')"                                             >> "$CASAMS_ScriptName.py"
+        echo "for i in range(len(list_all)):"                                               >> "$CASAMS_ScriptName.py"
+        echo "    fo.write('%d\n'%(list_all[i]))"                                           >> "$CASAMS_ScriptName.py"
+        echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo "fo = open('$CASAMS_ScriptName.chan.freq.ref.txt','wb')"                       >> "$CASAMS_ScriptName.py"
+        echo "list_all_chs = tb.getcol('REF_FREQUENCY')"                                    >> "$CASAMS_ScriptName.py"
+        echo "for i in range(len(list_all_chs)):"                                           >> "$CASAMS_ScriptName.py"
+        echo "    fo.write('%g\n'%(list_all_chs[i]))"                                       >> "$CASAMS_ScriptName.py"
+        echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo "for i in range(len(list_all_chs)): "                                          >> "$CASAMS_ScriptName.py"
+        echo "    fo = open('$CASAMS_ScriptName.chan.freq.spw%d.txt'%(i),'wb')"             >> "$CASAMS_ScriptName.py"
+        echo "    list_all_chk = tb.getcell('CHAN_FREQ',i)"                                 >> "$CASAMS_ScriptName.py"
+        echo "    for j in range(len(list_all_chk)): "                                      >> "$CASAMS_ScriptName.py"
+        echo "        fo.write('%0.10g\n'%(list_all_chk[j]))"                               >> "$CASAMS_ScriptName.py"
+        echo "    fo.close()"                                                               >> "$CASAMS_ScriptName.py"
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "tb.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "###############################"                                              >> "$CASAMS_ScriptName.py"
+        echo "# Read DATA_DESCRIPTION table #"                                              >> "$CASAMS_ScriptName.py"
+        echo "###############################"                                              >> "$CASAMS_ScriptName.py"
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "tb.open('${CASAMS_VIS}/DATA_DESCRIPTION')"                                    >> "$CASAMS_ScriptName.py"
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "if 'SPECTRAL_WINDOW_ID' in tb.colnames():"                                    >> "$CASAMS_ScriptName.py"
+        echo "    list_vis_desc_spwid = tb.getcol('SPECTRAL_WINDOW_ID')"                    >> "$CASAMS_ScriptName.py" # see "DATA_DESC_ID" documentation in https://casa.nrao.edu/casadocs-devel/stable/reference-material/measurement-set
+        echo "else:"                                                                        >> "$CASAMS_ScriptName.py"
+        echo "    list_vis_desc_spwid = [0]"                                                >> "$CASAMS_ScriptName.py"
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "tb.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "####################"                                                         >> "$CASAMS_ScriptName.py"
+        echo "# Read FIELD table #"                                                         >> "$CASAMS_ScriptName.py"
+        echo "####################"                                                         >> "$CASAMS_ScriptName.py"
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "tb.open('${CASAMS_VIS}/FIELD')"                                               >> "$CASAMS_ScriptName.py"
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "list_field_names = tb.getcol('NAME')"                                         >> "$CASAMS_ScriptName.py" # see "DATA_DESC_ID" documentation in https://casa.nrao.edu/casadocs-devel/stable/reference-material/measurement-set
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "fo = open('$CASAMS_ScriptName.field.names.txt','wb')"                         >> "$CASAMS_ScriptName.py"
+        echo "for i in range(len(list_field_names)):"                                       >> "$CASAMS_ScriptName.py"
+        echo "    fo.write('%s\n'%(list_field_names[i]))"                                   >> "$CASAMS_ScriptName.py"
+        echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "tb.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo "# "                                                                           >> "$CASAMS_ScriptName.py"
+        echo "##############################"                                               >> "$CASAMS_ScriptName.py"
+        echo "# Read CASAMS_VIS main table #"                                               >> "$CASAMS_ScriptName.py"
+        echo "##############################"                                               >> "$CASAMS_ScriptName.py"
+        echo "#"                                                                            >> "$CASAMS_ScriptName.py"
+        echo "tb.open('${CASAMS_VIS}')"                                                     >> "$CASAMS_ScriptName.py"
+        echo "#"                                                                            >> "$CASAMS_ScriptName.py"
+        echo "fo = open('$CASAMS_ScriptName.datatype.txt','wb')"                            >> "$CASAMS_ScriptName.py" # need to make sure that column corrected is not there
+        echo "list_col = tb.colnames()"                                                     >> "$CASAMS_ScriptName.py"
+        echo "if 'CORRECTED_DATA' in list_col: "                                            >> "$CASAMS_ScriptName.py"
+        echo "    fo.write('corrected\n')"                                                  >> "$CASAMS_ScriptName.py"
+        echo "else: "                                                                       >> "$CASAMS_ScriptName.py"
+        echo "    fo.write('data\n')"                                                       >> "$CASAMS_ScriptName.py"
+        echo "fo.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        if [[ $CASA_INP_SPLIT_TRIMCHAN -eq 1 ]] || [[ $CASA_INP_SPLIT_UNFLAGEDGECHAN -eq 1 ]]; then
+        echo "#"                                                                                                                >> "$CASAMS_ScriptName.py"
+        echo "# if user has input -trim-chan, then we will try to find out which channels are completely flagged, "             >> "$CASAMS_ScriptName.py"
+        echo "# then we will select only non-flagged channels for output."                                                      >> "$CASAMS_ScriptName.py"
+        echo "# we do this for all spws in 'list_vis_desc_spwid'"                                                               >> "$CASAMS_ScriptName.py"
+        echo "for ii in range(len(list_field_names)):"                                                                          >> "$CASAMS_ScriptName.py"
+        echo "    field_name = list_field_names[ii]"                                                                            >> "$CASAMS_ScriptName.py"
+        echo "    field_numb = ii"                                                                                              >> "$CASAMS_ScriptName.py"
+        echo "    for i in range(len(list_vis_desc_spwid)):"                                                                    >> "$CASAMS_ScriptName.py"
+        echo "        spw_numb = list_vis_desc_spwid[i]"                                                                        >> "$CASAMS_ScriptName.py"
+        echo "        spw_name = 'spw%0d'%(list_vis_desc_spwid[i])"                                                             >> "$CASAMS_ScriptName.py"
+        #
+        #echo "        # check if there are any flagged channels in any row which are not completely flagged"                    >> "$CASAMS_ScriptName.py"
+        #echo "        tb1 = tb.query('FLAG_ROW==FALSE' + ' AND '\\"                                                             >> "$CASAMS_ScriptName.py" 
+        #echo "                       'ntrue(FLAG)>0' + ' AND '\\"                                                               >> "$CASAMS_ScriptName.py" 
+        #echo "                       'DATA_DESC_ID==%d'%(spw_numb) + ' AND '\\"                                                 >> "$CASAMS_ScriptName.py" 
+        #echo "                       'FIELD_ID==%d'%(field_numb), \\"                                                           >> "$CASAMS_ScriptName.py" 
+        #echo "                       style='python') # style='python' means row number is 0-based"                              >> "$CASAMS_ScriptName.py"
+        #echo "        if tb1.nrows() == 0:"                                                                                     >> "$CASAMS_ScriptName.py"
+        #echo "            if os.path.isfile('$CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb)):"       >> "$CASAMS_ScriptName.py"
+        #echo "                os.system('rm $CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb))"         >> "$CASAMS_ScriptName.py"
+        #echo "            if os.path.isfile('$CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb)):"    >> "$CASAMS_ScriptName.py"
+        #echo "                os.system('rm $CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb))"      >> "$CASAMS_ScriptName.py"
+        #echo "            continue"                                                                                             >> "$CASAMS_ScriptName.py"
+        #echo "        tb1.close()"                                                                                              >> "$CASAMS_ScriptName.py"
+        #
+        echo "        # "                                                                                                       >> "$CASAMS_ScriptName.py"
+        echo "        # clean old files"                                                                                        >> "$CASAMS_ScriptName.py"
+        echo "        if os.path.isfile('$CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb)):"           >> "$CASAMS_ScriptName.py"
+        echo "            os.system('rm $CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb))"             >> "$CASAMS_ScriptName.py"
+        echo "        if os.path.isfile('$CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb)):"        >> "$CASAMS_ScriptName.py"
+        echo "            os.system('rm $CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb))"          >> "$CASAMS_ScriptName.py"
+        echo "        # then get the flag in those not-completely-flagged rows "                                                >> "$CASAMS_ScriptName.py"
+        echo "        # "                                                                                                       >> "$CASAMS_ScriptName.py"
+        echo "        # select data rows which are not completely flagged or nonflagged"                                        >> "$CASAMS_ScriptName.py" 
+        echo "        tb2 = tb.query('FLAG_ROW==FALSE' + ' AND '\\"                                                             >> "$CASAMS_ScriptName.py" 
+        echo "                       'ntrue(FLAG)>0' + ' AND '\\"                                                               >> "$CASAMS_ScriptName.py" 
+        echo "                       'nfalse(FLAG)>0' + ' AND '\\"                                                              >> "$CASAMS_ScriptName.py" 
+        echo "                       'DATA_DESC_ID==%d'%(spw_numb) + ' AND '\\"                                                 >> "$CASAMS_ScriptName.py" 
+        echo "                       'FIELD_ID==%d'%(field_numb), \\"                                                           >> "$CASAMS_ScriptName.py" 
+        echo "                       style='python')"                                                                           >> "$CASAMS_ScriptName.py"
+        echo "        if tb2.nrows() == 0:"                                                                                     >> "$CASAMS_ScriptName.py" 
+        echo "            continue"                                                                                             >> "$CASAMS_ScriptName.py" 
+        echo "        # "                                                                                                       >> "$CASAMS_ScriptName.py"
+        echo "        # prepare to write to file"                                                                               >> "$CASAMS_ScriptName.py"
+        echo "        fo1 = open('$CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb),'wb')"              >> "$CASAMS_ScriptName.py"
+        echo "        fo2 = open('$CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb),'wb')"           >> "$CASAMS_ScriptName.py"
+        echo "        # "                                                                                                       >> "$CASAMS_ScriptName.py"
+        echo "        # get 'FLAG' column for all data rows, note that the 'FLAG' data array has a shape of (2, nchan, nrow)"   >> "$CASAMS_ScriptName.py"
+        echo "        vis_flag_data = tb2.getcol('FLAG')"                                                                       >> "$CASAMS_ScriptName.py"
+        echo "        # "                                                                                                       >> "$CASAMS_ScriptName.py"
+        echo "        # check completely flagged channels"                                                                      >> "$CASAMS_ScriptName.py"
+        echo "        if len(vis_flag_data.shape) == 3:"                                                                        >> "$CASAMS_ScriptName.py"
+        echo "            vis_flag_mask = numpy.all(vis_flag_data, axis=(0,2))"                                                 >> "$CASAMS_ScriptName.py"
+        echo "        elif len(vis_flag_data.shape) == 2:"                                                                      >> "$CASAMS_ScriptName.py"
+        echo "            vis_flag_mask = numpy.all(vis_flag_data, axis=(1,))"                                                  >> "$CASAMS_ScriptName.py"
+        echo "        else:"                                                                                                    >> "$CASAMS_ScriptName.py"
+        echo "            print('Error! wrong data dimension %s!'%(str(vis_flag_data.shape)))"                                  >> "$CASAMS_ScriptName.py"
+        echo "            sys.exit()"                                                                                           >> "$CASAMS_ScriptName.py"
+        echo "        # "                                                                                                       >> "$CASAMS_ScriptName.py"
+        echo "        # It seems writting each channel number seperately will cause CASA not able to work properly, "           >> "$CASAMS_ScriptName.py"
+        echo "        # so we have to merge consecutive channels and write them into channel ranges, "                          >> "$CASAMS_ScriptName.py"
+        echo "        # e.g., write [0,1,2,3,60,61,62,63] as '0~3;60~63'"                                                       >> "$CASAMS_ScriptName.py"
+        echo "        # Our way is to check each element whether its difference to left and right elements are both 1."         >> "$CASAMS_ScriptName.py"
+        echo "        vis_chan_flagged_str = ''"                                                                                >> "$CASAMS_ScriptName.py"
+        echo "        if numpy.count_nonzero(vis_flag_mask) > 0:"                                                               >> "$CASAMS_ScriptName.py"
+        echo "            vis_chan_flagged = numpy.arange(len(vis_flag_mask))[vis_flag_mask]"                                   >> "$CASAMS_ScriptName.py"
+        echo "            if len(vis_chan_flagged) == 1:"                                                                       >> "$CASAMS_ScriptName.py"
+        echo "                vis_chan_flagged_str = '%d'%(vis_chan_flagged)"                                                   >> "$CASAMS_ScriptName.py"
+        echo "            else:"                                                                                                >> "$CASAMS_ScriptName.py"
+        echo "                vis_chan_flagged_ediff1d_left = numpy.ediff1d(numpy.concatenate(\\"                               >> "$CASAMS_ScriptName.py"
+        echo "                                                (vis_chan_flagged,[vis_chan_flagged[-1]])))"                      >> "$CASAMS_ScriptName.py"
+        echo "                                                # [0,1,2,3,60,61,62,63,63] ediff1d=[1,1,1,57,1,1,1,0]"            >> "$CASAMS_ScriptName.py"
+        echo "                vis_chan_flagged_ediff1d_right = numpy.ediff1d(numpy.concatenate(\\"                              >> "$CASAMS_ScriptName.py"
+        echo "                                                 ([vis_chan_flagged[0]],vis_chan_flagged)))"                      >> "$CASAMS_ScriptName.py"
+        echo "                                                # [0,0,1,2,3,60,61,62,63]  ediff1d=[0,1,1,1,57,1,1,1]"            >> "$CASAMS_ScriptName.py"
+        echo "                vis_chan_flagged_nonconsecu_mask = numpy.logical_or(\\"                                           >> "$CASAMS_ScriptName.py"
+        echo "                                                 vis_chan_flagged_ediff1d_left != 1, \\"                          >> "$CASAMS_ScriptName.py"
+        echo "                                                 vis_chan_flagged_ediff1d_right != 1)"                            >> "$CASAMS_ScriptName.py"
+        echo "                                                 # [T,F,F,T,T,F,F,T] [0,F,F,3,60,F,F,63]"                         >> "$CASAMS_ScriptName.py"
+        echo "                vis_chan_flagged_nonconsecu = vis_chan_flagged[vis_chan_flagged_nonconsecu_mask]"                 >> "$CASAMS_ScriptName.py"
+        echo "                vis_chan_flagged_str = ';'.join(['%d~%d'%(tstr1,tstr2) \\"                                        >> "$CASAMS_ScriptName.py"
+        echo "                                                 for tstr1,tstr2 in zip(\\"                                       >> "$CASAMS_ScriptName.py"
+        echo "                                                  vis_chan_flagged_nonconsecu[::2],\\"                            >> "$CASAMS_ScriptName.py"
+        echo "                                                  vis_chan_flagged_nonconsecu[1::2]\\"                           >> "$CASAMS_ScriptName.py"
+        echo "                                                 )])"                                                             >> "$CASAMS_ScriptName.py"
+        echo "        # "                                                                                                       >> "$CASAMS_ScriptName.py"
+        echo "        if numpy.count_nonzero(~vis_flag_mask) > 0:"                                                              >> "$CASAMS_ScriptName.py"
+        echo "            vis_chan_nonflagged = numpy.arange(len(vis_flag_mask))[~vis_flag_mask]"                               >> "$CASAMS_ScriptName.py"
+        echo "            if len(vis_chan_nonflagged) == 1:"                                                                    >> "$CASAMS_ScriptName.py"
+        echo "                vis_chan_nonflagged_str = '%d'%(vis_chan_nonflagged)"                                             >> "$CASAMS_ScriptName.py"
+        echo "            else:"                                                                                                >> "$CASAMS_ScriptName.py"
+        echo "                vis_chan_nonflagged_ediff1d_left = numpy.ediff1d(numpy.concatenate(\\"                            >> "$CASAMS_ScriptName.py"
+        echo "                                                   (vis_chan_nonflagged,[vis_chan_nonflagged[-1]])))"             >> "$CASAMS_ScriptName.py"
+        echo "                vis_chan_nonflagged_ediff1d_right = numpy.ediff1d(numpy.concatenate(\\"                           >> "$CASAMS_ScriptName.py"
+        echo "                                                    ([vis_chan_nonflagged[0]],vis_chan_nonflagged)))"             >> "$CASAMS_ScriptName.py"
+        echo "                vis_chan_nonflagged_nonconsecu_mask = numpy.logical_or(\\"                                        >> "$CASAMS_ScriptName.py"
+        echo "                                                      vis_chan_nonflagged_ediff1d_left != 1, \\"                  >> "$CASAMS_ScriptName.py"
+        echo "                                                      vis_chan_nonflagged_ediff1d_right != 1)"                    >> "$CASAMS_ScriptName.py"
+        echo "                vis_chan_nonflagged_nonconsecu = vis_chan_nonflagged[vis_chan_nonflagged_nonconsecu_mask]"        >> "$CASAMS_ScriptName.py"
+        echo "                vis_chan_nonflagged_str = ';'.join(['%d~%d'%(tstr1,tstr2) \\"                                     >> "$CASAMS_ScriptName.py"
+        echo "                                                   for tstr1,tstr2 in zip(\\"                                     >> "$CASAMS_ScriptName.py"
+        echo "                                                    vis_chan_nonflagged_nonconsecu[::2],\\"                       >> "$CASAMS_ScriptName.py"
+        echo "                                                    vis_chan_nonflagged_nonconsecu[1::2]\\"                       >> "$CASAMS_ScriptName.py"
+        echo "                                                   )])"                                                           >> "$CASAMS_ScriptName.py"
+        echo "        # "                                                                                                       >> "$CASAMS_ScriptName.py"
+        echo "        fo1.write(vis_chan_flagged_str+'\n')"                                                                     >> "$CASAMS_ScriptName.py"
+        echo "        fo2.write(vis_chan_nonflagged_str+'\n')"                                                                  >> "$CASAMS_ScriptName.py"
+        echo "        fo1.close()"                                                                                              >> "$CASAMS_ScriptName.py"
+        echo "        fo2.close()"                                                                                              >> "$CASAMS_ScriptName.py"
+        echo "        tb2.close()"                                                                                              >> "$CASAMS_ScriptName.py"
+        
+        #echo "        #if True:"                                                                             >> "$CASAMS_ScriptName.py" # 20180613 debug
+        #echo "            # then read flagged channels and write to file"                                  >> "$CASAMS_ScriptName.py"
+        #echo "            fo1 = open('$CASAMS_ScriptName.chan.flagged.spw%d.field%d.txt'%(spw_numb, field_numb),'wb')"         >> "$CASAMS_ScriptName.py"
+        #echo "            fo2 = open('$CASAMS_ScriptName.chan.nonflagged.spw%d.field%d.txt'%(spw_numb, field_numb),'wb')"      >> "$CASAMS_ScriptName.py"
+        #echo "            loop_row = []"                                                                   >> "$CASAMS_ScriptName.py"
+        #echo "            if tb2.nrows()>2: loop_row.append(int((tb2.nrows()-1)/2.0))"                     >> "$CASAMS_ScriptName.py"
+        #echo "            if tb2.nrows()>4: loop_row.append(int((tb2.nrows()-1)/4.0*3))"                   >> "$CASAMS_ScriptName.py"
+        #echo "            if tb2.nrows()>4: loop_row.append(int((tb2.nrows()-1)/4.0*1))"                   >> "$CASAMS_ScriptName.py"
+        #echo "            if tb2.nrows()>1: loop_row.append(tb2.nrows()-1)"                                >> "$CASAMS_ScriptName.py"
+        #echo "            loop_row.append(0) # just loop a few rows plus the first row"                    >> "$CASAMS_ScriptName.py"
+        #echo "            # it seems writting each channel number seperately will cause CASA "             >> "$CASAMS_ScriptName.py"
+        #echo "            # not able to output anything, we have to write channel ranges."                 >> "$CASAMS_ScriptName.py"
+        #echo "            for k in loop_row:"                                                              >> "$CASAMS_ScriptName.py"
+        #echo "                vis_flag = tb2.getcell('FLAG', k)"                                           >> "$CASAMS_ScriptName.py"
+        ##echo "                has_written_line_fo1 = False"                                                >> "$CASAMS_ScriptName.py"
+        ##echo "                has_written_line_fo2 = False"                                                >> "$CASAMS_ScriptName.py"
+        ##echo "                for j in range(len(vis_flag[0])):"                                           >> "$CASAMS_ScriptName.py"
+        ##echo "                    # if either stokes is flagged"                                           >> "$CASAMS_ScriptName.py"
+        ##echo "                    if (vis_flag[0][j] or vis_flag[1][j]):"                                  >> "$CASAMS_ScriptName.py"
+        ##echo "                        if has_written_line_fo1 == False:"                                   >> "$CASAMS_ScriptName.py"
+        ##echo "                            fo1.write('%d'%(j))"                                             >> "$CASAMS_ScriptName.py"
+        ##echo "                        else:"                                                               >> "$CASAMS_ScriptName.py"
+        ##echo "                            fo1.write(';%d'%(j))"                                            >> "$CASAMS_ScriptName.py" # NOTE ’;’ to separate channel selections, see https://casa.nrao.edu/docs/taskref/exportuvfits-task.html
+        ##echo "                        has_written_line_fo1 = True"                                         >> "$CASAMS_ScriptName.py"
+        ##echo "                    else:"                                                                   >> "$CASAMS_ScriptName.py"
+        ##echo "                        if has_written_line_fo2 == False:"                                   >> "$CASAMS_ScriptName.py"
+        ##echo "                            fo2.write('%d'%(j))"                                             >> "$CASAMS_ScriptName.py"
+        ##echo "                        else:"                                                               >> "$CASAMS_ScriptName.py"
+        ##echo "                            fo2.write(';%d'%(j))"                                            >> "$CASAMS_ScriptName.py" # NOTE ’;’ to separate channel selections, see https://casa.nrao.edu/docs/taskref/exportuvfits-task.html
+        ##echo "                        has_written_line_fo2 = True"                                         >> "$CASAMS_ScriptName.py"
+        ##echo "                fo1.write('\n')"                                                             >> "$CASAMS_ScriptName.py"
+        ##echo "                fo2.write('\n')"                                                             >> "$CASAMS_ScriptName.py"
+        #echo "                has_written_fo1 = False"                                                      >> "$CASAMS_ScriptName.py"
+        #echo "                has_written_fo2 = False"                                                      >> "$CASAMS_ScriptName.py"
+        #echo "                for j in range(len(vis_flag[0])):"                                            >> "$CASAMS_ScriptName.py"
+        #echo "                    has_changed_flag = False"                                                 >> "$CASAMS_ScriptName.py"
+        #echo "                    # check if flag is changed at this channel"                               >> "$CASAMS_ScriptName.py"
+        #echo "                    if j == 0:"                                                               >> "$CASAMS_ScriptName.py"
+        #echo "                        has_changed_flag = True"                                              >> "$CASAMS_ScriptName.py"
+        #echo "                    else:"                                                                    >> "$CASAMS_ScriptName.py"
+        #echo "                        if (vis_flag[0][j] or vis_flag[1][j]) != \\"                          >> "$CASAMS_ScriptName.py"
+        #echo "                           (vis_flag[0][j-1] or vis_flag[1][j-1]) :"                          >> "$CASAMS_ScriptName.py"
+        #echo "                            has_changed_flag = True"                                          >> "$CASAMS_ScriptName.py"
+        #echo "                    # "                                                                       >> "$CASAMS_ScriptName.py"
+        #echo "                    # if flag is changed at this channel j, then "                            >> "$CASAMS_ScriptName.py"
+        #echo "                    # we mark j-1 as the ending of last channel range, and "                  >> "$CASAMS_ScriptName.py"
+        #echo "                    # we mark j as the beginning of the next channel range."                  >> "$CASAMS_ScriptName.py"
+        #echo "                    if has_changed_flag == True:"                                             >> "$CASAMS_ScriptName.py"
+        #echo "                        if j > 0:"                                                            >> "$CASAMS_ScriptName.py"
+        #echo "                            if (vis_flag[0][j-1] or vis_flag[1][j-1]):"                       >> "$CASAMS_ScriptName.py"
+        #echo "                                fo1.write('~%d'%(j-1))"                                       >> "$CASAMS_ScriptName.py"
+        #echo "                                has_written_fo1 = True"                                       >> "$CASAMS_ScriptName.py"
+        #echo "                            else:"                                                            >> "$CASAMS_ScriptName.py"
+        #echo "                                fo2.write('~%d'%(j-1))"                                       >> "$CASAMS_ScriptName.py"
+        #echo "                                has_written_fo2 = True"                                       >> "$CASAMS_ScriptName.py"
+        #echo "                    # "                                                                       >> "$CASAMS_ScriptName.py"
+        #echo "                    if has_changed_flag == True or (j == len(vis_flag[0])-1):"                >> "$CASAMS_ScriptName.py"
+        #echo "                        if (vis_flag[0][j] or vis_flag[1][j]):"                               >> "$CASAMS_ScriptName.py"
+        #echo "                            if has_written_fo1 == True:"                                      >> "$CASAMS_ScriptName.py"
+        #echo "                                fo1.write(';')"                                               >> "$CASAMS_ScriptName.py"
+        #echo "                            fo1.write('%d'%(j))"                                              >> "$CASAMS_ScriptName.py"
+        #echo "                            has_written_fo1 = True"                                           >> "$CASAMS_ScriptName.py"
+        #echo "                        else:"                                                                >> "$CASAMS_ScriptName.py"
+        #echo "                            if has_written_fo2 == True:"                                      >> "$CASAMS_ScriptName.py"
+        #echo "                                fo2.write(';')"                                               >> "$CASAMS_ScriptName.py"
+        #echo "                            fo2.write('%d'%(j))"                                              >> "$CASAMS_ScriptName.py"
+        #echo "                            has_written_fo2 = True"                                           >> "$CASAMS_ScriptName.py"
+        #echo "                fo1.write('\n')"                                                              >> "$CASAMS_ScriptName.py"
+        #echo "                fo2.write('\n')"                                                              >> "$CASAMS_ScriptName.py"
+        #echo "            fo1.close()"                                                                      >> "$CASAMS_ScriptName.py"
+        #echo "            fo2.close()"                                                                      >> "$CASAMS_ScriptName.py"
+        #echo "        tb2.close()"                                                                          >> "$CASAMS_ScriptName.py"  # see https://casa.nrao.edu/docs/CasaRef/table.query.html#x916-9320003.2.1
+        #<old-method-20180322>#echo "loop_row = 0"                                                                 >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "while loop_row < tb.nrows():"                                                 >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "    if tb.getcell('FLAG_ROW',loop_row) == 0:"                                 >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "        vis_desc = tb.getcell('DATA_DESC_ID',loop_row)"                       >> "$CASAMS_ScriptName.py" # DATA_DESC_ID column is referred to the DATA_DESCRIPTION table, it is an integer, and usually it distinguishes spws
+        #<old-method-20180322>#echo "        vis_flag = tb.getcell('FLAG',loop_row)"                               >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "        vis_spwt = 'spw%0d'%(list_vis_desc_spwid[vis_desc])"                  >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "        for i in range(len(vis_flag)):"                                       >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "            if vis_flag[i][0] or vis_flag[i][1]:"                             >> "$CASAMS_ScriptName.py" # note that each vis_flag has two correlations (stokes) RR LL
+        #<old-method-20180322>#echo "                if vis_spwt not in list_chan_flagged:"                        >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "                    list_chan_flagged[vis_spwt] = [i]"                        >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "                else:"                                                        >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "                    list_chan_flagged[vis_spwt].append(i)"                    >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "            else:"                                                            >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "                if vis_spwt not in list_chan_nonflagged:"                     >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "                    list_chan_nonflagged[vis_spwt] = [i]"                     >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "                else:"                                                        >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "                    list_chan_nonflagged[vis_spwt].append(i)"                 >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "        check_done = True"                                                    >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "        for i in range(len(list_vis_desc_spwid)):"                            >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "            vis_spwt = 'spw%0d'%(list_vis_desc_spwid[i])"                     >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "            if vis_spwt not in list_chan_nonflagged:"                         >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "                check_done = False"                                           >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "        if check_done:"                                                       >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "            break"                                                            >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "    loop_row = loop_row + 1"                                                  >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "#"                                                                            >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "for i in range(len(list_vis_desc_spwid)): "                                   >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "    vis_spwt = 'spw%0d'%(list_vis_desc_spwid[i])"                             >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "    # if we found some flagged channels for each spw"                         >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "    if len(list_chan_flagged[vis_spwt]) > 0:"                                 >> "$CASAMS_ScriptName.py" # if found some flagged channels
+        #<old-method-20180322>#echo "        fo = open('$CASAMS_ScriptName.chan.flagged.spw%d.txt'%(i),'wb')"      >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "        for j in range(len(list_chan_flagged[vis_spwt])):"                    >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "            if j == 0:"                                                       >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "                fo.write('%d'%(list_chan_flagged[vis_spwt][j]))"              >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "            else:"                                                            >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "                fo.write(',%d'%(list_chan_flagged[vis_spwt][j]))"             >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "        fo.write('\n')"                                                       >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "        fo.close()"                                                           >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "    elif os.path.isfile('$CASAMS_ScriptName.chan.flagged.spw%d.txt'%(i)):"    >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "        os.system('rm $CASAMS_ScriptName.chan.flagged.spw%d.txt'%(i))"        >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "    # if we found nonflagged channels for each spw"                           >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "    if len(list_chan_nonflagged[vis_spwt]) > 0:"                              >> "$CASAMS_ScriptName.py" # if found some flagged channels
+        #<old-method-20180322>#echo "        fo = open('$CASAMS_ScriptName.chan.nonflagged.spw%d.txt'%(i),'wb')"   >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "        for j in range(len(list_chan_nonflagged[vis_spwt])):"                 >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "            if j == 0:"                                                       >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "                fo.write('%d'%(list_chan_nonflagged[vis_spwt][j]))"           >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "            else:"                                                            >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "                fo.write(',%d'%(list_chan_nonflagged[vis_spwt][j]))"          >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "        fo.write('\n')"                                                       >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "        fo.close()"                                                           >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "    elif os.path.isfile('$CASAMS_ScriptName.chan.nonflagged.spw%d.txt'%(i)):" >> "$CASAMS_ScriptName.py"
+        #<old-method-20180322>#echo "        os.system('rm $CASAMS_ScriptName.chan.nonflagged.spw%d.txt'%(i))"     >> "$CASAMS_ScriptName.py"
+        fi
+        echo "#"                                                                            >> "$CASAMS_ScriptName.py"
+        echo "tb.close()"                                                                   >> "$CASAMS_ScriptName.py"
+        echo ""                                                                             >> "$CASAMS_ScriptName.py"
+        echo ""                                                                             >> "$CASAMS_ScriptName.py"
+        echo "os.system('date \"%Y-%m-%d %HH%MM%SS %Z\"> \"$CASAMS_ScriptName.done\"')"     >> "$CASAMS_ScriptName.py"
+        echo ""                                                                             >> "$CASAMS_ScriptName.py"
+        echo ""                                                                             >> "$CASAMS_ScriptName.py"
     
-    $CASA_COMMAND --nogui --log2term -c "$CASAMS_ScriptName.py" > "$CASAMS_ScriptName.log" 2>&1
     
-    if [[ $(cat "$CASAMS_ScriptName.log" | grep -i "Error" | wc -l) -gt 0 ]]; then
-        echo "Error! Failed to run \"$CASAMS_ScriptName.py\" in CASA! Please check \"$CASAMS_ScriptName.log\"!"
-        exit 255
-    else
-        echo "Finished running \"$CASAMS_ScriptName.py\" in CASA!"
-    fi
+        # Run casa script to read ms data and write meta tables.
+        
+        echo "Running CASA ($CASA_COMMAND) to read measurement set data tables: "
+        echo "    \"${CASAMS_VIS}\"/SOURCE"
+        echo "    \"${CASAMS_VIS}\"/SPECTRAL_WINDOW"
+        echo "Running "
+        echo "    $CASA_COMMAND --nogui --log2term -c \"$CASAMS_ScriptName.py\" > \"$CASAMS_ScriptName.log\" 2>&1"
+        
+        $CASA_COMMAND --nogui --log2term -c "$CASAMS_ScriptName.py" > "$CASAMS_ScriptName.log" 2>&1
+        
+        if [[ $(cat "$CASAMS_ScriptName.log" | grep -i "Error" | wc -l) -gt 0 ]]; then
+            echo "Error! Failed to run \"$CASAMS_ScriptName.py\" in CASA! Please check \"$CASAMS_ScriptName.log\"!"
+            exit 255
+        else
+            echo "Finished running \"$CASAMS_ScriptName.py\" in CASA!"
+        fi
     
     # 
     # Read data tables
@@ -883,46 +915,6 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 fi
             fi
             
-            # determine whether there are edge channels to unflag
-            # apply this if user has not input "-spw 0:XXX~XXX 1:XXX~XXX"
-            # added on 20200321
-            UNFLAG_SPW=""
-            if [[ ${#CASA_INP_SPLIT_UNFLAGEDGECHANNUM[@]} -gt 0 ]]; then
-                # if user gives the option "-unflag-edge-chan-num"
-                if [[ "$SPLIT_SPW_ID" == "$SPLIT_SPW" ]]; then
-                    # if user is not applying channalized spw like "-spw 0:XXX~XXX"
-                    trim_left=""
-                    trim_right=""
-                    if [[ ${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[0]} -gt 0 ]]; then
-                        trim_left=$(bc <<< "${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[0]}-1")
-                    fi
-                    if [[ ${#CASA_INP_SPLIT_UNFLAGEDGECHANNUM[@]} -ge 2 ]]; then
-                        if [[ ${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[1]} -gt 0 ]]; then
-                            trim_right=$(bc <<< "${SPLIT_SPW_NUMCHAN}-(${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[1]})")
-                        fi
-                    else
-                        if [[ ${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[0]} -gt 0 ]]; then
-                            trim_right=$(bc <<< "${SPLIT_SPW_NUMCHAN}-(${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[0]})")
-                        fi
-                    fi
-                    if [[ x"$trim_left" != x"" ]] && [[ x"$trim_right" != x"" ]]; then
-                        UNFLAG_SPW="0:0~${trim_left};${trim_right}~${SPLIT_SPW_NUMCHAN}"
-                    elif [[ x"$trim_left" != x"" ]]; then
-                        UNFLAG_SPW="0:0~${trim_left}"
-                    elif [[ x"$trim_right" != x"" ]]; then
-                        UNFLAG_SPW="0:${trim_right}~${SPLIT_SPW_NUMCHAN}"
-                    fi
-                fi
-            elif [[ $CASA_INP_SPLIT_UNFLAGEDGECHAN -eq 1 ]]; then
-                # if user gives the option "-unflag-edge-chan" (and not giving the option "-unflag-edge-chan-num")
-                if [[ "$SPLIT_SPW_ID" == "$SPLIT_SPW" ]]; then
-                    # if user is not applying channalized spw like "-spw 0:XXX~XXX"
-                    if [[ -f "$CASAMS_ScriptName.chan.flagged.spw${SPLIT_SPW_ID}.field${SPLIT_SID}.txt" ]] && [[ -f "$CASAMS_ScriptName.chan.nonflagged.spw${SPLIT_SPW_ID}.field${SPLIT_SID}.txt" ]]; then
-                        # if has computed the flagged channel list
-                        UNFLAG_SPW="0:"$(cat "$CASAMS_ScriptName.chan.flagged.spw${SPLIT_SPW_ID}.field${SPLIT_SID}.txt" | grep -v "^#" | head -n 1 | sed -e 's/ *//g')
-                    fi
-                fi
-            fi
             
             #<alternative># # determine the width
             #<alternative># if [[ $ispw -ge ${#CASAMS_WID[@]} ]]; then 
@@ -976,6 +968,13 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 fi
                 SPLIT_WID=$(echo "$SPLIT_WID" | sed -e 's%km/s%%g' | sed -e 's%KM/S%%g')
                 SPLIT_WID_STR="${SPLIT_WID}kms"
+                SPLIT_WID_MIN_KMS=$(awk "BEGIN {print ($SPLIT_SPW_BANDWIDTH/$SPLIT_SPW_NUMCHAN)/$SPLIT_FEQ*2.99792458e5);}")
+                if [[ $(awk "BEGIN {if ($SPLIT_WID<($SPLIT_WID_MIN_KMS)) print 1; else print 0;}") -eq 1 ]]; then
+                    echo "Error! The given channel width \"${SPLIT_WID_STR}\" is too small! Minimum channel width is \"${SPLIT_WID_MIN_KMS}km/s\"."
+                    echo "Please set -width to at least the minimum value and try again."
+                    exit 1
+                fi
+                # convert width in velocity to width in channel number and round to integer (floor)
                 SPLIT_WID=$(awk "BEGIN {printf (\"%.0f\", $SPLIT_WID/(($SPLIT_SPW_BANDWIDTH/$SPLIT_SPW_NUMCHAN)/$SPLIT_FEQ*2.99792458e5));}")
                 SPLIT_WID=$(awk "BEGIN {if ($SPLIT_WID<1) print 1; else print $SPLIT_WID;}")
             fi
@@ -987,6 +986,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 SPLIT_WID_STR="0"
             fi
             
+            
             # determine the timebin <20180316> <TODO> only support a single value
             SPLIT_TIMEBIN="0s"
             if [[ ${#CASA_INP_SPLIT_TIMEBIN[@]} -gt 0 ]]; then
@@ -995,6 +995,92 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     SPLIT_TIMEBIN="${SPLIT_TIMEBIN}s" # append "s" (second) as the unit if the input is a pure number
                 fi
             fi
+            
+            
+            
+            # determine whether there are edge channels to unflag
+            # apply this if user has not input "-spw 0:XXX~XXX 1:XXX~XXX"
+            # added on 20200321
+            # modified on 20200324: we need to consider the spw channel selection after channel rebinning by the input width, 
+            #                       because we will do this unflagging to the splitted ms data.
+            UNFLAG_SPW=""
+            unflag_chanleft=""
+            unflag_chanright=""
+            last_chan_index=$(bc <<< "${SPLIT_SPW_NUMCHAN}-1")
+            if [[ $SPLIT_WID -gt 1 ]]; then
+                last_chan_index=$(awk "function floor(x,y){y=int(x);return(x<y?y-1:y)} BEGIN {print floor(($last_chan_index+1)*1.0/($SPLIT_WID))-1; }")
+            fi
+            # 
+            if [[ ${#CASA_INP_SPLIT_UNFLAGEDGECHANNUM[@]} -gt 0 ]]; then
+                # if user gives the option "-unflag-edge-chan-num"
+                if [[ "$SPLIT_SPW_ID" == "$SPLIT_SPW" ]]; then
+                    # if user is not applying channalized spw like "-spw 0:XXX~XXX"
+                    if [[ ${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[0]} -gt 0 ]]; then
+                        unflag_chanleft=${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[0]}
+                        if [[ $SPLIT_WID -gt 1 ]]; then
+                            unflag_chanleft=$(awk "function ceil(x,y){y=int(x);return(x>y?y+1:y)} BEGIN {print ceil(($unflag_chanleft)*1.0/($SPLIT_WID)); }")
+                        fi
+                    fi
+                    if [[ ${#CASA_INP_SPLIT_UNFLAGEDGECHANNUM[@]} -ge 2 ]]; then
+                        if [[ ${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[1]} -gt 0 ]]; then
+                            unflag_chanright=${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[1]}
+                            if [[ $SPLIT_WID -gt 1 ]]; then
+                                unflag_chanright=$(awk "function ceil(x,y){y=int(x);return(x>y?y+1:y)} BEGIN {print ceil(($unflag_chanright)*1.0/($SPLIT_WID)); }") # round to integer of split width
+                            fi
+                            
+                        fi
+                    else
+                        if [[ ${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[0]} -gt 0 ]]; then
+                            unflag_chanright=${CASA_INP_SPLIT_UNFLAGEDGECHANNUM[0]}
+                            if [[ $SPLIT_WID -gt 1 ]]; then
+                                unflag_chanright=$(awk "function ceil(x,y){y=int(x);return(x>y?y+1:y)} BEGIN {print ceil(($unflag_chanright)*1.0/($SPLIT_WID)); }") # round to integer of split width
+                            fi
+                        fi
+                    fi
+                fi
+            # 
+            elif [[ $CASA_INP_SPLIT_UNFLAGEDGECHAN -eq 1 ]]; then
+                # if user gives the option "-unflag-edge-chan" (and not giving the option "-unflag-edge-chan-num")
+                if [[ "$SPLIT_SPW_ID" == "$SPLIT_SPW" ]]; then
+                    # if user is not applying channalized spw like "-spw 0:XXX~XXX"
+                    if [[ -f "$CASAMS_ScriptName.chan.flagged.spw${SPLIT_SPW_ID}.field${SPLIT_SID}.txt" ]] && [[ -f "$CASAMS_ScriptName.chan.nonflagged.spw${SPLIT_SPW_ID}.field${SPLIT_SID}.txt" ]]; then
+                        # if has computed the flagged channel list
+                        flagged_chan_str=$(cat "$CASAMS_ScriptName.chan.flagged.spw${SPLIT_SPW_ID}.field${SPLIT_SID}.txt" | grep -v "^#" | head -n 1 | sed -e 's/ *//g')
+                        flagged_chan_pairs=($(echo "$flagged_chan_str" | sed -e 's/ //g' | sed -e 's/;/ /g'))
+                        last_chan_index=$(awk "function floor(x,y){y=int(x);return(x<y?y-1:y)} BEGIN {print floor((${SPLIT_SPW_NUMCHAN})*1.0/($SPLIT_WID))-1; }")
+                        for (( ichanpair = 0; ichanpair < ${#flagged_chan_pairs[@]}; ichanpair++ )); do
+                            flagged_chan_pair_str="${flagged_chan_pairs[ichanpair]}"
+                            if [[ x"$flagged_chan_pair_str" == x"0" ]]; then
+                                left_chan_index=0
+                                unflag_chanleft=1
+                            elif [[ x"$flagged_chan_pair_str" == x"0~"* ]]; then
+                                left_chan_index=$(echo "$flagged_chan_pair_str" | sed -e 's/0~//g')
+                                unflag_chanleft=$(bc <<< "$left_chan_index+1")
+                            elif [[ x"$flagged_chan_pair_str" == x"$last_chan_index" ]]; then
+                                right_chan_index=$last_chan_index
+                                unflag_chanright=1
+                            elif [[ x"$flagged_chan_pair_str" == x*"~$last_chan_index" ]]; then
+                                right_chan_index=$(echo "$flagged_chan_pair_str" | sed -e "s/~$last_chan_index//g")
+                                unflag_chanright=$(bc <<< "$last_chan_index-$right_chan_index+1")
+                            fi
+                        done
+                    fi
+                fi
+            fi
+            # 
+            if [[ x"$unflag_chanleft" != x"" ]] && [[ x"$unflag_chanright" != x"" ]]; then
+                left_chan_index=$(bc <<< "${unflag_chanleft}-1")
+                right_chan_index=$(bc <<< "${last_chan_index}-(${unflag_chanright}-1)")
+                UNFLAG_SPW="0:0~${left_chan_index};${right_chan_index}~${last_chan_index}"
+            elif [[ x"$unflag_chanleft" != x"" ]]; then
+                left_chan_index=$(bc <<< "${unflag_chanleft}-1")
+                UNFLAG_SPW="0:0~${left_chan_index}"
+            elif [[ x"$unflag_chanright" != x"" ]]; then
+                right_chan_index=$(bc <<< "${last_chan_index}-(${unflag_chanright}-1)")
+                UNFLAG_SPW="0:${right_chan_index}~${last_chan_index}"
+            fi
+            
+            
             
             
             # 
@@ -1048,12 +1134,12 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 # Write scripts
                 # 
                 if [[ $count_ispw -eq 1 ]]; then 
-                    CASAMS_Script1="run_${SPLIT_SourceName}_step1_split.py"
-                    CASAMS_Script2="run_${SPLIT_SourceName}_step2_cvel.py"
-                    CASAMS_Script3="run_${SPLIT_SourceName}_step3_exportuvfits.py"
-                    CASAMS_Script4="run_${SPLIT_SourceName}_step4_clean.py"
-                    CASAMS_Script5="run_${SPLIT_SourceName}_step5_uvmodelfit.py"
-                    CASAMS_Script6="run_${SPLIT_SourceName}_step6_gildas_import_uvfits.sh"
+                    CASAMS_Script1="run_${SPLIT_SourceName}_width${SPLIT_WID_STR}_step1_split.py"
+                    CASAMS_Script2="run_${SPLIT_SourceName}_width${SPLIT_WID_STR}_step2_cvel.py"
+                    CASAMS_Script3="run_${SPLIT_SourceName}_width${SPLIT_WID_STR}_step3_exportuvfits.py"
+                    CASAMS_Script4="run_${SPLIT_SourceName}_width${SPLIT_WID_STR}_step4_clean.py"
+                    CASAMS_Script5="run_${SPLIT_SourceName}_width${SPLIT_WID_STR}_step5_uvmodelfit.py"
+                    CASAMS_Script6="run_${SPLIT_SourceName}_width${SPLIT_WID_STR}_step6_gildas_import_uvfits.sh"
                     
                     echo "#!/usr/bin/env python"                                             > "$CASAMS_Script1"
                     echo "#!/usr/bin/env python"                                             > "$CASAMS_Script2"
