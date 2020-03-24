@@ -988,8 +988,10 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 SPLIT_WID_STR="${SPLIT_WID}kms"
                 #<DEBUG> awk "BEGIN {print ((2e+09/128)/(8.9743e+10)*2.99792458e5);}"
                 if [[ $(awk "BEGIN {if ($SPLIT_WID<($SPLIT_WID_MIN_KMS)) print 1; else print 0;}") -eq 1 ]]; then
-                    echo "Error! The given channel width \"${SPLIT_WID_STR}\" is too small for this spw! Minimum channel width is \"${SPLIT_WID_MIN_KMS}km/s\"."
+                    echo ""
+                    echo "Error! The given channel width \"${SPLIT_WID_STR}\" is too small for this spw $SPLIT_SPW_ID'! Minimum channel width is \"${SPLIT_WID_MIN_KMS}km/s\"."
                     echo "Please set -width to at least the minimum value and try again if you want to split this spw. We will skip it for now."
+                    echo ""
                     continue
                 fi
                 # convert width in velocity to width in channel number and round to integer (floor)
