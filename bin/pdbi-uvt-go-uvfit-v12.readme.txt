@@ -1,0 +1,7 @@
+2020-04-01 PdBIUVT_OBJ_SIZE bug in "pdbi-uvt-core-arg"
+           PdBIUVT_OBJ_SIZE is an array of 2*N dimension where N is the number of objects to fit, 
+           each time adding a new object, PdBIUVT_OBJ_SIZE expands 2, 
+           however, the reading of input OBJ_SIZE is written to only 'PdBIUVT_OBJ_SIZE[PdBIUVT_OBJ_NUMB-1]', 
+           which should be first PdBIUVT_OBJ_SIZE[2*PdBIUVT_OBJ_NUMB-2] then PdBIUVT_OBJ_SIZE[2*PdBIUVT_OBJ_NUMB-1]. 
+           This affects all E_GAUSS fitting with fixed sizes... sizes are not fixed at all if fitting a single sources, 
+           or fixed to wrong sizes if fitting >=2 sources together...
