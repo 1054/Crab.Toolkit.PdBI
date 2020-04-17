@@ -176,6 +176,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo "read dirty 'name'.lmv"                             >> "$PdBIUVT_EXE"
         echo "read beam 'name'.beam"                             >> "$PdBIUVT_EXE"
         echo "read mask 'name'.msk"                              >> "$PdBIUVT_EXE"
+        echo "support /mask"                                     >> "$PdBIUVT_EXE"
         echo "let myclean%support yes"                           >> "$PdBIUVT_EXE"
         
         
