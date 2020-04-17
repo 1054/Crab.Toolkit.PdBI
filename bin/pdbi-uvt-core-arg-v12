@@ -872,7 +872,7 @@ while [[ "$#" -gt 0 ]]; do
     if [[ "$PdBIUVT_RPAR" == "OBJ_ANGLE" ]];  then 
         if [[ "$#" -lt 1 ]]; then break; fi
         if echo "$1" | grep -q -v -E "^[0-9.+-Ee]*$"; then
-            echo ""; echo "Error! Input -objposangle has a wrong format! Please input only number value of the object pos angle."; echo ""
+            echo ""; echo "Error! Input -posangle has a wrong format! Please input only number value of the object pos angle."; echo ""
             return 2
         fi
         PdBIUVT_OBJ_ANGLE[PdBIUVT_OBJ_NUMB-1]="$1"
@@ -880,8 +880,8 @@ while [[ "$#" -gt 0 ]]; do
     # -- obj spergel nu
     if [[ "$PdBIUVT_RPAR" == "OBJ_SPERGEL_NU" ]];  then 
         if [[ "$#" -lt 1 ]]; then break; fi
-        if echo "$1" | grep -q -v -E "^[0-9.+-Ee]*$"; then
-            echo ""; echo "Error! Input -objspergelnu has a wrong format! Please input only number value of the object Spergel profile nu value."; echo ""
+        if echo "$1" | grep -q -v -E "^[0-9Ee.+-]*$"; then
+            echo ""; echo "Error! Input -spergel-nu has a wrong format! Please input only number value of the object Spergel profile nu value."; echo ""
             return 2
         fi
         PdBIUVT_OBJ_SPERGEL_NU[PdBIUVT_OBJ_NUMB-1]="$1"
