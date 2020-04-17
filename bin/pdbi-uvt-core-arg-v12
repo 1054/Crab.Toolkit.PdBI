@@ -18,6 +18,7 @@
 #     2018-05-03 Added option "-cdisk" "-edisk" "-disk"
 #     2018-10-23 Added option "-stokes"
 #     2019-10-10 Now set default parameters for current object when calling -offset or -radec, instead of setting previous object when calling next -offset or -radec.
+#     2020-04-17 Added option "-clean-mask", updated more PdBIUVT_TYPE.
 # 
 
 
@@ -108,10 +109,12 @@ PdBIUVT_OBJ_POS=()        # RA Dec in degrees, 2*N dimension, where N is the num
 PdBIUVT_OBJ_FLUX=()       # Flux density, usually Jy/beam
 PdBIUVT_OBJ_SIZE=()       # Major and minor axis FWHM size in arcsec, 2*N dimension, where N is the number of objects to fit. 
 PdBIUVT_OBJ_ANGLE=()      # Position angle in degree
+PdBIUVT_OBJ_SPERGEL_NU=() # Spergel profile nu
 PdBIUVT_OBJ_VARY_POS=()   # 1 to vary, 0 to be fixed. 
 PdBIUVT_OBJ_VARY_SIZE=()  # 1 to vary, 0 to be fixed. 
 PdBIUVT_OBJ_VARY_FLUX=()  # 1 to vary, 0 to be fixed. 
 PdBIUVT_OBJ_VARY_ANGLE=() # 1 to vary, 0 to be fixed. 
+PdBIUVT_OBJ_VARY_SPERGEL_NU=() # 1 to vary, 0 to be fixed. 
 PdBIUVT_OBJ_FUNC=()       # "POINT"
 PdBIUVT_OBJ_RSUB=()       # a list to indicate if subtract this source from the residual or not.
 PdBIUVT_RSUB="NO"         # whether subtract the fit component or not (if we set PdBIUVT_RESI, then PdBIUVT_RSUB="YES")
@@ -172,6 +175,7 @@ PdBIUVT_UVMAP_SPACING=()  # spacing in unit of 'noise'
 PdBIUVT_UVRESAMPLE_VW=()  # velocity width to resample
 # ------------------------# clean
 PdBIUVT_CLEAN_SIGMA=()    # clean down to this times sigma
+PdBIUVT_CLEAN_MASK=()     # clean with this mask
 # ------------------------# uv ctime
 PdBIUVT_TIME_INTERVAL=()  # time interval in unit of TODO
 # ----------------------- # uvt line search
@@ -270,6 +274,9 @@ while [[ "$#" -gt 0 ]]; do
                 "-expo") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FUNC_EXPO";; # do not accept inputing a value, therefore no shift here. 
                "-eexpo") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FUNC_EEXPO";; # do not accept inputing a value, therefore no shift here. 
               "-e_expo") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FUNC_EEXPO";; # do not accept inputing a value, therefore no shift here. 
+             "-spergel") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FUNC_SPERGEL";; # do not accept inputing a value, therefore no shift here. 
+            "-espergel") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FUNC_ESPERGEL";; # do not accept inputing a value, therefore no shift here. 
+           "-e_spergel") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FUNC_ESPERGEL";; # do not accept inputing a value, therefore no shift here. 
 
                  "-obj") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
              "-objname") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_NAME";;
@@ -288,6 +295,11 @@ while [[ "$#" -gt 0 ]]; do
             "-posangle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
            "-obj-angle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
         "-obj-posangle") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_ANGLE";;
+
+                  "-nu") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_SPERGEL_NU";;
+          "-spergel-nu") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_SPERGEL_NU";;
+              "-obj-nu") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_SPERGEL_NU";;
+      "-obj-spergel-nu") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="OBJ_SPERGEL_NU";;
   
                 "-vary") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_POS";; # does not accept input value
              "-varypos") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_POS";; # does not accept input value
@@ -314,10 +326,12 @@ while [[ "$#" -gt 0 ]]; do
           "-fixed-flux") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_FLUX";; # does not accept input value
 
             "-varysize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_SIZE";; # does not accept input value
+           "-vary-size") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_SIZE";; # does not accept input value
          "-varyobjsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_SIZE";; # does not accept input value
       "-varysourcesize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_SIZE";; # does not accept input value
   
           "-variedsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_SIZE";; # does not accept input value
+         "-varied-size") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_SIZE";; # does not accept input value
        "-variedobjsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_SIZE";; # does not accept input value
     "-variedsourcesize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_SIZE";; # does not accept input value
           "-variedsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_SIZE";; # does not accept input value
@@ -325,6 +339,7 @@ while [[ "$#" -gt 0 ]]; do
     "-variedsourcesize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_SIZE";; # does not accept input value
 
              "-fixsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_SIZE";; # does not accept input value
+            "-fix-size") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_SIZE";; # does not accept input value
           "-fixobjsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_SIZE";; # does not accept input value
        "-fixsourcesize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_SIZE";; # does not accept input value
            "-fixedsize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_SIZE";; # does not accept input value
@@ -332,6 +347,7 @@ while [[ "$#" -gt 0 ]]; do
      "-fixedsourcesize") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_SIZE";; # does not accept input value
 
            "-varyangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_ANGLE";; # does not accept input value
+          "-vary-angle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_ANGLE";; # does not accept input value
         "-varyposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_ANGLE";; # does not accept input value
      "-varyobjposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_ANGLE";; # does not accept input value
   "-varysourceposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_ANGLE";; # does not accept input value
@@ -341,6 +357,7 @@ while [[ "$#" -gt 0 ]]; do
 "-variedsourceposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_ANGLE";; # does not accept input value
 
             "-fixangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_ANGLE";; # does not accept input value
+           "-fix-angle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_ANGLE";; # does not accept input value
          "-fixposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_ANGLE";; # does not accept input value
       "-fixobjposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_ANGLE";; # does not accept input value
    "-fixsourceposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_ANGLE";; # does not accept input value
@@ -348,6 +365,20 @@ while [[ "$#" -gt 0 ]]; do
        "-fixedposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_ANGLE";; # does not accept input value
     "-fixedobjposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_ANGLE";; # does not accept input value
  "-fixedsourceposangle") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_ANGLE";; # does not accept input value
+
+              "-varynu") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_SPERGEL_NU";; # does not accept input value
+             "-vary-nu") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_SPERGEL_NU";; # does not accept input value
+     "-vary-spergel-nu") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_SPERGEL_NU";; # does not accept input value
+            "-variednu") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_SPERGEL_NU";; # does not accept input value
+           "-varied-nu") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_SPERGEL_NU";; # does not accept input value
+   "-varied-spergel-nu") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_VARY_SPERGEL_NU";; # does not accept input value
+
+               "-fixnu") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_SPERGEL_NU";; # does not accept input value
+              "-fix-nu") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_SPERGEL_NU";; # does not accept input value
+      "-fix-spergel-nu") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_SPERGEL_NU";; # does not accept input value
+             "-fixednu") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_SPERGEL_NU";; # does not accept input value
+            "-fixed-nu") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_SPERGEL_NU";; # does not accept input value
+    "-fixed-spergel-nu") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FIX_SPERGEL_NU";; # does not accept input value
 
             "-subtract") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_RSUB"; PdBIUVT_RSUB="YES";; # does not accept input value
     "-keep-in-residual") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_NO_RSUB";; # does not accept input value
@@ -375,6 +406,7 @@ while [[ "$#" -gt 0 ]]; do
              "-scaling") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_factor";;
             
          "-clean-sigma") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="clean_sigma";;
+          "-clean-mask") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="clean_mask";;
               
               "-stokes") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvsplit_stokes";;
     
@@ -654,6 +686,9 @@ while [[ "$#" -gt 0 ]]; do
         while [[ ${#PdBIUVT_OBJ_ANGLE[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
             PdBIUVT_OBJ_ANGLE+=("0.0")
         done
+        while [[ ${#PdBIUVT_OBJ_SPERGEL_NU[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_SPERGEL_NU+=("0")
+        done
         while [[ ${#PdBIUVT_OBJ_VARY_POS[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
             PdBIUVT_OBJ_VARY_POS+=(0)
         done
@@ -665,6 +700,9 @@ while [[ "$#" -gt 0 ]]; do
         done
         while [[ ${#PdBIUVT_OBJ_VARY_ANGLE[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
             PdBIUVT_OBJ_VARY_ANGLE+=(1) # in default we vary angle
+        done
+        while [[ ${#PdBIUVT_OBJ_VARY_SPERGEL_NU[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_VARY_SPERGEL_NU+=(1) # in default we vary Spergel profile nu value
         done
         while [[ ${#PdBIUVT_OBJ_RSUB[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
             PdBIUVT_OBJ_RSUB+=(1) # in default we subtract the source from residual
@@ -701,6 +739,9 @@ while [[ "$#" -gt 0 ]]; do
         while [[ ${#PdBIUVT_OBJ_ANGLE[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
             PdBIUVT_OBJ_ANGLE+=("0.0")
         done
+        while [[ ${#PdBIUVT_OBJ_SPERGEL_NU[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_SPERGEL_NU+=("0")
+        done
         while [[ ${#PdBIUVT_OBJ_VARY_POS[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
             PdBIUVT_OBJ_VARY_POS+=(0)
         done
@@ -712,6 +753,9 @@ while [[ "$#" -gt 0 ]]; do
         done
         while [[ ${#PdBIUVT_OBJ_VARY_ANGLE[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
             PdBIUVT_OBJ_VARY_ANGLE+=(1) # in default we vary angle
+        done
+        while [[ ${#PdBIUVT_OBJ_VARY_SPERGEL_NU[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
+            PdBIUVT_OBJ_VARY_SPERGEL_NU+=(1) # in default we vary Spergel profile nu value
         done
         while [[ ${#PdBIUVT_OBJ_RSUB[@]} -lt $PdBIUVT_OBJ_NUMB ]]; do 
             PdBIUVT_OBJ_RSUB+=(1) # in default we subtract the source from residual
@@ -785,6 +829,15 @@ while [[ "$#" -gt 0 ]]; do
     if [[ "$PdBIUVT_RPAR" == "OBJ_FUNC_EEXPO" ]]; then
         PdBIUVT_OBJ_FUNC[PdBIUVT_OBJ_NUMB-1]="E_EXPO"
     fi
+    if [[ "$PdBIUVT_RPAR" == "OBJ_FUNC_SPERGEL" ]]; then
+        PdBIUVT_OBJ_FUNC[PdBIUVT_OBJ_NUMB-1]="SPERGEL"
+    fi
+    if [[ "$PdBIUVT_RPAR" == "OBJ_FUNC_ESPERGEL" ]]; then
+        PdBIUVT_OBJ_FUNC[PdBIUVT_OBJ_NUMB-1]="E_SPERGEL"
+    fi
+    if [[ "$PdBIUVT_RPAR" == "OBJ_FUNC_ESPERGEL" ]]; then
+        PdBIUVT_OBJ_FUNC[PdBIUVT_OBJ_NUMB-1]="E_SPERGEL"
+    fi
     # -- obj name
     if [[ "$PdBIUVT_RPAR" == "OBJ_NAME" ]];  then 
         if [[ "$#" -lt 1 ]]; then break; fi
@@ -824,6 +877,15 @@ while [[ "$#" -gt 0 ]]; do
         fi
         PdBIUVT_OBJ_ANGLE[PdBIUVT_OBJ_NUMB-1]="$1"
     fi
+    # -- obj spergel nu
+    if [[ "$PdBIUVT_RPAR" == "OBJ_SPERGEL_NU" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        if echo "$1" | grep -q -v -E "^[0-9.+-Ee]*$"; then
+            echo ""; echo "Error! Input -objspergelnu has a wrong format! Please input only number value of the object Spergel profile nu value."; echo ""
+            return 2
+        fi
+        PdBIUVT_OBJ_SPERGEL_NU[PdBIUVT_OBJ_NUMB-1]="$1"
+    fi
     # -- obj vary pos, flux, size, angle and rsub
     if [[ "$PdBIUVT_RPAR" == "OBJ_VARY_POS" ]];  then 
         PdBIUVT_OBJ_VARY_POS[PdBIUVT_OBJ_NUMB-1]=1
@@ -848,6 +910,12 @@ while [[ "$#" -gt 0 ]]; do
     fi
     if [[ "$PdBIUVT_RPAR" == "OBJ_FIX_ANGLE" ]];  then 
         PdBIUVT_OBJ_VARY_ANGLE[PdBIUVT_OBJ_NUMB-1]=0
+    fi
+    if [[ "$PdBIUVT_RPAR" == "OBJ_VARY_SPERGEL_NU" ]];  then 
+        PdBIUVT_OBJ_VARY_SPERGEL_NU[PdBIUVT_OBJ_NUMB-1]=1
+    fi
+    if [[ "$PdBIUVT_RPAR" == "OBJ_FIX_SPERGEL_NU" ]];  then 
+        PdBIUVT_OBJ_VARY_SPERGEL_NU[PdBIUVT_OBJ_NUMB-1]=0
     fi
     if [[ "$PdBIUVT_RPAR" == "OBJ_RSUB" ]];  then 
         PdBIUVT_OBJ_RSUB[PdBIUVT_OBJ_NUMB-1]=1
@@ -925,6 +993,10 @@ while [[ "$#" -gt 0 ]]; do
         if [[ "$#" -lt 1 ]]; then break; fi
         PdBIUVT_CLEAN_SIGMA+=("$1")
     fi
+    if [[ "$PdBIUVT_RPAR" == "clean_mask" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_CLEAN_MASK+=("$1")
+    fi
     
     
     # -- uvtlinesearch
@@ -1000,6 +1072,18 @@ for (( PdBIUVT_ITER = 0; PdBIUVT_ITER < "${#PdBIUVT_NAME[@]}"; PdBIUVT_ITER++ ))
     elif [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".30m" ]]; then
         PdBIUVT_TYPE[PdBIUVT_ITER]="30m"
         PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]30m$//g')
+    elif [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".lmv" ]]; then
+        PdBIUVT_TYPE[PdBIUVT_ITER]="lmv"
+        PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]lmv$//g')
+    elif [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".lmv-clean" ]]; then
+        PdBIUVT_TYPE[PdBIUVT_ITER]="lmv-clean"
+        PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]lmv-clean$//g')
+    elif [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".beam" ]]; then
+        PdBIUVT_TYPE[PdBIUVT_ITER]="beam"
+        PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]beam$//g')
+    elif [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".cct" ]]; then
+        PdBIUVT_TYPE[PdBIUVT_ITER]="cct"
+        PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]cct$//g')
     elif [[ "${PdBIUVT_NAME[PdBIUVT_ITER]}" == *".jcmt" ]]; then
         PdBIUVT_TYPE[PdBIUVT_ITER]="jcmt"
         PdBIUVT_NAME[PdBIUVT_ITER]=$(echo "${PdBIUVT_NAME[PdBIUVT_ITER]}" | sed -e 's/[.]jcmt$//g')

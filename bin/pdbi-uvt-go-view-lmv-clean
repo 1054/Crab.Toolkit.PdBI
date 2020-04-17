@@ -1,0 +1,271 @@
+#!/bin/bash
+# 
+# Input lmv-clean
+# Output eps
+# 
+# Last update:
+#    2020-04-17 copied from pdbi-uvt-go-clean
+# 
+# 
+
+
+
+# 
+# Uage
+# 
+usage() {
+    echo "Usage: "
+    echo "  pdbi-uvt-go-view-lmv-clean -name aaa.lmv-clean -out aaa.eps"
+    echo ""
+    echo "Options:"
+    echo "  -show_header"
+    echo "  -contour -3 3 4 5 6 7 8 9 10"
+    echo "  -crange 0 0 # first and last channels"
+    echo ""
+    echo "Notes:"
+    echo "  Please run pdbi-uvt-go-clean before running this script!"
+    echo "  We need aaa.lmv-clean in advance. \"aaa\" is an example input name."
+    echo ""
+}
+
+
+
+# 
+# SOURCE pdbi-uvt-core-arg
+# 
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v12" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v12" "$@"
+else
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v12\"!"
+    echo ""
+    exit 1
+fi
+
+
+
+# 
+# Check input parameters -- uvt file name
+# 
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]]; then
+    usage; exit
+fi
+
+
+
+# 
+# Loop input uv tables
+# 
+for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
+    # 
+    # if type is uvtable
+    # 
+    if [[ ${PdBIUVT_TYPE[i]} == "lmv-clean" ]] || [[ ${PdBIUVT_TYPE[i]} == "uvt" ]]; then
+        # 
+        # Set default output file name
+        # 
+        if [[ ${#PdBIUVT_SAVE[@]} -le $i ]]; then
+            PdBIUVT_SAVE+=("${PdBIUVT_NAME[i]}")
+        fi
+        if [[ x"${PdBIUVT_SAVE[i]}" == x || x"${PdBIUVT_SAVE[i]}" == x"tmp_pdbi_uvt" ]]; then 
+            PdBIUVT_SAVE[i]="${PdBIUVT_NAME[i]}"
+            echo ""; echo "Warning! Output name was not given for the input uvtable \"${PdBIUVT_NAME[i]}\", setting to \"${PdBIUVT_SAVE[i]}\""; echo ""
+        fi
+        # 
+        # Remove suffix
+        # 
+        if [[ x"${PdBIUVT_SAVE[i]}" == x*".eps" ]]; then
+            PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.eps$//g')
+        fi
+        if [[ x"${PdBIUVT_SAVE[i]}" == x*".EPS" ]]; then
+            PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.EPS$//g')
+        fi
+        # 
+        # 
+        # Check necessary files
+        if [[ ! -f "${PdBIUVT_NAME[i]}.lmv" ]]; then
+            echo "Error! \"${PdBIUVT_NAME[i]}.lmv\" was not found! Maybe forget to run pdbi-uvt-go-clean first?!"
+            exit 255
+        fi
+        if [[ ! -f "${PdBIUVT_NAME[i]}.lmv-clean" ]]; then
+            echo "Error! \"${PdBIUVT_NAME[i]}.lmv-clean\" was not found! Maybe forget to run pdbi-uvt-go-clean first?!"
+            exit 255
+        fi
+        if [[ ! -f "${PdBIUVT_NAME[i]}.beam" ]]; then
+            echo "Error! \"${PdBIUVT_NAME[i]}.beam\" was not found! Maybe forget to run pdbi-uvt-go-clean first?!"
+            exit 255
+        fi
+        if [[ ! -f "${PdBIUVT_NAME[i]}.lmv" ]]; then
+            echo "Error! \"${PdBIUVT_NAME[i]}\" was not found! Maybe forget to run pdbi-uvt-go-clean first?!"
+            exit 255
+        fi
+        # 
+        # 
+        # Deal with the input uvt file
+        # Output to mapping script
+        # "$PdBIUVT_NAME.uvt.go.clean.script"
+        # 
+        PdBIUVT_EXE="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.view.script"
+        PdBIUVT_PAR="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.view.ipar"
+        PdBIUVT_LOG="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.view.log"
+        PdBIUVT_INI="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.view.init" #<TODO>
+        PdBIUVT_EPS="${PdBIUVT_SAVE[i]}"
+        if [[ ${#PdBIUVT_SIZE[@]} -gt $i ]]; then 
+            if [[ $(awk "BEGIN {if (${PdBIUVT_SIZE[$i]}>0) print 1; else print 0;}") -eq 1 ]]; then
+                PdBIUVT_EPS="${PdBIUVT_EPS}_FoV_"$(printf "%.0f" ${PdBIUVT_SIZE[$i]})"_arcsec"
+            fi
+        fi
+        # 
+        # Backup existing output file
+        # 
+        if [[ -f "${PdBIUVT_EPS}.eps" ]]; then
+            if [[ -f "${PdBIUVT_EPS}.eps.backup" ]]; then
+                \rm "${PdBIUVT_EPS}.eps.backup"
+            fi
+            echo "Warning! Found existing \"${PdBIUVT_EPS}.eps\"! Backup as \"${PdBIUVT_EPS}.eps.backup\"!"
+            mv "${PdBIUVT_EPS}.eps" "${PdBIUVT_EPS}.eps.backup"
+        fi
+        
+        if [[ -f "${PdBIUVT_EPS}.eps" ]]; then
+            mv "${PdBIUVT_EPS}.eps" "${PdBIUVT_EPS}.eps.backup"
+        fi
+        # 
+        # Write GILDAS MAPPING script
+        # 
+        echo "! GILDAS MAPPING SCRIPT"                          >  "$PdBIUVT_EXE"
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "let name \"${PdBIUVT_NAME[i]}\""                  >> "$PdBIUVT_EXE"
+        # 
+        if [[ ${#PdBIUVT_SIZE[@]} -gt $i ]]; then 
+            echo "let size ${PdBIUVT_SIZE[$i]}"                 >> "$PdBIUVT_EXE"
+        fi
+        if [[ ${#PdBIUVT_FOV_SIZE[@]} -gt $i ]]; then 
+            echo "let size ${PdBIUVT_FOV_SIZE[$i]}"             >> "$PdBIUVT_EXE"
+        fi
+        # 
+        echo "let map_beam_step 1"                              >> "$PdBIUVT_EXE"
+        
+        # Read noise 
+        echo ""                                                   >> "$PdBIUVT_EXE"
+        echo "if (.not.exist(noise)) define real noise /global"   >> "$PdBIUVT_EXE"
+        if [[ -f "${PdBIUVT_NAME[i]}.noise.info.txt" ]]; then
+        echo "let noise $(cat ${PdBIUVT_NAME[i]}.noise.info.txt)" >> "$PdBIUVT_EXE"
+        else
+        echo "read dirty 'name'.lmv"                              >> "$PdBIUVT_EXE"
+        echo "let noise dirty%noise"                              >> "$PdBIUVT_EXE"
+        fi
+        echo ""                                                   >> "$PdBIUVT_EXE"
+        echo "say \"\""                                           >> "$PdBIUVT_EXE"
+        echo "say \"exam noise\""                                 >> "$PdBIUVT_EXE"
+        echo "exam noise"                                         >> "$PdBIUVT_EXE"
+        
+        # Set contour spacing
+        echo ""                                                   >> "$PdBIUVT_EXE"
+        if [[ ${#PdBIUVT_UVMAP_SPACING[@]} -gt $i ]]; then
+        echo "let spacing ${PdBIUVT_UVMAP_SPACING[$i]}"           >> "$PdBIUVT_EXE"
+        else
+        echo "let spacing noise"                                  >> "$PdBIUVT_EXE"
+        fi
+        
+        # Set channel range
+        if [[ ${#PdBIUVT_CMIN[@]} -gt $i ]]; then
+        echo "let first ${PdBIUVT_CMIN[i]}"                       >> "$PdBIUVT_EXE"
+        fi
+        if [[ ${#PdBIUVT_CMAX[@]} -gt $i ]]; then
+        echo "let last ${PdBIUVT_CMAX[i]}"                       >> "$PdBIUVT_EXE"
+        fi
+        
+        # Print first and last channels
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"examine first last\""                       >> "$PdBIUVT_EXE"
+        echo "exam first last"                                  >> "$PdBIUVT_EXE"
+        
+        # Print field of view size
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"examine size\""                             >> "$PdBIUVT_EXE"
+        echo "exam size"                                        >> "$PdBIUVT_EXE"
+        
+        # Switch to lmv clean
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"let type lmv-clean\""                       >> "$PdBIUVT_EXE"
+        echo "let type lmv-clean"                               >> "$PdBIUVT_EXE"
+        
+        # Examine current name, should be previous name-prim
+        if [[ -f "${PdBIUVT_NAME[i]}-prim.lmv-clean" ]]; then
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "let name ${PdBIUVT_NAME[i]}-prim"                 >> "$PdBIUVT_EXE"
+        fi
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"exam name\""                                >> "$PdBIUVT_EXE"
+        echo "exam name"                                        >> "$PdBIUVT_EXE"        
+        
+        # Plot 
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"go view\""                                  >> "$PdBIUVT_EXE"
+        echo "go view"                                          >> "$PdBIUVT_EXE"
+        
+        echo "let do_header $PdBIUVT_SHOW_HEADER"               >> "$PdBIUVT_EXE"
+        echo "go nice"                                          >> "$PdBIUVT_EXE"
+        
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "hardcopy \"${PdBIUVT_EPS}.eps\" /overwrite"       >> "$PdBIUVT_EXE"
+        echo "if (FILE(\"${PdBIUVT_EPS}.eps\")) then"           >> "$PdBIUVT_EXE"
+        echo "sys \"ps2pdf -dEPSCrop ${PdBIUVT_EPS}.eps\""      >> "$PdBIUVT_EXE"
+        echo "endif"                                            >> "$PdBIUVT_EXE"
+        
+        
+        # 
+        # Execute GILDAS MAPPING script
+        # -- no parallel mode for now. if we want that in the future, see pdbi-uvt-go-uvmap for some parallel examples. 
+        # -- must wait for other mapping processes (for example when another uv_merge is running... strange though)
+        echo "on error continue ; @$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG"
+        
+        
+        # 
+        # Check output
+        # 
+        if [[ -f "${PdBIUVT_EPS}.eps" ]]; then
+            if grep -i -q "vue has no range" "$PdBIUVT_LOG"; then
+                echo "Error! Failed to run go view! Perhaps the data is blank or has problem?"
+                echo "--"
+            else
+                echo "Successufully saved to \"${PdBIUVT_EPS}.eps\"!"
+                echo "--"
+            fi
+            if [[ $PdBIUVT_UVMERGE_KEEP_FILE -le 0 ]]; then
+                if [[ -f "$PdBIUVT_LOG" ]]; then
+                    rm "$PdBIUVT_LOG"
+                fi
+                if [[ -f "$PdBIUVT_EXE" ]]; then
+                    rm "$PdBIUVT_EXE"
+                fi
+            fi
+        else
+            echo "Error! Failed to run GILDAS MAPPING GO VIEW and output \"${PdBIUVT_EPS}.eps\"!"
+            echo "Please check \"$PdBIUVT_LOG\"!"
+            echo "--"
+            exit 1
+        fi
+        
+    fi
+    
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -318,6 +318,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         PdBIUVT_Obj_Maj="${PdBIUVT_OBJ_SIZE[2*i+0]}"
         PdBIUVT_Obj_Min="${PdBIUVT_OBJ_SIZE[2*i+1]}"
         PdBIUVT_Obj_Ang="${PdBIUVT_OBJ_ANGLE[i]}"
+        PdBIUVT_Obj_Spnu="${PdBIUVT_OBJ_SPERGEL_NU[i]}"
         PdBIUVT_Obj_FJy="${PdBIUVT_OBJ_FLUX[i]}"
         PdBIUVT_Fit_X=$((${PdBIUVT_OBJ_VARY_POS[i]}-1))
         PdBIUVT_Fit_Y=$((${PdBIUVT_OBJ_VARY_POS[i]}-1))
@@ -325,6 +326,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         PdBIUVT_Fit_Maj=$((${PdBIUVT_OBJ_VARY_SIZE[i]}-1)) # -1 is because GIDLAS use 0 means to fit, -1 means to be fixed. 
         PdBIUVT_Fit_Min=$((${PdBIUVT_OBJ_VARY_SIZE[i]}-1)) # -1 is because GIDLAS use 0 means to fit, -1 means to be fixed. 
         PdBIUVT_Fit_Ang=$((${PdBIUVT_OBJ_VARY_ANGLE[i]}-1)) # -1 is because GIDLAS use 0 means to fit, -1 means to be fixed. 
+        PdBIUVT_Fit_Spnu=$((${PdBIUVT_OBJ_VARY_SPERGEL_NU[i]}-1)) # -1 is because GIDLAS use 0 means to fit, -1 means to be fixed. 
         PdBIUVT_Obj_Sub=$(awk "BEGIN {if(${PdBIUVT_OBJ_RSUB[i]}==1) print \"YES\"; else print \"NO\";}") # 1 means we subtract the model from the residual.
         # 
         # allow input function
@@ -370,19 +372,33 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
                 fi
             fi
         fi
+        if echo "$PdBIUVT_Function" | grep -q -i "SPERGEL"; then
+            echo Obj FWHM Major = $PdBIUVT_Obj_Maj arcsec "(START=$PdBIUVT_Fit_Maj)"
+            if [[ $(awk "BEGIN {if($PdBIUVT_Obj_Maj<=0) print 1; else print 0;}") -eq 1 ]]; then
+                PdBIUVT_Obj_Maj="0.1" # set a non-zero initial guess if the user has not provided any. This is needed for SPERGEL fitting.
+            fi
+            if echo "$PdBIUVT_Function" | grep -q -i "E_SPERGEL"; then
+                echo Obj FWHM Minor = $PdBIUVT_Obj_Min arcsec "(START=$PdBIUVT_Fit_Min)"
+                echo Obj Pos. Angle = $PdBIUVT_Obj_Ang degree "(START=$PdBIUVT_Fit_Ang)"
+                echo Obj Spergel nu = $PdBIUVT_Obj_Spnu "(START=$PdBIUVT_Fit_Spnu)"
+                if [[ $(awk "BEGIN {if($PdBIUVT_Obj_Min<=0) print 1; else print 0;}") -eq 1 ]]; then
+                    PdBIUVT_Obj_Min="0.1" # set a non-zero initial guess if the user has not provided any. This is needed for SPERGEL fitting.
+                fi
+            fi
+        fi
         # 
         # print separator
         echo "--"
         # 
         # Continue to write to PdBIUVT_TEMP_INIT
-        echo  '! '                                                                                                                                                                      >> $PdBIUVT_TEMP_INIT
-        echo  "! --- $PdBIUVT_Obj_ID"                                                                                                                                                   >> $PdBIUVT_TEMP_INIT
-        echo  '! '                                                                                                                                                                      >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\CHARACTER "Function"            FUNCT'$PdBIUVT_Obj_ID'$       '"$PdBIUVT_Function"                                                                                  >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\REAL      "Parameters"          PARAM'$PdBIUVT_Obj_ID'$[7]    '$PdBIUVT_PosX $PdBIUVT_PosY $PdBIUVT_Obj_FJy $PdBIUVT_Obj_Maj $PdBIUVT_Obj_Min $PdBIUVT_Obj_Ang 0    >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\REAL      "Starting range"      RANGE'$PdBIUVT_Obj_ID'$[7]    '0 0 0 0 0 0 0                                                                                        >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\INTEGER   "number of starts"    START'$PdBIUVT_Obj_ID'$[7]    '$PdBIUVT_Fit_X $PdBIUVT_Fit_Y $PdBIUVT_Fit_Flux $PdBIUVT_Fit_Maj $PdBIUVT_Fit_Min $PdBIUVT_Fit_Ang 0 >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\LOGICAL   "Subtract function"   SUBSF'$PdBIUVT_Obj_ID'$       '"$PdBIUVT_Obj_Sub"                                                                                   >> $PdBIUVT_TEMP_INIT
+        echo  '! '                                                                                                                                                                                      >> $PdBIUVT_TEMP_INIT
+        echo  "! --- $PdBIUVT_Obj_ID"                                                                                                                                                                   >> $PdBIUVT_TEMP_INIT
+        echo  '! '                                                                                                                                                                                      >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\CHARACTER "Function"            FUNCT'$PdBIUVT_Obj_ID'$       '"$PdBIUVT_Function"                                                                                                  >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\REAL      "Parameters"          PARAM'$PdBIUVT_Obj_ID'$[7]    '$PdBIUVT_PosX $PdBIUVT_PosY $PdBIUVT_Obj_FJy $PdBIUVT_Obj_Maj $PdBIUVT_Obj_Min $PdBIUVT_Obj_Ang $PdBIUVT_Obj_Spnu    >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\REAL      "Starting range"      RANGE'$PdBIUVT_Obj_ID'$[7]    '0 0 0 0 0 0 0                                                                                                        >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\INTEGER   "number of starts"    START'$PdBIUVT_Obj_ID'$[7]    '$PdBIUVT_Fit_X $PdBIUVT_Fit_Y $PdBIUVT_Fit_Flux $PdBIUVT_Fit_Maj $PdBIUVT_Fit_Min $PdBIUVT_Fit_Ang $PdBIUVT_Obj_Spnu >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\LOGICAL   "Subtract function"   SUBSF'$PdBIUVT_Obj_ID'$       '"$PdBIUVT_Obj_Sub"                                                                                                   >> $PdBIUVT_TEMP_INIT
         # 
         # Final write to PdBIUVT_TEMP_INIT
         if [[ $(($i+1)) -eq "$PdBIUVT_OBJ_NUMB" ]]; then

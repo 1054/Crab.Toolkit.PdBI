@@ -1,0 +1,330 @@
+#!/bin/bash
+# 
+# Input uvt
+# Output lmv-clean, eps
+# 
+# Last update:
+#    2020-03-09 copied from pdbi-uvt-go-uvmap, added clean and primary beam correction.
+#               added -clean-sigma arg in pdbi-uvt-core-arg-v11.
+#    2020-04-17 added -clean-mask arg in pdbi-uvt-core-arg-v12.
+# 
+# 
+
+
+
+# 
+# Uage
+# 
+usage() {
+    echo "Usage: "
+    echo "  pdbi-uvt-go-clean-with-mask -name aaa -clean-mask xxx.fits -clean-sigma 1"
+    echo ""
+    echo "Options:"
+    echo "  -clean-sigma 1 # in default we clean down to 1 sigma in the mask"
+    echo "  -clean-mask XXX.fits # requires Python spectral_cube if we want to clean with a mask"
+    echo "  -out XXX # output name. The output will be XXX.lmv-clean XXX.lmv-clean.fits etc."
+    echo ""
+    echo "Notes:"
+    echo "  Please run pdbi-uvt-go-clean before running this script!"
+    echo "  We need aaa.lmv aaa.lmv-clean aaa.beam in advance. \"aaa\" is an example input name."
+    echo ""
+}
+
+
+
+# 
+# SOURCE pdbi-uvt-core-arg
+# 
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v12" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v12" "$@"
+else
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v12\"!"
+    echo ""
+    exit 1
+fi
+
+
+
+# 
+# Check input parameters -- uvt file name
+# 
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]]; then
+    usage; exit
+fi
+
+if [[ ${#PdBIUVT_CLEAN_MASK[@]} -eq 0 ]]; then
+    usage; exit
+fi
+
+
+
+# 
+# Check software dependency
+# 
+if [[ ${#PdBIUVT_CLEAN_MASK[@]} -gt 0 ]]; then
+    if [[ $(python -c "import spectral_cube" 2>&1 | wc -l) -ne 0 ]]; then
+        echo "Error! Python spectral_cube package is needed in order to use a clean mask!"
+        exit 255
+    fi
+fi
+
+
+# 
+# Loop input uv tables
+# 
+for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
+    # 
+    # if type is uvtable
+    # 
+    if [[ ${PdBIUVT_TYPE[i]} == "uvt" || ${PdBIUVT_TYPE[i]} == "UVT" ]]; then
+        # 
+        # Set default output file name
+        # 
+        if [[ ${#PdBIUVT_SAVE[@]} -le $i ]]; then
+            PdBIUVT_SAVE+=("${PdBIUVT_NAME[i]}")
+        fi
+        if [[ x"${PdBIUVT_SAVE[i]}" == x || x"${PdBIUVT_SAVE[i]}" == x"tmp_pdbi_uvt" ]]; then 
+            PdBIUVT_SAVE[i]="${PdBIUVT_NAME[i]}"
+            echo ""; echo "Warning! Output name was not given for the input uvtable \"${PdBIUVT_NAME[i]}\", setting to \"${PdBIUVT_SAVE[i]}\""; echo ""
+        fi
+        # 
+        # Set clean mask when has only one mask input but multiple name input
+        # 
+        if [[ ${#PdBIUVT_CLEAN_MASK[@]} -le $i ]]; then
+            PdBIUVT_CLEAN_MASK+=("${PdBIUVT_CLEAN_MASK[0]}")
+        fi
+        # 
+        # Remove suffix
+        # 
+        if [[ x"${PdBIUVT_SAVE[i]}" == x*".eps" ]]; then
+            PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.eps$//g')
+        fi
+        if [[ x"${PdBIUVT_SAVE[i]}" == x*".EPS" ]]; then
+            PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.EPS$//g')
+        fi
+        # 
+        # 
+        # Backup previous clean outputs
+        # 
+        echo "Backing-up previous clean outputs"
+        for suffix in "lmv" "lmv-clean" "lmv-res" "beam" "cct"; do
+            if [[ ! -f "${PdBIUVT_NAME[i]}.${suffix}" ]]; then
+                echo "Error! \"${PdBIUVT_NAME[i]}.${suffix}\" was not found! Maybe forget to run pdbi-uvt-go-clean first?!"
+                exit 255
+            else
+                if [[ ! -f "${PdBIUVT_NAME[i]}.${suffix}-without-mask" ]]; then
+                    echo cp "${PdBIUVT_NAME[i]}.${suffix}" "${PdBIUVT_NAME[i]}.${suffix}-without-mask"
+                    \cp "${PdBIUVT_NAME[i]}.${suffix}" "${PdBIUVT_NAME[i]}.${suffix}-without-mask"
+                fi
+                if [[ -f "${PdBIUVT_NAME[i]}.${suffix}.fits" ]] && [[ ! -f "${PdBIUVT_NAME[i]}.${suffix}-without-mask.fits" ]]; then
+                    echo cp "${PdBIUVT_NAME[i]}.${suffix}.fits" "${PdBIUVT_NAME[i]}.${suffix}-without-mask.fits"
+                    \cp "${PdBIUVT_NAME[i]}.${suffix}.fits" "${PdBIUVT_NAME[i]}.${suffix}-without-mask.fits"
+                fi
+                if [[ -f "${PdBIUVT_NAME[i]}-prim.${suffix}" ]] && [[ ! -f "${PdBIUVT_NAME[i]}-prim.${suffix}-without-mask" ]]; then
+                    echo cp "${PdBIUVT_NAME[i]}-prim.${suffix}" "${PdBIUVT_NAME[i]}-prim.${suffix}-without-mask"
+                    \cp "${PdBIUVT_NAME[i]}-prim.${suffix}" "${PdBIUVT_NAME[i]}-prim.${suffix}-without-mask"
+                fi
+                if [[ -f "${PdBIUVT_NAME[i]}-prim.${suffix}.fits" ]] && [[ ! -f "${PdBIUVT_NAME[i]}-prim.${suffix}-without-mask.fits" ]]; then
+                    echo cp "${PdBIUVT_NAME[i]}-prim.${suffix}.fits" "${PdBIUVT_NAME[i]}-prim.${suffix}-without-mask.fits"
+                    \cp "${PdBIUVT_NAME[i]}-prim.${suffix}.fits" "${PdBIUVT_NAME[i]}-prim.${suffix}-without-mask.fits"
+                fi
+            fi
+        done
+        # 
+        # 
+        # Regrid clean mask fits cube
+        # 
+        echo "Running: "
+        echo "$(dirname ${BASH_SOURCE[0]})/regrid_fits_cube.py \\"
+        echo "    \"${PdBIUVT_CLEAN_MASK[i]}\" \\"
+        echo "    \"${PdBIUVT_NAME[i]}.lmv-clean.fits\" \\"
+        echo "    \"${PdBIUVT_NAME[i]}.msk.fits\""
+        # 
+        $(dirname ${BASH_SOURCE[0]})/regrid_fits_cube.py \
+            "${PdBIUVT_CLEAN_MASK[i]}" \
+            "${PdBIUVT_NAME[i]}.lmv-clean.fits" \
+            "${PdBIUVT_NAME[i]}.msk.fits"
+        # 
+        if [[ ! -f "${PdBIUVT_NAME[i]}.msk.fits" ]]; then
+            echo "Error! Failed to run the above command and output \"${PdBIUVT_NAME[i]}.msk.fits\"!"
+            exit 255
+        fi
+        # 
+        # 
+        # Prepare to write GILDAS MAPPING script
+        # 
+        PdBIUVT_EXE="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.clean.with.mask.script"
+        PdBIUVT_PAR="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.clean.with.mask.ipar"
+        PdBIUVT_LOG="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.clean.with.mask.log"
+        PdBIUVT_INI="${PdBIUVT_NAME[i]}.${PdBIUVT_TYPE[i]}.clean.with.mask.init" #<TODO>
+        # 
+        echo "! GILDAS MAPPING SCRIPT"                          >  "$PdBIUVT_EXE"
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "let name \"${PdBIUVT_NAME[i]}\""                  >> "$PdBIUVT_EXE"
+        # 
+        echo "let map_beam_step 1"                              >> "$PdBIUVT_EXE"
+        # 
+        # Clean with the clean mask
+        # 
+        # Import regridded clean mask fits cube
+        echo ""
+        echo "say \"\""                                          >> "$PdBIUVT_EXE"
+        echo "say \"import clean mask\""                         >> "$PdBIUVT_EXE"
+        echo "fits 'name'.msk.fits to 'name'.msk"                >> "$PdBIUVT_EXE"
+        echo "read clean 'name'.lmv-clean"                       >> "$PdBIUVT_EXE"
+        echo "read dirty 'name'.lmv"                             >> "$PdBIUVT_EXE"
+        echo "read beam 'name'.beam"                             >> "$PdBIUVT_EXE"
+        echo "read mask 'name'.msk"                              >> "$PdBIUVT_EXE"
+        echo "let myclean%support yes"                           >> "$PdBIUVT_EXE"
+        
+        
+        # Backup previous clean outputs
+        #echo "say \"\""                                          >> "$PdBIUVT_EXE"
+        #echo "say \"backup previous clean cube\""                >> "$PdBIUVT_EXE"
+        #echo "sic\system \"mv \"'name'\".lmv-clean \"'name'\".lmv-clean-without-mask\""  >> "$PdBIUVT_EXE"
+        #echo "sic\system \"mv \"'name'\".lmv-clean.fits \"'name'\".lmv-clean-without-mask.fits\""  >> "$PdBIUVT_EXE"
+        #echo "sic\system \"mv \"'name'\".lmv-res \"'name'\".lmv-res-without-mask\""  >> "$PdBIUVT_EXE"
+        #echo "sic\system \"mv \"'name'\".lmv-res.fits \"'name'\".lmv-res-without-mask.fits\""  >> "$PdBIUVT_EXE"
+        #echo "sic\system \"mv \"'name'\".cct \"'name'\".cct-without-mask\""  >> "$PdBIUVT_EXE"
+        #echo "sic\system \"mv \"'name'\".cct.fits \"'name'\".cct-without-mask.fits\""  >> "$PdBIUVT_EXE"
+        #echo "sic\system \"mv \"'name'\"-prim.lmv-clean \"'name'\"-prim.lmv-clean-without-mask\""  >> "$PdBIUVT_EXE"
+        #echo "sic\system \"mv \"'name'\"-prim.lmv-clean.fits \"'name'\"-prim.lmv-clean-without-mask.fits\""  >> "$PdBIUVT_EXE"
+        
+        
+        # Reset absolute threshold for cleaning (<TODO>: now down to 1-sigma within the clean mask in default)
+        echo ""                                                      >> "$PdBIUVT_EXE"
+        if [[ ${#PdBIUVT_CLEAN_SIGMA[@]} -gt $i ]]; then
+            echo "say \"\""                                          >> "$PdBIUVT_EXE"
+            echo "say \"let ares ${PdBIUVT_CLEAN_SIGMA[i]}*noise\""  >> "$PdBIUVT_EXE"
+            echo "let ares ${PdBIUVT_CLEAN_SIGMA[i]}*noise"          >> "$PdBIUVT_EXE"
+        else
+            echo "say \"\""                                          >> "$PdBIUVT_EXE"
+            echo "say \"let ares 0*noise\""                          >> "$PdBIUVT_EXE"
+            echo "let ares 0*noise"                                  >> "$PdBIUVT_EXE"
+        fi
+        
+        
+        # Print cleaning inputs
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"inp clean\""                                >> "$PdBIUVT_EXE"
+        echo "inp clean"                                        >> "$PdBIUVT_EXE"
+        
+        
+        # Cleaning
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"clean\""                                    >> "$PdBIUVT_EXE"
+        echo "clean"                                            >> "$PdBIUVT_EXE"
+        
+        
+        # Write lmv clean to disk
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"write clean 'name'\""                       >> "$PdBIUVT_EXE"
+        echo "write clean 'name'"                               >> "$PdBIUVT_EXE"
+        echo "say \"write res 'name'\""                         >> "$PdBIUVT_EXE"
+        echo "write res 'name'"                                 >> "$PdBIUVT_EXE"
+        echo "say \"write cct 'name'\""                         >> "$PdBIUVT_EXE"
+        echo "write cct 'name'"                                 >> "$PdBIUVT_EXE"
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        
+        
+        # Save fits
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"fits\""                                     >> "$PdBIUVT_EXE"
+        echo "fits 'name'.lmv-clean.fits from 'name'.lmv-clean /bits -32 /overwrite"  >> "$PdBIUVT_EXE"
+        echo "fits 'name'.lmv-res.fits from 'name'.lmv-res /bits -32 /overwrite"  >> "$PdBIUVT_EXE"
+        
+        
+        # Switch to lmv clean
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"let type lmv-clean\""                       >> "$PdBIUVT_EXE"
+        echo "let type lmv-clean"                               >> "$PdBIUVT_EXE"
+        
+        
+        # Primary beam correction, this outputs 'name'-prim.lmv-clean
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"go primary\""                               >> "$PdBIUVT_EXE"
+        echo "go primary"                                       >> "$PdBIUVT_EXE"
+        
+        
+        # Exam current name, should be previous name-prim
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"exam name\""                                >> "$PdBIUVT_EXE"
+        echo "exam name"                                        >> "$PdBIUVT_EXE"
+        
+        
+        # Update name (no need, go primary will update name by itself)
+        #echo ""                                                 >> "$PdBIUVT_EXE"
+        #echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        #echo "say \"let name 'name'-prim\""                     >> "$PdBIUVT_EXE"
+        #echo "let name 'name'-prim"                             >> "$PdBIUVT_EXE"
+        
+        
+        # Save fits
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"fits\""                                     >> "$PdBIUVT_EXE"
+        echo "fits 'name'.lmv-clean.fits from 'name'.lmv-clean /bits -32 /overwrite"  >> "$PdBIUVT_EXE"
+        # 
+        # 
+        # Execute GILDAS MAPPING script
+        # -- no parallel mode for now. if we want that in the future, see pdbi-uvt-go-uvmap for some parallel examples. 
+        # -- must wait for other mapping processes (for example when another uv_merge is running... strange though)
+        echo "on error continue ; @$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG"
+        # 
+        #PdBIUVT_REPEAT=0
+        #while [[ ! -f "${PdBIUVT_EPS}.eps" || ! -f "${PdBIUVT_NAME[i]}.lmv-clean" || ! -f "${PdBIUVT_NAME[i]}-prim.lmv-clean.fits" ]]; do
+        #    echo "Failed to get the uv_map result? Perhaps conflicting with other running mapping processes! We will try again!" 1>&2
+        #    echo ls "${PdBIUVT_EPS}.eps"; ls "${PdBIUVT_EPS}.eps"
+        #    echo ls "${PdBIUVT_NAME[i]}.lmv-clean"; ls "${PdBIUVT_NAME[i]}.lmv-clean"
+        #    echo ls "${PdBIUVT_NAME[i]}-prim.lmv-clean.fits"; ls "${PdBIUVT_NAME[i]}-prim.lmv-clean.fits"
+        #    sleep 1.5
+        #    echo "@$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG"
+        #    PdBIUVT_REPEAT=$(($PdBIUVT_REPEAT+1))
+        #    # repeat running it
+        #done
+        
+        # 
+        # Check output
+        # 
+        if [[ -f "${PdBIUVT_NAME[i]}.lmv-clean.fits" ]] && [[ -f "${PdBIUVT_NAME[i]}-prim.lmv-clean.fits" ]]; then
+            echo "Successufully output \"${PdBIUVT_NAME[i]}.lmv-clean.fits\" and \"${PdBIUVT_NAME[i]}-prim.lmv-clean.fits\"!"
+            echo "--"
+            if [[ $PdBIUVT_UVMERGE_KEEP_FILE -le 0 ]]; then
+                if [[ -f "$PdBIUVT_LOG" ]]; then
+                    rm "$PdBIUVT_LOG"
+                fi
+                if [[ -f "$PdBIUVT_EXE" ]]; then
+                    rm "$PdBIUVT_EXE"
+                fi
+            fi
+        else
+            echo "Error! Failed to run GILDAS MAPPING CLEAN and output \"${PdBIUVT_NAME[i]}.lmv-clean.fits\" and \"${PdBIUVT_NAME[i]}-prim.lmv-clean.fits\"!"
+            echo "Please check \"$PdBIUVT_LOG\"!"
+            echo "--"
+            exit 1
+        fi
+        
+    fi
+    
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+

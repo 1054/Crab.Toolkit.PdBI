@@ -16,7 +16,19 @@
 # 
 usage() {
     echo "Usage: "
-    echo "  pdbi-uvt-go-clean -name aaa.uvt -size 15 -map_size 512 -map_cell 0.2 -show_header [-contour -3 3 4 5 6 7 8 9 10] -out aaa.eps -overwrite"
+    echo "  pdbi-uvt-go-clean -name aaa.uvt"
+    echo ""
+    echo "Options:"
+    echo "  -size 15 "
+    echo "  -map_size 1024 "
+    echo "  -map_cell 0.2 "
+    echo "  -show_header "
+    echo "  -contour -3 3 4 5 6 7 8 9 10 "
+    echo "  -out aaa.eps "
+    echo "  -overwrite "
+    echo ""
+    echo "Notes:"
+    echo "  We will output not only the clean cube but also an eps figure."
     echo ""
 }
 
@@ -175,11 +187,27 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         
         echo ""                                                 >> "$PdBIUVT_EXE"
         if [[ ${#PdBIUVT_UVMAP_SPACING[@]} -gt $i ]]; then
-            echo "let spacing ${PdBIUVT_UVMAP_SPACING[$i]}"     >> "$PdBIUVT_EXE"
+        echo "let spacing ${PdBIUVT_UVMAP_SPACING[$i]}"         >> "$PdBIUVT_EXE"
         else
-            echo "let spacing noise"                            >> "$PdBIUVT_EXE"
+        echo "let spacing noise"                                >> "$PdBIUVT_EXE"
         fi
         
+        # Set channel range
+        if [[ ${#PdBIUVT_CMIN[@]} -gt $i ]]; then
+        echo "let first ${PdBIUVT_CMIN[i]}"                       >> "$PdBIUVT_EXE"
+        fi
+        if [[ ${#PdBIUVT_CMAX[@]} -gt $i ]]; then
+        echo "let last ${PdBIUVT_CMAX[i]}"                       >> "$PdBIUVT_EXE"
+        fi
+        
+        # Print first and last channels
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"examine first last\""                       >> "$PdBIUVT_EXE"
+        echo "exam first last"                                  >> "$PdBIUVT_EXE"
+        
+        
+        # Print map size, map cell, field of view size, and noise
         echo ""                                                 >> "$PdBIUVT_EXE"
         echo "say \"\""                                         >> "$PdBIUVT_EXE"
         echo "say \"examine map_size\""                         >> "$PdBIUVT_EXE"
@@ -199,6 +227,15 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo "say \"\""                                         >> "$PdBIUVT_EXE"
         echo "say \"examine noise\""                            >> "$PdBIUVT_EXE"
         echo "exam noise"                                       >> "$PdBIUVT_EXE"
+        
+        
+        # Write noise to disk
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"write \"'name'\".noise.info.txt\""          >> "$PdBIUVT_EXE"
+        echo "sic output 'name'.noise.info.txt new"             >> "$PdBIUVT_EXE"
+        echo "say 'noise' /format E15.6"                        >> "$PdBIUVT_EXE"
+        echo "sic output"                                       >> "$PdBIUVT_EXE"
         
         
         # Set absolute threshold for cleaning
@@ -227,23 +264,33 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # Write lmv clean to disk
         echo ""                                                 >> "$PdBIUVT_EXE"
         echo "say \"\""                                         >> "$PdBIUVT_EXE"
-        echo "say \"write clean 'name'\""                       >> "$PdBIUVT_EXE"
+        echo "say \"write clean \"'name'"                       >> "$PdBIUVT_EXE"
         echo "write clean 'name'"                               >> "$PdBIUVT_EXE"
-        echo "say \"write beam 'name'\""                        >> "$PdBIUVT_EXE"
+        echo "say \"write beam \"'name'"                        >> "$PdBIUVT_EXE"
         echo "write beam 'name'"                                >> "$PdBIUVT_EXE"
-        echo "say \"write res 'name'\""                         >> "$PdBIUVT_EXE"
+        echo "say \"write res \"'name'"                         >> "$PdBIUVT_EXE"
         echo "write res 'name'"                                 >> "$PdBIUVT_EXE"
-        echo "say \"write cct 'name'\""                         >> "$PdBIUVT_EXE"
+        echo "say \"write cct \"'name'"                         >> "$PdBIUVT_EXE"
         echo "write cct 'name'"                                 >> "$PdBIUVT_EXE"
+        
+        
+        # Write clean beam to disk
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"write \"'name'\".clean.beam.info.txt\""     >> "$PdBIUVT_EXE"
+        echo "sic output 'name'.clean.beam.info.txt new"        >> "$PdBIUVT_EXE"
+        echo "say 'clean%major/pi*180.0*3600.0' 'clean%minor/pi*180.0*3600.0' 'clean%pa/pi*180.0'" >> "$PdBIUVT_EXE"
+        echo "sic output"                                       >> "$PdBIUVT_EXE"
         
         
         # Save fits
         echo ""                                                 >> "$PdBIUVT_EXE"
         echo "say \"\""                                         >> "$PdBIUVT_EXE"
         echo "say \"fits\""                                     >> "$PdBIUVT_EXE"
-        echo "fits 'name'.lmv-clean.fits from 'name'.lmv-clean /overwrite"  >> "$PdBIUVT_EXE"
-        echo "fits 'name'.lmv-res.fits from 'name'.lmv-res /overwrite"  >> "$PdBIUVT_EXE"
-        echo "fits 'name'.beam.fits from 'name'.beam /overwrite">> "$PdBIUVT_EXE"
+        echo "fits 'name'.lmv-clean.fits from 'name'.lmv-clean /bits -32 /overwrite"  >> "$PdBIUVT_EXE"
+        echo "fits 'name'.lmv-res.fits from 'name'.lmv-res /bits -32 /overwrite"  >> "$PdBIUVT_EXE"
+        echo "fits 'name'.beam.fits from 'name'.beam /bits -32 /overwrite">> "$PdBIUVT_EXE"
+        echo "fits 'name'.lmv.fits from 'name'.lmv /bits -32 /overwrite">> "$PdBIUVT_EXE"
         
         
         # Switch to lmv clean
@@ -278,7 +325,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo ""                                                 >> "$PdBIUVT_EXE"
         echo "say \"\""                                         >> "$PdBIUVT_EXE"
         echo "say \"fits\""                                     >> "$PdBIUVT_EXE"
-        echo "fits 'name'.lmv-clean.fits from 'name'.lmv-clean /overwrite"  >> "$PdBIUVT_EXE"
+        echo "fits 'name'.lmv-clean.fits from 'name'.lmv-clean /bits -32 /overwrite"  >> "$PdBIUVT_EXE"
         
         
         # plot 
@@ -334,6 +381,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
                 echo PdBIUVT_TEMP_MAP_SIZE="${PdBIUVT_TEMP_MAP_SIZE[@]}"
                 echo PdBIUVT_TEMP_MAP_CELL="${PdBIUVT_TEMP_MAP_CELL[@]}"
                 # 
+                # see -- ./integ/pro/simulate.map -- or -- ./integ/x86_64-darwin-gfortran/tasks/uv_dft.init
                 echo "" > "$PdBIUVT_INI"
                 echo 'TASK\FILE      "UV table"                            UV_TABLE$     "'${PdBIUVT_NAME[i]}'"'                                    >> "$PdBIUVT_INI"
                 echo 'TASK\CHARACTER "Map name"                            MAP_NAME$     "'${PdBIUVT_NAME[i]}'"'                                    >> "$PdBIUVT_INI"
@@ -343,7 +391,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
                 echo 'TASK\INTEGER   "Map size [pixel]"                    MAP_SIZE$[2]  '${PdBIUVT_TEMP_MAP_SIZE[0]} ${PdBIUVT_TEMP_MAP_SIZE[1]}   >> "$PdBIUVT_INI"
                 echo 'TASK\REAL      "Map cell [arc sec]"                  MAP_CELL$[2]  '${PdBIUVT_TEMP_MAP_CELL[0]} ${PdBIUVT_TEMP_MAP_CELL[1]}   >> "$PdBIUVT_INI"
                 echo 'TASK\REAL      "UV cell [m], for unif. weighting"     UV_CELL$[2]  0 0'         >> "$PdBIUVT_INI"
-                echo 'TASK\LOGICAL   "Make one beam (NO), or one per channel (YES)" ONEBEAM$ YES'     >> "$PdBIUVT_INI"
+                echo 'TASK\LOGICAL   "Make one beam (YES), or one per channel (NO)" ONEBEAM$ YES'     >> "$PdBIUVT_INI"
                 echo 'TASK\INTEGER   "Weight channel" WCOL$ 0'                                        >> "$PdBIUVT_INI"
                 echo 'TASK\INTEGER   "Beam channel" BCOL$ 0'                                          >> "$PdBIUVT_INI"
                 echo 'TASK\INTEGER   "First and Last channel to map" MCOL$[2]  0 0'                   >> "$PdBIUVT_INI"
@@ -385,29 +433,24 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # -- must wait for other mapping processes (for example when another uv_merge is running... strange though)
         echo "on error continue ; @$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG"
         
-        PdBIUVT_REPEAT=0
-        while [[ ! -f "${PdBIUVT_EPS}.eps" || ! -f "${PdBIUVT_NAME[i]}.lmv-clean" || ! -f "${PdBIUVT_NAME[i]}-prim.lmv-clean.fits" ]]; do
-            echo "Failed to get the uv_map result? Perhaps conflicting with other running mapping processes! We will try again!" 1>&2
-            echo ls "${PdBIUVT_EPS}.eps"; ls "${PdBIUVT_EPS}.eps"
-            echo ls "${PdBIUVT_NAME[i]}.lmv-clean"; ls "${PdBIUVT_NAME[i]}.lmv-clean"
-            echo ls "${PdBIUVT_NAME[i]}-prim.lmv-clean.fits"; ls "${PdBIUVT_NAME[i]}-prim.lmv-clean.fits"
-            sleep 1.5
-            echo "@$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG"
-            PdBIUVT_REPEAT=$(($PdBIUVT_REPEAT+1))
-            # repeat running it
-        done
+        #PdBIUVT_REPEAT=0
+        #while [[ ! -f "${PdBIUVT_EPS}.eps" || ! -f "${PdBIUVT_NAME[i]}.lmv-clean" || ! -f "${PdBIUVT_NAME[i]}-prim.lmv-clean.fits" ]]; do
+        #    echo "Failed to get the uv_map result? Perhaps conflicting with other running mapping processes! We will try again!" 1>&2
+        #    echo ls "${PdBIUVT_EPS}.eps"; ls "${PdBIUVT_EPS}.eps"
+        #    echo ls "${PdBIUVT_NAME[i]}.lmv-clean"; ls "${PdBIUVT_NAME[i]}.lmv-clean"
+        #    echo ls "${PdBIUVT_NAME[i]}-prim.lmv-clean.fits"; ls "${PdBIUVT_NAME[i]}-prim.lmv-clean.fits"
+        #    sleep 1.5
+        #    echo "@$PdBIUVT_EXE" | mapping -nw -nl | tee "$PdBIUVT_LOG"
+        #    PdBIUVT_REPEAT=$(($PdBIUVT_REPEAT+1))
+        #    # repeat running it
+        #done
         
         # 
         # Check output
         # 
-        if [[ -f "${PdBIUVT_EPS}.eps" ]]; then
-            if grep -i -q "vue has no range" "$PdBIUVT_LOG"; then
-                echo "Error! Failed to run go view! Perhaps the data is blank or has problem?"
-                echo "--"
-            else
-                echo "Successufully saved to \"${PdBIUVT_EPS}.eps\"!"
-                echo "--"
-            fi
+        if [[ -f "${PdBIUVT_NAME[i]}.lmv-clean.fits" ]] && [[ -f "${PdBIUVT_NAME[i]}-prim.lmv-clean.fits" ]]; then
+            echo "Successufully output \"${PdBIUVT_NAME[i]}.lmv-clean.fits\" and \"${PdBIUVT_NAME[i]}-prim.lmv-clean.fits\"!"
+            echo "--"
             if [[ $PdBIUVT_UVMERGE_KEEP_FILE -le 0 ]]; then
                 if [[ -f "$PdBIUVT_LOG" ]]; then
                     rm "$PdBIUVT_LOG"
@@ -417,7 +460,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
                 fi
             fi
         else
-            echo "Error! Failed to run GILDAS MAPPING UV_MAP and output \"${PdBIUVT_EPS}.eps\"!"
+            echo "Error! Failed to run GILDAS MAPPING CLEAN and output \"${PdBIUVT_NAME[i]}.lmv-clean.fits\" and \"${PdBIUVT_NAME[i]}-prim.lmv-clean.fits\"!"
             echo "Please check \"$PdBIUVT_LOG\"!"
             echo "--"
             exit 1
