@@ -397,7 +397,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
         echo  'TASK\CHARACTER "Function"            FUNCT'$PdBIUVT_Obj_ID'$       '"$PdBIUVT_Function"                                                                                                  >> $PdBIUVT_TEMP_INIT
         echo  'TASK\REAL      "Parameters"          PARAM'$PdBIUVT_Obj_ID'$[7]    '$PdBIUVT_PosX $PdBIUVT_PosY $PdBIUVT_Obj_FJy $PdBIUVT_Obj_Maj $PdBIUVT_Obj_Min $PdBIUVT_Obj_Ang $PdBIUVT_Obj_Spnu    >> $PdBIUVT_TEMP_INIT
         echo  'TASK\REAL      "Starting range"      RANGE'$PdBIUVT_Obj_ID'$[7]    '0 0 0 0 0 0 0                                                                                                        >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\INTEGER   "number of starts"    START'$PdBIUVT_Obj_ID'$[7]    '$PdBIUVT_Fit_X $PdBIUVT_Fit_Y $PdBIUVT_Fit_Flux $PdBIUVT_Fit_Maj $PdBIUVT_Fit_Min $PdBIUVT_Fit_Ang $PdBIUVT_Obj_Spnu >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\INTEGER   "number of starts"    START'$PdBIUVT_Obj_ID'$[7]    '$PdBIUVT_Fit_X $PdBIUVT_Fit_Y $PdBIUVT_Fit_Flux $PdBIUVT_Fit_Maj $PdBIUVT_Fit_Min $PdBIUVT_Fit_Ang $PdBIUVT_Fit_Spnu >> $PdBIUVT_TEMP_INIT
         echo  'TASK\LOGICAL   "Subtract function"   SUBSF'$PdBIUVT_Obj_ID'$       '"$PdBIUVT_Obj_Sub"                                                                                                   >> $PdBIUVT_TEMP_INIT
         # 
         # Final write to PdBIUVT_TEMP_INIT
