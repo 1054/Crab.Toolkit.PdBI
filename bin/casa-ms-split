@@ -884,7 +884,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             fi
             
             # skip averaged spws by their names -- 20200602
-            if [[ x"$SPLIT_SPW_NAME" == x"CH_AVG"* ]]; then
+            if [[ x"$SPLIT_SPW_NAME" == x*"CH_AVG" ]]; then
                 echo ""
                 echo "Skipping spw \"$SPLIT_SPW_ID\" because its NAME in SPECTRAL_WINDOW table is \"$SPLIT_SPW_NAME\"!"
                 echo ""
