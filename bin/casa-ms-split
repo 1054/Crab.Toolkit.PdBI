@@ -1497,6 +1497,11 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             continue
         fi
         
+        if [[ $count_ispw -ge 1 ]]; then 
+            echo "Warning! No valid spw to process!"
+            continue
+        fi
+        
         echo "    * written to python script: $CASAMS_Script1                   PLEASE RUN: $CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script1')\""
         echo "    * written to python script: $CASAMS_Script2                    PLEASE RUN: $CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script2')\""
         echo "    * written to python script: $CASAMS_Script3            PLEASE RUN: $CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script3')\""
