@@ -883,6 +883,14 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 continue
             fi
             
+            # skip averaged spws by their names -- 20200602
+            if [[ x"$SPLIT_SPW_NAME" == x"CH_AVG"* ]]; then
+                echo ""
+                echo "Skipping spw \"$SPLIT_SPW_ID\" because its NAME in SPECTRAL_WINDOW table is \"$SPLIT_SPW_NAME\"!"
+                echo ""
+                continue
+            fi
+            
             # determine whether there are flagged channels (experimental)
             # apply this if user has not input "-spw 0:XXX~XXX 1:XXX~XXX"
             if [[ ${#CASA_INP_SPLIT_TRIMCHANNUM[@]} -ge 1 ]]; then
@@ -1497,7 +1505,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             continue
         fi
         
-        if [[ $count_ispw -ge 1 ]]; then 
+        if [[ $count_ispw -eq 0 ]]; then 
             echo "Warning! No valid spw to process!"
             continue
         fi
