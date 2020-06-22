@@ -157,6 +157,7 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
             echo "say \"go uvmap\""                             >> "$PdBIUVT_EXE"
             #echo "on error continue"                           >> "$PdBIUVT_EXE"
             echo "go uvmap"                                     >> "$PdBIUVT_EXE"
+            echo "fits 'name'.lmv-dirty.fits from 'name'.lmv /overwrite"  >> "$PdBIUVT_EXE"
         fi
         
         echo "let type lmv"                                     >> "$PdBIUVT_EXE"
