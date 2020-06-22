@@ -89,9 +89,13 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         if [[ ${#PdBIUVT_RANX_OBJT[@]} -le $i ]]; then
             PdBIUVT_MAP_RA="${PdBIUVT_RANX_OBJT[${#PdBIUVT_RANX_OBJT[@]}-1]}" # repeat the last input radec pair if the input radec pair number is less than uvtable number
             PdBIUVT_MAP_DEC="${PdBIUVT_DECX_OBJT[${#PdBIUVT_DECX_OBJT[@]}-1]}" # repeat the last input radec pair if the input radec pair number is less than uvtable number
+            PdBIUVT_MAP_RA_DEG="${PdBIUVT_RAND_OBJT[${#PdBIUVT_RAND_OBJT[@]}-1]}" # repeat the last input radec pair if the input radec pair number is less than uvtable number
+            PdBIUVT_MAP_DEC_DEG="${PdBIUVT_DECD_OBJT[${#PdBIUVT_DECD_OBJT[@]}-1]}" # repeat the last input radec pair if the input radec pair number is less than uvtable number
         else
             PdBIUVT_MAP_RA="${PdBIUVT_RANX_OBJT[i]}"
             PdBIUVT_MAP_DEC="${PdBIUVT_DECX_OBJT[i]}"
+            PdBIUVT_MAP_RA_DEG="${PdBIUVT_RAND_OBJT[i]}"
+            PdBIUVT_MAP_DEC_DEG="${PdBIUVT_DECD_OBJT[i]}"
         fi
         if [[ ${#PdBIUVT_OBJ_ANGLE[@]} -gt 0 ]]; then
             if [[ ${#PdBIUVT_OBJ_ANGLE[@]} -le $i ]]; then
@@ -101,6 +105,23 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
             fi
         else
             PdBIUVT_MAP_ANGLE="0"
+        fi
+        # 
+        # print shifted arcsec
+        # 
+        if [[ 1 == 1 ]]; then
+            echo "header ${PdBIUVT_NAME[i]}.uvt" | mapping -nw -nl > "${PdBIUVT_NAME[i]}.uvt.header.txt"
+            PdBIUVT_PHASECENTER_RA_DEC=($(grep "Axis 0 * A0 * D0" "${PdBIUVT_NAME[i]}.uvt.header.txt" | head -n 1 | tr -s ' ' | cut -d ' ' -f 4,8))
+            PdBIUVT_PHASECENTER_RA_DEC_DEG=($(radec2degree ${PdBIUVT_PHASECENTER_RA_DEC[@]}))
+            PdBIUVT_PHASECENTER_RA_DEG=${PdBIUVT_PHASE_CENTER_RA_DEC_DEG[0]}
+            PdBIUVT_PHASECENTER_DEC_DEG=${PdBIUVT_PHASE_CENTER_RA_DEC_DEG[1]}
+            echo "Phase center RA Dec: $PdBIUVT_PHASECENTER_RA_DEG $PdBIUVT_PHASECENTER_DEC_DEG"
+            echo "Shift to RA Dec: $PdBIUVT_MAP_RA_DEG $PdBIUVT_MAP_DEC_DEG"
+            echo "Shifted angular distance in arcsec: "$(awk "BEGIN {print sqrt( ((($PdBIUVT_MAP_RA_DEG)-($PdBIUVT_PHASECENTER_RA_DEG))*cos($PdBIUVT_PHASECENTER_DEC_DEG/180.0*3.1415926))^2 + (($PdBIUVT_MAP_DEC_DEG)-($PdBIUVT_PHASECENTER_DEC_DEG))^2 )*3600.0;}")
+            #frequency_GHz
+            #antenna_diameter
+            #echo "Primary beam size in arcsec: "$(awk "BEGIN print {1.13*2.99792458e5/(${frequency_GHz})/((${antenna_diameter})*1e6)/3.1415926*180.0*3600.0;}")
+            # 1.13*2.99792458e5/sky_frequency_GHz/(primary_beam_diam_meter*1e6)/3.1415926*180.0*3600.0
         fi
         # 
         # prepare gildas/mapping init and script and run
@@ -148,6 +169,9 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
                 fi
                 if [[ -f "$PdBIUVT_TEMP_EXEC" ]]; then
                     rm "$PdBIUVT_TEMP_EXEC"
+                fi
+                if [[ -f "${PdBIUVT_NAME[i]}.uvt.header.txt" ]]; then
+                    rm "${PdBIUVT_NAME[i]}.uvt.header.txt"
                 fi
             fi
         else
