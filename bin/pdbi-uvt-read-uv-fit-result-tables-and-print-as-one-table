@@ -31,7 +31,7 @@ for (( i = 1; i <= $#; i++ )); do
         printf "# %-${first_column_width}s  %s\n" "uvfit_result_table" "$first_line_content"
         printf "# %-${first_column_width}s  %s\n" "------------------" "$second_line_content"
     fi
-    first_column_content=$(printf "%${first_column_width}s" "$uvfit_result_table")
+    first_column_content=$(printf "%-${first_column_width}s" "$uvfit_result_table")
     tail -n +3 "$uvfit_result_table" | sed -e "s%^%  $first_column_content  %g"
     
 done
