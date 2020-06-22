@@ -161,6 +161,13 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         
         echo ""                                                 >> "$PdBIUVT_EXE"
         echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"let niter 1\""                              >> "$PdBIUVT_EXE"
+        echo "say \"clean\""                                    >> "$PdBIUVT_EXE"
+        echo "let niter 1"                                      >> "$PdBIUVT_EXE"
+        echo "clean"                                            >> "$PdBIUVT_EXE"
+        
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
         echo "say \"go noise\""                                 >> "$PdBIUVT_EXE"
         #echo "on error continue"                               >> "$PdBIUVT_EXE"
         echo "go noise"                                         >> "$PdBIUVT_EXE"
@@ -205,6 +212,8 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo "go view"                                          >> "$PdBIUVT_EXE"
         
         echo "let do_header $PdBIUVT_SHOW_HEADER"               >> "$PdBIUVT_EXE"
+        echo "let do_bit yes"                                   >> "$PdBIUVT_EXE"
+        echo "let do_contour yes"                               >> "$PdBIUVT_EXE"
         echo "go nice"                                          >> "$PdBIUVT_EXE"
         
         echo ""                                                 >> "$PdBIUVT_EXE"
