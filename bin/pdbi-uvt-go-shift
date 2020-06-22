@@ -111,9 +111,11 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # 
         if [[ 1 == 1 ]]; then
             echo "header ${PdBIUVT_NAME[i]}.uvt" | mapping -nw -nl > "${PdBIUVT_NAME[i]}.uvt.header.txt"
-            echo "grep \"Axis 0 *A0 *.* *Axis 0 * D0 *.*\" \"${PdBIUVT_NAME[i]}.uvt.header.txt\""
+            PdBIUVT_SKYFREQUENCY=$(grep "Axis 1 *.* *Rest Frequency *.*" "${PdBIUVT_NAME[i]}.uvt.header.txt" | head -n 1 | perl -p -e 's/^.*Rest Frequency *//g')
+            echo "Sky frequency in MHz: $PdBIUVT_SKYFREQUENCY"
+            #echo "grep \"Axis 0 *A0 *.* *Axis 0 * D0 *.*\" \"${PdBIUVT_NAME[i]}.uvt.header.txt\""
             PdBIUVT_PHASECENTER_RA_DEC=($(grep "Axis 0 *A0 *.* *Axis 0 * D0 *.*" "${PdBIUVT_NAME[i]}.uvt.header.txt" | head -n 1 | tr -s ' ' | cut -d ' ' -f 4,8))
-            echo "radec2degree ${PdBIUVT_PHASECENTER_RA_DEC[@]}"
+            #echo "radec2degree ${PdBIUVT_PHASECENTER_RA_DEC[@]}"
             PdBIUVT_PHASECENTER_RA_DEC_DEG=($(radec2degree ${PdBIUVT_PHASECENTER_RA_DEC[@]}))
             PdBIUVT_PHASECENTER_RA_DEG=${PdBIUVT_PHASECENTER_RA_DEC_DEG[0]}
             PdBIUVT_PHASECENTER_DEC_DEG=${PdBIUVT_PHASECENTER_RA_DEC_DEG[1]}
