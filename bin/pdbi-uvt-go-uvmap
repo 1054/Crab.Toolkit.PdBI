@@ -159,12 +159,17 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
             echo "go uvmap"                                     >> "$PdBIUVT_EXE"
         fi
         
-        echo ""                                                 >> "$PdBIUVT_EXE"
-        echo "say \"\""                                         >> "$PdBIUVT_EXE"
-        echo "say \"let niter 1\""                              >> "$PdBIUVT_EXE"
-        echo "say \"clean\""                                    >> "$PdBIUVT_EXE"
-        echo "let niter 1"                                      >> "$PdBIUVT_EXE"
-        echo "clean"                                            >> "$PdBIUVT_EXE"
+        #echo ""                                                 >> "$PdBIUVT_EXE"
+        #echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        #echo "say \"let niter 1\""                              >> "$PdBIUVT_EXE"
+        #echo "say \"clean\""                                    >> "$PdBIUVT_EXE"
+        #echo "let niter 1"                                      >> "$PdBIUVT_EXE"
+        #echo "clean"                                            >> "$PdBIUVT_EXE"
+        
+        echo "let type lmv"                                     >> "$PdBIUVT_EXE"
+        echo "read uv 'name'.uvt"                               >> "$PdBIUVT_EXE"
+        echo "read dirty 'name'.lmv"                            >> "$PdBIUVT_EXE"
+        echo "read beam 'name'.beam"                            >> "$PdBIUVT_EXE"
         
         echo ""                                                 >> "$PdBIUVT_EXE"
         echo "say \"\""                                         >> "$PdBIUVT_EXE"
