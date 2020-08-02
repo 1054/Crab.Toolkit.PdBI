@@ -166,6 +166,8 @@ PdBIUVT_UVMERGE_WEIGHT=()
 PdBIUVT_UVMERGE_FACTOR=()
 PdBIUVT_UVMERGE_KEEP_FILE=0
 PdBIUVT_UVMERGE_CONT_MODE=0
+# ------------------------# uv ctime (timebin)
+PdBIUVT_UVCTIME_TIMEBIN=30
 # ------------------------# uv compress
 PdBIUVT_UVCOMPRESS_NC=()  # channel number to compress
 # ------------------------# uv map

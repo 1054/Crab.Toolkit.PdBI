@@ -1,0 +1,182 @@
+#!/bin/bash
+# 
+# Input uvtablefile
+# Run the task UV_CTIME to time-average a UV data set
+# 
+# Last update:
+#    2020-06-24
+# 
+# 
+
+
+
+# 
+# Uage
+# 
+usage() {
+    echo "Usage: "
+    echo "  pdbi-uvt-go-timebin -name UV_TABLE_NAME"
+    echo ""
+    echo "  Run the task UV_CTIME to time-average a UV data set."
+    echo ""
+}
+
+
+
+# 
+# SOURCE pdbi-uvt-core-arg
+# 
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v12" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v12" "$@"
+else
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v12\"!"
+    echo ""
+    exit 1
+fi
+
+
+
+# 
+# Check input parameters -- uvt file name, velocity width ("-width") or line width ("-linewidth")
+# 
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]]; then
+    usage; exit
+fi
+
+
+
+# 
+# Loop input uv tables
+# 
+for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
+    
+    
+    
+    # 
+    # if type is uvtable
+    # 
+    if [[ ${PdBIUVT_TYPE[tk]} != "uvt" && ${PdBIUVT_TYPE[tk]} != "UVT" ]]; then
+        continue
+    fi
+    
+    
+    # 
+    # Set default output file name
+    # 
+    if [[ ${#PdBIUVT_SAVE[@]} -le $i ]]; then
+        PdBIUVT_SAVE+=("${PdBIUVT_NAME[i]}-Timebinned")
+    fi
+    if [[ x"${PdBIUVT_SAVE[i]}" == x || x"${PdBIUVT_SAVE[i]}" == x"tmp_pdbi_uvt" ]]; then 
+        PdBIUVT_SAVE[i]="${PdBIUVT_NAME[i]}-Timebinned"
+        echo ""; echo "Warning! Output name was not given for the input uvtable \"${PdBIUVT_NAME[i]}\", setting to \"${PdBIUVT_SAVE[i]}.uvt\""; echo ""
+    fi
+    # 
+    # Remove suffix
+    # 
+    if [[ x"${PdBIUVT_SAVE[i]}" == x*".uvt" ]]; then
+        PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.uvt$//g')
+    fi
+    if [[ x"${PdBIUVT_SAVE[i]}" == x*".UVT" ]]; then
+        PdBIUVT_SAVE[i]=$(echo "${PdBIUVT_SAVE[i]}" | sed -e 's/\.UVT$//g')
+    fi
+    # 
+    # Backup existing output file
+    # 
+    if [[ -f "${PdBIUVT_SAVE[i]}.uvt" ]]; then
+        if [[ -f "${PdBIUVT_SAVE[i]}.uvt.backup" ]]; then
+            rm "${PdBIUVT_SAVE[i]}.uvt.backup"
+        fi
+        echo "Warning! Found existing \"${PdBIUVT_SAVE[i]}.uvt\"! Backup as \"${PdBIUVT_SAVE[i]}.uvt.backup\"!"
+        mv "${PdBIUVT_SAVE[i]}.uvt" "${PdBIUVT_SAVE[i]}.uvt.backup"
+    fi
+    
+    
+    
+    # 
+    # prepare gildas/mapping init and script and run
+    # 
+    # 
+    PdBIUVT_TEMP_INIT="${PdBIUVT_NAME[tk]}.uvt.uv_timebase.init"
+    PdBIUVT_TEMP_EXEC="${PdBIUVT_NAME[tk]}.uvt.uv_timebase.map"
+    PdBIUVT_TEMP_LOGT="${PdBIUVT_NAME[tk]}.uvt.uv_timebase.log"
+    echo  '! '                                                                                                            > $PdBIUVT_TEMP_INIT
+    echo  '! Task UV_TIMEBASE'                                                                                           >> $PdBIUVT_TEMP_INIT
+    echo  '!'                                                                                                            >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\FILE "Input UV Table"                 INPUT$     "'${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}'"'            >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\FILE "Output UV Table"               OUTPUT$     "'${PdBIUVT_SAVE[tk]}_tmp_sorted.uvt'"'                 >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\GO'                                                                                                      >> $PdBIUVT_TEMP_INIT
+    echo  "run uv_timebase $PdBIUVT_TEMP_INIT /NOWINDOW" > $PdBIUVT_TEMP_EXEC
+    echo  "@$PdBIUVT_TEMP_EXEC | mapping -nw -nl > $PdBIUVT_TEMP_LOGT"
+    echo  "@$PdBIUVT_TEMP_EXEC" | mapping -nw -nl > "$PdBIUVT_TEMP_LOGT"
+    
+    if grep -q "successfully" "$PdBIUVT_TEMP_LOGT"; then
+        echo "Successufully processed \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"!"
+        echo "--"
+        if [[ $PdBIUVT_UVMERGE_KEEP_FILE -le 0 ]]; then
+            if [[ -f "$PdBIUVT_TEMP_LOGT" ]]; then
+                rm "$PdBIUVT_TEMP_LOGT"
+                rm "$PdBIUVT_TEMP_INIT"
+                rm "$PdBIUVT_TEMP_EXEC"
+            fi
+        fi
+    else
+        echo "Error! Failed to run GILDAS MAPPING UV_TIMEBASE and process \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"!"
+        echo "Please check \"$PdBIUVT_TEMP_LOGT\"!"
+        exit 1
+    fi
+    
+    
+    
+    # 
+    # prepare gildas/mapping init and script and run
+    # 
+    # 
+    PdBIUVT_TEMP_INIT="${PdBIUVT_NAME[tk]}.uvt.uv_ctime.init"
+    PdBIUVT_TEMP_EXEC="${PdBIUVT_NAME[tk]}.uvt.uv_ctime.map"
+    PdBIUVT_TEMP_LOGT="${PdBIUVT_NAME[tk]}.uvt.uv_ctime.log"
+    echo  '! '                                                                                                            > $PdBIUVT_TEMP_INIT
+    echo  '! Task UV_CTIME'                                                                                              >> $PdBIUVT_TEMP_INIT
+    echo  '!'                                                                                                            >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "Input UV Table"              UV_INPUT$     "'${PdBIUVT_SAVE[tk]}_tmp_sorted.uvt'"'            >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "Output UV Table"            UV_OUTPUT$     "'${PdBIUVT_SAVE[tk]}.uvt'"'                       >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\REAL      "Averaging seconds"               TIME$      '${PdBIUVT_UVCTIME_TIMEBIN}                       >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\REAL      "Maximum UV distance"               UV$      '10000                                            >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\INTEGER   "Weighting channel"               WCOL$      '0                                                >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\GO'                                                                                                      >> $PdBIUVT_TEMP_INIT
+    echo  "run uv_ctime $PdBIUVT_TEMP_INIT /NOWINDOW" > $PdBIUVT_TEMP_EXEC
+    echo  "@$PdBIUVT_TEMP_EXEC | mapping -nw -nl > $PdBIUVT_TEMP_LOGT"
+    echo  "@$PdBIUVT_TEMP_EXEC" | mapping -nw -nl > "$PdBIUVT_TEMP_LOGT"
+    
+    if grep -q "successfully" "$PdBIUVT_TEMP_LOGT"; then
+        echo "Successufully processed \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"!"
+        echo "--"
+        if [[ $PdBIUVT_UVMERGE_KEEP_FILE -le 0 ]]; then
+            if [[ -f "$PdBIUVT_TEMP_LOGT" ]]; then
+                rm "$PdBIUVT_TEMP_LOGT"
+                rm "$PdBIUVT_TEMP_INIT"
+                rm "$PdBIUVT_TEMP_EXEC"
+                rm ${PdBIUVT_SAVE[tk]}_tmp_sorted.uvt
+            fi
+        fi
+    else
+        echo "Error! Failed to run GILDAS MAPPING UV_CTIME and process \"${PdBIUVT_SAVE[tk]}_tmp_sorted.uvt\"!"
+        echo "Please check \"$PdBIUVT_TEMP_LOGT\"!"
+        exit 1
+    fi
+    
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
