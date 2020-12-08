@@ -8,6 +8,7 @@
 # Updates:
 #    20170209 created
 #    20180211 also check [[ ! -L "$1" ]] in 'Is_File()' 'checkDirExistence()' 'checkFileExistence()' functions, and '[[ -L "$DIR" ]]' in 'readlink()' function.
+#    20201208 CASA_INP_RESTRICT_WIDTH
 # 
 # 
 # 
@@ -87,6 +88,7 @@ CASA_INP_FIELD=() # i.e. string type FIELD with two quotes in CASA, or string ty
 CASA_INP_FREQ=()
 CASA_INP_SPW=()
 CASA_INP_WIDTH=()
+CASA_INP_RESTRICT_WIDTH=1 # whether to restrict the extracting channel width or allow width to vary even it is larger than 
 CASA_INP_STOKES=()
 CASA_INP_INTENT=()
 CASA_INP_MISC=()
@@ -143,6 +145,8 @@ while [[ "$#" -gt 0 ]]; do
                    "-width") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="spw-width";;
                "-spw-width") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="spw-width";;
                    "-nchan") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="spw-width";;
+          "-restrict-width") CASA_CMD_TEXT="$1";        CASA_CMD_TYPE="restrict-width";;
+   "-do-not-restrict-width") CASA_CMD_TEXT="$1";        CASA_CMD_TYPE="do-not-restrict-width";;
             "-polarization") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="stokes";;
                    "-polar") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="stokes";;
                    "-stoke") CASA_CMD_TEXT="$1"; shift; CASA_CMD_TYPE="stokes";;
@@ -189,6 +193,8 @@ while [[ "$#" -gt 0 ]]; do
                      "freq") if [[ $# -gt 0 ]]; then CASA_INP_FREQ+=("$1"); fi;;
                       "spw") if [[ $# -gt 0 ]]; then CASA_INP_SPW+=("$1"); fi;;
                 "spw-width") if [[ $# -gt 0 ]]; then CASA_INP_WIDTH+=("$1"); fi;;
+           "restrict-width") if [[ $# -gt 0 ]]; then CASA_INP_RESTRICT_WIDTH=1; fi;;
+    "do-not-restrict-width") if [[ $# -gt 0 ]]; then CASA_INP_RESTRICT_WIDTH=0; fi;;
                    "stokes") if [[ $# -gt 0 ]]; then CASA_INP_STOKES+=("$1"); fi;;
                    "intent") if [[ $# -gt 0 ]]; then CASA_INP_INTENT+=("$1"); fi;;
           "uvfit-iteration") if [[ $# -gt 0 ]]; then CASA_INP_UVFIT_ITERATION+=("$1"); fi;;

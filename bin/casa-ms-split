@@ -993,16 +993,27 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 SPLIT_WID=$(echo "$SPLIT_WID" | sed -e 's%km/s%%g' | sed -e 's%KM/S%%g')
                 SPLIT_WID_STR="${SPLIT_WID}kms"
                 #<DEBUG> awk "BEGIN {print ((2e+09/128)/(8.9743e+10)*2.99792458e5);}"
+                # if the user input channel width is smaller than the minimum allowed channel width in this spw, 
+                # and if -restirct-width is not set, we set the width to the minimum 1 channel.
                 if [[ $(awk "BEGIN {if ($SPLIT_WID<($SPLIT_WID_MIN_KMS)) print 1; else print 0;}") -eq 1 ]]; then
-                    echo ""
-                    echo "Error! The given channel width \"${SPLIT_WID_STR}\" is too small for this spw $SPLIT_SPW_ID'! Minimum channel width is \"${SPLIT_WID_MIN_KMS}km/s\"."
-                    echo "Please set -width to at least the minimum value and try again if you want to split this spw. We will skip it for now."
-                    echo ""
-                    continue
+                    if [[ $CASA_INP_RESTRICT_WIDTH -eq 1 ]]; then
+                        echo ""
+                        echo "Error! The given channel width \"${SPLIT_WID_STR}\" is too small for this spw $SPLIT_SPW_ID'! Minimum channel width is \"${SPLIT_WID_MIN_KMS}km/s\"."
+                        echo "Please set -width to at least the minimum value and try again if you want to split this spw. We will skip it for now."
+                        echo ""
+                        continue
+                    else
+                        SPLIT_WID=1
+                    fi
                 fi
                 # convert width in velocity to width in channel number and round to integer (floor)
                 SPLIT_WID=$(awk "BEGIN {printf ( \"%.0f\", $SPLIT_WID/($SPLIT_WID_MIN_KMS) );}")
                 SPLIT_WID=$(awk "BEGIN {if ($SPLIT_WID<1) print 1; else print $SPLIT_WID;}")
+                # 
+                # update the channel width string using the actual width, irrespective of the user input
+                if [[ $CASA_INP_RESTRICT_WIDTH -eq 0 ]]; then
+                    SPLIT_WID_STR=$(awk "BEGIN {printf ( \"%.0f\", ($SPLIT_WID_MIN_KMS)*($SPLIT_WID) );}")"kms"
+                fi
             fi
             # if the width is wider than the whole bandwidth of the spw, use the whole bandwidth
             #SPLIT_WID=$(awk "BEGIN {if ($SPLIT_WID>$SPLIT_SPW_NUMCHAN) print $SPLIT_SPW_NUMCHAN; else print $SPLIT_WID;}")
