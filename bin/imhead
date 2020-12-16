@@ -17,7 +17,7 @@ root_dirname=$(dirname "${BASH_SOURCE[0]}")
 root_basename=$(basename "${BASH_SOURCE[0]}")
 # Linux
 if [[ $(uname -s) == Linux ]]; then
-    ldd_versions=($(ldd --version | head -n 1 | perl -p -e 's/.* ([0-9.]*)/\1/g' | perl -p -e 's/\./ /g'))
+    ldd_versions=($(ldd --version | head -n 1 | perl -p -e 's/.* ([0-9.]+) *$/\1/g' | perl -p -e 's/\./ /g'))
     bin_dirname="wcstools_linux_Glibc_2.14"
     if [[ ${#ldd_versions[@]} -ge 2 ]]; then
         ldd_version_major="${ldd_versions[0]}"
