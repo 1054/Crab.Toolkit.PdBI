@@ -1192,9 +1192,9 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "#!/bin/bash"                                                       > "$CASAMS_Script6"
                     
                     echo "source \"$(dirname ${BASH_SOURCE[0]})/bin-clear-casa-path\""       >> "$CASAMS_Script6" # clear CASA path for running GILDAS
-                    echo "if [[ ! -z $GAG_PATH ]]; then "                                    >> "$CASAMS_Script6" # re-source GILDAS
-                    echo "    if [[ -f \"$GAG_PATH/bash_profile\" ]]; then "                 >> "$CASAMS_Script6" # re-source GILDAS
-                    echo "        source \"$GAG_PATH/bash_profile\""                         >> "$CASAMS_Script6" # re-source GILDAS
+                    echo "if [[ ! -z \$GAG_PATH ]]; then "                                   >> "$CASAMS_Script6" # re-source GILDAS
+                    echo "    if [[ -f \"\$GAG_PATH/bash_profile\" ]]; then "                >> "$CASAMS_Script6" # re-source GILDAS
+                    echo "        source \"\$GAG_PATH/bash_profile\""                        >> "$CASAMS_Script6" # re-source GILDAS
                     echo "    fi"                                                            >> "$CASAMS_Script6" # re-source GILDAS
                     echo "fi"                                                                >> "$CASAMS_Script6" # re-source GILDAS
                     
