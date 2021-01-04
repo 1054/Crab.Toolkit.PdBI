@@ -576,7 +576,10 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         echo "Running "
         echo "    $CASA_COMMAND --nogui --log2term -c \"$CASAMS_ScriptName.py\" > \"$CASAMS_ScriptName.log\" 2>&1"
         
+        export BACKUP_LD_LIBRARY_PATH="$LD_LIBRARY_PATH"
+        export LD_LIBRARY_PATH=
         $CASA_COMMAND --nogui --log2term -c "$CASAMS_ScriptName.py" > "$CASAMS_ScriptName.log" 2>&1
+        export LD_LIBRARY_PATH="$BACKUP_LD_LIBRARY_PATH"
         
         if [[ $(cat "$CASAMS_ScriptName.log" | grep -i "Error" | wc -l) -gt 0 ]]; then
             echo "Error! Failed to run \"$CASAMS_ScriptName.py\" in CASA! Please check \"$CASAMS_ScriptName.log\"!"
@@ -1189,6 +1192,11 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "#!/bin/bash"                                                       > "$CASAMS_Script6"
                     
                     echo "source \"$(dirname ${BASH_SOURCE[0]})/bin-clear-casa-path\""       >> "$CASAMS_Script6" # clear CASA path for running GILDAS
+                    echo "if [[ ! -z $GAG_PATH ]]; then "                                    >> "$CASAMS_Script6" # re-source GILDAS
+                    echo "    if [[ -f \"$GAG_PATH/bash_profile\" ]]; then "                 >> "$CASAMS_Script6" # re-source GILDAS
+                    echo "        source \"$GAG_PATH/bash_profile\""                         >> "$CASAMS_Script6" # re-source GILDAS
+                    echo "    fi"                                                            >> "$CASAMS_Script6" # re-source GILDAS
+                    echo "fi"                                                                >> "$CASAMS_Script6" # re-source GILDAS
                     
                     
                     echo "import os, sys"                                                                                    >> "$CASAMS_Script1"
@@ -1548,6 +1556,8 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
         #<DEBUG># break
         
         for (( istep=0; istep<${#CASA_INP_STEPS[@]}; istep++ )); do
+            export BACKUP_LD_LIBRARY_PATH="$LD_LIBRARY_PATH"
+            export LD_LIBRARY_PATH=
             if [[ "${CASA_INP_STEPS[istep]}" == "1" || "${CASA_INP_STEPS[istep]}" == "split" ]]; then
                 echo ""
                 echo "Running $CASA_COMMAND --nogui --log2term -c \"execfile('$CASAMS_Script1')\""
@@ -1578,9 +1588,10 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 echo ""
                 $CASA_COMMAND --nogui --log2term -c "execfile('$CASAMS_Script5')"
             fi
+            export LD_LIBRARY_PATH="$BACKUP_LD_LIBRARY_PATH"
             if [[ "${CASA_INP_STEPS[istep]}" == "6" || "${CASA_INP_STEPS[istep]}" == "gildas" ]]; then
                 echo ""
-                echo "Running bash -c \"$CASAMS_Script6\""
+                echo "Running ./$CASAMS_Script6"
                 echo ""
                 chmod +x "$CASAMS_Script6"
                 ./"$CASAMS_Script6"
