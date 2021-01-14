@@ -19,6 +19,7 @@
 #     2018-10-23 Added option "-stokes"
 #     2019-10-10 Now set default parameters for current object when calling -offset or -radec, instead of setting previous object when calling next -offset or -radec.
 #     2020-04-17 Added option "-clean-mask", updated more PdBIUVT_TYPE.
+#     2021-01-14 Fixed bug: "-c_gauss" option is not recognized ("-cgauss" works), this is because arg str has "_" replaced as "-". this is fixed now (lines 270-271).
 # 
 
 
@@ -266,8 +267,8 @@ while [[ "$#" -gt 0 ]]; do
                "-gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FUNC_GAUSS";; # do not accept inputing a value, therefore no shift here. 
               "-egauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FUNC_EGAUSS";; # do not accept inputing a value, therefore no shift here. 
               "-cgauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FUNC_CGAUSS";; # do not accept inputing a value, therefore no shift here. 
-             "-e_gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FUNC_EGAUSS";; # do not accept inputing a value, therefore no shift here. 
-             "-c_gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FUNC_CGAUSS";; # do not accept inputing a value, therefore no shift here. 
+             "-e-gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FUNC_EGAUSS";; # do not accept inputing a value, therefore no shift here. 
+             "-c-gauss") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FUNC_CGAUSS";; # do not accept inputing a value, therefore no shift here. 
                 "-disk") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FUNC_DISK";; # do not accept inputing a value, therefore no shift here. 
                "-edisk") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FUNC_EDISK";; # do not accept inputing a value, therefore no shift here. 
                "-cdisk") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="OBJ_FUNC_CDISK";; # do not accept inputing a value, therefore no shift here. 
@@ -800,6 +801,7 @@ while [[ "$#" -gt 0 ]]; do
     fi
     if [[ "$PdBIUVT_RPAR" == "OBJ_FUNC_CGAUSS" ]]; then
         PdBIUVT_OBJ_FUNC[PdBIUVT_OBJ_NUMB-1]="C_GAUSS"
+        #echo "PdBIUVT_OBJ_FUNC=${PdBIUVT_OBJ_FUNC[@]} (${#PdBIUVT_OBJ_FUNC[@]})"
     fi
     if [[ "$PdBIUVT_RPAR" == "OBJ_FUNC_EGAUSS" ]]; then
         PdBIUVT_OBJ_FUNC[PdBIUVT_OBJ_NUMB-1]="E_GAUSS"
