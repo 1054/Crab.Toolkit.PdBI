@@ -87,24 +87,24 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # check input radec
         # 
         if [[ ${#PdBIUVT_RANX_OBJT[@]} -le $i ]]; then
-            PdBIUVT_MAP_RA="${PdBIUVT_RANX_OBJT[${#PdBIUVT_RANX_OBJT[@]}-1]}" # repeat the last input radec pair if the input radec pair number is less than uvtable number
-            PdBIUVT_MAP_DEC="${PdBIUVT_DECX_OBJT[${#PdBIUVT_DECX_OBJT[@]}-1]}" # repeat the last input radec pair if the input radec pair number is less than uvtable number
-            PdBIUVT_MAP_RA_DEG="${PdBIUVT_RAND_OBJT[${#PdBIUVT_RAND_OBJT[@]}-1]}" # repeat the last input radec pair if the input radec pair number is less than uvtable number
-            PdBIUVT_MAP_DEC_DEG="${PdBIUVT_DECD_OBJT[${#PdBIUVT_DECD_OBJT[@]}-1]}" # repeat the last input radec pair if the input radec pair number is less than uvtable number
+            PdBIUVT_TEMP_MAP_RA="${PdBIUVT_RANX_OBJT[${#PdBIUVT_RANX_OBJT[@]}-1]}" # repeat the last input radec pair if the input radec pair number is less than uvtable number
+            PdBIUVT_TEMP_MAP_DEC="${PdBIUVT_DECX_OBJT[${#PdBIUVT_DECX_OBJT[@]}-1]}" # repeat the last input radec pair if the input radec pair number is less than uvtable number
+            PdBIUVT_TEMP_MAP_RA_DEG="${PdBIUVT_RAND_OBJT[${#PdBIUVT_RAND_OBJT[@]}-1]}" # repeat the last input radec pair if the input radec pair number is less than uvtable number
+            PdBIUVT_TEMP_MAP_DEC_DEG="${PdBIUVT_DECD_OBJT[${#PdBIUVT_DECD_OBJT[@]}-1]}" # repeat the last input radec pair if the input radec pair number is less than uvtable number
         else
-            PdBIUVT_MAP_RA="${PdBIUVT_RANX_OBJT[i]}"
-            PdBIUVT_MAP_DEC="${PdBIUVT_DECX_OBJT[i]}"
-            PdBIUVT_MAP_RA_DEG="${PdBIUVT_RAND_OBJT[i]}"
-            PdBIUVT_MAP_DEC_DEG="${PdBIUVT_DECD_OBJT[i]}"
+            PdBIUVT_TEMP_MAP_RA="${PdBIUVT_RANX_OBJT[i]}"
+            PdBIUVT_TEMP_MAP_DEC="${PdBIUVT_DECX_OBJT[i]}"
+            PdBIUVT_TEMP_MAP_RA_DEG="${PdBIUVT_RAND_OBJT[i]}"
+            PdBIUVT_TEMP_MAP_DEC_DEG="${PdBIUVT_DECD_OBJT[i]}"
         fi
         if [[ ${#PdBIUVT_OBJ_ANGLE[@]} -gt 0 ]]; then
             if [[ ${#PdBIUVT_OBJ_ANGLE[@]} -le $i ]]; then
-                PdBIUVT_MAP_ANGLE="${PdBIUVT_OBJ_ANGLE[${#PdBIUVT_OBJ_ANGLE[@]}-1]}"
+                PdBIUVT_TEMP_MAP_ANGLE="${PdBIUVT_OBJ_ANGLE[${#PdBIUVT_OBJ_ANGLE[@]}-1]}"
             else
-                PdBIUVT_MAP_ANGLE="${PdBIUVT_OBJ_ANGLE[i]}"
+                PdBIUVT_TEMP_MAP_ANGLE="${PdBIUVT_OBJ_ANGLE[i]}"
             fi
         else
-            PdBIUVT_MAP_ANGLE="0"
+            PdBIUVT_TEMP_MAP_ANGLE="0"
         fi
         # 
         # print shifted arcsec
@@ -120,8 +120,8 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
             PdBIUVT_PHASECENTER_RA_DEG=${PdBIUVT_PHASECENTER_RA_DEC_DEG[0]}
             PdBIUVT_PHASECENTER_DEC_DEG=${PdBIUVT_PHASECENTER_RA_DEC_DEG[1]}
             echo "Phase center RA Dec: $PdBIUVT_PHASECENTER_RA_DEG $PdBIUVT_PHASECENTER_DEC_DEG"
-            echo "Shift to RA Dec: $PdBIUVT_MAP_RA_DEG $PdBIUVT_MAP_DEC_DEG"
-            echo "Shifted angular distance in arcsec: "$(awk "BEGIN {print sqrt( ((($PdBIUVT_MAP_RA_DEG)-($PdBIUVT_PHASECENTER_RA_DEG))*cos($PdBIUVT_PHASECENTER_DEC_DEG/180.0*3.1415926))^2 + (($PdBIUVT_MAP_DEC_DEG)-($PdBIUVT_PHASECENTER_DEC_DEG))^2 )*3600.0;}")
+            echo "Shift to RA Dec: $PdBIUVT_TEMP_MAP_RA_DEG $PdBIUVT_TEMP_MAP_DEC_DEG"
+            echo "Shifted angular distance in arcsec: "$(awk "BEGIN {print sqrt( ((($PdBIUVT_TEMP_MAP_RA_DEG)-($PdBIUVT_PHASECENTER_RA_DEG))*cos($PdBIUVT_PHASECENTER_DEC_DEG/180.0*3.1415926))^2 + (($PdBIUVT_TEMP_MAP_DEC_DEG)-($PdBIUVT_PHASECENTER_DEC_DEG))^2 )*3600.0;}")
             #frequency_GHz
             #antenna_diameter
             #echo "Primary beam size in arcsec: "$(awk "BEGIN print {1.13*2.99792458e5/(${frequency_GHz})/((${antenna_diameter})*1e6)/3.1415926*180.0*3600.0;}")
@@ -131,8 +131,8 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # prepare gildas/mapping init and script and run
         # 
         # "let name ${PdBIUVT_NAME[i]}"
-        # "let map_ra ${PdBIUVT_MAP_RA}"
-        # "let map_dec ${PdBIUVT_MAP_DEC}"
+        # "let map_ra ${PdBIUVT_TEMP_MAP_RA}"
+        # "let map_dec ${PdBIUVT_TEMP_MAP_DEC}"
         # 
         #PdBIUVT_TEMP_INIT="${PdBIUVT_SAVE[i]}.init"
         #PdBIUVT_TEMP_EXEC="${PdBIUVT_SAVE[i]}.map"
@@ -150,9 +150,9 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo  'TASK\CHARACTER "UV table 1"                             UVTABLE$      "'${PdBIUVT_SAVE[i]}.uvt'"'              >> $PdBIUVT_TEMP_INIT
         echo  'TASK\LOGICAL   "Offset mode YES or Absolute mode NO"   RELATIVE$       ' NO                                    >> $PdBIUVT_TEMP_INIT
         echo  'TASK\REAL      "Offset mode offset by radians"           OFFSET$[2]    ' 0 0                                   >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\CHARACTER "Absolute mode RA center"              RA_CENTER$      "'$PdBIUVT_MAP_RA'"'                     >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\CHARACTER "Absolute mode DEC center"            DEC_CENTER$      "'$PdBIUVT_MAP_DEC'"'                    >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\REAL      "Angle"                                    ANGLE$       '$PdBIUVT_MAP_ANGLE                     >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\CHARACTER "Absolute mode RA center"              RA_CENTER$      "'$PdBIUVT_TEMP_MAP_RA'"'                >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\CHARACTER "Absolute mode DEC center"            DEC_CENTER$      "'$PdBIUVT_TEMP_MAP_DEC'"'               >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\REAL      "Angle"                                    ANGLE$       '$PdBIUVT_TEMP_MAP_ANGLE                >> $PdBIUVT_TEMP_INIT
         echo  'TASK\LOGICAL   "Accuracy"                               PRECISE$       ' YES                                   >> $PdBIUVT_TEMP_INIT
         echo  'TASK\GO'                                                                                                       >> $PdBIUVT_TEMP_INIT
         echo  "run uv_shift $PdBIUVT_TEMP_INIT /NOWINDOW" > $PdBIUVT_TEMP_EXEC

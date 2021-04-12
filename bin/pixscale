@@ -1,5 +1,6 @@
 #!/bin/bash
 # 
+# 20210204: Fixed ${tmp_naxis[1]}-1 issue. Changed "${tmp_naxis[1]}" to "${tmp_naxis[1]}-1", and [0]. 
 # 
 
 
@@ -18,11 +19,11 @@ if [[ "$*" == *"-verbose"* ]]; then
     echo "RADECS = ${tmp_radec[@]} (((${tmp_radec[5+1]})-(${tmp_radec[1]})))"
 fi
 if [[ "$*" == *"-2D"* ]]; then
-    tmp_pixsc2=$(awk "BEGIN { print ((${tmp_radec[5+1]})-(${tmp_radec[1]}))/(${tmp_naxis[1]})*3600.0 }")
-    tmp_pixsc1=$(awk "BEGIN { print ((${tmp_radec[5+0]})-(${tmp_radec[0]}))*cos( ((${tmp_radec[1]})+(${tmp_radec[5+1]}))/2.0/180.0*3.14159265359 )/(${tmp_naxis[0]})*3600.0 }")
+    tmp_pixsc2=$(awk "BEGIN { print ((${tmp_radec[5+1]})-(${tmp_radec[1]}))/(${tmp_naxis[1]}-1)*3600.0 }")
+    tmp_pixsc1=$(awk "BEGIN { print ((${tmp_radec[5+0]})-(${tmp_radec[0]}))*cos( ((${tmp_radec[1]})+(${tmp_radec[5+1]}))/2.0/180.0*3.14159265359 )/(${tmp_naxis[0]}-1)*3600.0 }")
     echo "$tmp_pixsc1" "$tmp_pixsc2"
 else
-    tmp_pixsc=$(awk "BEGIN { print ((${tmp_radec[5+1]})-(${tmp_radec[1]}))/(${tmp_naxis[1]})*3600.0 }")
+    tmp_pixsc=$(awk "BEGIN { print ((${tmp_radec[5+1]})-(${tmp_radec[1]}))/(${tmp_naxis[1]}-1)*3600.0 }")
     if [[ x"$tmp_pixsc" != x ]]; then
         echo "$tmp_pixsc" # | sed -e 's/^-//g' # > "image_sci_pixscale.txt"
     fi

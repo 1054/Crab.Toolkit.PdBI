@@ -10,6 +10,7 @@
 #    2018-02-14 Now using "pdbi-uvt-core-arg-v8"
 #    2019-02-01 Now using "pdbi-uvt-core-arg-v9", and modified this code to support "-FoV" (PdBIUVT_FOV_SIZE)
 #    2019-05-09 added "map_beam_step" so that if the input is a cube, we produce beam per single channel.
+#    2021-04-12 Added MAP_RA MAP_DEC in "pdbi-uvt-core-arg-v13". Now using "pdbi-uvt-core-arg-v13".
 # 
 # 
 
@@ -29,11 +30,11 @@ usage() {
 # 
 # SOURCE pdbi-uvt-core-arg
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v9" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v9" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13" "$@"
 else
     echo ""
-    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v9\"!"
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13\"!"
     echo ""
     exit 1
 fi
@@ -141,7 +142,14 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         if [[ ${#PdBIUVT_MAP_CELL[@]} -gt $i ]]; then 
             echo "let map_cell ${PdBIUVT_MAP_CELL[$i]}"         >> "$PdBIUVT_EXE"
         fi
+        if [[ ${#PdBIUVT_MAP_RA[@]} -gt $i ]]; then 
+            echo "let MAP_RA ${PdBIUVT_MAP_RA[$i]}"             >> "$PdBIUVT_EXE"
+        fi
+        if [[ ${#PdBIUVT_MAP_DEC[@]} -gt $i ]]; then 
+            echo "let MAP_DEC ${PdBIUVT_MAP_DEC[$i]}"           >> "$PdBIUVT_EXE"
+        fi
         
+        # set to fit per channel beam or not
         echo "let map_beam_step 1"                              >> "$PdBIUVT_EXE"
         
         #echo "define uvtable uvtvar 'name'.uvt read"
@@ -257,9 +265,13 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
                 PdBIUVT_TEMP_MAP_FIELD="0 0"
                 PdBIUVT_TEMP_MAP_SIZE="0 0"
                 PdBIUVT_TEMP_MAP_CELL="0 0"
+                PdBIUVT_TEMP_MAP_RA=""
+                PdBIUVT_TEMP_MAP_DEC=""
                 if [[ ${#PdBIUVT_SIZE[@]}     -gt $i ]]; then PdBIUVT_TEMP_MAP_FIELD="${PdBIUVT_SIZE[$i]}"; fi
                 if [[ ${#PdBIUVT_MAP_SIZE[@]} -gt $i ]]; then PdBIUVT_TEMP_MAP_SIZE="${PdBIUVT_MAP_SIZE[$i]}"; fi
                 if [[ ${#PdBIUVT_MAP_CELL[@]} -gt $i ]]; then PdBIUVT_TEMP_MAP_CELL="${PdBIUVT_MAP_CELL[$i]}"; fi
+                if [[ ${#PdBIUVT_MAP_RA[@]}   -gt $i ]]; then PdBIUVT_TEMP_MAP_RA="${PdBIUVT_MAP_RA[$i]}"; fi
+                if [[ ${#PdBIUVT_MAP_DEC[@]}  -gt $i ]]; then PdBIUVT_TEMP_MAP_DEC="${PdBIUVT_MAP_DEC[$i]}"; fi
                 PdBIUVT_TEMP_MAP_FIELD=($PdBIUVT_TEMP_MAP_FIELD)
                 PdBIUVT_TEMP_MAP_SIZE=($PdBIUVT_TEMP_MAP_SIZE)
                 PdBIUVT_TEMP_MAP_CELL=($PdBIUVT_TEMP_MAP_CELL)
@@ -285,10 +297,17 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
                 echo 'TASK\INTEGER   "First and Last channel to map" MCOL$[2]  0 0'                   >> "$PdBIUVT_INI"
                 echo 'TASK\INTEGER   "Convolution function [0-5]" CONVOLUTION$ 5'                     >> "$PdBIUVT_INI"
                 echo '!'                                                                              >> "$PdBIUVT_INI"
+                if [[ "$PdBIUVT_TEMP_MAP_RA"x != ""x ]] && [[ "$PdBIUVT_TEMP_MAP_DEC"x != ""x ]]; then
+                echo 'TASK\LOGICAL   "Change map center or map orientation" UV_SHIFT$ YES'            >> "$PdBIUVT_INI"
+                echo 'TASK\CHARACTER "Map Center RA" RA_CENTER$ "'$PdBIUVT_TEMP_MAP_RA'"'             >> "$PdBIUVT_INI"
+                echo 'TASK\CHARACTER "Map Center DEC" DEC_CENTER$ "'$PdBIUVT_TEMP_MAP_DEC'"'          >> "$PdBIUVT_INI"
+                echo 'TASK\REAL      "Map Position Angle [deg]" ANGLE$ 0'                             >> "$PdBIUVT_INI"
+                else
                 echo 'TASK\LOGICAL   "Change map center or map orientation" UV_SHIFT$ NO'             >> "$PdBIUVT_INI"
                 echo 'TASK\CHARACTER "Map Center RA" RA_CENTER$ "0"'                                  >> "$PdBIUVT_INI"
                 echo 'TASK\CHARACTER "Map Center DEC" DEC_CENTER$ "0"'                                >> "$PdBIUVT_INI"
                 echo 'TASK\REAL      "Map Position Angle [deg]" ANGLE$ 0'                             >> "$PdBIUVT_INI"
+                fi
                 echo '!'                                                                              >> "$PdBIUVT_INI"
                 echo 'TASK\GO'                                                                        >> "$PdBIUVT_INI"
                 # 
