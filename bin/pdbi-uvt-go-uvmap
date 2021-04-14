@@ -142,11 +142,11 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         if [[ ${#PdBIUVT_MAP_CELL[@]} -gt $i ]]; then 
             echo "let map_cell ${PdBIUVT_MAP_CELL[$i]}"         >> "$PdBIUVT_EXE"
         fi
-        if [[ ${#PdBIUVT_MAP_RA[@]} -gt $i ]]; then 
+        if [[ ${#PdBIUVT_MAP_RA[@]} -gt $i ]] && [[ ${#PdBIUVT_MAP_DEC[@]} -gt $i ]]; then 
+            echo "let MAP_SHIFT YES"                            >> "$PdBIUVT_EXE"
             echo "let MAP_RA ${PdBIUVT_MAP_RA[$i]}"             >> "$PdBIUVT_EXE"
-        fi
-        if [[ ${#PdBIUVT_MAP_DEC[@]} -gt $i ]]; then 
             echo "let MAP_DEC ${PdBIUVT_MAP_DEC[$i]}"           >> "$PdBIUVT_EXE"
+            echo "let MAP_ANGLE 0.0"                            >> "$PdBIUVT_EXE"
         fi
         
         # set to fit per channel beam or not
@@ -206,6 +206,26 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo "say \"\""                                         >> "$PdBIUVT_EXE"
         echo "say \"examine map_cell\""                         >> "$PdBIUVT_EXE"
         echo "exam map_cell"                                    >> "$PdBIUVT_EXE"
+        
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"examine map_shift\""                        >> "$PdBIUVT_EXE"
+        echo "exam map_shift"                                   >> "$PdBIUVT_EXE"
+        
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"examine map_ra\""                           >> "$PdBIUVT_EXE"
+        echo "exam map_ra"                                      >> "$PdBIUVT_EXE"
+        
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"examine map_dec\""                          >> "$PdBIUVT_EXE"
+        echo "exam map_dec"                                     >> "$PdBIUVT_EXE"
+        
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"examine map_angle\""                        >> "$PdBIUVT_EXE"
+        echo "exam map_angle"                                   >> "$PdBIUVT_EXE"
         
         echo ""                                                 >> "$PdBIUVT_EXE"
         echo "say \"\""                                         >> "$PdBIUVT_EXE"
