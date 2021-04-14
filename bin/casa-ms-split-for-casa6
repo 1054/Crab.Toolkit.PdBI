@@ -1312,7 +1312,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "split_params['datacolumn']  = '${CASAMS_TYP}'"                                     >> "$CASAMS_Script1"
                     echo "split_params['uvrange']     = '>0m'"                                               >> "$CASAMS_Script1" #<Added><20170929># 
                     echo "split_params['timebin']     = '${SPLIT_TIMEBIN}'"                                  >> "$CASAMS_Script1" #<Added><20180316># 
-                    echo "split_params['combinespw']  = False"                                               >> "$CASAMS_Script1"
+                    #echo "split_params['combinespw']  = False"                                              >> "$CASAMS_Script1" split has no combinespw
                     echo "split_params['keepflags']   = False"                                               >> "$CASAMS_Script1"
                     if [[ ${#CASA_VERSION[@]} -ge 2 ]]; then
                     if [[ ${CASA_VERSION[0]} -ge 4 && ${CASA_VERSION[1]} -ge 6 ]]; then
