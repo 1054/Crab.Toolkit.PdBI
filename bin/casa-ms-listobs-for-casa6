@@ -1,0 +1,136 @@
+#!/bin/bash
+# 
+# Input vis
+# Output python script file (listobs)
+# 
+# Last update:
+#    2016-06-27 copied from casa-ms-split
+# 
+CASAMS_VIS="" # dataset name
+CASAMS_OUT="" # output listobs file
+# 
+# Read input parameters
+# 
+#if [[ "$#" -eq 0 ]]; then
+#    echo "Usage: casa-ms-listobs -vis calibrated.ms [-out calibrated.ms.listobs.txt]"
+#    exit
+#fi
+# 
+# Check casa
+# 
+if [[ $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo ""
+    echo "Error! CASA was not found! Please check your \$PATH!"
+    echo ""
+    exit
+fi
+# 
+# Read input parameters
+# 
+CASAMS_GOOD=1
+CASAMS_RPAR=""
+while [[ "$#" -gt 0 ]]; do
+    # echo $1
+    case $1 in
+           "-vis") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_VIS="$1";;
+           "-out") if [[ "$#" -lt 2 ]]; then CASAMS_GOOD=0; break; fi; shift; CASAMS_RPAR=""; CASAMS_OUT="$1";;
+    esac
+    shift
+done
+# 
+# Check input parameter -- vis
+# 
+if [[ x"$CASAMS_VIS" == x ]]; then
+    CASAMS_GOOD=0
+    #echo -n "Please input vis: "
+    #read CASAMS_VIS
+    # Set default value
+    CASAMS_VIS="calibrated.ms"
+    # Now we can first print default value, then if user input anything we remove the default value and show the user input. 
+    echo -n "Please input vis: $CASAMS_VIS"
+    read -N 1 CASAMS_KEY
+    if [[ x"$CASAMS_KEY" != x ]]; then
+        echo -e -n "\r$(tput el)Please input vis: $CASAMS_KEY"
+        read CASAMS_VIS
+        CASAMS_VIS="${CASAMS_KEY}${CASAMS_VIS}"
+    fi
+    # Check again the input is not empty
+    if [[ x"$CASAMS_VIS" != x ]]; then
+        CASAMS_GOOD=1
+    fi
+fi
+# 
+# Check input parameters ------ if not passed then print usage and exit
+# 
+if [[ $CASAMS_GOOD -eq 0 ]]; then
+    echo "Usage: casa-ms-split -vis calibrated.ms -field 3 -name CDFS344 -freq 344 -width 3840"
+    exit
+fi
+# 
+# Revise input parameters
+# 
+# -- remove the suffix of the input vis name, and test whether the file exists
+if [[ x"$(echo $CASAMS_VIS | grep -E '.*\.ms.*')" == x ]]; then
+    CASAMS_VIS_SFIX=".ms"
+else
+    CASAMS_VIS_SFIX=$(echo $CASAMS_VIS | sed -E 's/.*(\.ms.*)$/\1/g')
+    CASAMS_VIS=$(echo $CASAMS_VIS | sed -E 's/(.*)(\.ms.*)$/\1/g')
+fi
+CASAMS_VIS=$(echo $CASAMS_VIS | sed -E 's/[.]ms$//g')
+if [[ ! -d "${CASAMS_VIS}${CASAMS_VIS_SFIX}" ]]; then
+    echo Error! "${CASAMS_VIS}${CASAMS_VIS_SFIX}" was not found! Exit!
+    exit
+fi
+# 
+# Revise input parameter -- out -- if not given, set to input vis+".listobs.txt"
+# 
+if [[ x"$CASAMS_OUT" == x ]]; then
+	echo "Output file name not given, set as \"${CASAMS_VIS}${CASAMS_VIS_SFIX}.listobs.txt\"!"
+    CASAMS_OUT="${CASAMS_VIS}${CASAMS_VIS_SFIX}.listobs.txt"
+fi
+# 
+# 
+# 
+# 
+# Write run_casa_ms_step0_listobs.py
+# 
+CASAMS_UTC=$(date +%Y%m%d.%Hh%Mm%Ss.%Z)
+CASAMS_FPY="run_casa_ms_listobs.$CASAMS_UTC.py"
+echo "# RUN THIS INSIDE CASA"                                                                               >  "$CASAMS_FPY"
+echo "import os, sys"                                                                                       >> "$CASAMS_FPY"
+echo ""                                                                                                     >> "$CASAMS_FPY"
+echo "def printparams(name, params):"                                                                       >> "$CASAMS_FPY"
+echo "    return return name+'('+', '.join(\"{!s}={!r}\".format(k, params[k]) for k in params.keys())+')'"  >> "$CASAMS_FPY"
+echo ""                                                                                                     >> "$CASAMS_FPY"
+echo "listobs_params = {}"                                                                                  >> "$CASAMS_FPY"
+echo "listobs_params['vis']        = '${CASAMS_VIS}${CASAMS_VIS_SFIX}'"                                     >> "$CASAMS_FPY"
+echo "listobs_params['listfile']   = '${CASAMS_OUT}'"                                                       >> "$CASAMS_FPY"
+echo "printparams('listobs', listobs_params)"                                                               >> "$CASAMS_FPY"
+echo "listobs(**listobs_params)"                                                                            >> "$CASAMS_FPY"
+echo ""                                                                                                     >> "$CASAMS_FPY"
+echo "Wrote to python script: \"${CASAMS_FPY}\""
+echo "Please run bash -c 'casa --nologfile --nogui -c \"exec(open(\'${CASAMS_FPY}\').read())\"'"
+# 
+# 
+# 
+# 
+# Run casa
+# 
+if [[ $(type casa 2>/dev/null | wc -l) -eq 0 ]]; then
+    echo ""
+    echo "Error! CASA was not found! Please check your \$PATH!"
+    echo ""
+    exit
+else
+    echo ""
+    echo "Running casa at "$(date +"%Y%m%d %Hh%Mm%Ss %Z")", please wait ..."
+    casa --nologfile --nogui -c "exec(compile(open('$CASAMS_FPY').read(), '$CASAMS_FPY', 'exec'))"
+    echo "Finished casa at "$(date +"%Y%m%d %Hh%Mm%Ss %Z")", now reading listobs text file ..."
+    echo ""
+    cat ${CASAMS_OUT} | awk '/Fields: /,/Spectral Windows: /' | head -n -1
+    cat ${CASAMS_OUT} | awk '/Spectral Windows: /,/Sources: /' | head -n -1
+fi
+
+
+
+echo "Done!"
