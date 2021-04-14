@@ -1232,9 +1232,9 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "    with open(filename, \"r\") as fh:"                                                             >> "$CASAMS_Script1"
                     echo "        exec(fh.read()+\"\\n\", globals, locals)"                                                  >> "$CASAMS_Script1"
                     echo ""                                                                                                  >> "$CASAMS_Script1"
-                    echo "def printparams(name, params):"                                                                       >> "$CASAMS_Script1"
-                    echo "    return return name+'('+', '.join(\"{!s}={!r}\".format(k, params[k]) for k in params.keys())+')'"  >> "$CASAMS_Script1"
-                    echo ""                                                                                                     >> "$CASAMS_Script1"
+                    echo "def printparams(name, params):"                                                                    >> "$CASAMS_Script1"
+                    echo "    return name+'('+', '.join(\"{!s}={!r}\".format(k, params[k]) for k in params.keys())+')'"      >> "$CASAMS_Script1"
+                    echo ""                                                                                                  >> "$CASAMS_Script1"
                     
                     
                     echo "import os, sys"                                                                                    >> "$CASAMS_Script2"
@@ -1268,30 +1268,30 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "    with open(filename, \"r\") as fh:"                                                             >> "$CASAMS_Script2"
                     echo "        exec(fh.read()+\"\\n\", globals, locals)"                                                  >> "$CASAMS_Script2"
                     echo ""                                                                                                  >> "$CASAMS_Script2"
-                    echo "def printparams(name, params):"                                                                       >> "$CASAMS_Script2"
-                    echo "    return return name+'('+', '.join(\"{!s}={!r}\".format(k, params[k]) for k in params.keys())+')'"  >> "$CASAMS_Script2"
-                    echo ""                                                                                                     >> "$CASAMS_Script2"
+                    echo "def printparams(name, params):"                                                                    >> "$CASAMS_Script2"
+                    echo "    return name+'('+', '.join(\"{!s}={!r}\".format(k, params[k]) for k in params.keys())+')'"      >> "$CASAMS_Script2"
+                    echo ""                                                                                                  >> "$CASAMS_Script2"
                     
                     
-                    echo "import os, sys"                                                                                       >> "$CASAMS_Script3"
-                    echo ""                                                                                                     >> "$CASAMS_Script3"
-                    echo "def printparams(name, params):"                                                                       >> "$CASAMS_Script3"
-                    echo "    return return name+'('+', '.join(\"{!s}={!r}\".format(k, params[k]) for k in params.keys())+')'"  >> "$CASAMS_Script3"
-                    echo ""                                                                                                     >> "$CASAMS_Script3"
+                    echo "import os, sys"                                                                                    >> "$CASAMS_Script3"
+                    echo ""                                                                                                  >> "$CASAMS_Script3"
+                    echo "def printparams(name, params):"                                                                    >> "$CASAMS_Script3"
+                    echo "    return name+'('+', '.join(\"{!s}={!r}\".format(k, params[k]) for k in params.keys())+')'"      >> "$CASAMS_Script3"
+                    echo ""                                                                                                  >> "$CASAMS_Script3"
                     
                     
-                    echo "import os, sys"                                                                                       >> "$CASAMS_Script4"
-                    echo ""                                                                                                     >> "$CASAMS_Script4"
-                    echo "def printparams(name, params):"                                                                       >> "$CASAMS_Script4"
-                    echo "    return return name+'('+', '.join(\"{!s}={!r}\".format(k, params[k]) for k in params.keys())+')'"  >> "$CASAMS_Script4"
-                    echo ""                                                                                                     >> "$CASAMS_Script4"
+                    echo "import os, sys"                                                                                    >> "$CASAMS_Script4"
+                    echo ""                                                                                                  >> "$CASAMS_Script4"
+                    echo "def printparams(name, params):"                                                                    >> "$CASAMS_Script4"
+                    echo "    return name+'('+', '.join(\"{!s}={!r}\".format(k, params[k]) for k in params.keys())+')'"      >> "$CASAMS_Script4"
+                    echo ""                                                                                                  >> "$CASAMS_Script4"
                     
                     
-                    echo "import os, sys"                                                                                       >> "$CASAMS_Script5"
-                    echo ""                                                                                                     >> "$CASAMS_Script5"
-                    echo "def printparams(name, params):"                                                                       >> "$CASAMS_Script5"
-                    echo "    return return name+'('+', '.join(\"{!s}={!r}\".format(k, params[k]) for k in params.keys())+')'"  >> "$CASAMS_Script5"
-                    echo ""                                                                                                     >> "$CASAMS_Script5"
+                    echo "import os, sys"                                                                                    >> "$CASAMS_Script5"
+                    echo ""                                                                                                  >> "$CASAMS_Script5"
+                    echo "def printparams(name, params):"                                                                    >> "$CASAMS_Script5"
+                    echo "    return name+'('+', '.join(\"{!s}={!r}\".format(k, params[k]) for k in params.keys())+')'"      >> "$CASAMS_Script5"
+                    echo ""                                                                                                  >> "$CASAMS_Script5"
                     
                 fi
                 # 
