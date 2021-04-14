@@ -1319,7 +1319,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "split_params['keepmms']     = False"                                               >> "$CASAMS_Script1" # for CASA >=4.6
                     fi
                     fi
-                    echo "dirbackup(outputvis)"                                              >> "$CASAMS_Script1"
+                    echo "dirbackup(split_params['outputvis'])"                              >> "$CASAMS_Script1"
                     echo "printparams('split', split_params)"                                >> "$CASAMS_Script1"
                     echo "split(**split_params)"                                             >> "$CASAMS_Script1"
                     if [[ x"${UNFLAG_SPW}" != x"" ]]; then
@@ -1350,7 +1350,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "            split_params['width']       = 1"                                       >> "$CASAMS_Script1"
                     echo "            split_params['timebin']     = ''"                                      >> "$CASAMS_Script1"
                     echo "            split_params['datacolumn']  = 'data'"                                  >> "$CASAMS_Script1"
-                    echo "            dirbackup(outputvis)"                                  >> "$CASAMS_Script1"
+                    echo "            dirbackup(split_params['outputvis'])"                                  >> "$CASAMS_Script1"
                     echo "            printparams('split', split_params)"                    >> "$CASAMS_Script1"
                     echo "            split(**split_params)"                                 >> "$CASAMS_Script1"
                     if [[ x"${UNFLAG_SPW}" != x"" ]]; then
@@ -1382,7 +1382,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "cvel_params['width']       =  1"                                   >> "$CASAMS_Script2"
                     echo "cvel_params['outframe']    = 'LSRK'"                               >> "$CASAMS_Script2"
                     echo "cvel_params['restfreq']    = '${SPLIT_FEQ}Hz'"                     >> "$CASAMS_Script2"
-                    echo "dirbackup(outputvis)"                                              >> "$CASAMS_Script2"
+                    echo "dirbackup(cvel_params['outputvis'])"                               >> "$CASAMS_Script2"
                     echo "printparams('cvel', cvel_params)"                                  >> "$CASAMS_Script2"
                     echo "cvel(**cvel_params)"                                               >> "$CASAMS_Script2"
                     echo ""                                                                  >> "$CASAMS_Script2"
