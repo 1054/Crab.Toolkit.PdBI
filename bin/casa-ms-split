@@ -1131,7 +1131,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 if [[ ${extra_chan_num} -gt 0 ]]; then
                     left_chan_index=$(awk "BEGIN {print int($extra_chan_num/2.0);}")
                     right_chan_index=$(awk "BEGIN {print ${SPLIT_SPW_NUMCHAN}-1-(${extra_chan_num}-(${left_chan_index}));} ")
-                    SPLIT_SPW="${SPLIT_SPW}:${right_chan_index}~${last_chan_index}"
+                    SPLIT_SPW="${SPLIT_SPW}:${left_chan_index}~${right_chan_index}"
                 fi
             fi
             
