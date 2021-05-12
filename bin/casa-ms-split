@@ -1122,6 +1122,21 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
             
             
             
+            # 20210512
+            # make sure SPLIT_SPW_NUMCHAN is an integer factor of SPLIT_WID, if not, then add channel selection in SPLIT_SPW
+            # <TODO> can not be used with UNFLAG_SPW?
+            if [[ $SPLIT_WID -gt 1 ]] && [[ "$SPLIT_SPW"x != *":"*x ]]; then
+                integer_factor=$(awk "BEGIN {print int(1.0*(${SPLIT_SPW_NUMCHAN})/(${SPLIT_WID}));}")
+                extra_chan_num=$(awk "BEGIN {print ${SPLIT_SPW_NUMCHAN}-(${integer_factor}*(${SPLIT_WID}));}")
+                if [[ ${extra_chan_num} -gt 0 ]]; then
+                    left_chan_index=$(awk "BEGIN {print int($extra_chan_num/2.0);}")
+                    right_chan_index=$(awk "BEGIN {print ${SPLIT_SPW_NUMCHAN}-1-(${extra_chan_num}-(${left_chan_index}));} ")
+                    SPLIT_SPW="${SPLIT_SPW}:${right_chan_index}~${last_chan_index}"
+                fi
+            fi
+            
+            
+            
             
             
             
@@ -1134,6 +1149,7 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                 echo "  * looping source    '$SPLIT_SOU'  ($(($isou+1))/${#CASAMS_SOU[@]})"; fi
                 echo "    *       spw       '$SPLIT_SPW_ID'"
                 echo "    *       spw_name  '$SPLIT_SPW_NAME'"
+                echo "    *       spw_sel   '$SPLIT_SPW'"
                 echo "            chanwidth '$SPLIT_WID' ('$SPLIT_WID_STR') (original '${SPLIT_WID_MIN_KMS}km/s')"
                 echo "            bandwidth '$SPLIT_SPW_BANDWIDTH'"
                 echo "            ref_freq  '$SPLIT_FEQ'"
