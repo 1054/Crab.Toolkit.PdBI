@@ -1,0 +1,263 @@
+#!/bin/bash
+# 
+# Input UV table file name
+# Output uv averaged single channel uv data table
+# 
+# Last update:
+#    2021-05-14 copied from pdbi-uvt-go-average, using the UV_CONTINUUM task.
+# 
+# 
+
+
+
+# 
+# Uage
+# 
+usage() {
+    echo "Usage: "
+    echo "    pdbi-uvt-go-continuum-task -name PdBIUVT_NAME -crange 1 50 [-out PdBIUVT_NAME-Averaged]"
+    echo "    pdbi-uvt-go-continuum-task -name PdBIUVT_NAME -linefreq 89.098 -linewidth 450 [-out PdBIUVT_NAME-Averaged]"
+    echo "    pdbi-uvt-go-continuum-task -name PdBIUVT_NAME -redshift 2.055 -linename \"CO(3-2)\" -linewidth 450 [-out PdBIUVT_NAME-Averaged]"
+    echo ""
+    echo "Note: "
+    echo "    If you input a line, the output is the line, not the continuum, although the code is named continuum!"
+    echo "    This does the similar effect as pdbi-uvt-go-average."
+    echo "    If you want to input a line and output the line-free continuum, then input the -continuum-mode argument."
+    echo "    Also note that we can only input two channel number as the channel range in this task."
+    echo "    Mind that the input linefreq should be the obs. freq. in units of GHz, and line width in km/s."
+    echo "    Please input only one line."
+    echo ""
+}
+
+
+
+# 
+# SOURCE pdbi-uvt-core-arg
+# 
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13" "$@"
+else
+    echo ""
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13\"!"
+    echo ""
+    exit 1
+fi
+
+
+
+# 
+# Check input parameters -- uvt file name
+# 
+check_has_input_range=0
+if [[ ${#PdBIUVT_CMIN[@]} -gt 0 ]] && [[ ${#PdBIUVT_CMAX[@]} -gt 0 ]]; then
+    check_has_input_range=1
+elif [[ ${#PdBIUVT_VMIN[@]} -gt 0 ]] && [[ ${#PdBIUVT_VMAX[@]} -gt 0 ]]; then
+    check_has_input_range=1
+elif [[ ${#PdBIUVT_FMIN[@]} -gt 0 ]] && [[ ${#PdBIUVT_FMAX[@]} -gt 0 ]]; then
+    check_has_input_range=1
+fi
+check_has_input_line=0
+if [[ ${#PdBIUVT_VWID[@]} -gt 0 ]] && [[ ${#PdBIUVT_FCEN[@]} -gt 0 ]]; then
+    check_has_input_line=1
+fi
+check_has_input=$((check_has_input_range+check_has_input_line))
+if [[ ${#PdBIUVT_NAME[@]} -eq 0 ]] || [[ $check_has_input -eq 0 ]]; then
+    usage; exit
+fi
+
+
+# 
+# parameters to be applied to all uvtables and written into the init file
+# 
+PdBIUVT_TEMP_FREQUENCIES=("0.0")
+PdBIUVT_TEMP_WIDTH=0.0
+PdBIUVT_TEMP_CHANNEL=(0 0)
+
+
+# 
+# check if both check_has_input_range and check_has_input_line are true, if so, we will take input line info and channel range info separately.
+# 
+if [[ $check_has_input_line -gt 0 ]]; then
+    # -continuum-mode PdBIUVT_UVMERGE_CONT_MODE
+    # -linewidth PdBIUVT_VWID
+    # -lineobsfreq PdBIUVT_FCEN
+    if [[ $PdBIUVT_UVMERGE_CONT_MODE -eq 0 ]]; then
+        # not in continuum mode, so line input means to output the averaged line channels
+        if [[ $check_has_input_line -gt 0 ]] && [[ $check_has_input_range -gt 0 ]]; then
+            echo "Error! Both -crange/-vrange/-frange and -linewidth/-lineobsfreq are given and this is not in the continuum mode! Please input only one of them and we will average those channels."
+            exit 255
+        fi
+        # disable any -crange -vrange -frange input, so that pdbi-uvt-core-cvf will convert the input line info into channel info
+    else
+        # in continuum mode, so line input means to output the average of line-free channels as the continuum
+        max_freq=0.0
+        PdBIUVT_TEMP_FREQUENCIES=()
+        for (( j=0; j<${#PdBIUVT_FCEN[@]}; j++ )); do
+            PdBIUVT_TEMP_FREQUENCY=$(awk "BEGIN {print (${PdBIUVT_FCEN[j]})*1e3;}") # GHz -> MHz
+            if [[ $(awk "BEGIN {print (${PdBIUVT_FCEN[j]} > $max_freq);}") -gt 0 ]]; then
+                max_freq=${PdBIUVT_FCEN[j]}
+            fi
+            PdBIUVT_TEMP_FREQUENCIES+=("$PdBIUVT_TEMP_FREQUENCY")
+        done
+        PdBIUVT_TEMP_WIDTH=$(awk "BEGIN {print (${PdBIUVT_VWID[0]})/2.99792458e5*(${max_freq})*1e3;}") # km/s -> MHz
+        # reset line info so that they will not be analyzed by pdbi-uvt-core-cvf
+        PdBIUVT_VWID=()
+        PdBIUVT_FCEN=()
+    fi
+fi
+
+
+
+# 
+# Loop input uv tables
+# 
+for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
+    
+    
+    
+    # 
+    # SOURCE pdbi-uvt-core-cvf
+    # 
+    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v10" ]]; then
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v10" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
+    else
+        echo ""
+        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v10\"!"
+        echo ""
+        exit 1
+    fi
+    
+    
+    
+    # 
+    # Set default parameters -- crange
+    # 
+    if [[ ${#PdBIUVT_CMIN[@]} -le 0 && ${#PdBIUVT_CMAX[@]} -le 0 ]]; then
+        PdBIUVT_CMIN=$PdBIUVT_CHAN_MIN
+        PdBIUVT_CMAX=$PdBIUVT_CHAN_MAX
+    fi
+    
+    
+    
+    # 
+    # Check input parameters -- crange
+    # 
+    if [[ ${#PdBIUVT_CMIN[@]} -le 0 || ${#PdBIUVT_CMAX[@]} -le 0 ]]; then
+        echo ""; echo "Error! Could not determine channel range for the input uv table \"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}\"! Please check your input e.g. \"-crange 0 0\"!"; echo ""
+        continue
+    fi
+    
+    
+    
+    # 
+    # Set default output file
+    # 
+    if [[ ${#PdBIUVT_SAVE[@]} -le $tk ]]; then
+        PdBIUVT_SAVE+=($(basename "${PdBIUVT_NAME[tk]}")"-Averaged")
+        echo ""; echo "Warning! Output name was not defined, we will set it as \"${PdBIUVT_SAVE[tk]}\"!"; echo ""
+    fi
+    if [[ x"${PdBIUVT_SAVE[tk]}" == x || x"${PdBIUVT_SAVE[tk]}" == x"tmp_pdbi_uvt" || x"${PdBIUVT_SAVE[tk]}" == x"tmp_pdbi_uvt_run_uv_fit" ]]; then
+        PdBIUVT_SAVE[tk]=$(basename "${PdBIUVT_NAME[tk]}")"-Averaged"
+        echo ""; echo "Warning! Output name was not defined, we will set it as \"${PdBIUVT_SAVE[tk]}\"!"; echo ""
+    fi
+    # 
+    # Remove suffix
+    # 
+    if [[ x"${PdBIUVT_SAVE[tk]}" == x*".uvt" ]]; then
+        PdBIUVT_SAVE[tk]=$(echo "${PdBIUVT_SAVE[tk]}" | sed -e 's/\.uvt$//g')
+    fi
+    if [[ x"${PdBIUVT_SAVE[tk]}" == x*".UVT" ]]; then
+        PdBIUVT_SAVE[tk]=$(echo "${PdBIUVT_SAVE[tk]}" | sed -e 's/\.UVT$//g')
+    fi
+    # 
+    # Backup existing output file
+    # 
+    if [[ -f "${PdBIUVT_SAVE[tk]}.uvt" ]]; then
+        if [[ -f "${PdBIUVT_SAVE[tk]}.uvt.backup" ]]; then
+            \rm "${PdBIUVT_SAVE[tk]}.uvt.backup"
+        fi
+        echo "Warning! Found existing \"${PdBIUVT_SAVE[tk]}.uvt\"! Backup as \"${PdBIUVT_SAVE[tk]}.uvt.backup\"!"
+        mv "${PdBIUVT_SAVE[tk]}.uvt" "${PdBIUVT_SAVE[tk]}.uvt.backup"
+    fi
+    
+    
+    
+    
+    
+    # 
+    # Deal with the input uv data file
+    # 
+    # Prepare CRANGE list
+    # 
+    if [[ ${#PdBIUVT_CMIN[@]} -gt 1 ]] || [[ ${#PdBIUVT_CMAX[@]} -gt 1 ]]; then
+        echo "Error! The input channel range (-crange/-vrange/-frange) should be only two numbers!"
+        exit 255
+    fi
+    if [[ ${PdBIUVT_CMIN[0]} -gt 0 ]] && [[ ${PdBIUVT_CMAX[0]} -gt 0 ]]; then
+        PdBIUVT_CAGE="${PdBIUVT_CMIN[0]} ${PdBIUVT_CMAX[0]}"
+    else
+        PdBIUVT_CAGE="$PdBIUVT_CHAN_MIN $PdBIUVT_CHAN_MAX"
+    fi
+    #for (( i=1; i<${#PdBIUVT_CMIN[@]}; i++ )); do
+    #    if [[ ${PdBIUVT_CMIN[i]} -gt 0 && ${PdBIUVT_CMAX[i]} -gt 0 ]]; then
+    #        PdBIUVT_CAGE="$PdBIUVT_CAGE ${PdBIUVT_CMIN[i]} ${PdBIUVT_CMAX[i]}"
+    #    fi
+    #done
+    echo ""
+    echo "CRANGE: $PdBIUVT_CAGE"
+    echo ""
+    # 
+    # prepare gildas/mapping init and script and run
+    # 
+    PdBIUVT_TEMP_INIT="${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}.uv_continuum.init"
+    PdBIUVT_TEMP_EXEC="${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}.uv_continuum.map"
+    PdBIUVT_TEMP_LOGT="${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}.uv_continuum.log"
+    echo  '! '                                                                                                          >  $PdBIUVT_TEMP_INIT
+    echo  '! Task UV_CONTINUUM'                                                                                         >> $PdBIUVT_TEMP_INIT
+    echo  '!'                                                                                                           >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "Input UV table"                    UV_INPUT$  "'"${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"'"' >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\CHARACTER "Output UV table"                  UV_OUTPUT$  "'"${PdBIUVT_SAVE[tk]}.uvt"'"'                 >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\VALUES    "Frequencies to filter (MHz)"    FREQUENCIES$   '"${PdBIUVT_TEMP_FREQUENCIES[@]}"             >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\REAL      "Half Width (MHz)"                     WIDTH$   '"$PdBIUVT_TEMP_WIDTH"                        >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\INTEGER   "Channel range"                      CHANNEL$   '"${PdBIUVT_CAGE}"                            >> $PdBIUVT_TEMP_INIT
+    echo  'TASK\GO'                                                                                                     >> $PdBIUVT_TEMP_INIT
+    echo  "run uv_continuum $PdBIUVT_TEMP_INIT /NOWINDOW" > $PdBIUVT_TEMP_EXEC
+    echo  "@$PdBIUVT_TEMP_EXEC | mapping -nw -nl > $PdBIUVT_TEMP_LOGT"
+    echo  "@$PdBIUVT_TEMP_EXEC" | mapping -nw -nl > "$PdBIUVT_TEMP_LOGT"
+    # 
+    if [[ -f "${PdBIUVT_SAVE[tk]}.uvt" ]]; then
+        echo "Successufully saved to \"${PdBIUVT_SAVE[tk]}.uvt\"!"
+        echo "--"
+        if [[ $PdBIUVT_UVMERGE_KEEP_FILE -le 0 ]]; then
+            if [[ -f "$PdBIUVT_TEMP_EXEC" ]]; then
+                rm "$PdBIUVT_TEMP_EXEC"
+            fi
+            if [[ -f "$PdBIUVT_TEMP_INIT" ]]; then
+                rm "$PdBIUVT_TEMP_INIT"
+            fi
+            if [[ -f "$PdBIUVT_TEMP_LOGT" ]]; then
+                rm "$PdBIUVT_TEMP_LOGT"
+            fi
+        fi
+    else
+        echo "Error! Failed to run GILDAS MAPPING UV_CONTINUUM and output \"${PdBIUVT_SAVE[tk]}.uvt\"!"
+        echo "Please check \"$PdBIUVT_TEMP_LOGT\"!"
+        exit 1
+    fi
+    
+    
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+

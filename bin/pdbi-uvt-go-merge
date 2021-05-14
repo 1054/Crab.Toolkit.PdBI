@@ -6,6 +6,8 @@
 # Last update:
 #    2017-03-30 using "pdbi-uvt-core-arg-v5"
 #    2018-02-12 using "pdbi-uvt-core-arg-v8"
+#    2021-05-14 some awk does not support "**2", so now using "(${PdBIUVT_UVMERGE_FACTOR[i]}-1.0)*(${PdBIUVT_UVMERGE_FACTOR[i]}-1.0)"
+#    2021-05-14 adding spectral index, PdBIUVT_UVMERGE_ALPHA, using pdbi-uvt-core-arg-v13
 # 
 # 
 
@@ -28,11 +30,11 @@ usage() {
 # 
 # SOURCE pdbi-uvt-core-arg
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13" "$@"
 else
     echo ""
-    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8\"!"
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13\"!"
     echo ""
     exit 1
 fi
@@ -56,6 +58,13 @@ while [[ ${#PdBIUVT_UVMERGE_WEIGHT[@]} -lt ${#PdBIUVT_NAME[@]} ]]; do
 done
 while [[ ${#PdBIUVT_UVMERGE_FACTOR[@]} -lt ${#PdBIUVT_NAME[@]} ]]; do
     PdBIUVT_UVMERGE_FACTOR+=("1.0")
+done
+
+if [[ ${#PdBIUVT_UVMERGE_ALPHA[@]} -eq 0 ]]; then
+    PdBIUVT_UVMERGE_ALPHA=(0.0)
+fi
+while [[ ${#PdBIUVT_UVMERGE_ALPHA[@]} -lt ${#PdBIUVT_NAME[@]} ]]; do
+    PdBIUVT_UVMERGE_ALPHA+=(${PdBIUVT_UVMERGE_ALPHA[${#PdBIUVT_UVMERGE_ALPHA[@]}-1]}) # repeating the last spectral index
 done
 
 
@@ -145,31 +154,31 @@ for (( i=1; i<${#PdBIUVT_NAME[@]}; i++ )); do
         PdBIUVT_TEMP_INIT="${PdBIUVT_SAVE[0]}.$i.init"
         PdBIUVT_TEMP_EXEC="${PdBIUVT_SAVE[0]}.$i.map"
         PdBIUVT_TEMP_LOGT="${PdBIUVT_SAVE[0]}.$i.log"
-        echo  '! '                                                                                            >  $PdBIUVT_TEMP_INIT
-        echo  '! Task UV_MERGE'                                                                               >> $PdBIUVT_TEMP_INIT
-        echo  '!'                                                                                             >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\CHARACTER "UV table 1"                  TABLE_IN$      "'$PdBIUVT_TEMP_TAB1'"'            >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\REAL      "Weighting 1"                   WEIGHT$       ' $PdBIUVT_TEMP_WEIGHT            >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\REAL      "Multipling 1"                  FACTOR$       ' $PdBIUVT_TEMP_FACTOR            >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\CHARACTER "UV table 2"                 TABLE_REF$      "'$PdBIUVT_TEMP_TAB2'"'            >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\CHARACTER "UV table out"               TABLE_OUT$      "'$PdBIUVT_TEMP_TAB3'"'            >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\INTEGER   "Continuum Mode"                  MODE$       ' $PdBIUVT_UVMERGE_CONT_MODE      >> $PdBIUVT_TEMP_INIT
-        echo  'TASK\REAL      "Spectral Index"                 ALPHA$       ' 0.0                             >> $PdBIUVT_TEMP_INIT #<TODO><20190425># Introduced since GILDAS Version around 08mar19, here I just set to 0.0 i.e. no spectral index to apply for continuum merging. 
-        echo  'TASK\REAL      "Spectral Index Test"        ALPHATEST$       ' 0.0                             >> $PdBIUVT_TEMP_INIT #<TODO><20190425># Test whether setting one more useless variable will affect result or not. 
-        echo  'TASK\GO'                                                                                       >> $PdBIUVT_TEMP_INIT
+        echo  '! '                                                                                                     >  $PdBIUVT_TEMP_INIT
+        echo  '! Task UV_MERGE'                                                                                        >> $PdBIUVT_TEMP_INIT
+        echo  '!'                                                                                                      >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\CHARACTER "UV table 1"                              TABLE_IN$    "'$PdBIUVT_TEMP_TAB1'"'           >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\REAL      "Weighting 1"                               WEIGHT$     ' $PdBIUVT_TEMP_WEIGHT           >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\REAL      "Multipling 1"                              FACTOR$     ' $PdBIUVT_TEMP_FACTOR           >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\CHARACTER "UV table 2 (reference)"                 TABLE_REF$    "'$PdBIUVT_TEMP_TAB2'"'           >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\CHARACTER "UV table to output"                     TABLE_OUT$    "'$PdBIUVT_TEMP_TAB3'"'           >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\INTEGER   "Continuum Mode"                              MODE$     ' $PdBIUVT_UVMERGE_CONT_MODE     >> $PdBIUVT_TEMP_INIT
+        echo  'TASK\REAL      "Spectral Index for continuum merging"       ALPHA$     ' ${PdBIUVT_UVMERGE_ALPHA[i]}    >> $PdBIUVT_TEMP_INIT #<TODO><20190425># Introduced since GILDAS Version around 08mar19, here I just set to 0.0 i.e. no spectral index to apply for continuum merging. 
+        #echo  'TASK\REAL      "Spectral Index Test"                    ALPHATEST$     ' $PdBIUVT_UVMERGE_ALPHATEST     >> $PdBIUVT_TEMP_INIT #<TODO><20190425># Test whether setting one more useless variable will affect result or not. 
+        echo  'TASK\GO'                                                                                                >> $PdBIUVT_TEMP_INIT
         echo  "run uv_merge $PdBIUVT_TEMP_INIT /NOWINDOW" > $PdBIUVT_TEMP_EXEC
         # or apply the last "-factor" if it is not 1.0
         if [[ $i -eq $((${#PdBIUVT_NAME[@]}-1)) ]]; then 
-            if [[ $(awk "BEGIN {if((${PdBIUVT_UVMERGE_FACTOR[i]}-1.0)**2 > 1e-5) print 1; else print 0; }") -eq 1 ]]; then
+            if [[ $(awk "BEGIN {if((${PdBIUVT_UVMERGE_FACTOR[i]}-1.0)*(${PdBIUVT_UVMERGE_FACTOR[i]}-1.0) > 1e-5) print 1; else print 0; }") -eq 1 ]]; then
                 PdBIUVT_TEMP_INIT="${PdBIUVT_SAVE[0]}.$i.apply.final.factor.init"
-                echo  '! '                                                                             >  $PdBIUVT_TEMP_INIT
-                echo  '! Task UV_MULT'                                                                 >> $PdBIUVT_TEMP_INIT
-                echo  '! '                                                                             >> $PdBIUVT_TEMP_INIT
-                echo  'TASK\CHARACTER "UV table"     UV_TABLE$      "'$PdBIUVT_TEMP_TAB3'"'            >> $PdBIUVT_TEMP_INIT
-                echo  'TASK\REAL "Multipling U"         MULTA$      ' 1                                >> $PdBIUVT_TEMP_INIT
-                echo  'TASK\REAL "Multipling V"         MULTB$      ' 1                                >> $PdBIUVT_TEMP_INIT
-                echo  'TASK\REAL "Multipling Intensity" MULTC$      ' ${PdBIUVT_UVMERGE_FACTOR[i]}     >> $PdBIUVT_TEMP_INIT
-                echo  'TASK\GO'                                                                        >> $PdBIUVT_TEMP_INIT
+                echo  '! '                                                                               >  $PdBIUVT_TEMP_INIT
+                echo  '! Task UV_MULT'                                                                   >> $PdBIUVT_TEMP_INIT
+                echo  '! '                                                                               >> $PdBIUVT_TEMP_INIT
+                echo  'TASK\CHARACTER "UV table"          UV_TABLE$   "'$PdBIUVT_TEMP_TAB3'"'            >> $PdBIUVT_TEMP_INIT
+                echo  'TASK\REAL "Multipling U"              MULTA$   ' 1                                >> $PdBIUVT_TEMP_INIT
+                echo  'TASK\REAL "Multipling V"              MULTB$   ' 1                                >> $PdBIUVT_TEMP_INIT
+                echo  'TASK\REAL "Multipling Intensity"      MULTC$   ' ${PdBIUVT_UVMERGE_FACTOR[i]}     >> $PdBIUVT_TEMP_INIT
+                echo  'TASK\GO'                                                                          >> $PdBIUVT_TEMP_INIT
                 echo  "run uv_mult $PdBIUVT_TEMP_INIT /NOWINDOW" >> $PdBIUVT_TEMP_EXEC
             fi
         fi

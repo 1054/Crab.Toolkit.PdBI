@@ -21,6 +21,8 @@
 #     2020-04-17 Added option "-clean-mask", updated more PdBIUVT_TYPE.
 #     2021-01-14 Fixed bug: "-c_gauss" option is not recognized ("-cgauss" works), this is because arg str has "_" replaced as "-". this is fixed now (lines 270-271).
 #     2021-04-12 Added MAP_RA MAP_DEC
+#     2021-05-14 Added TELES
+#     2021-05-14 Added PdBIUVT_UVMERGE_ALPHA
 # 
 
 
@@ -98,11 +100,28 @@ PdBIUVT_RESI=()           # the output residual uvtable after subtraction
 PdBIUVT_CONT=()           # any continuum uv table
 PdBIUVT_SAVE=()           # the output save files base name
 PdBIUVT_OVERWRITE="NO"    # 
+# ----------------------- # gildas version
+PdBIUVT_MAPPING_VERSION=$(mapping -v | grep "GILDAS Version:" | tr -s ' ' | cut -d ' ' -f 3)
+PdBIUVT_MAPPING_VERSION_LEN=${#PdBIUVT_MAPPING_VERSION}
+if [[ $PdBIUVT_MAPPING_VERSION_LEN -eq 7 ]]; then
+    PdBIUVT_MAPPING_VERSION_YEAR=$(echo "$PdBIUVT_MAPPING_VERSION" | cut -b 6-7)
+    PdBIUVT_MAPPING_VERSION_MONTH=$(echo "$PdBIUVT_MAPPING_VERSION" | cut -b 3-5)
+    PdBIUVT_MAPPING_VERSION_DAY=$(echo "$PdBIUVT_MAPPING_VERSION" | cut -b 1-2)
+elif [[ $PdBIUVT_MAPPING_VERSION_LEN -eq 5 ]]; then
+    PdBIUVT_MAPPING_VERSION_YEAR=$(echo "$PdBIUVT_MAPPING_VERSION" | cut -b 4-5)
+    PdBIUVT_MAPPING_VERSION_MONTH=$(echo "$PdBIUVT_MAPPING_VERSION" | cut -b 1-3)
+    PdBIUVT_MAPPING_VERSION_DAY=$(echo "$PdBIUVT_MAPPING_VERSION" | cut -b 6-6)
+else
+    PdBIUVT_MAPPING_VERSION_YEAR=0
+    PdBIUVT_MAPPING_VERSION_MONTH=jan
+    PdBIUVT_MAPPING_VERSION_DAY=0
+fi
 # ----------------------- # uvmap parameters
 PdBIUVT_MAP_SIZE=()
 PdBIUVT_MAP_CELL=()
 PdBIUVT_MAP_RA=()
 PdBIUVT_MAP_DEC=()
+PdBIUVT_TELES=()
 # ----------------------- # other parameters
 PdBIUVT_FOV_SIZE=()
 PdBIUVT_SHOW_HEADER="NO"  # 
@@ -168,6 +187,7 @@ PdBIUVT_UVSPLIT_STOKES=()
 # ------------------------# uv merge
 PdBIUVT_UVMERGE_WEIGHT=()
 PdBIUVT_UVMERGE_FACTOR=()
+PdBIUVT_UVMERGE_ALPHA=()
 PdBIUVT_UVMERGE_KEEP_FILE=0
 PdBIUVT_UVMERGE_CONT_MODE=0
 # ------------------------# uv ctime (timebin)
@@ -190,6 +210,8 @@ PdBIUVT_LINE_SEARCH_STEP=()
 PdBIUVT_LINE_SEARCH_SIGMA=()
 PdBIUVT_LINE_SEARCH_BLEND=()
 PdBIUVT_LINE_SEARCH_MAXNUM=()
+# ------------------------# clean\uv_continuum
+PdBIUVT_UVCONTINUUM_WIDTH=()
 # ------------------------# plot channel map in uv-fit
 PdBIUVT_PLOT_CHANNEL_MAP="NO"
 # ------------------------# program control
@@ -416,6 +438,8 @@ while [[ "$#" -gt 0 ]]; do
            "-weighting") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_weight";;
               "-factor") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_factor";;
              "-scaling") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_factor";;
+               "-alpha") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_alpha";;
+      "-spectral-index") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_alpha";;
             
          "-clean-sigma") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="clean_sigma";;
           "-clean-mask") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="clean_mask";;
@@ -431,6 +455,10 @@ while [[ "$#" -gt 0 ]]; do
              "-fovsize") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
             "-fov-size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
             "-fov_size") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="fov_size";;
+        
+               "-teles") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="teles";;
+           "-telescope") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="teles";;
+        
          "-show_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
          "-show-header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
            "-do_header") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_SHOW_HEADER="YES";;
@@ -1012,6 +1040,10 @@ while [[ "$#" -gt 0 ]]; do
         if [[ "$#" -lt 1 ]]; then break; fi
         PdBIUVT_UVMERGE_FACTOR+=("$1")
     fi
+    if [[ "$PdBIUVT_RPAR" == "uvmerge_alpha" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_UVMERGE_ALPHA+=("$1")
+    fi
     
     
     # -- uvcompress/uvresample/uvtlinesearch
@@ -1019,6 +1051,7 @@ while [[ "$#" -gt 0 ]]; do
         if [[ "$#" -lt 1 ]]; then break; fi
         PdBIUVT_UVCOMPRESS_NC+=("$1")
         PdBIUVT_UVRESAMPLE_VW+=("$1")
+        PdBIUVT_UVCONTINUUM_WIDTH+=("$1")
         PdBIUVT_LINE_SEARCH_WIDTH+=("$1")
     fi
     
@@ -1056,6 +1089,13 @@ while [[ "$#" -gt 0 ]]; do
     if [[ "$PdBIUVT_RPAR" == "maxnum" ]];  then 
         if [[ "$#" -lt 1 ]]; then break; fi
         PdBIUVT_LINE_SEARCH_MAXNUM+=("$1")
+    fi
+    
+    
+    # -- teles
+    if [[ "$PdBIUVT_RPAR" == "teles" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_TELES+=("$1")
     fi
     
     

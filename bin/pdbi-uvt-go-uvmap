@@ -152,6 +152,11 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # set to fit per channel beam or not
         echo "let map_beam_step 1"                              >> "$PdBIUVT_EXE"
         
+        if [[ ${#PdBIUVT_TELES[@]} -gt 0 ]]; then
+            echo "let type uvt"                                 >> "$PdBIUVT_EXE"
+            echo "go TELES $PdBIUVT_TELES"                      >> "$PdBIUVT_EXE"
+        fi
+        
         #echo "define uvtable uvtvar 'name'.uvt read"
         #echo "if (uvtvar%ntel.eq.0) then"
         #echo "    header 'name'.uvt /teles ALMA   ! see p_telesmap"
