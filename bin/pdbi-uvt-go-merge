@@ -18,10 +18,15 @@
 # 
 usage() {
     echo "Usage: "
-    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-keep-files]"
-    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-keep-files] [-weight 0.5 0.5 1.0 1.0]"
-    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-keep-files] [-factor 0.5 0.5 1.0 1.0]"
-    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3 [UV_TABLE_NAME_4]] -out UV_TABLE_NEW [-clean-files] [-continuum-mode]"
+    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3] -out UV_TABLE_NEW [-keep-files]"
+    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3] -out UV_TABLE_NEW [-keep-files] [-weight 0.5 0.5 1.0 1.0]"
+    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3] -out UV_TABLE_NEW [-keep-files] [-factor 0.5 0.5 1.0 1.0]"
+    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3] -out UV_TABLE_NEW [-clean-files] [-continuum-mode]"
+    echo "   pdbi-uvt-go-merge -name UV_TABLE_NAME_1 UV_TABLE_NAME_2 [UV_TABLE_NAME_3] -out UV_TABLE_NEW [-alpha 1.8]"
+    echo "Notes:"
+    echo "   We can input -alpha or -spectral-index to specify the spectral index."
+    echo "   In default continuum mode is off."
+    echo "   We can check the GILDAS *.init file by setting -keep-files, so that intermediate files are kept."
     echo ""
 }
 
