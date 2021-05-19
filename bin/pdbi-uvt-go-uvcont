@@ -169,15 +169,25 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     #done
     echo ""
     echo "CRANGE: $PdBIUVT_CAGE"
-    echo ""
     # 
     # check naver
     # 
     if [[ ${#PdBIUVT_UVCONTINUUM_WIDTH[@]} -gt 0 ]]; then
         naver=${PdBIUVT_UVCONTINUUM_WIDTH[0]}
+        if [[ "$naver"x == *"%"x ]]; then
+            naverfraction=$(echo "$naver" | sed -e 's/%//g')
+            naver=$(awk "BEGIN {printf \"%.0f\",($naverfraction/100.0*($PdBIUVT_CHAN_MAX));}")
+        fi
+        if [[ $naver -lt 1 ]]; then
+            naver=1
+        elif [[ $naver -gt $PdBIUVT_CHAN_MAX ]]; then
+            naver=$PdBIUVT_CHAN_MAX
+        fi
     else
         naver=1
     fi
+    echo "NAVER: $naver"
+    echo ""
     # 
     # prepare gildas/mapping init and script and run
     # 
