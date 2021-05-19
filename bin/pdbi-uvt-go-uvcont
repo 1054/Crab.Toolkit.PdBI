@@ -77,18 +77,16 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     
     
     
-    if [[ $check_has_input -gt 0 ]]; then 
-        # 
-        # SOURCE pdbi-uvt-core-cvf
-        # 
-        if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v10" ]]; then
-            source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v10" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
-        else
-            echo ""
-            echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v10\"!"
-            echo ""
-            exit 1
-        fi
+    # 
+    # SOURCE pdbi-uvt-core-cvf
+    # 
+    if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v10" ]]; then
+        source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v10" "${PdBIUVT_NAME[tk]}.${PdBIUVT_TYPE[tk]}"
+    else
+        echo ""
+        echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-cvf-v10\"!"
+        echo ""
+        exit 1
     fi
     
     
@@ -175,6 +173,7 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
     if [[ ${#PdBIUVT_UVCONTINUUM_WIDTH[@]} -gt 0 ]]; then
         naver=${PdBIUVT_UVCONTINUUM_WIDTH[0]}
         if [[ "$naver"x == *"%"x ]]; then
+            echo "NAVER: $naver (input fraction of total channel number $PdBIUVT_CHAN_MAX)"
             naverfraction=$(echo "$naver" | sed -e 's/%//g')
             naver=$(awk "BEGIN {printf \"%.0f\",($naverfraction/100.0*($PdBIUVT_CHAN_MAX));}")
         fi
