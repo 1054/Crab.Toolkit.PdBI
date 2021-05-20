@@ -55,8 +55,12 @@ if len(uvt_names) == 0 or out_name == '':
     print('  pdbi-uvt-raw-uvtable-print-u-v-w-re-im-wt.py -name uvtable_spw1_example.uvt -out output_u_v_w_re_im_wt_table.fits')
     print('')
     print('Notes:')
-    print('  -- this code allows to input *.uvt or *.uvfits, but uvfits must be generated in CASA data structure type. ')
-    print('  -- The output file format can be either *.fits or *.txt or *.csv. ')
+    print('  -- This code allows to input *.uvt or *.uvfits, but uvfits must be generated in CASA data structure type.')
+    print('     In the case of inputting a *.uvt, we will call GILDAS MAPPING FITS command to convert it to *.uvfits.')
+    print('  -- The output file is a table with 10 columns: ivis, ichan, istokes, u, v, w, re, im, wt, amp. ')
+    print('     The output format can be either *.txt or *.csv or *.fits. ')
+    print('  -- Data rows where re, im, wt are all zeros will not be output, this can happen for some edge channels, ')
+    print('     and thus the output table might not have a uniform block size. To keep those zero rows, use the -keep-zeros option.')
     print('')
     sys.exit()
 
@@ -156,9 +160,10 @@ for i_uvt in range(len(uvt_names)):
     #global_data_dict['time'].extend(np.repeat(tb.data['_DATE'], n_chan*n_stokes).flatten().tolist()) # if output date mjd and time then uncomment this line
     
     if not keep_zeros:
-        print('Removing zero re, im, wt rows')
         mask_zeros = np.logical_and.reduce((np.isclose(global_data_dict['re'], 0.0), np.isclose(global_data_dict['im'], 0.0), np.isclose(global_data_dict['wt'], 0.0)))
-        if np.count_nonzero(mask_zeros) > 0:
+        count_zeros = np.count_nonzero(mask_zeros)
+        if count_zeros > 0:
+            print('Removing %d rows where re, im, wt are all zeros'%(count_zeros))
             for key in global_data_dict:
                 global_data_dict[key] = np.array(global_data_dict[key])[~mask_zeros]
 
