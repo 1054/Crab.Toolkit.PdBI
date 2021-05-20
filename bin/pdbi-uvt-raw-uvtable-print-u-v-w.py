@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # 
 # An alternative Python code to print u v w from the input uvtable
+# if the uv table has only one channel and one stokes, then we also output re im wt amp
 # 
 
 import os, sys, re
@@ -52,25 +53,34 @@ while iarg < len(sys.argv):
 if len(uvt_names) == 0 or out_name == '':
     print('')
     print('Usage: ')
-    print('  pdbi-uvt-raw-uvtable-print-u-v-w-re-im-wt.py -name uvtable_spw1_example.uvt -out output_u_v_w_re_im_wt_table.fits')
+    print('  pdbi-uvt-raw-uvtable-print-u-v-w.py -name uvtable_spw1_example.uvt -out output_u_v_w_re_im_wt_table.txt')
     print('')
     print('Notes:')
     print('  -- This code allows to input *.uvt or *.uvfits, but uvfits must be generated in CASA data structure type.')
     print('     In the case of inputting a *.uvt, we will call GILDAS MAPPING FITS command to convert it to *.uvfits.')
-    print('  -- The output file is a table with 10 columns: ivis, ichan, istokes, u, v, w, re, im, wt, amp. ')
-    print('     The output format can be either *.txt or *.csv or *.fits. ')
-    print('  -- Data rows where re, im, wt are all zeros will not be output, this can happen for some edge channels, ')
+    print('  -- The output file is a table with 4 or 7 columns: ')
+    print('     If the input data has more than one channel or stokes, then we output 4 columns: ivis, u, v, w.')
+    print('     Else if the input data has only one channel and one stokes, then we output 7 columns: ivis, u, v, w, re, im, wt, amp.')
+    print('     The output format can be either *.txt or *.csv or *.fits.')
+    print('  -- Data rows where re, im, wt are all zeros will not be output, this can happen for some edge channels,')
     print('     and thus the output table might not have a uniform block size. To keep those zero rows, use the -keep-zeros option.')
     print('')
     sys.exit()
 
 
 # 
+# check uvt_names
+if len(uvt_names) > 1:
+    print('Error! Please input only one uv table!')
+    sys.exit(255)
+
+
+# 
 # loop the input uvtables
 global_data_dict = {}
 global_data_dict['ivis'] = []
-global_data_dict['ichan'] = []
-global_data_dict['istokes'] = []
+#global_data_dict['ichan'] = []
+#global_data_dict['istokes'] = []
 global_data_dict['u'] = []
 global_data_dict['v'] = []
 global_data_dict['w'] = []
@@ -137,28 +147,22 @@ for i_uvt in range(len(uvt_names)):
     n_chan = data_array.shape[4]
     n_stokes = data_array.shape[5]
     # 
-    x_vis, x_chan, x_stokes = np.array(\
-                                        list(\
-                                            itertools.product(\
-                                                                np.linspace(1, n_visi, num=n_visi, endpoint=True, dtype=np.int32), 
-                                                                np.linspace(1, n_chan, num=n_chan, endpoint=True, dtype=np.int32), 
-                                                                np.linspace(1, n_stokes, num=n_stokes, endpoint=True, dtype=np.int32)
-                                            )
-                                        )
-                                    ).T
+    x_vis = np.linspace(1, n_visi, num=n_visi, endpoint=True, dtype=np.int32)
     global_data_dict['ivis'].extend(x_vis.flatten().tolist())
-    global_data_dict['ichan'].extend(x_chan.flatten().tolist())
-    global_data_dict['istokes'].extend(x_stokes.flatten().tolist())
-    global_data_dict['u'].extend(np.repeat(tb.data['UU'] * const.c.to('m/s').value, n_chan*n_stokes).flatten().tolist())
-    global_data_dict['v'].extend(np.repeat(tb.data['VV'] * const.c.to('m/s').value, n_chan*n_stokes).flatten().tolist())
-    global_data_dict['w'].extend(np.repeat(tb.data['WW'] * const.c.to('m/s').value, n_chan*n_stokes).flatten().tolist())
-    global_data_dict['re'].extend(tb.data['DATA'].flatten().tolist()[0::3])
-    global_data_dict['im'].extend(tb.data['DATA'].flatten().tolist()[1::3])
-    global_data_dict['wt'].extend(tb.data['DATA'].flatten().tolist()[2::3])
-    global_data_dict['amp'].extend(np.sqrt(np.array(global_data_dict['re'])**2 + np.array(global_data_dict['im'])**2).tolist())
-    #global_data_dict['date'].extend(np.repeat(tb.data['DATE'], n_chan*n_stokes).flatten().tolist()) # if output date mjd and time then uncomment this line
-    #global_data_dict['time'].extend(np.repeat(tb.data['_DATE'], n_chan*n_stokes).flatten().tolist()) # if output date mjd and time then uncomment this line
+    global_data_dict['u'].extend((tb.data['UU'] * const.c.to('m/s').value).flatten().tolist())
+    global_data_dict['v'].extend((tb.data['VV'] * const.c.to('m/s').value).flatten().tolist())
+    global_data_dict['w'].extend((tb.data['WW'] * const.c.to('m/s').value).flatten().tolist())
+    # 
+    # if the uv table has only one channel and one stokes, then we also output re im wt amp
+    if n_chan == 1 and n_stokes == 1:
+        global_data_dict['re'].extend(tb.data['DATA'].flatten().tolist()[0::3])
+        global_data_dict['im'].extend(tb.data['DATA'].flatten().tolist()[1::3])
+        global_data_dict['wt'].extend(tb.data['DATA'].flatten().tolist()[2::3])
+        global_data_dict['amp'].extend(np.sqrt(np.array(global_data_dict['re'])**2 + np.array(global_data_dict['im'])**2).tolist())
+        #global_data_dict['date'].extend((tb.data['DATE']).flatten().tolist()) # if output date mjd and time then uncomment this line
+        #global_data_dict['time'].extend((tb.data['_DATE']).flatten().tolist()) # if output date mjd and time then uncomment this line
     
+    # 
     # check whether to keep rows where re, im, wt are all zeros
     if not keep_zeros:
         mask_zeros = np.logical_and.reduce((np.isclose(global_data_dict['re'], 0.0), np.isclose(global_data_dict['im'], 0.0), np.isclose(global_data_dict['wt'], 0.0)))
@@ -170,16 +174,21 @@ for i_uvt in range(len(uvt_names)):
 
 
 #for i in ['ivis', 'ichan', 'istokes', 'u', 'v', 'w', 're', 'im', 'wt', 'amp', 'date', 'time']:
-for i in ['ivis', 'ichan', 'istokes', 'u', 'v', 'w', 're', 'im', 'wt', 'amp']:
+for i in ['ivis']:
     print('len(global_data_dict[%s]) = %d'%(i, len(global_data_dict[i])))
+keys = list(global_data_dict.keys())
+for key in keys:
+    if len(global_data_dict[key]) == 0:
+        del global_data_dict[key]
 tbout = Table(global_data_dict)
 tbout['u'].format = '%0.3f'
 tbout['v'].format = '%0.3f'
 tbout['w'].format = '%0.3f'
-tbout['re'].format = '%0.3E'
-tbout['im'].format = '%0.3E'
-tbout['wt'].format = '%0.3E'
-tbout['amp'].format = '%0.3E'
+if 'amp' in global_data_dict:
+    tbout['re'].format = '%0.3E'
+    tbout['im'].format = '%0.3E'
+    tbout['wt'].format = '%0.3E'
+    tbout['amp'].format = '%0.3E'
 
 regex_pattern = re.compile(r'^(.+)\.(fits|txt|csv)$')
 if regex_pattern.match(out_name):

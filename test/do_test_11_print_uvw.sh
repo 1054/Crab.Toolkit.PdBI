@@ -27,7 +27,16 @@ pdbi-uvt-go-splitpolar -name NAME_1.uvt -out NAME.uvt
 rm NAME_1.uvt
 
 
+echo "Current time "$(date +"%Y-%m-%d %Hh%Mm%Ss %Z")
+echo "Running pdbi-uvt-raw-uvtable-print-u-v-w -name NAME.uvt -out OUTPUT.txt -keep-files"
 pdbi-uvt-raw-uvtable-print-u-v-w -name NAME.uvt -out OUTPUT.txt -keep-files
+echo "Current time "$(date +"%Y-%m-%d %Hh%Mm%Ss %Z")
+
+
+echo "Current time "$(date +"%Y-%m-%d %Hh%Mm%Ss %Z")
+echo "Running pdbi-uvt-raw-uvtable-print-u-v-w.py -name NAME.uvt -out OUTPUT.txt -keep-files"
+pdbi-uvt-raw-uvtable-print-u-v-w.py -name NAME.uvt -out OUTPUT.txt -keep-files
+echo "Current time "$(date +"%Y-%m-%d %Hh%Mm%Ss %Z")
 
 
 echo "Done!"
