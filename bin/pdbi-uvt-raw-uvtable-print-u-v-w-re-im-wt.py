@@ -68,8 +68,8 @@ global_data_dict['re'] = []
 global_data_dict['im'] = []
 global_data_dict['wt'] = []
 global_data_dict['amp'] = []
-global_data_dict['date'] = []
-global_data_dict['time'] = []
+#global_data_dict['date'] = [] # if output date mjd and time then uncomment this line
+#global_data_dict['time'] = [] # if output date mjd and time then uncomment this line
 for i_uvt in range(len(uvt_names)):
     uvt_name = uvt_names[i_uvt]
     uvt_type = 'none'
@@ -146,8 +146,8 @@ for i_uvt in range(len(uvt_names)):
     global_data_dict['im'].extend(tb.data['DATA'].flatten().tolist()[1::3])
     global_data_dict['wt'].extend(tb.data['DATA'].flatten().tolist()[2::3])
     global_data_dict['amp'].extend(np.sqrt(np.array(global_data_dict['re'])**2 + np.array(global_data_dict['im'])**2).tolist())
-    global_data_dict['date'].extend(np.repeat(tb.data['DATE'], n_chan*n_stokes).flatten().tolist())
-    global_data_dict['time'].extend(np.repeat(tb.data['_DATE'], n_chan*n_stokes).flatten().tolist())
+    #global_data_dict['date'].extend(np.repeat(tb.data['DATE'], n_chan*n_stokes).flatten().tolist()) # if output date mjd and time then uncomment this line
+    #global_data_dict['time'].extend(np.repeat(tb.data['_DATE'], n_chan*n_stokes).flatten().tolist()) # if output date mjd and time then uncomment this line
 
 
 for i in ['ivis', 'ichan', 'istokes', 'u', 'v', 'w', 're', 'im', 'wt', 'amp', 'date', 'time']:
