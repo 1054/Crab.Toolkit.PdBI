@@ -21,11 +21,15 @@ source ../../SETUP.bash
 cp ../uv_table_data/split_VUDS0510807732_spw1_width10_SP.uvt NAME.uvt
 
 
+echo "Current time "$(date +"%Y-%m-%d %Hh%Mm%Ss %Z")
+echo "Running pdbi-uvt-raw-uvtable-print-u-v-w-re-im-wt -name NAME.uvt -out OUTPUT.txt"
 pdbi-uvt-raw-uvtable-print-u-v-w-re-im-wt -name NAME.uvt -out OUTPUT.txt
+echo "Current time "$(date +"%Y-%m-%d %Hh%Mm%Ss %Z")
 
-
+echo "Current time "$(date +"%Y-%m-%d %Hh%Mm%Ss %Z")
+echo "Running pdbi-uvt-raw-uvtable-print-u-v-w-re-im-wt.py -name NAME.uvt -out OUTPUT2.txt"
 pdbi-uvt-raw-uvtable-print-u-v-w-re-im-wt.py -name NAME.uvt -out OUTPUT2.txt
-
+echo "Current time "$(date +"%Y-%m-%d %Hh%Mm%Ss %Z")
 
 echo "Done!"
 

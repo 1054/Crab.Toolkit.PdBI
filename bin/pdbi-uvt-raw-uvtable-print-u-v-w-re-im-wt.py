@@ -153,13 +153,13 @@ for i_uvt in range(len(uvt_names)):
 for i in ['ivis', 'ichan', 'istokes', 'u', 'v', 'w', 're', 'im', 'wt', 'amp', 'date', 'time']:
     print('len(global_data_dict[%s]) = %d'%(i, len(global_data_dict[i])))
 tbout = Table(global_data_dict)
-tbout['u'].format = '%0.3e'
-tbout['v'].format = '%0.3e'
-tbout['w'].format = '%0.3e'
-tbout['re'].format = '%0.3e'
-tbout['im'].format = '%0.3e'
-tbout['wt'].format = '%0.3e'
-tbout['amp'].format = '%0.3e'
+tbout['u'].format = '%0.3f'
+tbout['v'].format = '%0.3f'
+tbout['w'].format = '%0.3f'
+tbout['re'].format = '%0.3E'
+tbout['im'].format = '%0.3E'
+tbout['wt'].format = '%0.3E'
+tbout['amp'].format = '%0.3E'
 
 regex_pattern = re.compile(r'^(.+)\.(fits|txt|csv)$')
 if regex_pattern.match(out_name):
