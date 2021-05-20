@@ -150,7 +150,8 @@ for i_uvt in range(len(uvt_names)):
     #global_data_dict['time'].extend(np.repeat(tb.data['_DATE'], n_chan*n_stokes).flatten().tolist()) # if output date mjd and time then uncomment this line
 
 
-for i in ['ivis', 'ichan', 'istokes', 'u', 'v', 'w', 're', 'im', 'wt', 'amp', 'date', 'time']:
+#for i in ['ivis', 'ichan', 'istokes', 'u', 'v', 'w', 're', 'im', 'wt', 'amp', 'date', 'time']:
+for i in ['ivis', 'ichan', 'istokes', 'u', 'v', 'w', 're', 'im', 'wt', 'amp']:
     print('len(global_data_dict[%s]) = %d'%(i, len(global_data_dict[i])))
 tbout = Table(global_data_dict)
 tbout['u'].format = '%0.3f'
