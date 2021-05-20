@@ -18,11 +18,13 @@ cd test_11_print_uvw
 source ../../SETUP.bash
 
 
-#cp ../uv_table_data/split_VUDS0510807732_spw1_width10_SP.uvt NAME.uvt
+cp ../uv_table_data/split_VUDS0510807732_spw1_width10_SP.uvt NAME_1.uvt
 
-cp ../uv_table_data/split_z35_68_spw0_width128.uvt NAME_1.uvt # testing single-channel data, for which we also print re im wt
+pdbi-uvt-go-average -name NAME_1.uvt -crange 0 0 -out NAME.uvt
 
-pdbi-uvt-go-splitpolar -name NAME_1.uvt -out NAME.uvt
+#cp ../uv_table_data/split_z35_68_spw0_width128.uvt NAME_1.uvt # testing single-channel data, for which we also print re im wt
+
+#pdbi-uvt-go-splitpolar -name NAME_1.uvt -out NAME.uvt
 
 rm NAME_1.uvt
 
