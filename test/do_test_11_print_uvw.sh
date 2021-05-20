@@ -34,8 +34,8 @@ echo "Current time "$(date +"%Y-%m-%d %Hh%Mm%Ss %Z")
 
 
 echo "Current time "$(date +"%Y-%m-%d %Hh%Mm%Ss %Z")
-echo "Running pdbi-uvt-raw-uvtable-print-u-v-w.py -name NAME.uvt -out OUTPUT.txt -keep-files"
-pdbi-uvt-raw-uvtable-print-u-v-w.py -name NAME.uvt -out OUTPUT.txt -keep-files
+echo "Running pdbi-uvt-raw-uvtable-print-u-v-w.py -name NAME.uvt -out OUTPUT2.txt"
+pdbi-uvt-raw-uvtable-print-u-v-w.py -name NAME.uvt -out OUTPUT2.txt
 echo "Current time "$(date +"%Y-%m-%d %Hh%Mm%Ss %Z")
 
 
