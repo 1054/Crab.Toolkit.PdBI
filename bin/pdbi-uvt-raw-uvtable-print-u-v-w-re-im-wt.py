@@ -8,6 +8,7 @@ import numpy as np
 import astropy
 from astropy.table import Table
 from astropy.io import fits
+import astropy.constants as const
 from copy import copy
 import shutil
 import itertools
@@ -129,18 +130,18 @@ for i_uvt in range(len(uvt_names)):
     x_vis, x_chan, x_stokes = np.array(\
                                         list(\
                                             itertools.product(\
-                                                                np.linspace(1, n_visi, num=n_visi, endpoint=True), 
-                                                                np.linspace(1, n_chan, num=n_chan, endpoint=True), 
-                                                                np.linspace(1, n_stokes, num=n_stokes, endpoint=True)
+                                                                np.linspace(1, n_visi, num=n_visi, endpoint=True, dtype=np.int32), 
+                                                                np.linspace(1, n_chan, num=n_chan, endpoint=True, dtype=np.int32), 
+                                                                np.linspace(1, n_stokes, num=n_stokes, endpoint=True, dtype=np.int32)
                                             )
                                         )
                                     ).T
     global_data_dict['ivis'].extend(x_vis.flatten().tolist())
     global_data_dict['ichan'].extend(x_chan.flatten().tolist())
     global_data_dict['istokes'].extend(x_stokes.flatten().tolist())
-    global_data_dict['u'].extend(np.repeat(tb.data['UU'], n_chan*n_stokes).flatten().tolist())
-    global_data_dict['v'].extend(np.repeat(tb.data['VV'], n_chan*n_stokes).flatten().tolist())
-    global_data_dict['w'].extend(np.repeat(tb.data['WW'], n_chan*n_stokes).flatten().tolist())
+    global_data_dict['u'].extend(np.repeat(tb.data['UU'] * const.c.to('m/s').value, n_chan*n_stokes).flatten().tolist())
+    global_data_dict['v'].extend(np.repeat(tb.data['VV'] * const.c.to('m/s').value, n_chan*n_stokes).flatten().tolist())
+    global_data_dict['w'].extend(np.repeat(tb.data['WW'] * const.c.to('m/s').value, n_chan*n_stokes).flatten().tolist())
     global_data_dict['re'].extend(tb.data['DATA'].flatten().tolist()[0::3])
     global_data_dict['im'].extend(tb.data['DATA'].flatten().tolist()[1::3])
     global_data_dict['wt'].extend(tb.data['DATA'].flatten().tolist()[2::3])
