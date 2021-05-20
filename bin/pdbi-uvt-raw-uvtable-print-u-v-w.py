@@ -13,6 +13,7 @@ import astropy.constants as const
 from copy import copy
 import shutil
 import itertools
+from collections import OrderedDict
 
 # 
 # read user input
@@ -81,7 +82,7 @@ if len(uvt_names) > 1:
 
 # 
 # loop the input uvtables
-global_data_dict = {}
+global_data_dict = OrderedDict()
 global_data_dict['ivis'] = []
 #global_data_dict['ichan'] = []
 #global_data_dict['istokes'] = []
