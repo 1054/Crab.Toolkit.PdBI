@@ -27,7 +27,7 @@ for i 1 to UVT%NVISI
             say "#" "ivis" " " "u" " " "v" " " "w" " " "re" " " "im" " " "wt" " " "amp" /format A1 A11 A1 A14 A1 A14 A1 A14 A1 A14 A1 A14 A1 A14 A1 A14
         endif
         !skip rows which are all zero re,im,wt
-        if (((abs(uvt[ire,i])).LE.1E-10).AND.((abs(uvt[iim,i])).LE.1E-10).AND.((abs(uvt[iwt,i])).LE.1E-10)) then
+        if (((abs(uvt[ire,i])).GE.1E-10).AND.((abs(uvt[iim,i])).GE.1E-10).AND.((abs(uvt[iwt,i])).GE.1E-10)) then
             say 'i' " " 'uvt[iu,i]' " " 'uvt[iv,i]' " " 'uvt[iw,i]' " " 'uvt[ire,i]' " " 'uvt[iim,i]' " " 'uvt[iwt,i]' " " 'sqrt(uvt[ire,i]*uvt[ire,i]+uvt[iim,i]*uvt[iim,i])' /format I12 A1 F14.3 A1 F14.3 A1 F14.3 A1 E14.3 A1 E14.3 A1 E14.3 A1 E14.3
         endif
     else
