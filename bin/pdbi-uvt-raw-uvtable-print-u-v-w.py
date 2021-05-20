@@ -36,6 +36,10 @@ while iarg < len(sys.argv):
         keep_zeros = True
         iarg += 1
         continue
+    elif arg_str == '-keep-files' or arg_str == '-keepfiles':
+        arg_mode = ''
+        iarg += 1
+        continue
     # 
     if arg_mode == 'name':
         if not os.path.isfile(sys.argv[iarg]):
