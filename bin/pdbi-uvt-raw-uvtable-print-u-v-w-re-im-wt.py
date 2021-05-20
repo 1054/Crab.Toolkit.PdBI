@@ -156,10 +156,11 @@ for i_uvt in range(len(uvt_names)):
     #global_data_dict['time'].extend(np.repeat(tb.data['_DATE'], n_chan*n_stokes).flatten().tolist()) # if output date mjd and time then uncomment this line
     
     if not keep_zeros:
+        print('Removing zero re, im, wt rows')
         mask_zeros = np.logical_and.reduce((np.isclose(global_data_dict['re'], 0.0), np.isclose(global_data_dict['im'], 0.0), np.isclose(global_data_dict['wt'], 0.0)))
         if np.count_nonzero(mask_zeros) > 0:
             for key in global_data_dict:
-                global_data_dict[key] = np.array(global_data_dict[key])[mask_zeros]
+                global_data_dict[key] = np.array(global_data_dict[key])[~mask_zeros]
 
 
 #for i in ['ivis', 'ichan', 'istokes', 'u', 'v', 'w', 're', 'im', 'wt', 'amp', 'date', 'time']:
@@ -182,6 +183,7 @@ else:
     out_base = out_name
     out_type = 'fits'
 
+print('Writing to disk')
 if out_type.lower() == 'txt':
     out_format = 'ascii.fixed_width'
     tbout.write(out_base+'.'+out_type, format=out_format, delimiter=' ', bookend=True, overwrite=True)
