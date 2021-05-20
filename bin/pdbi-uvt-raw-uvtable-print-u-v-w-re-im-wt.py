@@ -17,6 +17,7 @@ import itertools
 # read user input
 uvt_names = []
 out_name = ''
+keep_zeros = False
 iarg = 1
 arg_mode = ''
 while iarg < len(sys.argv):
@@ -29,13 +30,18 @@ while iarg < len(sys.argv):
         arg_mode = 'out'
         iarg += 1
         continue
+    elif arg_str == '-keep-zeros' or arg_str == '-keepzeros':
+        arg_mode = ''
+        keep_zeros = True
+        iarg += 1
+        continue
     # 
     if arg_mode == 'name':
         if not os.path.isfile(sys.argv[iarg]):
             print('Error! The input file "%s" does not exist!'%(sys.argv[iarg]))
             sys.exit()
         uvt_names.append(sys.argv[iarg])
-    if arg_mode == 'out':
+    elif arg_mode == 'out':
         out_name = sys.argv[iarg]
     # 
     iarg += 1
@@ -148,6 +154,12 @@ for i_uvt in range(len(uvt_names)):
     global_data_dict['amp'].extend(np.sqrt(np.array(global_data_dict['re'])**2 + np.array(global_data_dict['im'])**2).tolist())
     #global_data_dict['date'].extend(np.repeat(tb.data['DATE'], n_chan*n_stokes).flatten().tolist()) # if output date mjd and time then uncomment this line
     #global_data_dict['time'].extend(np.repeat(tb.data['_DATE'], n_chan*n_stokes).flatten().tolist()) # if output date mjd and time then uncomment this line
+    
+    if not keep_zeros:
+        mask_zeros = np.logical_and.reduce((np.isclose(global_data_dict['re'], 0.0), np.isclose(global_data_dict['im'], 0.0), np.isclose(global_data_dict['wt'], 0.0)))
+        if np.count_nonzero(mask_zeros) > 0:
+            for key in global_data_dict:
+                global_data_dict[key] = np.array(global_data_dict[key])[mask_zeros]
 
 
 #for i in ['ivis', 'ichan', 'istokes', 'u', 'v', 'w', 're', 'im', 'wt', 'amp', 'date', 'time']:
