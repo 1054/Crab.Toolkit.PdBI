@@ -60,6 +60,7 @@ fi
 # LANG
 # 
 LANG=C
+export LC_NUMERIC="en_US.UTF-8"
 
 
 
