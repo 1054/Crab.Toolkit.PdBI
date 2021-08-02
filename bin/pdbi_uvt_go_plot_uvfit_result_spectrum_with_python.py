@@ -18,6 +18,7 @@ if len(sys.argv) <= 1:
     print('    pdbi_uvt_go_plot_uvfit_result_spectrum_with_python.py *.result.obj_1.txt [-output output_name] [-figwidth 20] [-line-name XXX -rest-freq XXX -redshift XXX]')
     print('Options:')
     print('    -continuum -- can be one value, or freq_GHz cont_mJy pairs, for example -continuum 100 1.0 200 2.0 means the continuum increases from 1.0 to 2.0, from 100 GHz to 200 GHz.')
+    print('    -fixnan -- setting this will set all nan to zero, otherwise sometimes nan channels will look weird.')
     print('')
     sys.exit()
 
@@ -88,6 +89,7 @@ set_plot_margin_top = None
 set_plot_margin_bottom = None
 set_plot_margin_left = None
 set_plot_margin_right = None
+set_fix_nan = False
 input_continuum = []
 
 lib_linefreq = [115.2712018, 230.538, 345.7959899, 461.0407682, 576.2679305, 691.4730763, 806.651806, 921.7997, 1036.912393, 1151.985452, 1267.014486, 1381.995105, 1496.922909]
@@ -107,8 +109,8 @@ i = 1
 while i < len(sys.argv):
     temp_argv = sys.argv[i].lower()
     if temp_argv.find('--') == 0:
-        temp_argv = '-'+temp_argv.lstrip('-')
-    elif temp_argv == '-out' or temp_argv == '-output':
+        temp_argv = re.sub(r'^[-]+', r'-', temp_argv)
+    if temp_argv == '-out' or temp_argv == '-output':
         if i+1 < len(sys.argv):
             i = i + 1
             output_name = sys.argv[i]
@@ -219,6 +221,9 @@ while i < len(sys.argv):
             i = i + 1
             input_clip_nchan = int(sys.argv[i])
             print('input_clip_nchan = %s'%(input_clip_nchan))
+    elif temp_argv == '-fix-nan' or temp_argv == '-fixnan':
+        set_fix_nan = True
+        print('set_fix_nan = %s'%(set_fix_nan))
     elif temp_argv == '-continuum':
         # should be either one value
         # or pairs of values
@@ -396,10 +401,40 @@ for i in range(len(input_names)):
             # nonnan
             nan_mask = (~numpy.isnan(x)) & (~numpy.isnan(y))
             nan_iarg = numpy.argwhere(nan_mask)
-            x = x[nan_mask]
-            y = y[nan_mask]
-            if yerr is not None: yerr = yerr[nan_mask]
-            if SNR is not None: SNR = SNR[nan_mask]
+            if set_fix_nan:
+                # Note that the gildas mapping uv_fit output file has an issue 
+                # for the channels of nan -- the y value is nan, but x value is 
+                # random. We can not directly use its x value! This needs to be 
+                # fixed. We can use non-nan x array to guess the nan channels' 
+                # x values. 
+                xnonan = x[nan_mask]
+                ynonan = y[nan_mask]
+                knonan = (numpy.arange(len(y)))[nan_mask]
+                xdelta = numpy.mean(numpy.diff(numpy.unique(xnonan)))
+                kfirstnonnan = numpy.argwhere(~numpy.isnan(y)).ravel()[0]
+                klastnonnan = numpy.argwhere(~numpy.isnan(y)).ravel()[-1]
+                hasfirstnonnan = False
+                haslastnonnan = False
+                for k in range(len(y)):
+                    if k < kfirstnonnan:
+                        if numpy.isnan(y[k]):
+                            x[k] = x[kfirstnonnan]-xdelta*(kfirstnonnan-k)
+                            y[k] = 0.0
+                    elif k > klastnonnan:
+                        if numpy.isnan(y[k]):
+                            x[k] = x[klastnonnan]+xdelta*(k-klastnonnan)
+                            y[k] = 0.0
+                    else:
+                        if numpy.isnan(y[k]):
+                            x[k] = numpy.interp(k, knonan, xnonan)
+                            y[k] = 0.0
+                if yerr is not None: yerr[nan_mask] = numpy.nanmax(yerr) * 10.0
+                if SNR is not None: SNR[nan_mask] = 0.0
+            else:
+                x = x[nan_mask]
+                y = y[nan_mask]
+                if yerr is not None: yerr = yerr[nan_mask]
+                if SNR is not None: SNR = SNR[nan_mask]
             # 
             # clip sigma
             if input_clip_sigma > 0.0:
@@ -538,6 +573,12 @@ for i in range(len(input_names)):
                 global_x_arr.extend(x) # add to global_x_arr
                 global_y_arr.extend(y) # add to global_y_arr
                 # 
+                # compute a rms from the negative part of the spectrum
+                this_y_rms = 1.48*(numpy.median(numpy.abs(y[y<0.0])))
+                print('this_y_rms = %s'%(this_y_rms))
+                this_y_rms = 1.48*(numpy.median(numpy.abs(y[y<3.0*this_y_rms])))
+                print('this_y_rms = %s'%(this_y_rms))
+                # 
                 # highlight specific channels
                 for k in range(len(x_highlights)):
                     x_baseline = x_highlights[k]
@@ -547,12 +588,14 @@ for i in range(len(input_names)):
                 # label sum_highlights
                 if cnt_highlights > 0:
                     if global_highlight_count == 0:
-                        ax.text(0.01, 0.22, 'sum of %s: %0.6g'%(nom_highlights, sum_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
-                        ax.text(0.01, 0.16, 'avg of %s: %0.6g'%(nom_highlights, sum_highlights/cnt_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                        ax.text(0.01, 0.28, 'sum of %s: %0.6g'%(nom_highlights, sum_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                        ax.text(0.01, 0.22, 'avg of %s: %0.6g'%(nom_highlights, sum_highlights/cnt_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                        ax.text(0.01, 0.16, 'snr of %s: %0.6g'%(nom_highlights, sum_highlights/(this_y_rms*numpy.sqrt(cnt_highlights))), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
                         ax.text(0.01, 0.10, 'channel velocity resolution: %0.6g'%(numpy.abs(x[1]-x[0])/numpy.abs(x[0])*2.99792458e5), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
                         print('name of highlighted channels = %s'%(nom_highlights))
                         print('sum of highlighted channels = %0.6g'%(sum_highlights))
                         print('avg of highlighted channels = %0.6g'%(sum_highlights/cnt_highlights))
+                        print('snr of highlighted channels = %0.6g'%(sum_highlights/cnt_highlights/(this_y_rms*numpy.sqrt(cnt_highlights))))
                         print('channel velocity resolution = %0.5f'%(numpy.abs(x[1]-x[0])/numpy.abs(x[0])*2.99792458e5))
                     #else:
                     #    ax.text(0.01, 0.22, 'sum of highlighted channels: %0.6g'%(sum_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
