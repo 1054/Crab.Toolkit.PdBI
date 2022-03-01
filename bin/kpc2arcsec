@@ -17,7 +17,8 @@ fi
 if [[ $# -ge 2 ]]; then
     KPCLUMDIST="$2"
 else
-    KPCLUMDIST=($(lumdist -verbose "$1" | grep "d_A=" | perl -p -e 's/.* d_A=(.*) Mpc/\1/g'))
+    #$(dirname ${BASH_SOURCE[0]})/lumdist
+    KPCLUMDIST=($($(dirname ${BASH_SOURCE[0]})/lumdist -verbose "$1" | grep "d_A=" | perl -p -e 's/.* d_A=(.*) Mpc/\1/g'))
 fi
 if echo $KPCLUMDIST | grep -q -v "lumdist"; then
     mathcalc "1e-3/($KPCLUMDIST)/3.1415926*180.0*3600.0"

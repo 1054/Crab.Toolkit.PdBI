@@ -7,6 +7,7 @@
 #    2020-03-09 copied from pdbi-uvt-go-uvmap, added clean and primary beam correction.
 #               added -clean-sigma arg in pdbi-uvt-core-arg-v11.
 #    2020-04-17 added -clean-mask arg in pdbi-uvt-core-arg-v12.
+#    2022-03-01 pdbi-uvt-core-arg-v13. MAP_RA MAP_DEC.
 # 
 # 
 
@@ -35,11 +36,11 @@ usage() {
 # 
 # SOURCE pdbi-uvt-core-arg
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v12" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v12" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13" "$@"
 else
     echo ""
-    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v12\"!"
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13\"!"
     echo ""
     exit 1
 fi
@@ -161,9 +162,133 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # 
         echo "! GILDAS MAPPING SCRIPT"                          >  "$PdBIUVT_EXE"
         echo ""                                                 >> "$PdBIUVT_EXE"
+        
+        #echo "on error exit 255"                                >> "$PdBIUVT_EXE"
+        
         echo "let name \"${PdBIUVT_NAME[i]}\""                  >> "$PdBIUVT_EXE"
-        # 
-        echo "let map_beam_step 1"                              >> "$PdBIUVT_EXE"
+        
+        if [[ ${#PdBIUVT_SIZE[@]} -gt $i ]]; then 
+            echo "let size ${PdBIUVT_SIZE[$i]}"                 >> "$PdBIUVT_EXE"
+        fi
+        if [[ ${#PdBIUVT_FOV_SIZE[@]} -gt $i ]]; then 
+            echo "let size ${PdBIUVT_FOV_SIZE[$i]}"             >> "$PdBIUVT_EXE"
+        fi
+        if [[ ${#PdBIUVT_MAP_SIZE[@]} -gt $i ]]; then 
+            echo "let map_size ${PdBIUVT_MAP_SIZE[$i]}"         >> "$PdBIUVT_EXE"
+        else
+            echo "let map_size 1024"                            >> "$PdBIUVT_EXE"
+        fi
+        if [[ ${#PdBIUVT_MAP_CELL[@]} -gt $i ]]; then 
+            echo "let map_cell ${PdBIUVT_MAP_CELL[$i]}"         >> "$PdBIUVT_EXE"
+        fi
+        if [[ ${#PdBIUVT_MAP_RA[@]} -gt $i ]] && [[ ${#PdBIUVT_MAP_DEC[@]} -gt $i ]]; then 
+            echo "let MAP_SHIFT YES"                            >> "$PdBIUVT_EXE"
+            echo "let MAP_RA ${PdBIUVT_MAP_RA[$i]}"             >> "$PdBIUVT_EXE"
+            echo "let MAP_DEC ${PdBIUVT_MAP_DEC[$i]}"           >> "$PdBIUVT_EXE"
+            echo "let MAP_ANGLE 0.0"                            >> "$PdBIUVT_EXE"
+        fi
+        
+        # set to fit per channel beam (1) or not (0 or -1)
+        # must be zero for mosaic 20220301
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "! setup interferometer data"                      >> "$PdBIUVT_EXE"
+        echo "@ p_setup.map inter"                              >> "$PdBIUVT_EXE"
+        echo "if (setup%int%mosaic) then"                       >> "$PdBIUVT_EXE"
+        echo "    let map_beam_step 0"                          >> "$PdBIUVT_EXE"
+        echo "else"                                             >> "$PdBIUVT_EXE"
+        echo "    let map_beam_step 1"                          >> "$PdBIUVT_EXE"
+        echo "endif"                                            >> "$PdBIUVT_EXE"
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        
+        if [[ ${#PdBIUVT_TELES[@]} -gt 0 ]]; then
+            echo "let type uvt"                                 >> "$PdBIUVT_EXE"
+            echo "go TELES $PdBIUVT_TELES"                      >> "$PdBIUVT_EXE"
+        fi
+        
+        #echo "define uvtable uvtvar 'name'.uvt read"
+        #echo "if (uvtvar%ntel.eq.0) then"
+        #echo "    header 'name'.uvt /teles ALMA   ! see p_telesmap"
+        #echo "endif"
+        
+        
+        # Set clean threshold by clean_sigma times the noise value
+        if [[ $PdBIUVT_PARALLELS -eq 1 ]]; then
+            echo "let type lmv"                                 >> "$PdBIUVT_EXE"
+        else
+            # try to read lmv-res file
+            if [[ -f ${PdBIUVT_NAME[i]}.lmv-res ]]; then
+                echo ""                                         >> "$PdBIUVT_EXE"
+                echo "say \"\""                                 >> "$PdBIUVT_EXE"
+                echo "say \"let type lmv-res\""                 >> "$PdBIUVT_EXE"
+                echo "let type lmv-res"                         >> "$PdBIUVT_EXE"
+            else
+                echo ""                                         >> "$PdBIUVT_EXE"
+                echo "say \"\""                                 >> "$PdBIUVT_EXE"
+                echo "say \"go uvmap\""                         >> "$PdBIUVT_EXE"
+                echo "go uvmap"                                 >> "$PdBIUVT_EXE"
+            fi
+        fi
+        
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"go noise\""                                 >> "$PdBIUVT_EXE"
+        echo "go noise"                                         >> "$PdBIUVT_EXE"
+        
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        if [[ ${#PdBIUVT_UVMAP_SPACING[@]} -gt $i ]]; then
+            echo "let spacing ${PdBIUVT_UVMAP_SPACING[$i]}"     >> "$PdBIUVT_EXE"
+        else
+            echo "let spacing noise"                            >> "$PdBIUVT_EXE"
+        fi
+        
+        
+        # Set channel range
+        if [[ ${#PdBIUVT_CMIN[@]} -gt $i ]]; then
+            echo "let first ${PdBIUVT_CMIN[i]}"                 >> "$PdBIUVT_EXE"
+        fi
+        if [[ ${#PdBIUVT_CMAX[@]} -gt $i ]]; then
+            echo "let last ${PdBIUVT_CMAX[i]}"                  >> "$PdBIUVT_EXE"
+        fi
+        
+        
+        # Print first and last channels
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"examine first last\""                       >> "$PdBIUVT_EXE"
+        echo "exam first last"                                  >> "$PdBIUVT_EXE"
+        
+        
+        # Print map size, map cell, field of view size, and noise
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"examine map_size\""                         >> "$PdBIUVT_EXE"
+        echo "exam map_size"                                    >> "$PdBIUVT_EXE"
+        
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"examine map_cell\""                         >> "$PdBIUVT_EXE"
+        echo "exam map_cell"                                    >> "$PdBIUVT_EXE"
+        
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"examine size\""                             >> "$PdBIUVT_EXE"
+        echo "exam size"                                        >> "$PdBIUVT_EXE"
+        
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"examine noise\""                            >> "$PdBIUVT_EXE"
+        echo "exam noise"                                       >> "$PdBIUVT_EXE"
+        
+        
+        # Write noise to disk
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"write \"'name'\".clean.with.mask.noise.info.txt\""          >> "$PdBIUVT_EXE"
+        echo "sic output 'name'.clean.with.mask.noise.info.txt new"             >> "$PdBIUVT_EXE"
+        echo "say 'noise' /format E15.6"                        >> "$PdBIUVT_EXE"
+        echo "sic output"                                       >> "$PdBIUVT_EXE"
+        
+        
         # 
         # Clean with the clean mask
         # 
@@ -206,10 +331,31 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         fi
         
         
+        # Set clean method
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"let method hogbom\""                        >> "$PdBIUVT_EXE"
+        echo "let method hogbom"                                >> "$PdBIUVT_EXE"
+        
+        
         # Print cleaning inputs
         echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
         echo "say \"inp clean\""                                >> "$PdBIUVT_EXE"
         echo "inp clean"                                        >> "$PdBIUVT_EXE"
+        
+        
+        # @ p_setup.map inter
+        # read * 'name'
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"@ p_setup.map inter\""                      >> "$PdBIUVT_EXE"
+        echo "@ p_setup.map inter"                              >> "$PdBIUVT_EXE"
+        
+        echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"read * 'name'\""                            >> "$PdBIUVT_EXE"
+        echo "read * 'name'"                                    >> "$PdBIUVT_EXE"
         
         
         # Cleaning
@@ -222,13 +368,23 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # Write lmv clean to disk
         echo ""                                                 >> "$PdBIUVT_EXE"
         echo "say \"\""                                         >> "$PdBIUVT_EXE"
-        echo "say \"write clean 'name'\""                       >> "$PdBIUVT_EXE"
+        echo "say \"write clean \"'name'"                       >> "$PdBIUVT_EXE"
         echo "write clean 'name'"                               >> "$PdBIUVT_EXE"
-        echo "say \"write res 'name'\""                         >> "$PdBIUVT_EXE"
+        echo "say \"write beam \"'name'"                        >> "$PdBIUVT_EXE"
+        echo "write beam 'name'"                                >> "$PdBIUVT_EXE"
+        echo "say \"write res \"'name'"                         >> "$PdBIUVT_EXE"
         echo "write res 'name'"                                 >> "$PdBIUVT_EXE"
-        echo "say \"write cct 'name'\""                         >> "$PdBIUVT_EXE"
+        echo "say \"write cct \"'name'"                         >> "$PdBIUVT_EXE"
         echo "write cct 'name'"                                 >> "$PdBIUVT_EXE"
+        
+        
+        # Write clean beam to disk
         echo ""                                                 >> "$PdBIUVT_EXE"
+        echo "say \"\""                                         >> "$PdBIUVT_EXE"
+        echo "say \"write \"'name'\".clean.with.mask.beam.info.txt\""     >> "$PdBIUVT_EXE"
+        echo "sic output 'name'.clean.with.mask.beam.info.txt new"        >> "$PdBIUVT_EXE"
+        echo "say 'clean%major/pi*180.0*3600.0' 'clean%minor/pi*180.0*3600.0' 'clean%pa/pi*180.0'" >> "$PdBIUVT_EXE"
+        echo "sic output"                                       >> "$PdBIUVT_EXE"
         
         
         # Save fits

@@ -3,50 +3,46 @@ Crab Toolkit for NOEMA(PdBI)/ALMA Data Reduction and Analysis
 
 This toolkit contains several useful code to easily deal with NOEMA(PdBI)/ALMA UV table/UV FITS data. 
 
-'pdbi-uvt-go-*' commands can process UV table data in a batch mode by calling the [GILDAS MAPPING](https://www.iram.fr/IRAMFR/GILDAS/) software without doing this manually in the [GILDAS MAPPING](https://www.iram.fr/IRAMFR/GILDAS/) software environment. 
+The scripts in this toolkits are mostly wrappers of the [GILDAS](https://www.iram.fr/IRAMFR/GILDAS) [MAPPING](https://www.iram.fr/IRAMFR/GILDAS/doc/pdf/map.pdf) module's tasks. 
+Because GILDAS is interative and usually needs GUI operations, this toolkit can let you run the tasks in command line which is much easier for batch data processing. 
 
-'pdbi-uvt-go-splitpolar' can average two polarization (stokes). For example, 
+
+## First of all, add it into your PATH ##
+
+In your BASH shell, 
 ```
-mkdir -p test/test_1_splitpolar
-cd test/test_1_splitpolar
-cp ../uv_table_data/split_z35_68_spw0_width128.uvt NAME.uvt
-pdbi-uvt-go-splitpolar -name NAME.uvt -out OUTPUTNAME
+source /path/to/the/downloaded/Crab.Toolkit.PdBI/SETUP.bash
 ```
+This will add the "bin" directory path to your system PATH enviornment, so that you can directly call our scripts from the command line. 
 
-'pdbi-uvt-go-merge' can merge two UV tables. For example, 
-```
-mkdir -p test/test_2_uvmerge
-cd test/test_2_uvmerge
-cp ../uv_table_data/split_z35_68_spw0_width128.uvt NAME_1.uvt
-cp ../uv_table_data/split_z35_68_spw1_width128.uvt NAME_2.uvt
-pdbi-uvt-go-merge -name NAME_1.uvt NAME_2.uvt -out OUTPUTNAME
-# we can also specify relative weighting, e.g., 
-pdbi-uvt-go-merge -name NAME_1.uvt NAME_2.uvt -out OUTPUTNAME -weighting 5.0 12.0
-```
+Our script names are like 'pdbi-uvt-go-*'. If you type `pdbi-uvt-go-` in the command line than press your tab key, it should show you those commands. 
 
-'pdbi-uvt-go-average' can average UV table channels and make a single channel UV table, which is just continuum data. For example, 
-```
-mkdir -p test/test_3_uvaverage
-cd test/test_3_uvaverage
-cp ../uv_table_data/split_VUDS0510807732_spw1_width10_SP.uvt NAME.uvt
-pdbi-uvt-go-average -name NAME.uvt -out OUTPUTNAME
-# we can specify channel range '-crange MM NN', or velocity range '-vrange MM NN', or frequency range '-frange MM NN'.
-pdbi-uvt-go-average -name NAME.uvt -crange 2 5 -out OUTPUTNAME
-pdbi-uvt-go-average -name NAME.uvt -vrange -400 400 -out OUTPUTNAME
-```
+Our script usually needs some input arguments. If you type our script name and do not input any argument and press enter, you will get the usage of that script. 
 
-'pdbi-uvt-go-compress' (TODO)
+A brief overview of the scripts are in the table below.
 
-'pdbi-uvt-go-resample' (TODO)
+| Script name | Description | Arguments |
+|-------------|-------------|-----------|
+| pdbi-uvt-go-average | Collapse all channel in a uvtable. | -name a.uvt |
+| pdbi-uvt-go-clean | Do CLEAN. | -name a.uvt -clean-sigma 4 |
+| pdbi-uvt-go-clean-with-mask | Do CLEAN with mask. | -name a.uvt -mask b.fits -clean-sigma 1 |
+| pdbi-uvt-go-compress | Bin channels in channel width. | -name a.uvt -width 2 |
+| pdbi-uvt-go-merge | Merge uvtables with compatible frequency setups. | -name a.uvt b.uvt c.uvt -out o.uvt |
+| pdbi-uvt-go-resample | Resample channels into certain velocity width. | -name a.uvt -width 500 |
+| pdbi-uvt-go-shift | Shift the phase center to RA Dec. | -name a.uvt -radec 150.0 2.0 |
+| pdbi-uvt-go-uvfit | Perform GILDAS/MAPPING UV_FIT. | -name a.uvt -offset 0 0 -varypos |
+|                   |  | -name a.uvt -radec 150.0 2.0 -fixpos |
+| pdbi-uvt-go-uvmap | Make a dirty image. | -name a.uvt -size -map_size |
+| pdbi-uvt-go-subtract | Subtract a uvtable (b) e.g. as continuum from another (a). | -name a.uvt b.uvt -out o.uvt |
 
-'pdbi-uvt-go-shift' (TODO)
 
-'pdbi-uvt-go-subtract' (TODO)
+## Use this code to do an UV_FIT (uv-plane source fitting) ##
 
-'pdbi-uvt-go-uvmap' (TODO)
+One of the most important task is probably the GILDAS/MAPPING UV_FIT, which performs uv-plane source fitting. If the data has multiple channels, then the source fitting is done channel by channel, and in the end you will get a table containing all the fluxes and channel frequencies, i.e., a spectrum. 
 
-##### 'pdbi-uvt-go-uvfit' #####
-'pdbi-uvt-go-uvfit' can do uv_fit easily with a large flexibility! Here are some examples:
+Our `pdbi-uvt-go-uvfit` script can do uv_fit easily with a large flexibility! 
+Below are some examples. You can try these commands with our test uvtable file in the "test" directory. 
+
 ```
 mkdir -p test/test_uv_fit
 cd test/test_uv_fit
@@ -97,8 +93,56 @@ Note that GILDAS MAPPING has a different definition of angle versus position ang
 
 
 
+## Other scripts ##
 
-## Deal with ALMA Measurement Sets ##
+Our 'pdbi-uvt-go-*' commands can process uvtable data in a batch mode by calling the [GILDAS MAPPING](https://www.iram.fr/IRAMFR/GILDAS/) tasks without invoking the GUI. 
+
+'pdbi-uvt-go-splitpolar' can average two polarization (stokes). For example, 
+
+```
+mkdir -p test/test_1_splitpolar
+cd test/test_1_splitpolar
+cp ../uv_table_data/split_z35_68_spw0_width128.uvt NAME.uvt
+pdbi-uvt-go-splitpolar -name NAME.uvt -out OUTPUTNAME
+```
+
+'pdbi-uvt-go-merge' can merge two UV tables. For example, 
+
+```
+mkdir -p test/test_2_uvmerge
+cd test/test_2_uvmerge
+cp ../uv_table_data/split_z35_68_spw0_width128.uvt NAME_1.uvt
+cp ../uv_table_data/split_z35_68_spw1_width128.uvt NAME_2.uvt
+pdbi-uvt-go-merge -name NAME_1.uvt NAME_2.uvt -out OUTPUTNAME
+# we can also specify relative weighting, e.g., 
+pdbi-uvt-go-merge -name NAME_1.uvt NAME_2.uvt -out OUTPUTNAME -weighting 5.0 12.0
+```
+
+'pdbi-uvt-go-average' can average UV table channels and make a single channel UV table, which is just continuum data. For example, 
+
+```
+mkdir -p test/test_3_uvaverage
+cd test/test_3_uvaverage
+cp ../uv_table_data/split_VUDS0510807732_spw1_width10_SP.uvt NAME.uvt
+pdbi-uvt-go-average -name NAME.uvt -out OUTPUTNAME
+# we can specify channel range '-crange MM NN', or velocity range '-vrange MM NN', or frequency range '-frange MM NN'.
+pdbi-uvt-go-average -name NAME.uvt -crange 2 5 -out OUTPUTNAME
+pdbi-uvt-go-average -name NAME.uvt -vrange -400 400 -out OUTPUTNAME
+```
+
+'pdbi-uvt-go-compress' (TODO)
+
+'pdbi-uvt-go-resample' (TODO)
+
+'pdbi-uvt-go-shift' (TODO)
+
+'pdbi-uvt-go-subtract' (TODO)
+
+'pdbi-uvt-go-uvmap' (TODO)
+
+
+
+## Deal with ALMA Measurement Sets? ##
 
 Running the follow command to split all sources in an ALMA measurement set in continuum mode. 
 Use arguments "-width 1" to split the data with original channel width. 
@@ -155,6 +199,27 @@ pdbi-uvt-go-uvfit-v3 -name "ID-6406-1mm" \
 The output fitting log file will be "Output_filename.log", and the output data table will be "Output_filename.uvfit.obj_1.txt" and "Output_filename.uvfit.obj_2.txt". 
 We also output spectrum figures as "Output_filename.plotfit.obj_1.eps". 
 
+
+
+
+
+## What is this code actually doing? ##
+
+The core idea of the scripts in this toolkit is: first creating a "\*.init" file according to the user inputs, which is needed by each GILDAS/MAPPING task, then generating a simple script "\*.script" that calls the GILDAS/MAPPING task with the "\*.init" file, then launchs the GILDAS/MAPPING main executable in a no-window, no-logging mode to run the "\*.scrpit" file:
+
+```
+echo "aaa.script" | mapping -nw -nl
+```
+
+If you have added the `-keep-files` argument when you call our script in the command line, you should get the "\*.init" and "\*.script" file saved on the disk. You can view the contents, and run it in GILDAS/MAPPING environment by yourself:
+
+```
+# Launch the GILDAS/MAPPING GUI
+mapping 
+! now I'm in the GILDAS/MAPPING environment
+! I'll try to run the "aaa.script" here
+@aaa.script
+```
 
 
 
