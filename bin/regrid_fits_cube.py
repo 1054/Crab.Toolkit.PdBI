@@ -24,8 +24,10 @@ if os.path.isfile(output_data_cube_file):
     shutil.move(output_data_cube_file, output_data_cube_file+'.backup')
 
 input_data_cube = SpectralCube.read(input_data_cube_file)
+input_data_cube.allow_huge_operations = True
 
 input_template_cube = SpectralCube.read(input_template_cube_file)
+input_template_cube.allow_huge_operations = True
 
 output_data_cube = input_data_cube.reproject(input_template_cube.header, order='bicubic')
 output_data_array = output_data_cube.unmasked_data[:,:,:]

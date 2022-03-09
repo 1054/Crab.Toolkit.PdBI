@@ -1,0 +1,42 @@
+! 
+! Aim:
+!     Some uvtable has an empty linename in the header, 
+!     which leads to invalid 0x00 bytes in the LINE key
+!     in the FITS header when we output the FITS image.
+! 
+! Usage:
+!     @pdbi-uvt-fix-null-linename
+! 
+! Last update: 
+!      2022-03-02 created
+! 
+
+! we need NAME and TYPE to be already set
+
+
+if (exist(name).and.exist(type)) then
+
+    exam name
+    exam type
+    
+    if (exist(hdr)) del /var hdr
+    
+    define header hdr 'name'.'type' read
+    
+    if (exist(tmplinename)) del /var tmplinename
+    
+    define char*12 tmplinename
+    !let tmplinename = "" /new char*12
+    
+    if (tmplinename.eq.hdr%line)
+        ! TODO
+    endif
+
+else
+
+    say "Please define NAME and TYPE"
+
+endif
+
+
+

@@ -1,0 +1,40 @@
+#!/bin/bash
+# 
+# Aim:
+#     Some uvtable has an empty linename in the header, 
+#     which leads to invalid 0x00 bytes in the LINE key
+#     in the FITS header when we output the FITS image.
+# 
+# Usage:
+#     pdbi-uvt-fix-null-linename-in-binary INPUT.fits
+# 
+# Last update: 
+#      2022-03-02 created
+# 
+
+usage() {
+    echo "Usage:"
+    echo "    pdbi-uvt-fix-null-linename-in-binary INPUT.fits"
+}
+
+if [[ $# -eq 0 ]]; then
+    usage
+    exit
+fi
+
+
+input_file="$1"
+echo "input_file: $input_file"
+if [[ "$input_file"x != *".fits"x ]]; then
+    echo "Error! The input file is not a FITS file!"
+    exit 255
+fi
+
+
+# '4C494E45 20202020 3D202700 00000000 00000000 00000027'
+
+perl -i.bak -p -e 's/\x4c\x49\x4e\x45\x20\x20\x20\x20\x3d\x20\x27\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x27/\x4c\x49\x4e\x45\x20\x20\x20\x20\x3d\x20\x27\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x27/' \
+    "$input_file"
+
+
+

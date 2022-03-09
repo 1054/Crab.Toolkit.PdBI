@@ -136,16 +136,27 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         # 
         # Regrid clean mask fits cube
         # 
-        echo "Running: "
-        echo "$(dirname ${BASH_SOURCE[0]})/regrid_fits_cube.py \\"
-        echo "    \"${PdBIUVT_CLEAN_MASK[i]}\" \\"
-        echo "    \"${PdBIUVT_NAME[i]}.lmv-clean.fits\" \\"
-        echo "    \"${PdBIUVT_NAME[i]}.msk.fits\""
-        # 
-        $(dirname ${BASH_SOURCE[0]})/regrid_fits_cube.py \
-            "${PdBIUVT_CLEAN_MASK[i]}" \
-            "${PdBIUVT_NAME[i]}.lmv-clean.fits" \
-            "${PdBIUVT_NAME[i]}.msk.fits"
+        check_naxis1=($(gethead "${PdBIUVT_CLEAN_MASK[i]}" NAXIS1 NAXIS2 NAXIS3))
+        check_naxis2=($(gethead "${PdBIUVT_NAME[i]}.lmv-clean.fits" NAXIS1 NAXIS2 NAXIS3))
+        if [[ ${check_naxis1[0]} -eq ${check_naxis2[0]} ]] && [[ ${check_naxis1[1]} -eq ${check_naxis2[1]} ]] && \
+           [[ ${check_naxis1[2]} -eq ${check_naxis2[2]} ]]; then
+            echo "Copying: "
+            echo "    ${PdBIUVT_CLEAN_MASK[i]} to"
+            echo "    ${PdBIUVT_NAME[i]}.msk.fits"
+            cp "${PdBIUVT_CLEAN_MASK[i]}" \
+                "${PdBIUVT_NAME[i]}.msk.fits"
+        else
+            echo "Running: "
+            echo "$(dirname ${BASH_SOURCE[0]})/regrid_fits_cube.py \\"
+            echo "    \"${PdBIUVT_CLEAN_MASK[i]}\" \\"
+            echo "    \"${PdBIUVT_NAME[i]}.lmv-clean.fits\" \\"
+            echo "    \"${PdBIUVT_NAME[i]}.msk.fits\""
+            # 
+            $(dirname ${BASH_SOURCE[0]})/regrid_fits_cube.py \
+                "${PdBIUVT_CLEAN_MASK[i]}" \
+                "${PdBIUVT_NAME[i]}.lmv-clean.fits" \
+                "${PdBIUVT_NAME[i]}.msk.fits"
+        fi
         # 
         if [[ ! -f "${PdBIUVT_NAME[i]}.msk.fits" ]]; then
             echo "Error! Failed to run the above command and output \"${PdBIUVT_NAME[i]}.msk.fits\"!"
