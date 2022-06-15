@@ -20,6 +20,7 @@
 #    2019-10-10 pdbi-uvt-go-uvfit-v10 -- now allow input the per-object arg "-keep-in-residual" or "-subtract". Updated "pdbi-uvt-core-arg-v10" parsing of object-oriented parameters. Updated "pdbi-uvt-go-uvfit-print-results-v10" with more freq digits.
 #    2020-02-17 pdbi-uvt-core-cvf-v9 --> pdbi-uvt-core-cvf-v10 (CII NII)
 #    2021-10-25 'number of starts' and 'starting range'
+#    2022-06-14 MAP_RA MAP_DEC MAP_SHIFT for the new GILDAS MAPPING which does not have UV_SHIFT task anymore
 # 
 
 
@@ -409,15 +410,20 @@ for (( tk=0; tk<${#PdBIUVT_NAME[@]}; tk++ )); do
             echo  'TASK\GO'                                                                                                                                               >> $PdBIUVT_TEMP_INIT
             echo  "let SIC%TEE .TRUE."                            >  $PdBIUVT_TEMP_EXEC
             echo  "let name ${PdBIUVT_NAME[tk]}"                  >> $PdBIUVT_TEMP_EXEC
+            
+            # 
+            # Check MAP_RA MAP_DEC MAP_SHIFT
+            # 
+            if [[ ${#PdBIUVT_MAP_RA[@]} -gt 0 ]] && [[ ${#PdBIUVT_MAP_DEC[@]} -gt 0 ]]; then
+                echo  "let map_ra ${PdBIUVT_MAP_RA[0]}"           >> $PdBIUVT_TEMP_EXEC
+                echo  "let map_dec ${PdBIUVT_MAP_DEC[0]}"         >> $PdBIUVT_TEMP_EXEC
+                echo  "let map_shift yes"                         >> $PdBIUVT_TEMP_EXEC
+            fi
+            
             echo  "run uv_fit $PdBIUVT_TEMP_INIT /NOWINDOW"       >> $PdBIUVT_TEMP_EXEC
             echo  ""                                              >> $PdBIUVT_TEMP_EXEC
         fi
     done
-    
-    
-    # 
-    # Check MAP_RA MAP_DEC MAP_SHIFT
-    # 
     
     
     

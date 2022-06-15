@@ -9,6 +9,7 @@ for i in range(len(sys.path)):
         sys.path[i] = ''
 import numpy, matplotlib, astropy
 import astropy.io.ascii as asciitable
+import astropy.units as u
 from astropy.table import Table
 import matplotlib.pyplot as plt
 import scipy.interpolate as interpolate
@@ -68,6 +69,7 @@ input_linefreq = [] # rest-frame
 input_lineFWHM = [] # km/s
 input_clip_sigma = 0.0
 input_clip_nchan = 0 # 20190411 clip nchan at both ends
+input_freq_unit = 'GHz'
 set_figure_size = [12.0,5.0]
 set_no_errorbar = False
 set_no_liblines = False
@@ -216,6 +218,12 @@ while i < len(sys.argv):
             i = i + 1
             input_clip_sigma = float(sys.argv[i])
             print('input_clip_sigma = %s'%(input_clip_sigma))
+    elif temp_argv == '-freq-unit' or temp_argv == '-frequnit':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            input_freq_unit = sys.argv[i]
+            assert u.Unit(input_freq_unit).to(u.GHz)
+            print('input_freq_unit = %s'%(input_freq_unit))
     elif temp_argv == '-clip-nchan':
         if i+1 < len(sys.argv):
             i = i + 1
@@ -379,6 +387,8 @@ for i in range(len(input_names)):
             input_table['SNR'][invalid_mask] = 'NaN'
     if 'freq' in input_table.colnames:
         x = numpy.array(input_table['freq']).astype(float)
+        if input_freq_unit is not None:
+            x = (x * u.Unit(input_freq_unit)).to(u.GHz).value
     if 'frequency' in input_table.colnames:
         x = numpy.array(input_table['frequency']).astype(float)
     if 'flux' in input_table.colnames:

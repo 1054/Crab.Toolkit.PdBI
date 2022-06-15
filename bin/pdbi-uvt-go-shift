@@ -26,11 +26,11 @@ usage() {
 # 
 # SOURCE pdbi-uvt-core-arg
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13" "$@"
 else
     echo ""
-    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v8\"!"
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13\"!"
     echo ""
     exit 1
 fi
@@ -158,6 +158,21 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
         echo  "run uv_shift $PdBIUVT_TEMP_INIT /NOWINDOW" > $PdBIUVT_TEMP_EXEC
         echo  "@$PdBIUVT_TEMP_EXEC | mapping -nw -nl > $PdBIUVT_TEMP_LOGT"
         echo  "@$PdBIUVT_TEMP_EXEC" | mapping -nw -nl >  "$PdBIUVT_TEMP_LOGT"
+        # 
+        # 202206 UV_SHIFT task is not available  anymore.  You  can  use  the command
+        #        CLEAN\UV_SHIFT as a replacement. See HELP CLEAN\UV_SHIFT for details.
+        if [[ $(grep "Program uv_shift does not exist" "$PdBIUVT_TEMP_LOGT"| wc -l) -gt 0 ]]; then
+            # 
+            echo "let name ${PdBIUVT_SAVE[i]}" > $PdBIUVT_TEMP_EXEC
+            #echo "define uvtable f ${PdBIUVT_SAVE[i]} read"
+            #echo "CLEAN\UV_SHIFT $PdBIUVT_TEMP_MAP_RA $PdBIUVT_TEMP_MAP_DEC" >> $PdBIUVT_TEMP_EXEC
+            echo "let map_ra $PdBIUVT_TEMP_MAP_RA" >> $PdBIUVT_TEMP_EXEC
+            echo "let map_dec $PdBIUVT_TEMP_MAP_DEC" >> $PdBIUVT_TEMP_EXEC
+            echo "let map_shift yes" >> $PdBIUVT_TEMP_EXEC
+            echo "CLEAN\UV_SHIFT" >> $PdBIUVT_TEMP_EXEC
+            echo  "@$PdBIUVT_TEMP_EXEC | mapping -nw -nl > $PdBIUVT_TEMP_LOGT"
+            echo  "@$PdBIUVT_TEMP_EXEC" | mapping -nw -nl >  "$PdBIUVT_TEMP_LOGT"
+        fi
         # 
         # Check final output
         # 
