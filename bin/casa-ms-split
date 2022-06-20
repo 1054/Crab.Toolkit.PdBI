@@ -105,8 +105,8 @@ echo "#!/bin/bash"                                                              
 echo ""                                                                                                         >> "run_casa_ms_split_all_step6.bash"
 #echo "source $(readlink -f $(dirname $(dirname ${BASH_SOURCE[0]}))/SETUP.bash)"                                >> "run_casa_ms_split_all_step6.bash"
 echo "source $(perl -MCwd -e 'print Cwd::abs_path shift' $(dirname $(dirname ${BASH_SOURCE[0]}))/SETUP.bash)"   >> "run_casa_ms_split_all_step6.bash"
-echo "source ~/Softwares/CASA/SETUP.bash noop"                                                                  >> "run_casa_ms_split_all_step6.bash"
-echo "source ~/Softwares/GILDAS/SETUP.bash"                                                                     >> "run_casa_ms_split_all_step6.bash"
+echo "source ~/Software/CASA/SETUP.bash noop"                                                                   >> "run_casa_ms_split_all_step6.bash"
+echo "source ~/Software/GILDAS/SETUP.bash"                                                                      >> "run_casa_ms_split_all_step6.bash"
 
 
 
@@ -1208,11 +1208,20 @@ for (( ivis=0; ivis<${#CASA_INP_VIS[@]}; ivis++ )); do
                     echo "#!/bin/bash"                                                       > "$CASAMS_Script6"
                     
                     echo "source \"$(dirname ${BASH_SOURCE[0]})/bin-clear-casa-path\""       >> "$CASAMS_Script6" # clear CASA path for running GILDAS
-                    echo "if [[ ! -z \$GAG_PATH ]]; then "                                   >> "$CASAMS_Script6" # re-source GILDAS
-                    echo "    if [[ -f \"\$GAG_PATH/bash_profile\" ]]; then "                >> "$CASAMS_Script6" # re-source GILDAS
-                    echo "        source \"\$GAG_PATH/bash_profile\""                        >> "$CASAMS_Script6" # re-source GILDAS
-                    echo "    fi"                                                            >> "$CASAMS_Script6" # re-source GILDAS
-                    echo "fi"                                                                >> "$CASAMS_Script6" # re-source GILDAS
+                    echo "if [[ \$(command -v mapping | wc -l) -eq 0 ]]; then "              >> "$CASAMS_Script6" # check GILDAS mapping path
+                    echo "    if [[ -f \$HOME/Software/GILDAS/SETUP.bash ]]; then "          >> "$CASAMS_Script6" # source GILDAS from a possible path
+                    echo "        source \"\$HOME/Software/GILDAS/SETUP.bash\""              >> "$CASAMS_Script6" # source GILDAS from a possible path
+                    echo "    fi"                                                            >> "$CASAMS_Script6" # source GILDAS from a possible path
+                    echo "fi"                                                                >> "$CASAMS_Script6" # source GILDAS from a possible path
+                    echo "if [[ \$(command -v mapping | wc -l) -eq 0 ]]; then "              >> "$CASAMS_Script6" # check GILDAS
+                    echo "    echo \"Error! GILDAS mapping not found in the PATH!\""         >> "$CASAMS_Script6" # check GILDAS
+                    echo "    exit 255"                                                      >> "$CASAMS_Script6" # check GILDAS
+                    echo "fi"                                                                >> "$CASAMS_Script6" # check GILDAS
+                    echo "if [[ ! -z \$GAG_PATH ]]; then "                                   >> "$CASAMS_Script6" # re-source GILDAS to make sure it works
+                    echo "    if [[ -f \"\$GAG_PATH/bash_profile\" ]]; then "                >> "$CASAMS_Script6" # re-source GILDAS to make sure it works
+                    echo "        source \"\$GAG_PATH/bash_profile\""                        >> "$CASAMS_Script6" # re-source GILDAS to make sure it works
+                    echo "    fi"                                                            >> "$CASAMS_Script6" # re-source GILDAS to make sure it works
+                    echo "fi"                                                                >> "$CASAMS_Script6" # re-source GILDAS to make sure it works
                     
                     
                     echo "import os, sys"                                                                                    >> "$CASAMS_Script1"
