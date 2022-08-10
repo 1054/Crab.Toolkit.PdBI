@@ -92,6 +92,7 @@ set_plot_margin_bottom = None
 set_plot_margin_left = None
 set_plot_margin_right = None
 set_fix_nan = False
+set_flip_yaxis = False
 input_continuum = []
 
 lib_linefreq = [115.2712018, 230.538, 345.7959899, 461.0407682, 576.2679305, 691.4730763, 806.651806, 921.7997, 1036.912393, 1151.985452, 1267.014486, 1381.995105, 1496.922909]
@@ -232,6 +233,9 @@ while i < len(sys.argv):
     elif temp_argv == '-fix-nan' or temp_argv == '-fixnan':
         set_fix_nan = True
         print('set_fix_nan = %s'%(set_fix_nan))
+    elif temp_argv == '-flip':
+        set_flip_yaxis = True
+        print('set_flip_yaxis = %s'%(set_flip_yaxis))
     elif temp_argv == '-continuum':
         # should be either one value
         # or pairs of values
@@ -694,6 +698,14 @@ else:
     if len(input_names)>1:
         title_plot = title_plot + ' and %d files'%(len(input_names)-1)
 plt.title(title_plot, fontsize = set_plot_title_fontsize) # , pad = set_plot_title_pad <TODO>
+
+
+# 
+# set_flip_yaxis
+if set_flip_yaxis:
+    ax = plt.gca()
+    ax.invert_yaxis()
+
 
 # 
 # adjust margin
