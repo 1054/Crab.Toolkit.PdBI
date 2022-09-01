@@ -23,6 +23,7 @@
 #     2021-04-12 Added MAP_RA MAP_DEC
 #     2021-05-14 Added TELES
 #     2021-05-14 Added PdBIUVT_UVMERGE_ALPHA
+#     2022-08-23 Added UV_TAPER
 # 
 
 
@@ -199,6 +200,7 @@ PdBIUVT_UVCOMPRESS_NC=()  # channel number to compress
 # ------------------------# uv map
 PdBIUVT_UVMAP_CONTOURS=() # contours in unit of 'noise' (TODO: 20180214)
 PdBIUVT_UVMAP_SPACING=()  # spacing in unit of 'noise'
+PdBIUVT_UVMAP_TAPER=()    # tapering, e.g., "120 120 0", meter,meter,deg
 # ------------------------# uv compress
 PdBIUVT_UVRESAMPLE_VW=()  # velocity width to resample
 # ------------------------# clean
@@ -263,6 +265,9 @@ while [[ "$#" -gt 0 ]]; do
               "-mapdec") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_dec";;
              "-map_dec") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_dec";;
              "-map-dec") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="map_dec";;
+            "-uv_taper") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uv_taper";;
+            "-uv-taper") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uv_taper";;
+             "-uvtaper") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uv_taper";;
 
             "-pointing") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="pointing";;
         "-phase-center") if [[ "$#" -lt 3 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="pointing";;
@@ -570,6 +575,17 @@ while [[ "$#" -gt 0 ]]; do
             return 2
         fi
         PdBIUVT_MAP_DEC+=("$1")
+    fi
+    
+    if [[ "$PdBIUVT_RPAR" == "uv_taper" ]];  then 
+        if [[ "$#" -lt 1 ]]; then
+            break
+        fi
+        if echo "$1" | grep -q -v -e "^[0-9 .+-]*$"; then
+            echo ""; echo "Error! Input -uv_taper has a wrong format! Please input only number value or XX XX XX."; echo ""
+            return 2
+        fi
+        PdBIUVT_UVMAP_TAPER+=("$1")
     fi
     
     if [[ "$PdBIUVT_RPAR" == "pointing" ]];  then 

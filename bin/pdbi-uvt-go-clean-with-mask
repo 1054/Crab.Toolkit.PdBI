@@ -199,6 +199,10 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
             echo "let MAP_ANGLE 0.0"                            >> "$PdBIUVT_EXE"
         fi
         
+        if [[ ${#PdBIUVT_UVMAP_TAPER[@]} -gt $i ]]; then
+            echo "let uv_taper ${PdBIUVT_UVMAP_TAPER[$i]}"      >> "$PdBIUVT_EXE"
+        fi
+        
         # set to fit per channel beam (1) or not (0 or -1)
         # must be zero for mosaic 20220301
         echo ""                                                 >> "$PdBIUVT_EXE"

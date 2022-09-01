@@ -149,6 +149,10 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
             echo "let MAP_ANGLE 0.0"                            >> "$PdBIUVT_EXE"
         fi
         
+        if [[ ${#PdBIUVT_UVMAP_TAPER[@]} -gt $i ]]; then
+            echo "let uv_taper ${PdBIUVT_UVMAP_TAPER[$i]}"      >> "$PdBIUVT_EXE"
+        fi
+        
         # set to fit per channel beam or not
         echo "let map_beam_step 1"                              >> "$PdBIUVT_EXE"
         
