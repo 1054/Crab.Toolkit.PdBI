@@ -38,11 +38,13 @@ def main(
     # 
     print('Reading image %r'%(image_file))
     image, header = fits.getdata(image_file, header=True)
-    if len(image.shape) > 2:
-        if image.shape[0] == 1:
-            image = image[0]
+    imshape = (image.shape)
     wcs = None # WCS(header, naxis=2)
     ny, nx = header['NAXIS2'], header['NAXIS1']
+    if len(imshape) >= 3:
+        nchan = np.prod(imshape[0:-2])
+        if len(imshape) > 3:
+            image = image.reshape([nchan, ny, nx])
     
     # 
     print('Reading regions %r'%(region_file))
@@ -60,7 +62,11 @@ def main(
         region_mask = np.logical_or(region_mask, pixel_region.to_mask().to_image((ny,nx)).astype(bool))
     
     # 
-    mask = np.logical_and.reduce((~np.isnan(image), np.isfinite(image), region_mask))
+    #mask = np.logical_and.reduce((~np.isnan(image), np.isfinite(image), region_mask))
+    if len(imshape) >= 3:
+        mask = np.repeat(region_mask[np.newaxis, :, :], nchan)
+    else:
+        mask = region_mask
     # 
     if revert:
         image[~mask] = 1
@@ -68,9 +74,12 @@ def main(
     else:
         image[~mask] = 0
         image[mask] = 1
-    image = image.astype(np.int32)
+    if len(imshape) >= 3:
+        image = image.astype(np.int32)
+    else:
+        image = image.reshape(imshape).astype(np.int32)
     header['BITPIX'] = 32
-    header['HISTORY'] = 'Masked the pixels not in the input regions "{}" as NaNs for the input image "{}".'.format(region_file, image_file)
+    header['HISTORY'] = 'Created mask with the input region "{}" for the input image "{}".'.format(region_file, image_file)
 
     hdu = fits.PrimaryHDU(data=image, header=header)
 
