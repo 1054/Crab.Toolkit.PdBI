@@ -729,9 +729,13 @@ if set_no_liblines:
 else:
     # append library lines
     if len(input_linefreq) > 0:
-        loop_linefreq.extend(input_linefreq)
+        loop_linefreq.extend([temp_linefreq 
+                                for temp_linename,temp_linefreq in list(zip(input_linename,input_linefreq)) 
+                                if temp_linename not in lib_linename])
     if len(input_linename) > 0:
-        loop_linename.extend(input_linename)
+        loop_linename.extend([temp_linename 
+                                for temp_linename,temp_linefreq in list(zip(input_linename,input_linefreq)) 
+                                if temp_linename not in lib_linename])
     loop_linefreq.extend(lib_linefreq)
     loop_linename.extend(lib_linename)
 # 

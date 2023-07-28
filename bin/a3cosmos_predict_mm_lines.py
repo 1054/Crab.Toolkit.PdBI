@@ -19,7 +19,9 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import ScalarFormatter, FuncFormatter, LogLocator, MultipleLocator
 
-np.warnings.filterwarnings('ignore')
+#np.warnings.filterwarnings('ignore')
+import warnings
+warnings.filterwarnings('ignore')
 
 sys.path.append('/Users/dzliu/Cloud/Github/Crab.Toolkit.Python/lib/crab/crabpdbi')
 from CrabPdBI import convert_Wavelength_um_to_Frequency_GHz, \
@@ -86,7 +88,7 @@ if __name__ == '__main__':
     # 
     # set default value
     if len(spectral_setups) == 0:
-        line_freqs, line_names = find_radio_lines_in_frequency_range([80.0, 850, 1461, 1462, 1900, 1901], Redshift=0.0, include_faint_lines = False)
+        line_freqs, line_names = find_radio_lines_in_frequency_range([80.0, 850, 1461, 1462, 1900, 1901, 2060, 2061, 3393, 3394], Redshift=0.0, include_faint_lines = False)
     else:
         line_freqs, line_names = find_radio_lines_in_frequency_range(spectral_setups, Redshift=z, include_faint_lines = False)
     # 
