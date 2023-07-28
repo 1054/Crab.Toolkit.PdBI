@@ -289,7 +289,7 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
             line_name=${PdBIUVT_UVRESAMPLE_LN[klast]}
         fi
         line_name=$(echo "$line_name" | sed -e 's/ /_/g')
-        #freq_ref must be in MHz
+        freq_ref=$(awk "BEGIN {print ($freq_ref)*1000.0;}") #freq_ref must be in MHz
         echo "" >> $PdBIUVT_TEMP_EXEC
         echo "modify ${PdBIUVT_SAVE[tk]}.uvt /frequency $line_name $freq_ref" >> $PdBIUVT_TEMP_EXEC
         echo "" >> $PdBIUVT_TEMP_EXEC
