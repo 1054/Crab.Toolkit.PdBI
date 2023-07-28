@@ -64,7 +64,7 @@ def main(
     # 
     #mask = np.logical_and.reduce((~np.isnan(image), np.isfinite(image), region_mask))
     if len(imshape) >= 3:
-        mask = np.repeat(region_mask[np.newaxis, :, :], nchan)
+        mask = np.repeat(region_mask[np.newaxis, :, :], nchan, axis=0)
     else:
         mask = region_mask
     # 
