@@ -68,7 +68,7 @@ def main(
     else:
         image[~mask] = 0
         image[mask] = 1
-    image = image.astype(bool)
+    image = image.astype(np.int32)
     header['BITPIX'] = 32
     header['HISTORY'] = 'Masked the pixels not in the input regions "{}" as NaNs for the input image "{}".'.format(region_file, image_file)
 
