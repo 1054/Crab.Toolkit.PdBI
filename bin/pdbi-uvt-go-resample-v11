@@ -30,11 +30,11 @@ usage() {
 # 
 # SOURCE pdbi-uvt-core-arg
 # 
-if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13" ]]; then
-    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13" "$@"
+if [[ -f $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v14" ]]; then
+    source $(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v14" "$@"
 else
     echo ""
-    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v13\"!"
+    echo "Error! Could not find \""$(dirname "${BASH_SOURCE[0]}")"/pdbi-uvt-core-arg-v14\"!"
     echo ""
     exit 1
 fi
@@ -275,18 +275,18 @@ for (( tk = 0; tk < "${#PdBIUVT_NAME[@]}"; tk++ )); do
     echo  'TASK\GO'                                                                                                      >> $PdBIUVT_TEMP_INIT
     echo  "run uv_resample $PdBIUVT_TEMP_INIT /NOWINDOW" > $PdBIUVT_TEMP_EXEC
     
-    if [[ ${#PdBIUVT_FREQ_REF[@]} -gt 0 ]] && [[ ${#PdBIUVT_LINE_NAME[@]} -gt 0 ]]; then
-        if [[ ${#PdBIUVT_FREQ_REF[@]} -gt $tk ]]; then
-            freq_ref=${PdBIUVT_FREQ_REF[tk]}
+    if [[ ${#PdBIUVT_UVRESAMPLE_RF[@]} -gt 0 ]] && [[ ${#PdBIUVT_UVRESAMPLE_LN[@]} -gt 0 ]]; then
+        if [[ ${#PdBIUVT_UVRESAMPLE_RF[@]} -gt $tk ]]; then
+            freq_ref=${PdBIUVT_UVRESAMPLE_RF[tk]}
         else
-            klast=$((${#PdBIUVT_FREQ_REF[@]}-1))
-            freq_ref=${PdBIUVT_FREQ_REF[klast]}
+            klast=$((${#PdBIUVT_UVRESAMPLE_RF[@]}-1))
+            freq_ref=${PdBIUVT_UVRESAMPLE_RF[klast]}
         fi
-        if [[ ${#PdBIUVT_LINE_NAME[@]} -gt $tk ]]; then
-            line_name=${PdBIUVT_LINE_NAME[tk]}
+        if [[ ${#PdBIUVT_UVRESAMPLE_LN[@]} -gt $tk ]]; then
+            line_name=${PdBIUVT_UVRESAMPLE_LN[tk]}
         else
-            klast=$((${#PdBIUVT_LINE_NAME[@]}-1))
-            line_name=${PdBIUVT_LINE_NAME[klast]}
+            klast=$((${#PdBIUVT_UVRESAMPLE_LN[@]}-1))
+            line_name=${PdBIUVT_UVRESAMPLE_LN[klast]}
         fi
         line_name=$(echo "$line_name" | sed -e 's/ /_/g')
         #freq_ref must be in MHz
