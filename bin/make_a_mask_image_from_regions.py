@@ -34,6 +34,9 @@ def main(image_file, region_file, output_name, set_0_1_mask, set_revert_mask):
     # 
     print('Reading image %r'%(image_file))
     image, header = fits.getdata(image_file, header=True)
+    if len(image.shape) > 2:
+        if image.shape[0] == 1:
+            image = image[0]
     wcs = None # WCS(header, naxis=2)
     ny, nx = header['NAXIS2'], header['NAXIS1']
     
