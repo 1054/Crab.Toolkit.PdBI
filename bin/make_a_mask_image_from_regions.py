@@ -28,9 +28,13 @@ except:
 @click.argument('image_file', type=click.Path(exists=True))
 @click.argument('region_file', type=click.Path(exists=True))
 @click.argument('output_name', type=click.Path(exists=False))
-@click.option('--set-0-1-mask', default=False, is_flag=True)
-@click.option('--set-revert-mask', default=False, is_flag=True)
-def main(image_file, region_file, output_name, set_0_1_mask, set_revert_mask):
+@click.option('--revert', default=False, is_flag=True)
+def main(
+        image_file, 
+        region_file, 
+        output_name, 
+        revert,
+    ):
     # 
     print('Reading image %r'%(image_file))
     image, header = fits.getdata(image_file, header=True)
@@ -57,21 +61,15 @@ def main(image_file, region_file, output_name, set_0_1_mask, set_revert_mask):
     
     # 
     mask = np.logical_and.reduce((~np.isnan(image), np.isfinite(image), region_mask))
-    if set_0_1_mask:
-        if set_revert_mask:
-            image[~mask] = 1
-            image[mask] = 0
-        else:
-            image[~mask] = 0
-            image[mask] = 1
-        image = image.astype(np.int32)
-        header['BITPIX'] = 32
+    # 
+    if revert:
+        image[~mask] = 1
+        image[mask] = 0
     else:
-        if set_revert_mask:
-            image[mask] = np.nan
-        else:
-            image[~mask] = np.nan
-        
+        image[~mask] = 0
+        image[mask] = 1
+    image = image.astype(bool)
+    header['BITPIX'] = 32
     header['HISTORY'] = 'Masked the pixels not in the input regions "{}" as NaNs for the input image "{}".'.format(region_file, image_file)
 
     hdu = fits.PrimaryHDU(data=image, header=header)
