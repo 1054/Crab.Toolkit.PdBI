@@ -312,6 +312,7 @@ if len(input_linename) > 0:
                         if len(possible_linenames) > 0:
                             if input_linename[kk] in possible_linenames:
                                 jkk.append(ikk)
+                                input_linename[kk] = possible_linenames[-1] # format the name to standard lib name
                 #jkk = numpy.argwhere(lib_linename == input_linename[kk]).flatten().tolist()
                 #print(jkk)
                 if len(jkk) > 0:
