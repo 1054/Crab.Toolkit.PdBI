@@ -199,6 +199,14 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
             echo "let MAP_ANGLE 0.0"                            >> "$PdBIUVT_EXE"
         fi
         
+        if [[ ${#PdBIUVT_UVMAP_WEIGHT[@]} -gt $i ]]; then
+            echo "let weight_mode ${PdBIUVT_UVMAP_WEIGHT[$i]}"  >> "$PdBIUVT_EXE"
+        fi
+        
+        if [[ ${#PdBIUVT_UVMAP_ROBUST[@]} -gt $i ]]; then
+            echo "let uv_cell[2] ${PdBIUVT_UVMAP_ROBUST[$i]}"   >> "$PdBIUVT_EXE"
+        fi
+        
         if [[ ${#PdBIUVT_UVMAP_TAPER[@]} -gt $i ]]; then
             echo "let uv_taper ${PdBIUVT_UVMAP_TAPER[$i]}"      >> "$PdBIUVT_EXE"
         fi

@@ -40,7 +40,12 @@ if [[ $(uname -s) == Linux ]]; then
             fi
         fi
     fi
-    ${root_dirname}/${bin_dirname}/${root_basename}_linux_x86_64 "$@"
+    if [[ $(uname -m) == "aarch64" ]]; then
+        arch="aarch64"
+    else
+        arch="x86_64"
+    fi
+    ${root_dirname}/${bin_dirname}/${root_basename}_linux_${arch} "$@"
 fi
 # Darwin
 if [[ $(uname -s) == Darwin ]]; then

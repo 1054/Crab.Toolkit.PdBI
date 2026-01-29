@@ -1,33 +1,45 @@
 #!/bin/bash
 # 
 # common caller for wcstools:
+#=  cphead
+#=  imhead
+#=  edhead
 #=  gethead
 #=  getpix
-#=  imhead
+#=  sumpix
 #=  sethead
 #=  sky2xy
 #=  xy2sky
-#=  sumpix
 # 
-# for ff in $(cat imhead | grep "^#= " | tr -s ' ' | cut -d ' ' -f 2); do cp imhead $ff; done
+# for ff in $(cat gethead | grep "^#= " | tr -s ' ' | cut -d ' ' -f 2); do cp gethead $ff; done
 #   
 # 
+root_dirname=$(dirname "${BASH_SOURCE[0]}")
+root_basename=$(basename "${BASH_SOURCE[0]}")
 # Linux
 if [[ $(uname -s) == Linux ]]; then
-    if [[ $(bc <<< "$(ldd --version | head -n 1 | tr -s ' ' | cut -d ' ' -f 4 | cut -d '.' -f 2)<14") -eq 1 ]]; then
-        # the supercomputer planer has an old GLIBC version 2.5
-        $(dirname $0)/wcstools_linux_Glibc_2.12/$(basename $0) $*
-    else
-        $(dirname $0)/wcstools_linux_Glibc_2.14/$(basename $0) $*
+    ldd_versions=($(ldd --version | head -n 1 | perl -p -e 's/.* ([0-9.]+) *$/\1/g' | perl -p -e 's/\./ /g'))
+    bin_dirname="wcstools_linux_Glibc_2.14"
+    if [[ ${#ldd_versions[@]} -ge 2 ]]; then
+        ldd_version_major="${ldd_versions[0]}"
+        ldd_version_minor="${ldd_versions[1]}"
+        if [[ $(bc <<< "${ldd_version_major}==2") -eq 1 ]]; then
+            if [[ $(bc <<< "${ldd_version_minor}<=12") -eq 1 ]]; then
+                bin_dirname="wcstools_linux_Glibc_2.12" # For computer with old GLIBC version
+            elif [[ $(bc <<< "${ldd_version_minor}<=14") -eq 1 ]]; then
+                bin_dirname="wcstools_linux_Glibc_2.14" # For computer with old GLIBC version
+            fi
+        fi
     fi
+    ${root_dirname}/${bin_dirname}/${root_basename} "$@"
 fi
 # Darwin
 if [[ $(uname -s) == Darwin ]]; then
-    $(dirname $0)/wcstools_mac/$(basename $0) $*
+    $(dirname $0)/wcstools_mac/$(basename $0) "$@"
 fi
 # Cygwin
 if [[ $(uname -s) == *CYGWIN* ]]; then
-    $(dirname $0)/wcstools_cygwin/$(basename $0)_cygwin_x86.exe $*
+    $(dirname $0)/wcstools_cygwin/$(basename $0)_cygwin_x86.exe "$@"
 fi
 
 

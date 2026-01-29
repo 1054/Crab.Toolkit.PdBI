@@ -65,7 +65,7 @@ def get_line_dict(line_list = ['CO', 'H2O', 'CI', 'CII', 'NII', 'OI', 'OIII']):
         line_dict['CI $^3P_1-^3P_0$'] = 492.16065 * u.GHz
         line_dict['CI $^3P_2-^3P_1$'] = 809.34197 * u.GHz
     if 'CII' in line_list:
-        line_dict['CI $^2P_{3/2}-^2P_{1/2}$'] = 1900.53690 * u.GHz
+        line_dict['CII $^2P_{3/2}-^2P_{1/2}$'] = 1900.53690 * u.GHz
     if 'NII' in line_list:
         line_dict['NII $^3P_1-^3P_0$'] = 1461.13141 * u.GHz
         line_dict['NII $^3P_2-^3P_1$'] = 2459.38010 * u.GHz
@@ -174,7 +174,7 @@ if __name__ == '__main__':
             sys.stdout.flush()
             iright = iline + 1
             while iright <= iline+nright:
-                if iright <= len(line_names_sorted):
+                if iright < len(line_names_sorted):
                     line_name_x = line_names_sorted[iright]
                     line_obsfreq_x = line_dict[line_name_x] / (1.+z)
                     sys.stdout.write(' '+str((line_name_x, line_obsfreq_x)))

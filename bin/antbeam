@@ -1,0 +1,42 @@
+#!/bin/bash
+# 
+# compute beam for a single dish antenna
+# beam = 1.22 * lambda / D
+# 
+LANG=C
+
+mathcalc() {
+    awk 'BEGIN { printf "%.6f\n", '"$1"'}'
+}
+
+emathcalc() {
+    awk 'BEGIN { printf "%.6e\n", '"$1"'}'
+}
+
+usage() {
+    echo "Usage: "
+    echo "    antbeam antenna_diameter[m] lambda[um] frequency[GHz]"
+    echo "Example:"
+    echo "    antbeam 15 850"
+    echo "    antbeam 15 0 300"
+}
+
+if [[ $# -lt 2 ]]; then
+    usage
+    exit
+fi
+
+if [[ $# -ge 3 ]]; then
+    freq=$3
+    if [[ "$freq" == *"GHz" ]]; then
+        freq=$(echo "$freq" | perl -p -e 's/GHz//g')
+    fi
+    wave=$(emathcalc "2.99792458e8/($freq*1e9)")
+else
+    wave=$(emathcalc "($2)/1e6")
+fi
+
+mathcalc "1.22*($wave)/($1)/3.1415926*180.0*3600.0"
+
+
+

@@ -25,6 +25,7 @@
 #     2021-05-14 Added PdBIUVT_UVMERGE_ALPHA
 #     2022-08-23 Added UV_TAPER
 #     2023-07-28 Added UVRESAMPLE_RF, UVRESAMPLE_LN
+#     2023-09-13 Added UVCELL, WEIGHT, ROBUST
 # 
 
 
@@ -202,6 +203,9 @@ PdBIUVT_UVCOMPRESS_NC=()  # channel number to compress
 PdBIUVT_UVMAP_CONTOURS=() # contours in unit of 'noise' (TODO: 20180214)
 PdBIUVT_UVMAP_SPACING=()  # spacing in unit of 'noise'
 PdBIUVT_UVMAP_TAPER=()    # tapering, e.g., "120 120 0", meter,meter,deg
+PdBIUVT_UVMAP_WEIGHT=()
+PdBIUVT_UVMAP_ROBUST=()
+PdBIUVT_UVMAP_UVCELL=()
 # ------------------------# uv compress
 PdBIUVT_UVRESAMPLE_VW=()  # velocity width to resample
 PdBIUVT_UVRESAMPLE_RF=()  # reference frequency to resample
@@ -444,6 +448,8 @@ while [[ "$#" -gt 0 ]]; do
          "-clean-files") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
            "-cleanfile") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
           "-cleanfiles") if [[ "$#" -lt 1 ]]; then PdBIUVT_GOOD=0; break; fi;        PdBIUVT_RPAR="none"; PdBIUVT_UVMERGE_KEEP_FILE=-1;; # argument with no value, no shift;
+              "-uvcell") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_uvcell";;
+              "-robust") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmap_robust";;
               "-weight") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_weight";;
            "-weighting") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_weight";;
               "-factor") if [[ "$#" -lt 2 ]]; then PdBIUVT_GOOD=0; break; fi; shift; PdBIUVT_RPAR="uvmerge_factor";;
@@ -1054,10 +1060,22 @@ while [[ "$#" -gt 0 ]]; do
     fi
     
     
+    # -- uvmap
+    if [[ "$PdBIUVT_RPAR" == "uvmap_robust" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_UVMAP_ROBUST+=("$1")
+    fi
+    if [[ "$PdBIUVT_RPAR" == "uvmap_uvcell" ]];  then 
+        if [[ "$#" -lt 1 ]]; then break; fi
+        PdBIUVT_UVMAP_UVCELL+=("$1")
+    fi
+    
+    
     # -- uvmerge
     if [[ "$PdBIUVT_RPAR" == "uvmerge_weight" ]];  then 
         if [[ "$#" -lt 1 ]]; then break; fi
         PdBIUVT_UVMERGE_WEIGHT+=("$1")
+        PdBIUVT_UVMAP_WEIGHT+=("$1")
     fi
     if [[ "$PdBIUVT_RPAR" == "uvmerge_factor" ]];  then 
         if [[ "$#" -lt 1 ]]; then break; fi

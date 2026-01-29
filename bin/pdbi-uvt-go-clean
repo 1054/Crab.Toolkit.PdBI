@@ -173,6 +173,18 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
             echo "let MAP_ANGLE 0.0"                            >> "$PdBIUVT_EXE"
         fi
         
+        if [[ ${#PdBIUVT_UVMAP_WEIGHT[@]} -gt $i ]]; then
+            echo "let weight_mode ${PdBIUVT_UVMAP_WEIGHT[$i]}"  >> "$PdBIUVT_EXE"
+        fi
+        
+        if [[ ${#PdBIUVT_UVMAP_UVCELL[@]} -gt $i ]]; then
+            echo "let uv_cell[1] ${PdBIUVT_UVMAP_UVCELL[$i]}"   >> "$PdBIUVT_EXE"
+        fi
+        
+        if [[ ${#PdBIUVT_UVMAP_ROBUST[@]} -gt $i ]]; then
+            echo "let uv_cell[2] ${PdBIUVT_UVMAP_ROBUST[$i]}"   >> "$PdBIUVT_EXE"
+        fi
+        
         if [[ ${#PdBIUVT_UVMAP_TAPER[@]} -gt $i ]]; then
             echo "let uv_taper ${PdBIUVT_UVMAP_TAPER[$i]}"      >> "$PdBIUVT_EXE"
         fi
@@ -428,11 +440,15 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
                 PdBIUVT_TEMP_MAP_CELL="0 0"
                 PdBIUVT_TEMP_MAP_RA=""
                 PdBIUVT_TEMP_MAP_DEC=""
+                PdBIUVT_TEMP_MAP_UVCELL=0 # 7.5
+                PdBIUVT_TEMP_MAP_ROBUST=0 # 2.0
                 if [[ ${#PdBIUVT_SIZE[@]}     -gt $i ]]; then PdBIUVT_TEMP_MAP_FIELD="${PdBIUVT_SIZE[$i]}"; fi
                 if [[ ${#PdBIUVT_MAP_SIZE[@]} -gt $i ]]; then PdBIUVT_TEMP_MAP_SIZE="${PdBIUVT_MAP_SIZE[$i]}"; fi
                 if [[ ${#PdBIUVT_MAP_CELL[@]} -gt $i ]]; then PdBIUVT_TEMP_MAP_CELL="${PdBIUVT_MAP_CELL[$i]}"; fi
                 if [[ ${#PdBIUVT_MAP_RA[@]}   -gt $i ]]; then PdBIUVT_TEMP_MAP_RA="${PdBIUVT_MAP_RA[$i]}"; fi
                 if [[ ${#PdBIUVT_MAP_DEC[@]}  -gt $i ]]; then PdBIUVT_TEMP_MAP_DEC="${PdBIUVT_MAP_DEC[$i]}"; fi
+                if [[ ${#PdBIUVT_MAP_WEIGHT[@]} -gt $i ]]; then PdBIUVT_TEMP_MAP_WEIGHT="${PdBIUVT_MAP_WEIGHT[$i]}"; fi
+                if [[ ${#PdBIUVT_MAP_ROBUST[@]} -gt $i ]]; then PdBIUVT_TEMP_MAP_ROBUST="${PdBIUVT_MAP_ROBUST[$i]}"; fi
                 PdBIUVT_TEMP_MAP_FIELD=($PdBIUVT_TEMP_MAP_FIELD)
                 PdBIUVT_TEMP_MAP_SIZE=($PdBIUVT_TEMP_MAP_SIZE)
                 PdBIUVT_TEMP_MAP_CELL=($PdBIUVT_TEMP_MAP_CELL)
@@ -442,17 +458,19 @@ for (( i = 0; i < "${#PdBIUVT_NAME[@]}"; i++ )); do
                 echo PdBIUVT_TEMP_MAP_FIELD="${PdBIUVT_TEMP_MAP_FIELD[@]}"
                 echo PdBIUVT_TEMP_MAP_SIZE="${PdBIUVT_TEMP_MAP_SIZE[@]}"
                 echo PdBIUVT_TEMP_MAP_CELL="${PdBIUVT_TEMP_MAP_CELL[@]}"
+                echo PdBIUVT_TEMP_MAP_WEIGHT="${PdBIUVT_TEMP_MAP_WEIGHT}"
+                echo PdBIUVT_TEMP_MAP_ROBUST="${PdBIUVT_TEMP_MAP_ROBUST}"
                 # 
                 # see -- ./integ/pro/simulate.map -- or -- ./integ/x86_64-darwin-gfortran/tasks/uv_dft.init
                 echo "" > "$PdBIUVT_INI"
                 echo 'TASK\FILE      "UV table"                            UV_TABLE$     "'${PdBIUVT_NAME[i]}'"'                                    >> "$PdBIUVT_INI"
                 echo 'TASK\CHARACTER "Map name"                            MAP_NAME$     "'${PdBIUVT_NAME[i]}'"'                                    >> "$PdBIUVT_INI"
                 echo 'TASK\REAL      "UV taper (1/e level) [m]"            UV_TAPER$[4]  0 0 0 0'                                                   >> "$PdBIUVT_INI"
-                echo 'TASK\CHARACTER "Weight mode (NA or UN)"           WEIGHT_MODE$     "NA"'                                                      >> "$PdBIUVT_INI"
+                echo 'TASK\CHARACTER "Weight mode (NA or UN)"           WEIGHT_MODE$     "'${PdBIUVT_TEMP_MAP_WEIGHT}'"'                            >> "$PdBIUVT_INI"
                 echo 'TASK\REAL      "Field of view [arc sec]"            MAP_FIELD$[2]  '${PdBIUVT_TEMP_MAP_FIELD[0]} ${PdBIUVT_TEMP_MAP_FIELD[1]} >> "$PdBIUVT_INI"
                 echo 'TASK\INTEGER   "Map size [pixel]"                    MAP_SIZE$[2]  '${PdBIUVT_TEMP_MAP_SIZE[0]} ${PdBIUVT_TEMP_MAP_SIZE[1]}   >> "$PdBIUVT_INI"
                 echo 'TASK\REAL      "Map cell [arc sec]"                  MAP_CELL$[2]  '${PdBIUVT_TEMP_MAP_CELL[0]} ${PdBIUVT_TEMP_MAP_CELL[1]}   >> "$PdBIUVT_INI"
-                echo 'TASK\REAL      "UV cell [m], for unif. weighting"     UV_CELL$[2]  0 0'         >> "$PdBIUVT_INI"
+                echo 'TASK\REAL      "UV cell [m], for unif. weighting"     UV_CELL$[2]  '${PdBIUVT_TEMP_MAP_UVCELL} ${PdBIUVT_TEMP_MAP_ROBUST}     >> "$PdBIUVT_INI"
                 echo 'TASK\LOGICAL   "Make one beam (YES), or one per channel (NO)" ONEBEAM$ YES'     >> "$PdBIUVT_INI"
                 echo 'TASK\INTEGER   "Weight channel" WCOL$ 0'                                        >> "$PdBIUVT_INI"
                 echo 'TASK\INTEGER   "Beam channel" BCOL$ 0'                                          >> "$PdBIUVT_INI"

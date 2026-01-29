@@ -69,10 +69,14 @@ input_linefreq = [] # rest-frame
 input_lineFWHM = [] # km/s
 input_clip_sigma = 0.0
 input_clip_nchan = 0 # 20190411 clip nchan at both ends
+input_clip_spw_edge = 0 # 20250424 a uvt may contain two spws with a gap filled with consecutive nan values
 input_freq_unit = 'GHz'
 set_figure_size = [12.0,5.0]
+set_dpi = 90
+set_no_grid = False
 set_no_errorbar = False
 set_no_liblines = False
+set_no_statistics_text = False
 set_xrange = []
 set_yrange = []
 set_highlight_frange = []
@@ -150,6 +154,10 @@ while i < len(sys.argv):
             set_figure_size[0] = float(sys.argv[i])
             i = i + 1
             set_figure_size[1] = float(sys.argv[i])
+    elif temp_argv == '-plot-dpi' or temp_argv == '-dpi':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            set_dpi = float(sys.argv[i])
     elif temp_argv == '-plot-xtick-interval' or temp_argv == '-plot-xtickinterval' or temp_argv == '-xtickinterval':
         if i+1 < len(sys.argv):
             i = i + 1
@@ -230,6 +238,11 @@ while i < len(sys.argv):
             i = i + 1
             input_clip_nchan = int(sys.argv[i])
             print('input_clip_nchan = %s'%(input_clip_nchan))
+    elif temp_argv == '-clip-spw-edge':
+        if i+1 < len(sys.argv):
+            i = i + 1
+            input_clip_spw_edge = int(sys.argv[i])
+            print('input_clip_spw_edge = %s'%(input_clip_spw_edge))
     elif temp_argv == '-fix-nan' or temp_argv == '-fixnan':
         set_fix_nan = True
         print('set_fix_nan = %s'%(set_fix_nan))
@@ -265,10 +278,14 @@ while i < len(sys.argv):
                 set_highlight_frange.append(float(sys.argv[i+1]))
                 set_highlight_frange.append(float(sys.argv[i]))
             i = i + 1
+    elif temp_argv == '-no-grid' or temp_argv == '-nogrid':
+        set_no_grid = True
     elif temp_argv == '-no-errorbar' or temp_argv == '-noerrorbar':
         set_no_errorbar = True
     elif temp_argv == '-no-lib-lines' or temp_argv == '-no-liblines' or temp_argv == '-noliblines':
         set_no_liblines = True
+    elif temp_argv == '-no-statistics-text':
+        set_no_statistics_text = True
     else:
         input_names.append(sys.argv[i])
     i = i + 1
@@ -341,14 +358,14 @@ if output_name == '':
     input_basename, input_extension = os.path.splitext(input_name)
     output_name = input_basename + '.spectrum.pdf'
 else:
-    if not output_name.endswith('.pdf') or output_name.endswith('.PDF'):
+    if not (output_name.endswith('.pdf') or output_name.endswith('.PDF') or output_name.endswith('.png') or output_name.endswith('.PNG')):
         output_name = output_name + '.pdf'
 
 
 
 # 
 # Make plot
-fig = plt.figure(figsize=set_figure_size, dpi=90)  # set figure size 12.0 x 5.0 inches, 90 pixels per inch. 
+fig = plt.figure(figsize=set_figure_size, dpi=set_dpi)  # set figure size 12.0 x 5.0 inches, 90 pixels per inch. 
 
 ax = fig.add_subplot(1,1,1)
 
@@ -413,18 +430,38 @@ for i in range(len(input_names)):
         # check array size
         if len(x) > 1 and len(y) == len(x):
             # 
+            # nonanmask
+            nonan_mask = (~numpy.isnan(x)) & (~numpy.isnan(y))
+            nonan_iarg = numpy.argwhere(nonan_mask).ravel()
+            # 
+            # clip spw edge channels which are usually more noisy
+            if input_clip_spw_edge > 0:
+                # find consecutive nan blocks
+                nan_iarg = numpy.argwhere(~nonan_mask).ravel().tolist()
+                nan_consec = numpy.concatenate([numpy.diff(nan_iarg), [99]])
+                nan_consec[0] = 99
+                nan_blocks = [nan_iarg[0]]
+                for k in range(1, len(nan_iarg)-1):
+                    if (nan_iarg[k] - nan_iarg[k-1]) > 1:
+                        nan_blocks.append(nan_iarg[k-1])
+                        nan_blocks.append(nan_iarg[k])
+                nan_blocks.append(nan_iarg[-1])
+                print('nan_blocks', nan_blocks)
+                for k in range(0, len(nan_blocks), 2):
+                    k1, k2 = nan_blocks[k], nan_blocks[k+1]
+                    y[max(0, k1-input_clip_spw_edge):k1] = numpy.nan
+                    y[k2:min(len(y)-1, k2+input_clip_spw_edge)] = numpy.nan
+            # 
             # nonnan
-            nan_mask = (~numpy.isnan(x)) & (~numpy.isnan(y))
-            nan_iarg = numpy.argwhere(nan_mask)
             if set_fix_nan:
                 # Note that the gildas mapping uv_fit output file has an issue 
                 # for the channels of nan -- the y value is nan, but x value is 
                 # random. We can not directly use its x value! This needs to be 
                 # fixed. We can use non-nan x array to guess the nan channels' 
                 # x values. 
-                xnonan = x[nan_mask]
-                ynonan = y[nan_mask]
-                knonan = (numpy.arange(len(y)))[nan_mask]
+                xnonan = x[nonan_mask]
+                ynonan = y[nonan_mask]
+                knonan = (numpy.arange(len(y)))[nonan_mask]
                 xdelta = numpy.mean(numpy.diff(numpy.unique(xnonan)))
                 kfirstnonnan = numpy.argwhere(~numpy.isnan(y)).ravel()[0]
                 klastnonnan = numpy.argwhere(~numpy.isnan(y)).ravel()[-1]
@@ -443,13 +480,13 @@ for i in range(len(input_names)):
                         if numpy.isnan(y[k]):
                             x[k] = numpy.interp(k, knonan, xnonan)
                             y[k] = 0.0
-                if yerr is not None: yerr[nan_mask] = numpy.nanmax(yerr) * 10.0
-                if SNR is not None: SNR[nan_mask] = 0.0
+                if yerr is not None: yerr[nonan_mask] = numpy.nanmax(yerr) * 10.0
+                if SNR is not None: SNR[nonan_mask] = 0.0
             else:
-                x = x[nan_mask]
-                y = y[nan_mask]
-                if yerr is not None: yerr = yerr[nan_mask]
-                if SNR is not None: SNR = SNR[nan_mask]
+                x = x[nonan_mask]
+                y = y[nonan_mask]
+                if yerr is not None: yerr = yerr[nonan_mask]
+                if SNR is not None: SNR = SNR[nonan_mask]
             # 
             # clip sigma
             if input_clip_sigma > 0.0:
@@ -603,10 +640,11 @@ for i in range(len(input_names)):
                 # label sum_highlights
                 if cnt_highlights > 0:
                     if global_highlight_count == 0:
-                        ax.text(0.01, 0.28, 'sum of %s: %0.6g'%(nom_highlights, sum_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
-                        ax.text(0.01, 0.22, 'avg of %s: %0.6g'%(nom_highlights, sum_highlights/cnt_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
-                        ax.text(0.01, 0.16, 'snr of %s: %0.6g'%(nom_highlights, sum_highlights/(this_y_rms*numpy.sqrt(cnt_highlights))), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
-                        ax.text(0.01, 0.10, 'channel velocity resolution: %0.6g'%(numpy.abs(x[1]-x[0])/numpy.abs(x[0])*2.99792458e5), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                        if not set_no_statistics_text:
+                            ax.text(0.01, 0.28, 'sum of %s: %0.6g'%(nom_highlights, sum_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                            ax.text(0.01, 0.22, 'avg of %s: %0.6g'%(nom_highlights, sum_highlights/cnt_highlights), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                            ax.text(0.01, 0.16, 'snr of %s: %0.6g'%(nom_highlights, sum_highlights/(this_y_rms*numpy.sqrt(cnt_highlights))), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+                            ax.text(0.01, 0.10, 'channel velocity resolution: %0.6g'%(numpy.abs(x[1]-x[0])/numpy.abs(x[0])*2.99792458e5), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
                         print('name of highlighted channels = %s'%(nom_highlights))
                         print('sum of highlighted channels = %0.6g'%(sum_highlights))
                         print('avg of highlighted channels = %0.6g'%(sum_highlights/cnt_highlights))
@@ -637,7 +675,8 @@ for i in range(len(input_names)):
 
 global_y_rms = numpy.std(global_y_arr)
 print('global channel rms = %0.6g'%(global_y_rms))
-ax.text(0.01, 0.04, 'global channel rms: %0.6g'%(global_y_rms), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
+if not set_no_statistics_text:
+    ax.text(0.01, 0.04, 'global channel rms: %0.6g'%(global_y_rms), transform=ax.transAxes, fontsize=set_plot_text_fontsize)
 
 print('global_x_min = %s'%(global_x_min))
 print('global_x_max = %s'%(global_x_max))
@@ -687,11 +726,12 @@ if ~numpy.isnan(set_ytickinterval):
     ax.yaxis.set_major_locator(matplotlib.ticker.MultipleLocator(base=set_ytickinterval))
     ax.yaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(base=set_ytickinterval/10.0))
 ax.tick_params(axis='both', which='both', direction='in')
-ax.grid(True, ls='dotted', lw=0.8, color='darkgray')
+if not set_no_grid:
+    ax.grid(True, ls='dotted', lw=0.8, color='darkgray')
 plt.xticks(fontsize=set_xtickfontsize)
 plt.yticks(fontsize=set_ytickfontsize)
-plt.xlabel('Observing Frequency', fontsize=set_xtitlefontsize)
-plt.ylabel('Flux Density', fontsize=set_ytitlefontsize)
+plt.xlabel('Observing Frequency [GHz]', fontsize=set_xtitlefontsize)
+plt.ylabel('Flux Density [mJy]', fontsize=set_ytitlefontsize)
 if set_plot_title != '':
     title_plot = set_plot_title
 else:
